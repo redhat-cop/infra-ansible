@@ -23,13 +23,6 @@
 - name: Setup Zone Directory
   file: dest=/var/named/static state=directory owner=named group=named mode=0770
 
-- name: Build ACL list
-  set_fact:
-    
-  with_subelements:
-  - named_config_views
-  - zone
-
 - name: Setup ACLs
   template: src=named.conf.acl.j2 dest=/etc/named/named.conf.acl owner=named group=named mode=0660
 
