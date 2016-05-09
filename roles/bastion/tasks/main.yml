@@ -16,3 +16,6 @@
 
 - name: Install Git
   action: "{{ ansible_pkg_mgr }} name=git state=latest"
+
+- name: Install VIM Editor
+  action: "{{ ansible_pkg_mgr }} name=vim state=latest"
