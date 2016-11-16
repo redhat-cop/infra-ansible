@@ -2,7 +2,7 @@
 - name: Remove DNS A records (if any)
   lineinfile: dest=/var/named/static/{{ item.0.view }}-{{ item.0.zone }}.db state=absent regexp="^{{ item.1.hostname }}\s+.+IN\s+A\s+{{ item.1.ip }}.*"
   with_subelements:
-   - dns_records_rm | default({})
+   - "{{ dns_records_rm | default({}) }}"
    - entries
   when: item.1.type == "A"
   notify: restart named
@@ -10,7 +10,7 @@
 - name: Add DNS A records (if any)
   lineinfile: dest=/var/named/static/{{ item.0.view }}-{{ item.0.zone }}.db state=present regexp="^{{ item.1.hostname }}\s+\d" line="{{ item.1.hostname }}      3600    IN      A       {{ item.1.ip }}"
   with_subelements:
-   - dns_records_add | default({})
+   - "{{ dns_records_add | default({}) }}"
    - entries
   when: item.1.type == "A"
   notify: restart named
