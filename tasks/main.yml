@@ -77,20 +77,20 @@
 - name: Clean out old key files
   shell: "rm -f /var/named/K{{ item.0.name }}-{{ item.1.dns_domain }}*"
   with_subelements:
-  - named_config_views
+  - "{{ named_config_views }}"
   - zone
 
 - name: Generate keys for nsupdate
   command: "/sbin/dnssec-keygen -a HMAC-MD5 -b 512 -n USER -r /dev/urandom -K /var/named {{ item.0.name }}-{{ item.1.dns_domain }}"
   with_subelements:
-  - named_config_views
+  - "{{ named_config_views }}"
   - zone
 
 - name: Gather keys for nsupdate
   shell: "grep Key: /var/named/K{{ item.0.name }}-{{ item.1.dns_domain }}*.private | cut -d ' ' -f 2"
   register: nsupdate_keys
   with_subelements:
-  - named_config_views
+  - "{{ named_config_views }}"
   - zone
 
 - name: Setup key files for nsupdate
@@ -100,7 +100,7 @@
     owner: named
     group: named
     mode: 0660
-  with_items: nsupdate_keys.results
+  with_items: "{{ nsupdate_keys.results }}"
 
 - name: Prepare Zone Files
   template: 
@@ -110,7 +110,7 @@
     group: named
     mode: 0660
   with_subelements:
-  - named_config_views
+  - "{{ named_config_views }}"
   - zone
 
 - name: Configure named
