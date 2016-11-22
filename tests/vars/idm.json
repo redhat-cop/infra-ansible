@@ -1,0 +1,45 @@
+{
+    "users" : [
+        { 
+            "user_name": "gdownie",
+            "first_name": "Gord",
+            "last_name": "Downie",
+            "email": "gdownie@redhat.com"
+
+        }, 
+        { 
+            "user_name": "lcohen", 
+            "first_name": "Leonard",
+            "last_name": "Cohen",
+            "email": "lcohen@redhat.com"
+        }, 
+        { 
+            "user_name": "rhawkins",
+            "first_name": "Ron",
+            "last_name": "Hawkins",
+            "email": "rhawkins@redhat.com"
+        } 
+    ],
+    "user_groups": [
+        { 
+            "name": "engage-admin",
+            "members": [
+                { "user_name": "gdownie" }, 
+                { "user_name": "lcohen" }, 
+                { "user_name": "rhawkins" }
+            ]
+        },
+        {
+            "name": "devops",
+            "members": [
+                { "user_name": "rhawkins" }
+            ]
+        },
+        {
+            "name": "developer",
+            "members": [
+                { "user_name": "gdownie" }
+            ]
+          }
+    ]
+}
