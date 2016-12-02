@@ -3,9 +3,10 @@
     ipa_user:
       ipa_admin_user: "{{ ipa_admin_user }}"
       ipa_admin_password: "{{ ipa_admin_password }}"
-      givenname: "{{ item.first_name }}"
-      sn: "{{ item.last_name }}"
+      givenname: "{{ item.first_name | default('Red') }}"
+      sn: "{{ item.last_name | default('Hat') }}"
       uid: "{{ item.user_name }}"
       password: "{{ item.user_name }}"
-      email: "{{ item.email }}"
+      email: "{{ item.email | default('') }}"
+      expiration_date: "{{ item.expiration_date | default('') }}"
     with_items: "{{ users }}"

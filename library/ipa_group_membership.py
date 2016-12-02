@@ -2,11 +2,12 @@
 
 DOCUMENTATION = '''
 ---
-module: ipa_add_user_to_group
+module: ipa_group_membership
 short_description: Creates/updates/deletes IPA Group Membership
 description:
-   - Add a user to a group that already exists
-   - When the user is already in the group and state=absent, the user will be removed TODO implement.
+   - Add and remove users to a group that already exists
+   - Will remove all users in the group that are not passed in via uid
+   - Will add all users not already in the group that are passed in via uid
 author: "Kevin McAnoy"
 requirements:
     - ipalib python module
@@ -25,24 +26,17 @@ options:
         required: true
     uid:
         description:
-            - The user id to add/remove
+            - The list of user id to add/remove. 0 or more
 '''
 
 EXAMPLES = '''
-- name: "Add Member to Group"
-  ipa_group:
+- name: "Add Members to Group"
+  ipa_group_membership:
     ipa_admin_user: ipa_admin_user
     ipa_admin_password: ipa_admin_password
     cn: group1
-    uid: jsmith
+    uid: jsmith, mhall
 
-- name: "Delete Member From Group"
-  ipa_group:
-    ipa_admin_user: ipa_admin_user
-    ipa_admin_password: ipa_admin_password
-    cn=group1
-    uid: jsmith
-    state=absent
 '''
 
 RETURN = '''# '''
@@ -61,7 +55,7 @@ def main():
     ipa_admin_user = module.params['ipa_admin_user']
     ipa_admin_password = module.params['ipa_admin_password']
     group_cn = unicode(module.params['cn'])
-    user_uid = unicode(module.params['uid'])
+    new_member_string = module.params['uid']
     state = module.params['state']
 
     # Get a Kerberos ticket from the IPA server, with ipa_admin_user and
@@ -84,6 +78,13 @@ def main():
     msg = ''
     changed = False
 
+    #If new members are set in json then split into a list. if not create empty list
+    if new_member_string :
+        new_members = new_member_string.split(",")
+    else:
+        new_members = []
+
+    #Get existing group information
     try:
         group_info = ipalib.api.Command.group_show(group_cn)['result']
         members = group_info.get('member_user', [])
@@ -91,45 +92,33 @@ def main():
     except ipalib.errors.NotFound:
         group_present = False
 
-    try:
-        user_info = ipalib.api.Command.user_show(user_uid)['result']
-        user_present = True
-    except ipalib.errors.NotFound:
-        user_present = False
+    removable_members = []
 
-    if state == 'present' and group_present and user_present:
-        # Find if user already in list. if true do nothing
-
-        already_added = False
-
-        for member in members:
-            if member == user_uid:
-                msg = "User %s already in group %s" % (user_uid, group_cn)
-                already_added = True
-
-        # Add member if not already added
-        if not already_added:
-            ipalib.api.Command.group_add_member(cn=group_cn, user=[user_uid]) 
-            msg = "Added IPA member %s to group %s" % (user_uid, group_cn)
-            changed = True
+    #Remove users no longer in the group
+    for current_member in members :
+        if current_member not in new_members :
+            #This member is already in the group but is no longer wanted. Remove.
+            removable_members.append(unicode(current_member))
     
-    elif state == 'absent' and group_present and user_present:
-        # Remove membership. Do nothing if member not found. 
 
-        current_member = False
+    if removable_members :
+        ipalib.api.Command.group_remove_member(cn=group_cn, user=removable_members)
+        changed = True
+        msg = "Removed from group %s" % ",".join(removable_members)
 
-        for member in members:
-            if member == user_uid:
-                current_member = True
+    addable_members = []
 
-        if current_member:
-            ipalib.api.Command.group_remove_member(cn=group_cn, user=[user_uid]) 
-            msg = "Removed IPA member %s from group %s" % (user_uid, group_cn)
-            changed = True
-        
-        else:
-            msg = "User %s was not a member of group %s" % (user_uid, group_cn)
+    #Add users new to the group
+    for new_member in new_members :
+        if new_member not in members :
+            #This member is not yet in the group. Add the member here.
+            addable_members.append(unicode(new_member))
 
+    if addable_members :
+        ipalib.api.Command.group_add_member(cn=group_cn, user=addable_members)
+        changed = True
+        msg = "Added to group %s members %s" % (group_cn, ",".join(addable_members))
+    
     module.exit_json(changed=changed, result=msg)
 
 from ansible.module_utils.basic import *

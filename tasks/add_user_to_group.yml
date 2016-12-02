@@ -1,10 +1,21 @@
 ---
-  - name: "Add Member to Group"
+  - name: "Init User List {{ this_group.name }}"
+    set_fact:
+      user_list: ''
+
+  - name: "Add Users to List {{ this_group.name }}"
+    set_fact:
+      user_list: "{{ user_list }}{{ item.user_name }},"
+    with_items: '{{ this_group.members | default([]) }}'
+
+  - name: "Remove Trailing Comma from User List  {{ this_group.name }}"
+    set_fact:
+      user_list: "{{ user_list[:-1] }}"
+    when: this_group.members is defined
+
+  - name: "Add Members to Group {{ this_group.name }}"
     ipa_group_membership:
       ipa_admin_user: "{{ ipa_admin_user }}"
       ipa_admin_password: "{{ ipa_admin_password }}"
-      cn: "{{ item.0.name }}"
-      uid: "{{ item.1.user_name }}"
-    with_subelements: 
-      - "{{ user_groups }}"
-      - members
+      cn: "{{ this_group.name }}"
+      uid: "{{ user_list }}"

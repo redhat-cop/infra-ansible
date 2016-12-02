@@ -11,4 +11,5 @@ run the test ```ansible-playbook -i inventory create_idm.yml```
 
 * This requires that you have an existing idm available. The code is written expressly for and is tested against the idm provide by RHEL 7.2
 * change the value in the inventory file to point to a valid idm
+* You can test modfications by re-running the test pointing to a different json file ```ansible-playbook -i inventory create_idm.yml -e "@vars/idm_mod.json"
 

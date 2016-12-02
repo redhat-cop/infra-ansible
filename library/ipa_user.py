@@ -49,6 +49,10 @@ options:
         description:
             - The user's primary group.
         required: false
+    expiration_date:
+        description:
+            - A date at which the user account will no longer be able to login
+        required: false
     state:
         description:
             - create or delete group.
@@ -90,6 +94,8 @@ RETURN = '''# '''
 import base64
 import hashlib
 
+from datetime import datetime
+
 def sshpubkey_fingerprint(sshpubkey):
     key_type = sshpubkey.strip().split()[0]
     key = base64.b64decode(sshpubkey.strip().split()[1].encode('ascii'))
@@ -126,6 +132,7 @@ def main():
             email=dict(required=False),
             sshpubkey=dict(required=False),
             primary_group=dict(required=False),
+            expiration_date=(dict(required=False)),
             state=dict(default="present", choices=["present", "absent"])
         ),
         supports_check_mode=True
@@ -141,6 +148,7 @@ def main():
     user_email = module.params['email']
     user_sshpubkey = module.params['sshpubkey']
     primary_group = module.params['primary_group']
+    expiration_date = module.params['expiration_date']
     state = module.params['state']
 
     # Get a Kerberos ticket from the IPA server, with ipa_admin_user and
@@ -205,6 +213,23 @@ def main():
                     user_info['gidnumber'] != user_gidnumber:
                     changed = True
 
+                current_expiration_exists = "krbprincipalexpiration" in user_info
+                changedExpiration = False
+
+                if expiration_date:
+                    expiration_date = expiration_date.split('.', 1)[0]  
+                    if current_expiration_exists and \
+                        expiration_date == user_info['krbprincipalexpiration'][0].strftime("%Y-%m-%dT%H:%M:%S"):
+                        msg = "No update. Identical expiration"
+                    else:
+                        expiration_date = expiration_date + "Z"
+                        changedExpiration = True
+                        changed = True
+
+                elif 'krbprincipalexpiration' in user_info:
+                    changedExpiration = True
+                    changed = True
+
                 if changed:
                     cn = None
                     if user_givenname is not None and user_sn is not None:
@@ -219,6 +244,12 @@ def main():
                     optional_param(params, 'cn', cn)
                     optional_param(params, 'mail', user_email)
                     optional_param(params, 'ipasshpubkey', user_sshpubkey)
+
+                    if changedExpiration:
+                        if expiration_date:
+                            params['krbprincipalexpiration'] = unicode(expiration_date)
+                        else:
+                            params['krbprincipalexpiration'] = ''
 
                     if user_gidnumber is not None:
                         params['gidnumber'] = int(user_gidnumber)
@@ -251,12 +282,16 @@ def main():
                 'uid': user_uid
             }
 
+            if expiration_date:
+                expiration_date = expiration_date.split('.', 1)[0] + "Z"
+
             optional_param(params, 'userpassword', user_password)
             optional_param(params, 'givenname', user_givenname)
             optional_param(params, 'sn', user_sn)
             optional_param(params, 'cn', "%s %s" % (user_givenname, user_sn))
             optional_param(params, 'mail', user_email)
             optional_param(params, 'ipasshpubkey', user_sshpubkey)
+            optional_param(params, 'krbprincipalexpiration', expiration_date)
 
             if user_gidnumber is not None:
                 params['gidnumber'] = int(user_gidnumber)
