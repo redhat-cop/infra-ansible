@@ -1,0 +1,10 @@
+---
+
+- name: Installing EPEL Software Repo
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+  - http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  tags: epel
+
