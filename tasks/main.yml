@@ -1,21 +1,31 @@
 ---
-- name: Install bind and bind-utils
-  action: "{{ ansible_pkg_mgr }} name={{item}} state=latest"
+- name: Ensure required packages are installed
+  package:
+    name: "{{ item }}"
+    state: latest
   with_items:
   - bind
   - bind-utils
+  - firewalld
+  - python-firewall
 
 - name: Enable named
-  service: name=named enabled=yes
-
-- name: Install firewalld
-  action: "{{ ansible_pkg_mgr }} name=firewalld state=latest"
+  service:
+    name: named
+    enabled: yes
 
 - name: Enable firewalld
-  service: name=firewalld enabled=yes state=started
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
 
 - name: Open Firewall for DNS
-  firewalld: port={{item}} permanent=yes state=enabled immediate=yes
+  firewalld: 
+    port: "{{item}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
   with_items:
   - 53/tcp
   - 53/udp
@@ -72,7 +82,11 @@
   command: "/sbin/rndc-confgen -a -r /dev/urandom"
 
 - name: Ensure correct permissions and ownerships on rndc.key file
-  file: path=/etc/rndc.key owner=root group=named mode=0640
+  file:
+    path: /etc/rndc.key
+    owner: root
+    group: named
+    mode: 0640
 
 - name: Clean out old key files
   shell: "rm -f /var/named/K{{ item.0.name }}-{{ item.1.dns_domain }}*"
@@ -129,5 +143,7 @@
     group: named 
 
 - name: Restart named
-  service: name=named state=restarted
+  service:
+    name: named
+    state: restarted
 
