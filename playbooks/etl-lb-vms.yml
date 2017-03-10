@@ -16,4 +16,10 @@
   - role: keepalived
   - role: haproxy
   
-
+- name: 'Clean-Up'
+  hosts: lb_mgmt
+  tasks: 
+  - name: 'Remove tmp file' 
+    file:
+      path: '/tmp/haproxy.cfg'
+      state: absent  
