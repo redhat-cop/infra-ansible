@@ -1,0 +1,11 @@
+
+backend {{ item.name }}
+    balance roundrobin
+    option httpclose
+    option forwardfor
+    cookie JSESSIONID prefix
+
+{% for backend in item.backends %}
+    server {{ backend.name }} {{ backend.fqdn }}:{{ backend.port }} cookie A check
+{% endfor %}
+

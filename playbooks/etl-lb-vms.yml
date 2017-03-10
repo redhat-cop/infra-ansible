@@ -1,0 +1,19 @@
+---
+
+- name: 'Generate the HAproxy configuration'
+  hosts: lb_mgmt
+  vars: 
+    haproxy_temp_file: '/tmp/haproxy.cfg'
+  roles:
+  - role: haproxy-config
+
+- name: 'Configure the LB hosts'
+  hosts: lb_vms
+  become: True
+  vars: 
+    haproxy_temp_file: '/tmp/haproxy.cfg'
+  roles:
+  - role: keepalived
+  - role: haproxy
+  
+

@@ -1,0 +1,14 @@
+
+frontend lb_http
+    bind {{ lb_host_vip }}:80
+
+{% for http in lb_http_entries %}
+    acl {{ http.name }} hdr_sub(host) -i {{ http.fqdn }}
+{% endfor %}
+
+{% for http in lb_http_entries %}
+    use_backend {{ http.name }} if {{ http.name }}
+{% endfor %}
+
+    default_backend lb_http_default
+

@@ -1,0 +1,9 @@
+---
+
+- name: 'Populate the keepalived.conf file'
+  template:
+    src: keepalived_conf.j2
+    dest: '/etc/keepalived/keepalived.conf'
+  notify: 'restart keepalived'
+
+  

@@ -1,0 +1,64 @@
+---
+
+- name: 'Populate the common config portion for HAproxy'
+  template:
+    src: lb_common.j2
+    dest: '{{ haproxy_temp_dir }}/0001_lb.cfg'
+
+- name: 'Set Facts for HTTP/SSL frontend (ocp_masters)' 
+  set_fact: 
+    lb_https_frontend_name: 'ocp_masters' 
+    lb_https_backend_name: 'lb_https_backend'
+    lb_https_vip: '{{ lb_host_vip }}'
+    lb_https_port: '{{ lb_https_port_ocp_master }}'
+
+- name: 'Populate the HTTP/SSL frontend for HAproxy'
+  template:
+    src: lb_https_frontend.j2
+    dest: '{{ haproxy_temp_dir }}/0002_lb.cfg'
+  
+- name: 'Set Facts for HTTP/SSL frontend (ocp_routers)' 
+  set_fact: 
+    lb_https_frontend_name: 'ocp_routers' 
+    lb_https_backend_name: 'lb_https_backend'
+    lb_https_vip: '{{ lb_host_vip }}'
+    lb_https_port: '{{ lb_https_port_ocp_router }}'
+
+- name: 'Populate the HTTP/SSL frontend for HAproxy'
+  template:
+    src: lb_https_frontend.j2
+    dest: '{{ haproxy_temp_dir }}/0003_lb.cfg'
+
+- name: 'Build new dict to filter out duplicate server entries'
+  set_fact: 
+    lb_https_backends: '{{ lb_https_backends | combine({item.1.name: {"name": item.1.name, "fqdn": item.1.fqdn, "port": item.0.port}}) }}'
+  with_subelements: 
+  - '{{ lb_https_entries }}'
+  - backends 
+
+- name: 'Populate the HTTP/SSL backend for HAproxy'
+  template:
+    src: lb_https_backend.j2
+    dest: '{{ haproxy_temp_dir }}/0004_lb.cfg'
+
+- name: 'Populate the HTTP frontend for HAproxy'
+  template:
+    src: lb_http_frontend.j2
+    dest: '{{ haproxy_temp_dir }}/0005_lb.cfg'
+
+- name: 'Populate the HTTP backends for HAproxy'
+  template:
+    src: lb_http_backend.j2
+    dest: '{{ haproxy_temp_dir }}/0006_lb_{{ item.name }}.cfg'
+  with_items: '{{ lb_http_entries }}'
+
+- name: 'Populate the default config portion for HAproxy'
+  template:
+    src: lb_http_default.j2
+    dest: '{{ haproxy_temp_dir }}/0007_lb.cfg'
+
+- name: 'Assmble the final haproxy config file'
+  assemble: 
+    src: '{{ haproxy_temp_dir }}'
+    dest: '{{ haproxy_temp_file }}'
+

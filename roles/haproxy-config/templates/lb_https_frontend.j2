@@ -1,0 +1,10 @@
+
+frontend {{ lb_https_frontend_name }}
+    bind {{ lb_https_vip }}:{{ lb_https_port }}
+    mode tcp
+  
+    tcp-request inspect-delay 5s
+    tcp-request content accept if { req_ssl_hello_type 1 }
+
+    default_backend {{ lb_https_backend_name }}
+
