@@ -5,7 +5,7 @@ vrrp_script chk_haproxy {
 }
 
 vrrp_instance VI_1 {
-        interface {{ haproxy_nic }}
+        interface {{ keepalived_nic }}
         state MASTER
         virtual_router_id 51
         priority {{ keepalived_priority }}
