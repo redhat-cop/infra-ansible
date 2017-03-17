@@ -32,7 +32,7 @@ vrrp_instance VI_1 {
         virtual_router_id 51
         priority 101
         unicast_peer {
-            10.9.55.81
+            10.9.55.82
         }
         virtual_ipaddress {
             10.9.55.80
