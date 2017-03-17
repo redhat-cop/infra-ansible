@@ -1,20 +1,9 @@
-backend lb_https_backend
+
+backend https_{{ item.port }}-{{ item.name | default(item.fqdn) }}
     mode tcp
     balance roundrobin
 
-{% for lb in lb_https_entries %}
-    acl {{ lb.name }} req_ssl_sni -m end {{ lb.fqdn }}
-{% endfor %}    
-
-{% for lb in lb_https_entries %}
-{% for backend in lb.backends %}
-    use-server {{ backend.name }} if {{ lb.name }}
-{% endfor %}    
-{% endfor %}    
-
-    option ssl-hello-chk
-
-{% for be in lb_https_backends %}
-    server {{ lb_https_backends[be].name }} {{ lb_https_backends[be].fqdn }}:{{ lb_https_backends[be].port }} cookie check
+{% for backend in item.backends %}
+    server {{ backend.name | default(backend.fqdn) }} {{ backend.fqdn }}:{{ backend.port }} check
 {% endfor %}
 
