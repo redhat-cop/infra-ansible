@@ -9,55 +9,45 @@ The following is an example of an inventory definition and the resulting haproxy
 
 ```
 lb_https_entries:
-- name: master-0.d1.casl.rht-labs.com
-  fqdn: master-0.d1.casl.rht-labs.com
+- fqdn: master-0.d1.casl.rht-labs.com
   port: 8443
   backends: 
-  - name: master-0.d1.casl.rht-labs.com
-    fqdn: master-0.d1.casl.rht-labs.com
+  - fqdn: master-0.d1.casl.rht-labs.com
     port: 8443
-- name: router.d1.casl.rht-labs.com
-  fqdn: .apps.d1.casl.rht-labs.com
+- fqdn: .apps.d1.casl.rht-labs.com
+  name: router.d1.casl.rht-labs.com
   port: 443
   backends: 
-  - name: router-0.d1.casl.rht-labs.com
-    fqdn: router-0.d1.casl.rht-labs.com
+  - fqdn: router-0.d1.casl.rht-labs.com
     port: 443
-  - name: router-1.d1.casl.rht-labs.com
-    fqdn: router-1.d1.casl.rht-labs.com
+  - fqdn: router-1.d1.casl.rht-labs.com
     port: 443
-- name: master-0.s3.core.rht-labs.com
-  fqdn: master-0.s3.core.rht-labs.com
+- fqdn: master-0.s3.core.rht-labs.com
   port: 8443
   backends: 
-  - name: master-0.s3.core.rht-labs.com
-    fqdn: master-0.s3.core.rht-labs.com
+  - fqdn: master-0.s3.core.rht-labs.com
     port: 8443
-- name: router.s3.core.rht-labs.com
-  fqdn: .apps.s3.core.rht-labs.com
+- fqdn: .apps.s3.core.rht-labs.com
+  name: router.s3.core.rht-labs.com
   port: 443
   backends: 
-  - name: router.s3.core.rht-labs.com
-    fqdn: router.s3.core.rht-labs.com
+  - fqdn: router.s3.core.rht-labs.com
     port: 443
 
 lb_http_entries:
-- name: router.d1.casl.rht-labs.com
-  fqdn: apps.d1.casl.rht-labs.com
+- fqdn: apps.d1.casl.rht-labs.com
+  name: router.d1.casl.rht-labs.com
   port: 80
   backends: 
-  - name: router-0.d1.casl.rht-labs.com
-    fqdn: router-0.d1.casl.rht-labs.com
+  - fqdn: router-0.d1.casl.rht-labs.com
     port: 80
-  - name: router-1.d1.casl.rht-labs.com
-    fqdn: router-1.d1.casl.rht-labs.com
+  - fqdn: router-1.d1.casl.rht-labs.com
     port: 80
-- name: router.s3.core.rht-labs.com
-  fqdn: apps.s3.core.rht-labs.com
+- fqdn: apps.s3.core.rht-labs.com
+  name: router.s3.core.rht-labs.com
   port: 80
   backends: 
-  - name: router.s3.core.rht-labs.com
-    fqdn: router.s3.core.rht-labs.com
+  - fqdn: router.s3.core.rht-labs.com
     port: 80
 ```
 
@@ -108,68 +98,73 @@ defaults
     maxconn                 3000
 
 
-# HTTPS frontend for all SSL-based connections on port 8443
+
 frontend ocp_masters
     bind 10.9.55.80:8443
     mode tcp
-  
+
     tcp-request inspect-delay 5s
     tcp-request content accept if { req_ssl_hello_type 1 }
-
-    default_backend lb_https_backend
-
-
-# HTTPS frontend for all SSL-based connections on port 443
-frontend ocp_routers
-    bind 10.9.55.80:443
-    mode tcp
-  
-    tcp-request inspect-delay 5s
-    tcp-request content accept if { req_ssl_hello_type 1 }
-
-    default_backend lb_https_backend
-
-
-# HTTPS backend for all SSL-based connections
-backend lb_https_backend
-    mode tcp
-    balance roundrobin # Note sure if this works with the below 'use-server' stanza 
 
     acl master-0.d1.casl.rht-labs.com req_ssl_sni -m end master-0.d1.casl.rht-labs.com
-    acl router.d1.casl.rht-labs.com req_ssl_sni -m end .apps.d1.casl.rht-labs.com
     acl master-0.s3.core.rht-labs.com req_ssl_sni -m end master-0.s3.core.rht-labs.com
+
+    use_backend https_8443-master-0.d1.casl.rht-labs.com if master-0.d1.casl.rht-labs.com
+    use_backend https_8443-master-0.s3.core.rht-labs.com if master-0.s3.core.rht-labs.com
+
+
+
+frontend ocp_routers_https
+    bind 10.9.55.80:443
+    mode tcp
+
+    tcp-request inspect-delay 5s
+    tcp-request content accept if { req_ssl_hello_type 1 }
+
+    acl router.d1.casl.rht-labs.com req_ssl_sni -m end .apps.d1.casl.rht-labs.com
     acl router.s3.core.rht-labs.com req_ssl_sni -m end .apps.s3.core.rht-labs.com
 
-    use-server master-0.d1.casl.rht-labs.com if master-0.d1.casl.rht-labs.com
-    use-server router-0.d1.casl.rht-labs.com if router.d1.casl.rht-labs.com
-    use-server router-1.d1.casl.rht-labs.com if router.d1.casl.rht-labs.com
-    use-server master-0.s3.core.rht-labs.com if master-0.s3.core.rht-labs.com
-    use-server router.s3.core.rht-labs.com if router.s3.core.rht-labs.com
+    use_backend https_443-router.d1.casl.rht-labs.com if router.d1.casl.rht-labs.com
+    use_backend https_443-router.s3.core.rht-labs.com if router.s3.core.rht-labs.com
 
-    option ssl-hello-chk
+backend https_443-router.d1.casl.rht-labs.com
+    mode tcp
+    balance roundrobin
 
-    server master-0.d1.casl.rht-labs.com master-0.d1.casl.rht-labs.com:8443 cookie check
-    server router-0.d1.casl.rht-labs.com router-0.d1.casl.rht-labs.com:443 cookie check
-    server router-1.d1.casl.rht-labs.com router-1.d1.casl.rht-labs.com:443 cookie check
-    server master-0.s3.core.rht-labs.com master-0.s3.core.rht-labs.com:8443 cookie check
-    server router.s3.core.rht-labs.com router.s3.core.rht-labs.com:443 cookie check
+    server router-0.d1.casl.rht-labs.com router-0.d1.casl.rht-labs.com:443 check
+    server router-1.d1.casl.rht-labs.com router-1.d1.casl.rht-labs.com:443 check
+
+backend https_443-router.s3.core.rht-labs.com
+    mode tcp
+    balance roundrobin
+
+    server router.s3.core.rht-labs.com router.s3.core.rht-labs.com:443 check
+
+backend https_8443-master-0.d1.casl.rht-labs.com
+    mode tcp
+    balance roundrobin
+
+    server master-0.d1.casl.rht-labs.com master-0.d1.casl.rht-labs.com:8443 check
+
+backend https_8443-master-0.s3.core.rht-labs.com
+    mode tcp
+    balance roundrobin
+
+    server master-0.s3.core.rht-labs.com master-0.s3.core.rht-labs.com:8443 check
 
 
-# HTTP front-end (port 80) for all regular HTTP connections
-frontend lb_http
+frontend ocp_routers_http
     bind 10.9.55.80:80
 
     acl router.d1.casl.rht-labs.com hdr_sub(host) -i apps.d1.casl.rht-labs.com
     acl router.s3.core.rht-labs.com hdr_sub(host) -i apps.s3.core.rht-labs.com
 
-    use_backend router.d1.casl.rht-labs.com if router.d1.casl.rht-labs.com
-    use_backend router.s3.core.rht-labs.com if router.s3.core.rht-labs.com
+    use_backend http_80-router.d1.casl.rht-labs.com if router.d1.casl.rht-labs.com
+    use_backend http_80-router.s3.core.rht-labs.com if router.s3.core.rht-labs.com
 
     default_backend lb_http_default
 
-
-# HTTP router (port 80) backend for "d1.casl.rht-labs.com"
-backend router.d1.casl.rht-labs.com
+backend http_80-router.d1.casl.rht-labs.com
     balance roundrobin
     option httpclose
     option forwardfor
@@ -178,16 +173,13 @@ backend router.d1.casl.rht-labs.com
     server router-0.d1.casl.rht-labs.com router-0.d1.casl.rht-labs.com:80 cookie A check
     server router-1.d1.casl.rht-labs.com router-1.d1.casl.rht-labs.com:80 cookie A check
 
-
-# HTTP router (port 80) backend for "s3.core.rht-labs.com"
-backend router.s3.core.rht-labs.com
+backend http_80-router.s3.core.rht-labs.com
     balance roundrobin
     option httpclose
     option forwardfor
     cookie JSESSIONID prefix
 
     server router.s3.core.rht-labs.com router.s3.core.rht-labs.com:80 cookie A check
-
 
 # Default backend - used for the 'stats' page
 backend lb_http_default
