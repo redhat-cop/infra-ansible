@@ -1,0 +1,18 @@
+
+frontend {{ lb_frontend_name }}
+    bind {{ lb_host_vip }}:{{ lb_host_port }}
+
+{% for entry in lb_entries %}
+{% if entry.port == lb_host_port %}
+    acl {{ entry.name | default(entry.fqdn) }} hdr_sub(host) -i {{ entry.fqdn }}
+{% endif %}
+{% endfor %}
+
+{% for entry in lb_entries %}
+{% if entry.port == lb_host_port %}
+    use_backend http_{{ entry.port }}-{{ entry.name | default(entry.fqdn) }} if {{ entry.name | default(entry.fqdn) }}
+{% endif %}
+{% endfor %}
+
+    default_backend lb_http_default
+
