@@ -1,0 +1,9 @@
+
+backend https_{{ item.port }}-{{ item.name | default(item.fqdn) }}
+    mode tcp
+    balance roundrobin
+
+{% for backend in item.backends %}
+    server {{ backend.name | default(backend.fqdn) }} {{ backend.fqdn }}:{{ backend.port }} check
+{% endfor %}
+

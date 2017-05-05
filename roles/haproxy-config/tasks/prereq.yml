@@ -1,0 +1,11 @@
+---
+
+- name: 'Use a unique temporary directory to store the config files pre-assemble'
+  command: mktemp -d
+  register: tempdir
+
+- name: 'Store away the temp names'
+  set_fact:
+    haproxy_temp_dir: '{{ tempdir.stdout }}'
+  notify: 'cleanup temp'
+

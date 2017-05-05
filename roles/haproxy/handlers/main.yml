@@ -1,0 +1,28 @@
+---
+
+- name: 'enable and start haproxy services'
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+  - haproxy
+  - firewalld
+
+- name: 'restart rsyslog'
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: 'reload haproxy'
+  service: 
+    name: haproxy
+    state: reloaded 
+
+- name: 'remove tmp new file'
+  file:
+    path: '{{ temp_new_file }}'
+    state: absent
+
+    
+

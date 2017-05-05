@@ -1,0 +1,62 @@
+---
+
+- name: 'Populate the common config portion for HAproxy'
+  template:
+    src: lb_common.j2
+    dest: '{{ haproxy_temp_dir }}/0001_lb.cfg'
+
+- name: 'Set Facts for HTTP/SSL frontend (ocp_masters)' 
+  set_fact: 
+    lb_frontend_name: 'ocp_masters' 
+    lb_host_port: '{{ lb_https_port_ocp_master }}'
+    lb_entries: '{{ lb_https_entries }}'
+
+- name: 'Populate the HTTP/SSL frontend for HAproxy (ocp_masters)'
+  template:
+    src: lb_https_frontend.j2
+    dest: '{{ haproxy_temp_dir }}/0002_lb.cfg'
+  
+- name: 'Set Facts for HTTP/SSL frontend (ocp_routers_https)' 
+  set_fact: 
+    lb_frontend_name: 'ocp_routers_https' 
+    lb_host_port: '{{ lb_https_port_ocp_router }}'
+    lb_entries: '{{ lb_https_entries }}'
+
+- name: 'Populate the HTTP/SSL frontend for HAproxy (ocp_routers_https)'
+  template:
+    src: lb_https_frontend.j2
+    dest: '{{ haproxy_temp_dir }}/0003_lb.cfg'
+
+- name: 'Populate the HTTP/SSL backend for HAproxy'
+  template:
+    src: lb_https_backend.j2
+    dest: '{{ haproxy_temp_dir }}/0004_lb_{{ item.fqdn }}.cfg'
+  with_items: '{{ lb_https_entries }}'
+
+- name: 'Set Facts for HTTP frontend (ocp_routers_http)' 
+  set_fact: 
+    lb_frontend_name: 'ocp_routers_http' 
+    lb_host_port: '{{ lb_http_port_ocp_router }}'
+    lb_entries: '{{ lb_http_entries }}'
+
+- name: 'Populate the HTTP frontend for HAproxy (ocp_routers_http)'
+  template:
+    src: lb_http_frontend.j2
+    dest: '{{ haproxy_temp_dir }}/0005_lb.cfg'
+
+- name: 'Populate the HTTP backends for HAproxy'
+  template:
+    src: lb_http_backend.j2
+    dest: '{{ haproxy_temp_dir }}/0006_lb_{{ item.fqdn }}.cfg'
+  with_items: '{{ lb_http_entries }}'
+
+- name: 'Populate the default config portion for HAproxy (stats)'
+  template:
+    src: lb_http_default.j2
+    dest: '{{ haproxy_temp_dir }}/0007_lb.cfg'
+
+- name: 'Assemble the final HAproxy config file'
+  assemble: 
+    src: '{{ haproxy_temp_dir }}'
+    dest: '{{ haproxy_temp_file }}'
+

@@ -1,0 +1,4 @@
+---
+
+- include: prereq.yml
+- include: keepalived-config.yml

@@ -1,0 +1,9 @@
+
+backend lb_http_default
+    mode http
+    stats enable
+    stats uri /stats
+    stats realm Haproxy\ Statistics
+    stats auth {{ lb_stats_username }}:{{ lb_stats_password }}
+
+

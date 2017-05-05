@@ -1,0 +1,19 @@
+---
+
+- name: 'reload sysctl'
+  command: sysctl -p
+
+
+- name: 'start and enable keepalived services'
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+  - keepalived
+
+
+- name: 'restart keepalived'
+  service:
+    name: keepalived 
+    state: restarted

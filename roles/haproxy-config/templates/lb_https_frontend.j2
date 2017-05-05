@@ -1,0 +1,21 @@
+
+frontend {{ lb_frontend_name }}
+    bind {{ lb_host_vip }}:{{ lb_host_port }}
+    mode tcp
+
+    tcp-request inspect-delay 5s
+    tcp-request content accept if { req_ssl_hello_type 1 }
+
+{% for entry in lb_entries %}
+{% if entry.port == lb_host_port %}
+    acl {{ entry.name | default(entry.fqdn) }} req_ssl_sni -m end {{ entry.fqdn }}
+{% endif %}
+{% endfor %}
+
+{% for entry in lb_entries %}
+{% if entry.port == lb_host_port %}
+    use_backend https_{{ entry.port }}-{{ entry.name | default(entry.fqdn) }} if {{ entry.name | default(entry.fqdn) }}
+{% endif %}
+{% endfor %}
+
+
