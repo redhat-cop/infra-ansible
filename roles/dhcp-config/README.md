@@ -86,7 +86,7 @@ dhcp_group_entries:
     fqdn: node6.example.com
 
 ```
-###Example generated output
+### Example generated output
 ```
 
 ```
