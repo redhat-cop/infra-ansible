@@ -1,13 +1,12 @@
 ---
 
-- name: 'enable and start haproxy services'
+- name: 'enable and start service(s)'
   service:
     name: '{{ item }}'
     enabled: yes
     state: started
   with_items:
   - haproxy
-  - firewalld
 
 - name: 'restart rsyslog'
   service:
