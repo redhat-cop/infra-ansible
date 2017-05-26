@@ -12,6 +12,12 @@
   - libsemanage-python
   notify: 'enable and start haproxy services'
 
+- name: 'Start firewalld'
+  service: 
+    name: firewalld
+    state: started
+    enabled: yes
+
 - name: 'Open Firewall for HAproxy use'
   firewalld: 
     port: "{{item}}"
