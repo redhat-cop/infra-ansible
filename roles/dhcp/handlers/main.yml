@@ -1,0 +1,20 @@
+---
+
+- name: 'enable and start dhcp services'
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+  - dhcpd
+  - firewalld
+
+- name: 'reload dhcp'
+  service:
+    name: dhcpd
+    state: reloaded
+
+- name: 'remove tmp new file'
+  file:
+    path: '{{ temp_new_file }}'
+    state: absent

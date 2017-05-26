@@ -1,0 +1,9 @@
+---
+- name: 'Pre-Req dhcp-config: Install required packages '
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - libselinux-python
+  - dhcp-server
+
