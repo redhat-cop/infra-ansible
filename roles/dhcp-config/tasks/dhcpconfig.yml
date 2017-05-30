@@ -1,0 +1,43 @@
+---
+  - name: "generate a random directory in /tmp"
+    delegate_to: localhost
+    tempfile:
+      path: /tmp
+      state: directory
+      prefix: dhcp
+    register: dhcp_config_dir
+
+  - name: 'Open permissions on directory'
+    delegate_to: localhost
+    file:
+      path: '{{ dhcp_config_dir.path }}'
+      mode: 0777
+      state: directory
+
+  - name: "debug the code"
+    debug:
+      msg: "Let the fun begin!! creating files: {{ dhcp_config_dir.path }}"
+
+  - name: "Generate dhcpd.conf file"
+    template:
+      src: subnets.j2
+      dest: '{{ dhcp_config_dir.path }}/01subnets.config'
+    delegate_to: localhost
+    notify: dhcp-config cleanup temp
+
+  - name: "Validate the generated file"
+    debug:
+      msg: "Validation of file is missing since the validate option issue
+            on copy module"
+
+
+  - name: "Move the file to proper location"
+    copy:
+      src: '{{ dhcp_config_dir.path }}/01subnets.config'
+      dest: /etc/dhcp/dhcpd.conf
+      mode: 0644
+      backup: yes
+      #validate: 'dhcp -t -cf %s'
+    notify: dhcp-config cleanup temp
+
+    # should cleanup the backup to keep only the last 3
