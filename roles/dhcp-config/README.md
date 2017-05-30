@@ -265,7 +265,3 @@ Example Playbook
   - dhcp
 
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or ar website (HTML is not allowed). 
