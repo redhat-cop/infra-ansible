@@ -5,5 +5,5 @@
     state: installed
   with_items:
   - libselinux-python
-  - dhcp-server
+  - dhcp
 
