@@ -1,18 +1,18 @@
 ---
 
-- name: "running task dhcp.yml"
-  debug:
-    msg: "does this need to be enabled DRJ"
+- name: 'Copy the dhcp config file to a temp location for validity checking'
+  copy:
+    src: '{{ dhcp_config_dir.path }}/{{ dhcp_config_temp_file }}'
+    dest: '{{ dhcp_config_temp_loc }}'
+  notify: 'cleanup dhcp tmp file'
 
-#- name: 'Copy the dhcp config file to a temp location for validity checking'
-#    src: '{{ dhcp_temp_file }}'
-#    dest: '{{ temp_new_file }}'
-#    validate: 'dhcp -t -cf %s'
+- name: ' Check the Validity of dhcp.conf file'
+  command: 'dhcpd -t -cf {{ dhcp_config_temp_loc }}'
+  notify: 'cleanup dhcp tmp file'
 
-#- name: 'Copy and activate the dhcp config file'
-#  copy:
-#    src: '{{ dhcp_temp_file }}'
-#    dest: '/etc/dhcpd/dhcpd.conf'
-#    backup: 'yes'
-#    validate: 'dhcp -t -cf %s'
-#  notify: 'reload dhcp'
+- name: 'Copy and activate the dhcp config file'
+  copy:
+    remote_src: true
+    src: '{{ dhcp_config_temp_loc }}'
+    dest: '{{ dhcp_config_dest_file }}'
+  notify: 'reload dhcp'
