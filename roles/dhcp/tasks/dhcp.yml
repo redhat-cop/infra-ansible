@@ -8,11 +8,11 @@
 
 - name: ' Check the Validity of dhcp.conf file'
   command: 'dhcpd -t -cf {{ dhcp_config_temp_loc }}'
-  notify: 'cleanup dhcp tmp file'
+  notify: 'enable and start dhcp services'
 
 - name: 'Copy and activate the dhcp config file'
   copy:
     remote_src: true
     src: '{{ dhcp_config_temp_loc }}'
     dest: '{{ dhcp_config_dest_file }}'
-  notify: 'enable and start dhcp services'
+  notify: 'cleanup dhcp tmp file'
