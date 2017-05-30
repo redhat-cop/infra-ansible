@@ -10,7 +10,7 @@ dhcp_host_entries:
 - host: test2
   fqdn: test2.example.com
   hw_addr: e0:07:1b:fd:a5:70
-  ip_addr: 192.168.11.123
+  ip_addr: 192.168.11.124
 
 
 #
