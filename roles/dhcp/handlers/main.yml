@@ -14,7 +14,7 @@
     name: dhcpd
     state: reloaded
 
-- name: 'remove tmp new file'
+- name: 'cleanup dhcp tmp file'
   file:
-    path: '{{ temp_new_file }}'
+    path: '/tmp/{{ dhcp_config_temp_file }}'
     state: absent
