@@ -26,15 +26,15 @@
     run_once: true
     template:
       src: subnets.j2
-      dest: '{{ dhcp_config_dir.path }}/01subnets.config'
+      dest: '{{ dhcp_config_dir.path }}/{{ dhcp_config_temp_file }}'
     delegate_to: localhost
     notify: dhcp-config cleanup temp
 
 
   - name: "Move the file to proper location"
     copy:
-      src: '{{ dhcp_config_dir.path }}/01subnets.config'
-      dest: /etc/dhcp/dhcpd.conf
+      src: '{{ dhcp_config_dir.path }}/{{ dhcp_config_temp_file }}'
+      dest: '{{ dhcp_config_dest_file }}'
       mode: 0644
       backup: no  # may want to keep a backup 
      # validate: 'dhcpd -t -cf %s'
