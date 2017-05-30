@@ -7,7 +7,7 @@
   - firewalld
   - python-firewall
   - libsemanage-python
-  - dhcp-server
+  - dhcp
   notify: 'enable and start dhcp services'
 
 - name: 'Start firewalld service'
