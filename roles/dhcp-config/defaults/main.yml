@@ -1,4 +1,5 @@
 ---
+
 # vars file for dhcp-config
 dhcp_host_entries:
 - host: test1
@@ -40,7 +41,7 @@ dhcp_subnet_entries:
 
 - subnet: 192.168.100.0
   netmask: 255.255.255.0
-  range: 192.168.12.50 192.168.12.99
+  range: 192.168.100.50 192.168.100.99
   mask: 255.255.255.0
   router: 192.168.100.1
   broadcast: 192.168.100.255
