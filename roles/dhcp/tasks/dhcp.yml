@@ -15,4 +15,4 @@
     remote_src: true
     src: '{{ dhcp_config_temp_loc }}'
     dest: '{{ dhcp_config_dest_file }}'
-  notify: 'reload dhcp'
+  notify: 'enable and start dhcp services'
