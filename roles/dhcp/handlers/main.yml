@@ -9,11 +9,6 @@
   - dhcpd
   - firewalld
 
-- name: 'reload dhcp'
-  service:
-    name: dhcpd
-    state: reloaded
-
 - name: 'cleanup dhcp tmp file'
   file:
     path: '/tmp/{{ dhcp_config_temp_file }}'
