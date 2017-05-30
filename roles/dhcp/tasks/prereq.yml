@@ -10,6 +10,12 @@
   - dhcp-server
   notify: 'enable and start dhcp services'
 
+- name: 'Start firewalld service'
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
 - name: 'Pre-Req: Open Firewall for dhcp use'
   firewalld:
     port: "{{item}}"
