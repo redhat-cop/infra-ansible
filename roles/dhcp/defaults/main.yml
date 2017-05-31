@@ -13,4 +13,4 @@ dhcp_config_temp_loc: '{{dhcp_config_temp_dir }}/{{ dhcp_config_temp_file }}'
 
 #default null entries
 dhcp_host_entries: {}
-dhcp_subnet_entries: {}
+dhcp_group_entries: {}
