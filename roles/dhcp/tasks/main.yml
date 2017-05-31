@@ -1,0 +1,10 @@
+---
+  - include: prereq.yml
+
+# build the config file locally
+  - include: dhcpconfig.yml
+    delegate_to: localhost
+    run_once: true
+
+# install the packages and copy the file from the local system
+  - include: dhcp.yml

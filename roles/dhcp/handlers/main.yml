@@ -1,0 +1,28 @@
+---
+# handlers file for dhcp-config
+- name: 'dhcp-config cleanup temp'
+  delegate_to: localhost
+  file:
+    path: '{{ dhcp_config_dir.path }}'
+    state: absent
+
+- name: 'cleanup dhcp tmp file'
+  file:
+    path: '{{ dhcp_config_temp_loc }}'
+    state: absent
+
+- name: 'reload dhcp'
+  service:
+    name: '{{ item }}'
+    state: reloaded
+  with_items:
+  - dhcpd
+
+- name: 'enable and start dhcp services'
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+  - dhcpd
+
