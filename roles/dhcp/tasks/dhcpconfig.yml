@@ -1,7 +1,7 @@
 ---
   - name: "generate a random local directory in /tmp"
     tempfile:
-      path: /tmp
+      path: '{{ dhcp_config_temp_dir }}'
       state: directory
       prefix: dhcp
     register: dhcp_config_dir
