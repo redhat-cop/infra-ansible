@@ -1,4 +1,11 @@
 ---
+# handlers file for dhcp-config
+- name: 'dhcp-config cleanup temp'
+  delegate_to: localhost
+  file:
+    path: '{{ dhcp_config_dir.path }}'
+    state: absent
+
 - name: 'cleanup dhcp tmp file'
   file:
     path: '/tmp/{{ dhcp_config_temp_file }}'

@@ -18,9 +18,9 @@
 
 - name: 'Pre-Req: Open Firewall for dhcp use'
   firewalld:
-    port: "{{item}}"
+    service: "{{item}}"
     permanent: yes
     state: enabled
     immediate: yes
   with_items:
-  - 67/udp
+  - dhcp

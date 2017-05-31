@@ -1,4 +1,0 @@
----
-# tasks file for dhcp-config
-- include: prereq.yml
-- include: dhcpconfig.yml
