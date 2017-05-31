@@ -1,27 +1,21 @@
 ---
-
   - name: "generate a random local directory in /tmp"
     tempfile:
       path: /tmp
       state: directory
       prefix: dhcp
     register: dhcp_config_dir
+    notify: dhcp-config cleanup temp
 
-  - name: debug tempfile creation
-    debug: 
-      var: dhcp_config_dir
-      verbosity: 1
-
-  - name: 'Open permissions on directory'
+  - name: 'Add Read/Execute permissions on directory'
     file:
       path: '{{ dhcp_config_dir.path }}'
-      mode: 0777
+      mode: 0755
       state: directory
 
   - name: "Generate local dhcpd.conf file"
     template:
-      src: subnets.j2
+      src: dhcp_conf.j2
       dest: '{{ dhcp_config_dir.path }}/{{ dhcp_config_temp_file }}'
     notify: dhcp-config cleanup temp
-
 

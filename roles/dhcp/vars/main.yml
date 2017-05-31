@@ -1,6 +1,0 @@
----
-# default name for temp file that is created from the template
-dhcp_config_temp_file: dhcpTempConfigFile
-dhcp_config_temp_loc: /tmp/dhcpTempConfigFile
-dhcp_config_dest_file: /etc/dhcp/dhcpd.conf
-

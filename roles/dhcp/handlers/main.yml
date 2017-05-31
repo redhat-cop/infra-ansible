@@ -8,8 +8,15 @@
 
 - name: 'cleanup dhcp tmp file'
   file:
-    path: '/tmp/{{ dhcp_config_temp_file }}'
+    path: '{{ dhcp_config_temp_loc }}'
     state: absent
+
+- name: 'reload dhcp'
+  service:
+    name: '{{ item }}'
+    state: reloaded
+  with_items:
+  - dhcpd
 
 - name: 'enable and start dhcp services'
   service:
@@ -18,4 +25,4 @@
     state: started
   with_items:
   - dhcpd
-  - firewalld
+

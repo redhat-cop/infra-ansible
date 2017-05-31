@@ -28,9 +28,9 @@ host {{ entry.host }}  {
 #
 
 {% for entry in dhcp_subnet_entries %}
-subnet {{ entry.subnet }} netmask {{ entry.netmask }} {
+subnet {{ entry.subnet }} netmask {{ entry.subnet_mask }} {
      range                      {{ entry.range }};
-     option subnet-mask         {{ entry.mask }};
+     option subnet-mask         {{ entry.subnet_mask }};
      option routers             {{ entry.router }};
      option broadcast-address   {{ entry.broadcast }};
      option domain-name-servers {{ entry.dns }};
