@@ -9,45 +9,28 @@ The following is an example of an inventory definition and the resulting haproxy
 
 ```
 lb_https_entries:
-- fqdn: master-0.d1.casl.rht-labs.com
+- fqdn: master.env1.example.com
   port: 8443
   backends: 
-  - fqdn: master-0.d1.casl.rht-labs.com
+  - fqdn: master.env1.example.com
     port: 8443
-- fqdn: .apps.d1.casl.rht-labs.com
-  name: router.d1.casl.rht-labs.com
+- fqdn: .apps.env1.example.com
+  name: router.env1.example.com
   port: 443
   backends: 
-  - fqdn: router-0.d1.casl.rht-labs.com
+  - fqdn: router1.env1.example.com
     port: 443
-  - fqdn: router-1.d1.casl.rht-labs.com
-    port: 443
-- fqdn: master-0.s3.core.rht-labs.com
-  port: 8443
-  backends: 
-  - fqdn: master-0.s3.core.rht-labs.com
-    port: 8443
-- fqdn: .apps.s3.core.rht-labs.com
-  name: router.s3.core.rht-labs.com
-  port: 443
-  backends: 
-  - fqdn: router.s3.core.rht-labs.com
+  - fqdn: router2.env1.example.com
     port: 443
 
 lb_http_entries:
-- fqdn: apps.d1.casl.rht-labs.com
-  name: router.d1.casl.rht-labs.com
+- fqdn: apps.env1.example.com
+  name: router.env1.example.com
   port: 80
   backends: 
-  - fqdn: router-0.d1.casl.rht-labs.com
+  - fqdn: router1.env1.example.com
     port: 80
-  - fqdn: router-1.d1.casl.rht-labs.com
-    port: 80
-- fqdn: apps.s3.core.rht-labs.com
-  name: router.s3.core.rht-labs.com
-  port: 80
-  backends: 
-  - fqdn: router.s3.core.rht-labs.com
+  - fqdn: router2.env1.example.com
     port: 80
 ```
 
@@ -106,11 +89,9 @@ frontend ocp_masters
     tcp-request inspect-delay 5s
     tcp-request content accept if { req_ssl_hello_type 1 }
 
-    acl master-0.d1.casl.rht-labs.com req_ssl_sni -m end master-0.d1.casl.rht-labs.com
-    acl master-0.s3.core.rht-labs.com req_ssl_sni -m end master-0.s3.core.rht-labs.com
+    acl master1.env1.example.com req_ssl_sni -m end master1.env1.example.com
 
-    use_backend https_8443-master-0.d1.casl.rht-labs.com if master-0.d1.casl.rht-labs.com
-    use_backend https_8443-master-0.s3.core.rht-labs.com if master-0.s3.core.rht-labs.com
+    use_backend https_8443-master1.env1.example.com if master1.env1.example.com
 
 
 
@@ -121,65 +102,41 @@ frontend ocp_routers_https
     tcp-request inspect-delay 5s
     tcp-request content accept if { req_ssl_hello_type 1 }
 
-    acl router.d1.casl.rht-labs.com req_ssl_sni -m end .apps.d1.casl.rht-labs.com
-    acl router.s3.core.rht-labs.com req_ssl_sni -m end .apps.s3.core.rht-labs.com
+    acl router.env1.example.com req_ssl_sni -m end .apps.env1.example.com
 
-    use_backend https_443-router.d1.casl.rht-labs.com if router.d1.casl.rht-labs.com
-    use_backend https_443-router.s3.core.rht-labs.com if router.s3.core.rht-labs.com
+    use_backend https_443-router.env1.example.com if router.env1.example.com
 
-backend https_443-router.d1.casl.rht-labs.com
+backend https_443-router.env1.example.com
     mode tcp
     balance roundrobin
 
-    server router-0.d1.casl.rht-labs.com router-0.d1.casl.rht-labs.com:443 check
-    server router-1.d1.casl.rht-labs.com router-1.d1.casl.rht-labs.com:443 check
+    server router1.env1.example.com router1.env1.example.com:443 check
+    server router2.env1.example.com router2.env1.example.com:443 check
 
-backend https_443-router.s3.core.rht-labs.com
+
+backend https_8443-master1.env1.example.com
     mode tcp
     balance roundrobin
 
-    server router.s3.core.rht-labs.com router.s3.core.rht-labs.com:443 check
-
-backend https_8443-master-0.d1.casl.rht-labs.com
-    mode tcp
-    balance roundrobin
-
-    server master-0.d1.casl.rht-labs.com master-0.d1.casl.rht-labs.com:8443 check
-
-backend https_8443-master-0.s3.core.rht-labs.com
-    mode tcp
-    balance roundrobin
-
-    server master-0.s3.core.rht-labs.com master-0.s3.core.rht-labs.com:8443 check
-
+    server master1.env1.example.com master1.env1.example.com:8443 check
 
 frontend ocp_routers_http
     bind 10.9.55.80:80
 
-    acl router.d1.casl.rht-labs.com hdr_sub(host) -i apps.d1.casl.rht-labs.com
-    acl router.s3.core.rht-labs.com hdr_sub(host) -i apps.s3.core.rht-labs.com
+    acl router.env1.example.com hdr_sub(host) -i apps.env1.example.com
 
-    use_backend http_80-router.d1.casl.rht-labs.com if router.d1.casl.rht-labs.com
-    use_backend http_80-router.s3.core.rht-labs.com if router.s3.core.rht-labs.com
+    use_backend http_80-router.env1.example.com if router.env1.example.com
 
     default_backend lb_http_default
 
-backend http_80-router.d1.casl.rht-labs.com
+backend http_80-router.env1.example.com
     balance roundrobin
     option httpclose
     option forwardfor
     cookie JSESSIONID prefix
 
-    server router-0.d1.casl.rht-labs.com router-0.d1.casl.rht-labs.com:80 cookie A check
-    server router-1.d1.casl.rht-labs.com router-1.d1.casl.rht-labs.com:80 cookie A check
-
-backend http_80-router.s3.core.rht-labs.com
-    balance roundrobin
-    option httpclose
-    option forwardfor
-    cookie JSESSIONID prefix
-
-    server router.s3.core.rht-labs.com router.s3.core.rht-labs.com:80 cookie A check
+    server router1.env1.example.com router1.env1.example.com:80 cookie A check
+    server router2.env1.example.com router2.env1.example.com:80 cookie A check
 
 # Default backend - used for the 'stats' page
 backend lb_http_default
