@@ -1,0 +1,11 @@
+---
+
+- name: 'Unmount install ISO'
+  mount:
+    path: "{{ mounted_iso[item] }}"
+    state: absent
+  with_items:
+  - "{{ mounted_iso.keys() }}"
+
+
+
