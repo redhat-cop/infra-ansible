@@ -12,30 +12,30 @@
   set_fact:
     nfs_share_basedir: "{{ nfs_share_basedir | default(default_nfs_share_basedir) }}"
 
-- name: "Setup PV"
-  shell: "pvcreate {{ nfs_storage_device }}" 
-  when: lvm_check.rc != 0
-
-- name: "Setup VG"
-  shell: "vgcreate {{ nfs_vg_name }} {{ nfs_storage_device }}"
+- name: "Setup and create PV & VG"
+  lvg:
+    vg: "{{ nfs_vg_name }}"
+    pvs: "{{ nfs_storage_device }}"
+    force: yes
 
 - name: "Setup LV"
-  shell: "lvcreate -n {{ nfs_lv_name }} -l 100%VG {{ nfs_vg_name }}"
+  lvol: 
+    vg: "{{ nfs_vg_name }}"
+    lv: "{{ nfs_lv_name }}"
+    force: yes
+    size: "100%VG"
 
 - name: "Create file system on share"
-  shell: "mkfs.xfs /dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}"
+  shell: "mkfs.xfs -f /dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}"
 
-- name: "Make dir for NFS shares" 
+- name: "Ensure the base dir for NFS shares exists" 
   file:
     path: "{{ nfs_share_basedir }}"
     state: directory
 
-- name: "Ensure the export directory is mounted at boot"
-  lineinfile:
-    path: /etc/fstab
-    regexp: "nfs-exports" 
-    line: "/dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }} {{ nfs_share_basedir }} xfs defaults 0 0"
-
-- name: "Mount Directories"
-  shell: "mount -a"
-
+- name: "Mount NFS base dir"
+  mount:
+    src: "/dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}" 
+    path: "{{ nfs_share_basedir }}"
+    fstype: xfs 
+    state: mounted

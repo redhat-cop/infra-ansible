@@ -18,7 +18,7 @@
   lineinfile: 
     path: /etc/exports
     state: present
-    regexp: "^{{ item.name }}"
+    regexp: "^{{ nfs_share_basedir }}/{{ item.name }}"
     line: "{{ nfs_share_basedir }}/{{ item.name }} *({{ item.nfs_share_options | default(default_nfs_share_options) }})" 
   with_items: 
   - "{{ nfs_shares }}"
