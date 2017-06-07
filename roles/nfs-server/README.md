@@ -10,10 +10,10 @@ nfs_storage_device=/dev/vdb
 nfs_shares:
 - name: registry
 - name: metrics
-  nfs_owner: nfsnobody # (optional - default: "nfsnobody") 
-  nfs_group: nfsnobody # (optional - default: "nfsnobody") 
-  nfs_mode: 0777 # (optional - default: "0777")
-  nfs_share_options # (optional - default: "rw,root_squash,no_wdelay")
+  nfs_owner: nfsnobody       # (optional - default: "nfsnobody") 
+  nfs_group: nfsnobody       # (optional - default: "nfsnobody") 
+  nfs_mode: 0777             # (optional - default: "0777")
+  nfs_share_options          # (optional - default: "rw,root_squash,no_wdelay")
 - name: logging
 ```
 
