@@ -13,7 +13,7 @@ nfs_shares:
   nfs_owner: nfsnobody # (optional - default: "nfsnobody") 
   nfs_group: nfsnobody # (optional - default: "nfsnobody") 
   nfs_mode: 0777 # (optional - default: "0777")
-  nfs_share_optiosn # (optional - default: "rw,root_squash,no_wdelay")
+  nfs_share_options # (optional - default: "rw,root_squash,no_wdelay")
 - name: logging
 ```
 
