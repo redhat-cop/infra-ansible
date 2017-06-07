@@ -2,11 +2,11 @@
 
 - name: "Create directories"
   file:
-    path: "{{ item.path }}"
+    path: "{{ nfs_share_basedir | default(default_nfs_share_basedir) }}/{{ item.name }}"
     state: directory 
-    owner: nfsnobody
-    group: nfsnobody
-    mode: 0777
+    owner: "{{ item.nfs_owner | default(default_nfs_owner) }}" 
+    group: "{{ item.nfs_group | default(default_nfs_group) }}"
+    mode: "{{ item.nfs_mode | default(default_nfs_mode) }}"
   with_items: 
   - "{{ nfs_shares }}"
 
@@ -14,8 +14,8 @@
   lineinfile: 
     path: /etc/exports
     state: present
-    regexp: "^{{ item.path }}"
-    line: "{{ item.path }} *(rw,root_squash,no_wdelay)" 
+    regexp: "^{{ item.name }}"
+    line: "{{ item.name }} *({{ item.nfs_share_options | default(default_nfs_share_options) }})" 
   with_items: 
   - "{{ nfs_shares }}"
   notify: Reload NFS

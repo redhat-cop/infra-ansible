@@ -1,7 +1,7 @@
 ---
 
 - name: "Check if LV has been created and mounted"
-  shell: "lsblk /dev/xvdb | egrep 'lvm.*/exports'"
+  shell: "lsblk {{ lvm_block_device }} | egrep 'lvm.*/exports'"
   register: lvm_check
 
 - include: configure_lvm.yml
