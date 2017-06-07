@@ -1,0 +1,29 @@
+---
+
+- name: "Setup PV"
+  shell: "pvcreate {{ nfs_storage }}" 
+  when: lvm_check.rc != 0
+
+- name: "Setup VG"
+  shell: "vgcreate nfs {{ nfs_storage }}"
+
+- name: "Setup LV"
+  shell: "lvcreate -n exports -l 100%VG nfs"
+
+- name: "Create file system on share"
+  shell: "mkfs.xfs /dev/mapper/nfs-exports"
+
+- name: "Make dir for NFS shares" 
+  file:
+    path: /exports
+    state: directory
+
+- name: "Ensure the export directory is mounted at boot"
+  lineinfile:
+    path: /etc/fstab
+    regexp: "nfs-exports" 
+    line: "/dev/mapper/nfs-exports /exports xfs defaults 0 0"
+
+- name: "Mount Directories"
+  shell: "mount -a"
+

@@ -1,0 +1,23 @@
+---
+
+- name: "Create directories"
+  file:
+    path: "{{ item.path }}"
+    state: directory 
+    owner: nfsnobody
+    group: nfsnobody
+    mode: 0777
+  with_items: 
+  - "{{ nfs_shares }}"
+
+- name: "Update export file to share out the directory"
+  lineinfile: 
+    path: /etc/exports
+    state: present
+    regexp: "^{{ item.path }}"
+    line: "{{ item.path }} *(rw,root_squash,no_wdelay)" 
+  with_items: 
+  - "{{ nfs_shares }}"
+  notify: Reload NFS
+
+

@@ -1,0 +1,5 @@
+---
+
+- include: prep.yml
+- include: lvm.yml
+- include: shares.yml

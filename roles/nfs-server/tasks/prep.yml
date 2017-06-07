@@ -1,0 +1,41 @@
+---
+
+- name: 'Ensure everything is up-to-date' 
+  package: 
+    name: '*'
+    state: latest
+
+- name: 'Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - nfs-utils
+  - lvm2
+  - firewalld
+  - python-firewall
+
+- name: 'Ensure firewalld is running'
+  service:
+    name: firewalld
+    state: started 
+    enabled: yes
+
+- name: 'Ensure nfs-server is running'
+  service:
+    name: nfs-server
+    state: started 
+    enabled: yes
+
+- name: 'Open Firewall for NFS use'
+  firewalld: 
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+  - 111/tcp
+  - 111/udp
+  - 2049/tcp
+  - 2049/udp
+
