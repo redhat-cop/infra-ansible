@@ -1,0 +1,38 @@
+---
+
+- name: 'Configure idm inital setup'
+  command: > 
+    ipa-server-install -U 
+      --hostname={{ idm_master_hostname }}
+      --domain={{ idm_domain }}
+      --realm={{ idm_realm }}
+      --ds-password={{ idm_dm_password }}
+      --admin-password={{ idm_admin_password }}
+  ignore_errors: true
+  when:
+  - idm_src is not defined 
+
+- name: 'Add client(s)  '
+  command: > 
+    ipa-client-install -U
+      --domain {{ idm_domain }}
+      --server {{ idm_master_hostname }}
+      --principal admin 
+      -w {{ idm_admin_password }}
+  when:
+  - idm_src is defined 
+
+- name: 'Install and Configure idm replica(s)'
+  command: > 
+    ipa-replica-install -U 
+      --principal admin 
+      --admin-password={{ idm_admin_password }}
+  ignore_errors: true
+  when:
+  - idm_src is defined 
+
+- name: 'Ensure ipa is running at boot '
+  service:
+    name: ipa
+    enabled: yes
+

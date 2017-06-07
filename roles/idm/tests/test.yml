@@ -1,0 +1,6 @@
+---
+- hosts: idm
+  become: yes
+
+  roles:
+    - idm
