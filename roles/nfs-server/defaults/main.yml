@@ -1,0 +1,10 @@
+---
+
+default_nfs_owner: "nfsnobody"
+default_nfs_group: "nfsnobody"
+default_nfs_mode: "0777"
+
+default_nfs_vg_name: "nfs"
+default_nfs_lv_name: "exports"
+default_nfs_share_basedir: "/exports"
+default_nfs_share_options: "rw,root_squash,no_wdelay"
