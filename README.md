@@ -1,11 +1,12 @@
-== The rhc-ose ansible dns-server role
+# The rhc-ose ansible dns-server role
 
 
 This role installs and configures bind/named for use with multiple views and zones. 
 
 
-Example Playbook
-----------------
+## Example Playbook
+
+```
 
   - hosts: dns-servers
     roles:
@@ -28,4 +29,4 @@ Example Playbook
         forwarder:
         - "8.8.8.8"
         - "8.8.4.4"
-
+```
