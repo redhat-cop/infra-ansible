@@ -4,6 +4,6 @@
 
 - include: "infrahosts.yml"
 
-- include: "vms.yml"
+- include: "vm.yml"
 
 - include: "services.yml"
