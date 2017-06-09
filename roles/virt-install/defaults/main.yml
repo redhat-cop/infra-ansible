@@ -1,0 +1,20 @@
+---
+
+default_http_dir: "/var/www/html"
+default_http_host: "192.168.122.1"
+
+default_connect: "qemu:///system"
+default_virt_type: "kvm"
+default_name: "tmpvm-{{ ansible_date_time.epoch }}"
+default_title: "tmpvm-title"
+default_description: "tmpvm-description"
+default_memory: "1024"
+default_vcpus: "2"
+default_disk_size: "10"
+default_disk_pool: "default"
+default_os_variant: "rhel7.3"
+default_iso: "/tmp/rhel-server-7.3-x86_64-dvd.iso"
+default_ksfile: "/tmp/my.ks"
+default_authorized_keys: "/tmp/authorized_keys"
+default_network_hostif: "eth0"
+default_network_model: "virtio"

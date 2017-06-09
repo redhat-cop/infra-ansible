@@ -1,0 +1,27 @@
+---
+
+- name: "Update the host"
+  package:
+    name: "*"
+    state: latest
+  register: updated
+
+- name: "Reboot the host"
+  shell: sleep 5 && shutdown -r now "Ansible Reboot of host"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  when:
+  - updated.changed
+
+- name: "waiting for server to come back"
+  local_action: wait_for
+  args:
+    host: "{{ ansible_host }}"
+    port: 22
+    delay: 30
+    timeout: 300
+    state: started
+  become: false
+  when:
+  - updated.changed

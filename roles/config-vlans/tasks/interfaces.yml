@@ -1,0 +1,19 @@
+---
+
+- name: "Configure VLAN interfaces"
+  template:
+    src: vlan.j2 
+    dest: /etc/sysconfig/network-scripts/ifcfg-{{ ifcfg.device }}
+  with_items:
+  - '{{ vlans }}'
+  loop_control:
+    loop_var: ifcfg
+
+- name: "Attempt to Bring Up VLAN interfaces"
+  command: ifup {{ ifcfg.device }}
+  with_items:
+  - '{{ vlans }}'
+  loop_control:
+    loop_var: ifcfg
+  ignore_errors: yes
+

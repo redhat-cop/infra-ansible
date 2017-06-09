@@ -1,0 +1,34 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - virt-install
+  - httpd
+
+- name: 'Enable and start libvirtd'
+  service:
+    name: libvirtd
+    enabled: yes
+    state: started
+
+- name: 'Enable and start httpd'
+  service:
+    name: httpd
+    enabled: no
+    state: started
+
+- name: 'Enable and start firewalld'
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: 'Ensure firewalld is open for httpd traffic'
+  firewalld:
+    service: http
+    state: enabled
+    permanent: no
+    immediate: yes
