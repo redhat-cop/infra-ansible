@@ -1,0 +1,32 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - ipa-server
+  - firewalld
+  - python-firewall
+
+- name: 'Ensure firewalld is running'
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: 'Open Firewall for IdM use'
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+  - ntp
+  - http 
+  - https
+  - ldap
+  - ldaps
+  - kerberos
+  - kpasswd
+

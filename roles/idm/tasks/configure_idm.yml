@@ -1,0 +1,38 @@
+---
+
+- name: 'Configure IdM inital setup'
+  command: > 
+    ipa-server-install -U 
+      --hostname={{ idm_master_hostname | default(ansible_fqdn) }}
+      --domain={{ idm_domain }}
+      --realm={{ idm_realm }}
+      --ds-password={{ idm_dm_password }}
+      --admin-password={{ idm_admin_password }}
+  ignore_errors: true
+  when:
+  - idm_src is not defined 
+
+- name: 'Add client(s)  '
+  command: > 
+    ipa-client-install -U
+      --domain {{ idm_domain }}
+      --server {{ idm_src }}
+      --principal admin 
+      -w {{ idm_admin_password }}
+  when:
+  - idm_src is defined 
+
+- name: 'Install and Configure IdM replica(s)'
+  command: > 
+    ipa-replica-install -U 
+      --principal admin 
+      --admin-password={{ idm_admin_password }}
+  ignore_errors: true
+  when:
+  - idm_src is defined 
+
+- name: 'Ensure IdM is running at boot'
+  service:
+    name: ipa
+    enabled: yes
+
