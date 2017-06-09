@@ -17,6 +17,8 @@
     state: reloaded
   with_items:
   - dhcpd
+  when: 
+  - dhcp_service_enabled|default(True)
 
 - name: 'enable and start dhcp services'
   service:
@@ -25,4 +27,5 @@
     state: started
   with_items:
   - dhcpd
-
+  when: 
+  - dhcp_service_enabled|default(True) 
