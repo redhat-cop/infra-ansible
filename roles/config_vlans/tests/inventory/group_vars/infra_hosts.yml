@@ -1,0 +1,13 @@
+---
+
+vlans:
+- device: tenant.vlan11
+  physdev: eth0
+  vlan_id: 11
+- device: tenant.vlan12
+  physdev: eth0
+  vlan_id: 12
+- device: tenant.vlan13
+  physdev: eth0
+  vlan_id: 13
+
