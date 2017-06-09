@@ -1,26 +1,27 @@
 Role Name
 =========
 
-This deploys IDM servers without integrated DNS and Replicas
+This deploys IdM servers with optional replicas and no integrated DNS 
 
-Requirements
-------------
+## Requirements
+The IdM server role requires that external DNS server be fully functional withforward and reverse DNS 
 
-The IDM server role requires that external DNS server be fully functional withforward and reverse DNS 
-
-Dependencies
-------------
+## Dependencies
 
 None
 
+## Optional Vars
 
-Example Inventory
-----------------
+idm_master_hostname is optional if Replica are NOT required and only setting up a single IdM server
+
+#### NOTE: If you want to join an active directory then idm-domain MUST equal idm-realm
+
+### Example Inventory
 
 [all:vars]
 idm_master_hostname=idm1.test.lab
 idm_domain=test.lab
-idm_realm=LAB
+idm_realm=test.lab
 idm_dm_password=test123$
 idm_admin_password=test123$
 
@@ -29,8 +30,7 @@ idm1.test.lab
 idm2.test.lab idm_src=idm1.test.lab
 idm3.test.lab idm_src=idm1.test.lab
 
-Example Playbook
-----------------
+### Example Playbook
 
 - hosts: idm
   become: yes

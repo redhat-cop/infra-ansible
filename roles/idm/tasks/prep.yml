@@ -1,10 +1,5 @@
 ---
 
-- name: 'Ensure everything is up-to-date' 
-  package: 
-    name: '*'
-    state: latest
-
 - name: 'Install required packages'
   package:
     name: '{{ item }}'
