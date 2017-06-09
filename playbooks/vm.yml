@@ -13,11 +13,11 @@
   tasks:
   - name: 'Wait for VM(s) to come alive'
     local_action: wait_for
-      args: 
-        host: "{{ ansible_host }}"
-        port: 22
-        delay: 30
-        timeout: 300
+    args: 
+      host: "{{ ansible_host }}"
+      port: 22
+      delay: 30
+      timeout: 300
   tags:
   - vm_health_check
 
