@@ -3,7 +3,7 @@
 - name: 'Configure IdM inital setup'
   command: > 
     ipa-server-install -U 
-      --hostname={{ idm_master_hostname | default(ansible_hostname) }}
+      --hostname={{ idm_master_hostname | default(ansible_fqdn) }}
       --domain={{ idm_domain }}
       --realm={{ idm_realm }}
       --ds-password={{ idm_dm_password }}
