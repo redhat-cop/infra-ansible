@@ -1,0 +1,9 @@
+---
+
+- name: 'Configure DHCP'
+  hosts: dhcp_servers
+  roles:
+  - role: dhcp
+  tags: 
+  - configure_dhcp
+  

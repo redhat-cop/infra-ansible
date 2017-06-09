@@ -1,0 +1,16 @@
+---
+
+- name: 'Register system to access.redhat.com' 
+  redhat_subscription:
+    state: present
+    username: "{{ rhsm_username }}"
+    password: "{{ rhsm_password }}"
+    pool: "{{ rhsm_pool }}" 
+
+- name: "Disable all repositories"
+  shell: 'subscription-manager repos --disable="*"'
+
+- name: "Enable specified repositories"
+  command: "subscription-manager repos --enable={{ item }}"
+  with_items: "{{ rhsm_repos }}"
+

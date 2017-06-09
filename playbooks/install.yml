@@ -1,0 +1,9 @@
+---
+
+- include: "prep.yml"
+
+- include: "infrahosts.yml"
+
+- include: "vm.yml"
+
+- include: "services.yml"
