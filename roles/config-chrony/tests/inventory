@@ -1,7 +1,7 @@
 # Staging inventory file
 [all:vars]
 
-chrony_allow_subnet="10.9.48/21"
+chrony_allow_subnet="192.168.1/21"
 
 
 [ntp_servers]
