@@ -5,6 +5,8 @@
     name: "*"
     state: latest
   register: updated
+  when: 
+  - pkg_update|default(False) 
 
 - name: "Reboot the host"
   shell: sleep 5 && shutdown -r now "Ansible Reboot of host"
