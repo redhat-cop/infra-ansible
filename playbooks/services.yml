@@ -7,3 +7,10 @@
   tags: 
   - configure_dhcp
   
+- name: 'Configure NTP / Chrony'
+  hosts: ntp_servers
+  roles:
+  - role: config-chrony
+  tags:
+  - configure_chrony
+

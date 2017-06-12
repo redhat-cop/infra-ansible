@@ -1,0 +1,7 @@
+---
+
+- name: "Reload chrony" 
+  service:
+    name: 'chronyd'
+    state: restarted
+

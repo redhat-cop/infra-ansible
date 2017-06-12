@@ -1,0 +1,22 @@
+---
+
+- name: "Ensure chrony service is enabled and started" 
+  service:
+    name: chronyd
+    enabled: yes
+    state: started
+
+- name: "Ensure chrony is listening on the correct subnet"
+  lineinfile: 
+    path: /etc/chrony.conf
+    regexp: '#?allow .+'
+    line: "allow {{ chrony_allow_subnet }}"
+  notify: 'Reload chrony' 
+
+- name: "Ensure chrony has a fall-back in case of failed external sync"
+  lineinfile: 
+    path: /etc/chrony.conf
+    regexp: '#?local stratum .+'
+    line: "local stratum 10"
+  notify: 'Reload chrony' 
+
