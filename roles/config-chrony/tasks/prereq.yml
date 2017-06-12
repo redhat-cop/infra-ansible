@@ -5,6 +5,7 @@
     name: '{{ item }}'
     state: installed
   with_items:
+  - chrony
   - firewalld
   - python-firewall
 
