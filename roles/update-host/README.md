@@ -5,6 +5,7 @@ This role performs updates and reboots a host (and waits for it to come back).
 ## Role Variables
 
 `pkg_update` variable controls the package updates in the role.
+
 | Name | What | Default|
 |---|---|---|
 |pkg_update|Boolean|False|
