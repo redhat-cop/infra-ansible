@@ -17,6 +17,10 @@ Example Playbook
       dns_records_rm:
       - view: "private"
         zone: "first.example.com"
+        server: "192.168.1.100"
+        key_name: "my_private_key"
+        key_secret: "+bFQtBCta7j2vWkjPkAFtgA=="
+        key_algorithm: "hmac-sha256"
         entries:
         - type: A
           hostname: server_1
@@ -24,6 +28,10 @@ Example Playbook
       dns_records_add:
       - view: "private"
         zone: "first.example.com"
+        server: "192.168.1.100"
+        key_name: "my_private_key"
+        key_secret: "+bFQtBCta7j2vWkjPkAFtgA=="
+        key_algorithm: "hmac-sha256"
         entries:
         - type: A
           hostname: server_a
@@ -32,6 +40,10 @@ Example Playbook
           hostname: server_b
           ip: 192.168.1.2
       - view: "private"
+        server: "192.168.1.100"
+        key_name: "my_private_key"
+        key_secret: "+bFQtBCta7j2vWkjPkAFtgA=="
+        key_algorithm: "hmac-sha256"
         zone: "second.example.com"
         entries:
         - type: A
