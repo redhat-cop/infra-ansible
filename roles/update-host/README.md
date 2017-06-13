@@ -4,13 +4,13 @@ This role performs updates and reboots a host (and waits for it to come back).
 
 ## Role Variables
 
+`pkg_update` variable controls the package updates in the role.
 | Name | What | Default|
 |---|---|---|
 |pkg_update|Boolean|False|
 
-This variable controls the package updates in the role.
 
-### Inventory example 1:
+#### Inventory example 1:
 Enable updates on all hosts
 
 ```
@@ -22,7 +22,7 @@ host1.test.lab ansible_user=root ansible_host=192.168.1.1
 host2.test.lab ansible_user=root ansible_host=192.168.1.2
 ```
 
-### Inventory example 2:
+#### Inventory example 2:
 Enable updates on all hosts except 1
 
 ```
@@ -35,7 +35,7 @@ host2.test.lab ansible_user=root ansible_host=192.168.1.2 pkg_update=False
 
 ```
 
-### Inventory example 3:
+#### Inventory example 3:
 Update 1 host
 
 ```
