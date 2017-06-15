@@ -1,0 +1,10 @@
+---
+
+- name: 'Update dhcpd config'
+  hosts: localhost
+  roles:
+  - role: dhcp
+  tags: 
+  - update_dhcp_config
+
+
