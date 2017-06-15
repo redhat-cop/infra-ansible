@@ -1,7 +1,7 @@
 ---
 
 - name: 'Update dhcpd config'
-  hosts: localhost
+  hosts: dhcp-servers
   roles:
   - role: dhcp
   tags: 
