@@ -14,7 +14,7 @@
 - name: 'reload dhcp'
   service:
     name: '{{ item }}'
-    state: reloaded
+    state: restarted
   with_items:
   - dhcpd
   when: 
