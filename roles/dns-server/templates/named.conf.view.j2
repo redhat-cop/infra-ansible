@@ -1,12 +1,22 @@
 {% for view in named_config_views %}
 view "{{ view.name }}" {
 	match-clients { "{{ view.name }}"; };
+	recursion {{ view.recursion | default('yes') }};
 
 {% for zone in view.zone %}
 	zone "{{ zone.dns_domain }}" IN {
-		type master;
-		file "static/{{view.name}}-{{zone.dns_domain}}.db";
-		allow-update { key {{view.name}}-{{zone.dns_domain}}; };
+		type {{ dns_server_type }};
+		file "static/{{ view.name }}-{{ zone.dns_domain }}.db";
+		allow-update { key {{ view.name }}-{{ zone.dns_domain }}; };
+{% if dns_server_type == "slave" %}
+		masters {
+	{% for server in ansible_play_batch %}
+	{% if hostvars[server].dns_server_type == "master" %}
+			{{ hostvars[server].ansible_default_ipv4.address }};
+	{% endif %}
+	{% endfor %}
+		};
+{% endif %}
 	};
 
 {% endfor %}
@@ -19,7 +29,7 @@ view "{{ view.name }}" {
 		forwarders {
 	{% for forwarder in view.forwarder %}
 		{{ forwarder }};
-	{%endfor %}
+	{% endfor %}
 		};
 	};
 {% else %}

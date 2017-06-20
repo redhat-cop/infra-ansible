@@ -1,9 +1,8 @@
-- hosts: localhost
+---
+
+- hosts: dns-server
   roles:
   - role: dns-server
-    named_config_allow_transfer:
-    - 192.168.10.11
-    - 192.168.10.12
     named_config_views:
     - name: private
       acl_entry: 
@@ -12,10 +11,13 @@
       zone:
       - dns_domain: first.example.com
       - dns_domain: second.example.com
+      - dns_domain: third.example.com
     - name: public
       zone:
       - dns_domain: first.example.com
       - dns_domain: second.example.com
+      - dns_domain: third.example.com
+      - dns_domain: forth.example.com
       forwarder:
       - 8.8.8.8
       - 8.8.4.4
