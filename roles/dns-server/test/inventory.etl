@@ -1,3 +1,0 @@
-
-[dns-server]
-10.9.50.212 ansible_user=centos ansible_become=True dns_server_type=master
