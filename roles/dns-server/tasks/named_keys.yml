@@ -43,10 +43,10 @@
   - "{{ dns_views }}"
 
 # Build the dict with the proper keys, i.e.:
-#    casl-private.example.com:
+#    private-view.example.com:
 #      algorithm: HMAC-MD5 
 #      secret: SKqKNdpfk7llKxZ57bbxUnUDobaaJp9t8CjXLJPl+fRI5mPcSBuxTAyvJPa6Y9R7vUg9DwCy/6WTpgLNqnV4Hg==
-#    casl-public.example.com:
+#    public-view.example.com:
 #      algorithm: HMAC-MD5 
 #      secret: kVE2bVTgZjrdJipxPhID8BEZmbHD8cExlVPR+zbFpW6la8kL5wpXiwOh8q5AAosXQI5t95UXwq3Inx8QT58duw==
 - name: Set nsupdate_keys fact
