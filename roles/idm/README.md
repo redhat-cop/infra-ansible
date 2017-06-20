@@ -18,6 +18,7 @@ idm_master_hostname is optional if Replica are NOT required and only setting up 
 
 ### Example Inventory
 
+```
 [all:vars]
 idm_master_hostname=idm1.test.lab
 idm_domain=test.lab
@@ -29,13 +30,13 @@ idm_admin_password=test123$
 idm1.test.lab 
 idm2.test.lab idm_src=idm1.test.lab
 idm3.test.lab idm_src=idm1.test.lab
-
+```
 ### Example Playbook
-
+```
 - hosts: idm
   become: yes
 
   roles:
     - idm
 
-
+```
