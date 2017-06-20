@@ -4,7 +4,7 @@ Role Name
 This deploys IdM servers with optional replicas and no integrated DNS 
 
 ## Requirements
-The IdM server role requires that external DNS server be fully functional withforward and reverse DNS 
+The IdM server role requires that external DNS server be fully functional with forward and reverse DNS 
 
 ## Dependencies
 
