@@ -12,6 +12,7 @@
       - dns_domain: first.example.com
       - dns_domain: second.example.com
       - dns_domain: third.example.com
+      - dns_domain: fifth.example.com
     - name: public
       zone:
       - dns_domain: first.example.com
