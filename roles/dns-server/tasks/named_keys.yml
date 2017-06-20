@@ -51,7 +51,7 @@
 #      secret: kVE2bVTgZjrdJipxPhID8BEZmbHD8cExlVPR+zbFpW6la8kL5wpXiwOh8q5AAosXQI5t95UXwq3Inx8QT58duw==
 - name: Set nsupdate_keys fact
   set_fact:
-    nsupdate_keys: "{{ nsupdate_keys | default({}) | combine({ ( item.item.0.name + '-' + item.item.1.dns_domain ): { 'key_algorithm': ( dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) ), 'key_secret': item.stdout } }) }}"
+    nsupdate_keys: "{{ nsupdate_keys | default({}) | combine({ item.item : { 'key_algorithm': ( dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) ), 'key_secret': item.stdout } }) }}"
   with_items: "{{ nsupdate_keys_captured.results }}"
 
 - name: Setup key files for nsupdate
