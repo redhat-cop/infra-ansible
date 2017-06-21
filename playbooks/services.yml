@@ -28,3 +28,9 @@
   tags:
   - configure_chrony
 
+- name: 'Configure IdM'
+  hosts: idm_servers
+  roles:
+  - role: idm
+  tags:
+  - configure_idm

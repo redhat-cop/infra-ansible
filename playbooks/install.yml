@@ -7,3 +7,5 @@
 - include: "vm.yml"
 
 - include: "services.yml"
+
+- include: "lb-vms.yml"
