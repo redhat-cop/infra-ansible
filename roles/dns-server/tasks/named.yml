@@ -16,14 +16,6 @@
     group: named
     mode: 0660
 
-- name: Setup Views and Zones configuration
-  template:
-    src: named.conf.view.j2
-    dest: /etc/named/named.conf.view
-    owner: named
-    group: named
-    mode: 0660
-
 - name: Setup Controls configuration
   template:
     src: named.conf.controls.j2

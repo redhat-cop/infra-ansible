@@ -7,6 +7,7 @@
     owner: named
     group: named
     mode: 0660
+  notify: restart named 
 
 - name: Get existing zone files
   shell: 'ls -1 {{ item }}.db | sed -ne "s/\({{ item }}\).db/\1/p"'
