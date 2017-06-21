@@ -1,0 +1,9 @@
+---
+
+- name: 'Update DNS records'
+  hosts: localhost
+  roles:
+  - role: dns
+  tags:
+  - update_dns_records
+
