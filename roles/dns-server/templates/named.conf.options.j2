@@ -17,14 +17,25 @@ options {
 	allow-query { any; };              // This is the default
 {% endif %}
 
-{% if named_config_allow_transfer %}
-	allow-transfer {
-{% for allow_transfer in named_config_allow_transfer %}
-		{{ allow_transfer }};
-{% endfor %}
+{% if dns_server_type == "master" %}
+	also-notify     {
+	{% for server in ansible_play_batch %}
+	{% if hostvars[server].dns_server_type == "slave" %}
+		{{ hostvars[server].ansible_default_ipv4.address }};
+	{% endif %}
+	{% endfor %}
 	};
+{% endif %}
+
+
+{% if named_config_allow_transfer %}
+        allow-transfer {
+{% for allow_transfer in named_config_allow_transfer %}
+                {{ allow_transfer }};
+{% endfor %}
+        };
 {% else %}
-	allow-transfer { none; };          // This is the default
+        allow-transfer { any; };          // This is the default
 {% endif %}
 
 	/*
@@ -51,4 +62,3 @@ options {
 	pid-file "/run/named/named.pid";
 	session-keyfile "/run/named/session.key";
 };
-

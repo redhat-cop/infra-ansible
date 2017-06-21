@@ -1,0 +1,41 @@
+---
+
+- name: Setup ACLs
+  template: 
+    src: named.conf.acl.j2
+    dest: /etc/named/named.conf.acl 
+    owner: named 
+    group: named
+    mode: 0660
+
+- name: Setup DNS Logging configuration
+  template: 
+    src: named.conf.logging.j2
+    dest: /etc/named/named.conf.logging
+    owner: named
+    group: named
+    mode: 0660
+
+- name: Setup Controls configuration
+  template:
+    src: named.conf.controls.j2
+    dest: /etc/named/named.conf.controls
+    owner: named
+    group: named
+    mode: 0660
+
+- name: Configure named options
+  template:
+    src: named.conf.options.j2
+    dest: /etc/named/named.conf.options
+    owner: named
+    group: named 
+
+- name: Setup Domain Keys configuration
+  template:
+    src: named.conf.domain-keys.j2
+    dest: /etc/named/named.conf.domain-keys
+    owner: named
+    group: named
+    mode: 0660
+

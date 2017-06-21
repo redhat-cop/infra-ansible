@@ -1,0 +1,45 @@
+---
+
+- name: Setup Views and Zones configuration
+  template:
+    src: named.conf.view.j2
+    dest: /etc/named/named.conf.view
+    owner: named
+    group: named
+    mode: 0660
+  notify: restart named 
+
+- name: Get existing zone files
+  shell: 'ls -1 {{ item }}.db | sed -ne "s/\({{ item }}\).db/\1/p"'
+  args:
+    chdir: /var/named/static
+  register: zone_files
+  ignore_errors: yes
+  with_items:
+  - "{{ dns_views }}"
+
+- name: Build list of existing zone files
+  set_fact:
+    existing_zone_files: "{{ existing_zone_files | default([]) + [ item.stdout ] }}"
+  with_items:
+  - "{{ zone_files.results }}"
+
+- name: Build zone/view items to iterate
+  set_fact:
+    zones: "{{ zones | default([]) + [ { 'name': item.0.name, 'dns_domain': item.1.dns_domain, 'combined': item.0.name + '-' + item.1.dns_domain } ] }}"
+  with_subelements:
+  - "{{ named_config_views }}"
+  - zone
+
+- name: Prepare Zone Files
+  template: 
+    src: zone.db.j2
+    dest: "/var/named/static/{{ item.combined }}.db"
+    owner: named
+    group: named
+    mode: 0660
+  with_items:
+  - "{{ zones }}"
+  when:
+  - item.combined not in existing_zone_files
+  notify: restart named 
