@@ -6,6 +6,10 @@ This playbook uses a variety of roles in this repo to setup a bastion host, also
 ## Prerequisites
 A running instance (VM or cloud image) such as Fedora, CentOS or Red Hat Enterprise Linux. The instance needs to be subscribed (if applicable) and configured with access to the necessary repos (in most cases, the exsisting repos / configuration is sufficient).
 
+## Gotcha's 
+1. If running in a cloud environment, for example OpenStack, make sure to have the correct ports open in the security groups (e.g.: 5901 for VNC, 22 for SSH, etc.)
+2. When enabling VNC, and you already have a shared home directory, make sure the proper changes are made to the VNC configuration (typically in `~/.vnc` ) to allow for the service to run correctly.
+
 ## Inventory Options
 
 | variable | info |
