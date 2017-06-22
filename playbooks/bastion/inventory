@@ -1,0 +1,21 @@
+[all:vars]
+main_user=testuser
+
+ipa_install=yes
+ipa_domain=mgmt.example.com
+ipa_automount_location=userhome
+ipa_username=testuser
+ipa_password=password
+
+docker_install=no
+docker_username=testuser
+
+xfce_install=yes
+gnome_install=no
+
+vnc_server_install=yes
+
+[bastion]
+192.168.1.10 ansible_user=fedora ansible_become=True
+
+

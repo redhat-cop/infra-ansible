@@ -1,0 +1,69 @@
+---
+
+- name: "Install additional packages for VNC server"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - tigervnc-server
+  - policycoreutils-python-utils
+  - checkpolicy 
+
+- name: "Ensure .vnc dir exists"
+  file:
+    path: "/home/{{ main_user }}/.vnc"
+    state: directory
+    owner: "{{ main_user }}"
+
+- name: "Check to see if a VNC password already exists"
+  stat: 
+    path: "/home/{{ main_user }}/.vnc/passwd"
+  register: passwd_info 
+
+- name: "Set a default vnc password (use 'vncpasswd' to change)"
+  shell: "echo vncpasswd01 | vncpasswd -f > /home/{{ main_user }}/.vnc/passwd"
+  when: passwd_info.stat.exists == False
+
+- name: "Add the xstartup configuration to the main user"
+  copy :
+    src: xstartup
+    dest: "/home/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+
+- name: "Copy VNC service file into place" 
+  copy:
+    src: /usr/lib/systemd/system/vncserver@.service
+    dest: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
+    remote_src: True
+
+- name: "Ensure the user config is set for the vnc service"
+  replace: 
+    path: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
+    regexp: "<USER>"
+    replace: "{{ main_user }}"
+
+- name: "Reload systemctl daemon"
+  command: systemctl daemon-reload
+
+- name: "Copy SELinux .te file to the host - used to build the module"
+  copy:
+    src: SELinuxVNC.te
+    dest: /tmp/SELinuxVNC.te
+  
+- name: "Build SELinux module (.mod) to allow VNC"
+  command: checkmodule -M -m -o SELinuxVNC.mod /tmp/SELinuxVNC.te  
+    
+- name: "Build SELinux module (.pp) to allow VNC"
+  command: semodule_package -m SELinuxVNC.mod -o SELinuxVNC.pp
+
+- name: "Load SELinux module to allow VNC"
+  command: semodule -i SELinuxVNC.pp
+
+- name: "Enable and start VNC server for user"
+  service:
+    name: "vncserver-{{ main_user }}@:1"
+    enabled: yes
+    state: started
+

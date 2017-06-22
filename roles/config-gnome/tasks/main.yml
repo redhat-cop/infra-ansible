@@ -1,0 +1,7 @@
+---
+
+- name: "Install, configure and enable Gnome"
+  include: gnome.yml
+  when: 
+  - gnome_install == "yes"
+

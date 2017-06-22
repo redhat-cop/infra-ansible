@@ -1,0 +1,7 @@
+---
+
+- name: "Install, configure and enable Docker"
+  include: docker.yml
+  when: 
+  - docker_install == "yes"
+
