@@ -30,4 +30,11 @@
   - role: rhsm
   tags:
   - configure_rhsm
-  
+
+- name: 'Make sure the VM is running the latest'
+  hosts: infra_vms
+  roles:
+  - role: update-host
+  tags:
+  - update_host
+ 
