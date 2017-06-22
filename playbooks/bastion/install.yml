@@ -16,4 +16,5 @@
   - role: config-gnome
   - role: config-xfce
   - role: config-vnc-server
+  - role: config-tools
 

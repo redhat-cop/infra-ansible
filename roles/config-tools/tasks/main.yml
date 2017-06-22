@@ -1,0 +1,10 @@
+---
+
+- name: 'Install additional Software packages/tools'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - vim
+  - git
+
