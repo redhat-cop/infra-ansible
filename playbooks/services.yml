@@ -34,3 +34,10 @@
   - role: idm
   tags:
   - configure_idm
+
+- name: 'Configure Satellite'
+  hosts: satellite_servers
+  roles:
+  - role: satellite
+  tags:
+  - configure_satellite
