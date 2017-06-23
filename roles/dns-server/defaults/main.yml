@@ -1,5 +1,7 @@
 ---
 
+default_dns_server_type: 'master'
+
 default_dnssec_keygen_size: 256
 default_dnssec_keygen_algorithm: HMAC-SHA256
 
