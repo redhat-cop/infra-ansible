@@ -1,0 +1,20 @@
+DEFAULT vesamenu.c32
+PROMPT 0
+MENU TITLE {{ pxe_menu_title | default(default_pxe_menu_title) }}
+TIMEOUT {{ pxe_timeout | default(default_pxe_timeout) }}
+TOTALTIMEOUT 6000
+ONTIMEOUT local
+
+LABEL local
+        MENU LABEL (local)
+        MENU DEFAULT
+        LOCALBOOT -1
+
+{% for entry in pxe_entries %}
+LABEL {{ entry.name }}
+        MENU LABEL {{ entry.menu_label }}
+        kernel {{ entry.kernel }}
+        append {{ entry.append }}
+        ipappend 2
+
+{% endfor %}

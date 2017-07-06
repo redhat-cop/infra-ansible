@@ -1,0 +1,6 @@
+---
+
+- name: "Install kickstart files"
+  copy:
+    src: "{{ ks_files }}"
+    dest: "{{ ks_files_destination }}" 

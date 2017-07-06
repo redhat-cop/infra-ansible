@@ -41,3 +41,19 @@
   - role: satellite
   tags:
   - configure_satellite
+
+- name: 'Configure REPO hosts'
+  hosts: repo_servers
+  roles:
+  - role: config-software-src
+  - role: repo-server
+  tags:
+  - configure_repo_hosts
+
+- name: 'Configure PXE hosts'
+  hosts: pxe_servers
+  roles:
+  - role: config-pxe
+  tags:
+  - configure_pxe_hosts
+

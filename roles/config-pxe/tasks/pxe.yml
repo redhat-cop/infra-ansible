@@ -1,0 +1,48 @@
+---
+
+- name: "Ensure necessary directories exists"
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ tftpserver_root_dir }}/pxelinux"
+  - "{{ tftpserver_root_dir }}/pxelinux.cfg"
+
+- name: "Copy in necessary PXE files for regular BIOS use"
+  copy: 
+    src: "{{ item }}"
+    dest:  "{{ tftpserver_root_dir }}/{{ item | basename }}"
+    remote_src: True
+  with_items:
+  - "/usr/share/syslinux/pxelinux.0"
+  - "/usr/share/syslinux/memdisk"
+  - "/usr/share/syslinux/vesamenu.c32"
+  - "/usr/share/syslinux/menu.c32"
+
+# Note: the Ansible 'copy' module doesn't support resursive copy of directories as-is, hence the 'command'
+- name: "Copy in necessary PXE files for UEFI use"
+  shell: "cp -r {{ uefi_source }}/* {{ tftpserver_root_dir }}/pxelinux"
+
+- name: "Ensure the hosted OS directories exists"
+  file:
+    path: "{{ tftpserver_root_dir }}/{{ item.destination }}"
+    state: directory
+  with_items:
+  - "{{ pxe_entries }}"
+
+# Note: the Ansible 'copy' module doesn't support resursive copy of directories as-is, hence the 'command'
+- name: "Copy in the necessary files for the hosted OS directories"
+  command: "cp -r {{ item.source }} {{ tftpserver_root_dir }}/{{ item.destination }}"
+  with_items:
+  - "{{ pxe_entries }}"
+
+- name: "Populate the pxelinux.cfg default file"
+  template:
+    src: pxelinux_cfg.j2
+    dest: "{{ tftpserver_root_dir }}/pxelinux.cfg/default"
+
+- name: "Populate the grub.cfg (UEFI) default file"
+  template:
+    src: pxelinux_uefi.j2
+    dest: "{{ tftpserver_root_dir }}/pxelinux/grub.cfg"
+

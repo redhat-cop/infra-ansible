@@ -1,0 +1,5 @@
+---
+
+- include: prep.yml
+- include: pxe.yml
+- include: kickstart.yml

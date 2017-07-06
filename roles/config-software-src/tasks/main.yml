@@ -1,10 +1,6 @@
 ---
 
-- name: "Mount the software repository" 
-  mount:
-    path: "{{ iso_repo_dir }}"
-    src: "{{ iso_repo_nfs }}"
-    fstype: nfs
-    state: mounted
+- include: prep.yml
+- include: mount-software.yml
 
 
