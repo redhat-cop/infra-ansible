@@ -1,0 +1,47 @@
+[all:vars]
+
+#
+# NOTE: Make sure the server has the necessary components before running this role
+# - make sure the ISOs/source is available, e.g.: by mounting an OS ISO (check out the "config-repo-server" role for this purpose)
+
+# this is the typical path for a Fedora/CentOS/RHEL based installation
+tftpserver_root_dir: "/var/lib/tftpboot"
+
+# Some PXE customization 
+pxe_menu_title: "My cool PXE server"
+pxe_timeout: 300
+
+# Set this to a known path that has the uefi boot binaries, etc.
+uefi_source: "/var/www/html/rhel/7/3/x86_64/EFI/BOOT/"
+
+# A directory with kickstart files (optional)
+ks_files: "{{ inventory_dir }}/../files/ks/"
+
+# The destination directory for the kickstart files
+# - i.e.: where the web server will host them from
+ks_files_destination: "/var/www/html/ks" 
+
+# A list of PXE entries that gets populated into the PXE server
+# NOTE: It is expected that the reader of this file has PXE knowledge / experience 
+# Detailed explanation of the params below:
+# - name: The Name that will show up in the PXE config/menu
+# - menu_label: The descriptive string that will show in the PXE menu
+# - source: Where the source for the PXE boot binaries are (BIOS, not UEFI)
+# - destination: Where the PXE boot binaries are to be copied to (BIOS, not UEFI)
+# - kernel: the boot kernel path (relative to the TFTP server) for this entry
+# - append: the append line for this entry (see example below for some options)
+# - initrdefi: The initrd for UEFI PXE boot
+pxe_entries:
+- name: "Fedora25-Server-x86_64"
+  source: "/var/www/html/fedora/25/server/x86_64/images/pxeboot/"
+  destination: "images/fedora/25/server/x86_64/pxeboot"
+  menu_label: "Fedora 25 Server (64-bit) - manual"
+  kernel: "/images/fedora/25/server/x86_64/pxeboot/vmlinuz"
+  append: "initrd=/images/fedora/25/server/x86_64/pxeboot/initrd.img sshd text ip=dhcp inst.repo=http://my-web-server.example.com/fedora/25/server/x86_64"
+  initrdefi: "/images/fedora/25/server/x86_64/pxeboot/initrd.img"
+
+
+
+[pxe-server]
+192.168.1.10 ansible_user=fedora ansible_become=True
+

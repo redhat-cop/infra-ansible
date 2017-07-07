@@ -46,7 +46,7 @@
   hosts: repo_servers
   roles:
   - role: config-software-src
-  - role: repo-server
+  - role: config-repo-server
   tags:
   - configure_repo_hosts
 

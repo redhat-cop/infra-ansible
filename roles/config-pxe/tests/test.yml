@@ -1,0 +1,5 @@
+---
+
+- hosts: pxe-server
+  roles:
+  - config-pxe 
