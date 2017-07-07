@@ -32,7 +32,7 @@
 
 # Note: the Ansible 'copy' module doesn't support resursive copy of directories as-is, hence the 'command'
 - name: "Copy in the necessary files for the hosted OS directories"
-  command: "cp -r {{ item.source }} {{ tftpserver_root_dir }}/{{ item.destination }}"
+  shell: "cp -r {{ item.source }}/* {{ tftpserver_root_dir }}/{{ item.destination }}"
   with_items:
   - "{{ pxe_entries }}"
 
