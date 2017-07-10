@@ -11,5 +11,5 @@
   - Make any tweaks as needed in the OpenVPN admin interface. Normally not much is needed beyond adding users or some kind of authentication mechanism (such as LDAP) 
   - Install a license
 
-** Note: ** make sure to configure the proper NAT rules and firewall policies externally to the OpenVPN server (if applicable)
+**Note:** make sure to configure the proper NAT rules and firewall policies externally to the OpenVPN server (if applicable)
 
