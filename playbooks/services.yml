@@ -45,6 +45,6 @@
 - name: 'Configure OpenVPN'
   hosts: openvpn_servers
   roles:
-  - role: openvpn
+  - role: config-openvpn
   tags:
   - configure_openvpn
