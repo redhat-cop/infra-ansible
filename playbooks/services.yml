@@ -41,3 +41,10 @@
   - role: satellite
   tags:
   - configure_satellite
+
+- name: 'Configure OpenVPN'
+  hosts: openvpn_servers
+  roles:
+  - role: openvpn
+  tags:
+  - configure_openvpn
