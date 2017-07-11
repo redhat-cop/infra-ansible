@@ -1,0 +1,7 @@
+---
+
+- name: 'Configure Satellite'
+  hosts: satellite_servers
+  roles:
+  - role: config-satellite
+
