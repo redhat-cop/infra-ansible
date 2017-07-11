@@ -38,6 +38,6 @@
 - name: 'Configure Satellite'
   hosts: satellite_servers
   roles:
-  - role: satellite
+  - role: config-satellite
   tags:
   - configure_satellite
