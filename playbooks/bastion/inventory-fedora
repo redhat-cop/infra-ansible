@@ -1,13 +1,13 @@
 [all:vars]
 main_user=fedora
 
-ipa_client_install=no
+ipa_client_install=yes
 ipa_domain=example.com
 ipa_automount_location=userhome
 ipa_username=testuser
 ipa_password=my-super-secret-password
 
-docker_install=no
+docker_install=yes
 docker_username=testuser
 
 xfce_install=yes
@@ -16,6 +16,6 @@ vnc_server_install=yes
 additional_tools_packages=['git']
 
 [bastion]
-10.9.50.215 ansible_user=fedora ansible_become=True
+192.168.1.10 ansible_user=fedora ansible_become=True
 
 
