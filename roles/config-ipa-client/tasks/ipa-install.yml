@@ -138,6 +138,6 @@
     create: yes
 
 - name: "Set up the IPA/IdM client integration"
-  command: ipa-client-install -U --automount-location={{ ipa_automount_location }} -p {{ ipa_username }} -w {{ ipa_password }} --domain={{ ipa_domain }} --force-join
+  command: ipa-client-install -U --automount-location={{ ipa_automount_location }} -p "{{ ipa_username }}" -w "{{ ipa_password }}" --domain="{{ ipa_domain }}" --force-join
 
  
