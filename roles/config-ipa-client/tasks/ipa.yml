@@ -1,0 +1,12 @@
+---
+
+- name: "Check if service has already been started - if so skip"
+  command: "systemctl status sssd" 
+  register: sssd_status
+  failed_when: False
+  changed_when: False
+
+
+- name: "Configure IPA/IdM Integration if not already enabled"
+  include: ipa-install.yml
+  when: sssd_status.rc != 0

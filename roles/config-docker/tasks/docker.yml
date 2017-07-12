@@ -1,0 +1,27 @@
+---
+- name: "Install additional packages for Docker"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - docker
+  notify: 
+  - restart docker
+
+- name: "Enable docker"
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: "Add docker group"
+  group:
+    name: docker
+    state: present
+  notify: restart docker
+
+- name: "Add username to the docker group" 
+  user:
+    name: "{{ docker_username }}"
+    groups: docker
+    append: yes

@@ -1,0 +1,12 @@
+---
+
+- name: "Prep for VNC server install"
+  include: prereq.yml
+  when: 
+  - vnc_server_install == "yes"
+
+- name: "Install, configure and enable VNC server"
+  include: vnc-server.yml
+  when: 
+  - vnc_server_install|default('no') == "yes"
+

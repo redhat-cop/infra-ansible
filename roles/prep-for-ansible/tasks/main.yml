@@ -1,0 +1,14 @@
+---
+
+- name: "Force gather facts - an error is normal"
+  setup:
+  check_mode: no
+  ignore_errors: True
+  register: facts
+
+- name: "Install python2 and dnf stuff to allow for Ansible operation"
+  raw: dnf -y install python-dnf libselinux-python
+  when:
+  - facts|failed
+
+

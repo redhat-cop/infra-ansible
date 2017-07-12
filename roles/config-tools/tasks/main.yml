@@ -1,0 +1,9 @@
+---
+
+- name: 'Install additional Software packages/tools'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - "{{ additional_tools_packages | default(default_tools_packages) }}"
+
