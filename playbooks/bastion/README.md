@@ -30,7 +30,7 @@ How to run the playbook may depend on the options selected. However, below is an
 |main_user|The username this bastion is primerly being enabled for| 
 |ipa_client_install|Set to "yes" if you'd like to integrate with a backend IPA/IdM service|
 |ipa_domain|If `ipa_client_install` is set to "yes", set this to the existing IdM / IPA domain your environment uses (obtain from sys admin if not known)|
-|ipa_automount|If `ipa_client_install` is set to "yes", set the required automount location for home directories (obtain from sys admin if not known)|
+|ipa_automount_location|If `ipa_client_install` is set to "yes", set the required automount location for home directories (obtain from sys admin if not known)|
 |ipa_username|If `ipa_client_install` is set to "yes", this is the username of an account that has the permission to join this host to the above IPA/IdM domain (obtain from sys admin if not known)|
 |ipa_password|If `ipa_client_install` is set to "yes", this is the password of an account that has the permission to join this host to the above IPA/IdM domain (obtain from sys admin if not known)
 |docker_install|Set to "yes" if you'd like to enable docker on this host|
