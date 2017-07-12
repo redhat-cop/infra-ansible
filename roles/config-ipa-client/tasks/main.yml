@@ -3,4 +3,4 @@
 - name: "Install, configure and enable IPA/IdM integration"
   include: ipa.yml
   when: 
-  - ipa_install == "yes"
+  - ipa_client_install|default('no') == "yes"

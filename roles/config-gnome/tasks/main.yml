@@ -1,7 +1,13 @@
 ---
 
 - name: "Install, configure and enable Gnome"
-  include: gnome.yml
-  when: 
-  - gnome_install == "yes"
+  include: "{{ distro_file }}"
+  with_first_found:
+  - files:
+    - gnome-{{ ansible_distribution }}.yml
+    skip: true
+  loop_control:
+    loop_var: distro_file
+  when:
+  - gnome_install|default('no') == "yes"
 

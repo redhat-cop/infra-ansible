@@ -6,12 +6,14 @@ This playbook uses a variety of roles in this repo to setup a bastion host, also
 ## Prerequisites
 A running instance (VM or cloud image) such as Fedora, CentOS or Red Hat Enterprise Linux. The instance needs to be subscribed (if applicable) and configured with access to the necessary repos (in most cases, the exsisting repos / configuration is sufficient).
 
+If the IdM / IPA integration is to be used, it is a prerequisites that the environment is set up with automatic client server discovery vis DNS SRV records (consult your sys admin if this is an unfamiliar area).
+
 ## Gotcha's 
 1. If running in a cloud environment, for example OpenStack, make sure to have the correct ports open in the security groups (e.g.: 5901 for VNC, 22 for SSH, etc.)
 2. When enabling VNC, and you already have a shared home directory, make sure the proper changes are made to the VNC configuration (typically in `~/.vnc` ) to allow for the service to run correctly.
 
 ## Example run
-How to run the playbook may depend on the options selected. However, below is an example execution whereas the password for IPA/IdM integration (with `ipa_install` set to "yes" in the inventory) is passed in rather than statically set in the inventory. Modify the inventory to your liking in `playbooks/bastion/inventory`, then at the top level of the repository, execute the following command:
+How to run the playbook may depend on the options selected. However, below is an example execution whereas the password for IPA/IdM integration (with `ipa_client_install` set to "yes" in the inventory) is passed in rather than statically set in the inventory. Modify the inventory to your liking in `playbooks/bastion/inventory`, then at the top level of the repository, execute the following command:
 
 ```
 > ansible-playbook -i playbooks/bastion/inventory playbooks/bastion/install.yml -e 'ipa_password=<ipa/IdM password>'
@@ -21,14 +23,16 @@ How to run the playbook may depend on the options selected. However, below is an
 
 ## Inventory Options
 
+**Note:** If you are intending to use the IdM/IPA integration, and are unfamiliar with the IdM/IPA variables below, please consult the IdM/IPA documentation or consult your sys admin for details.
+
 | variable | info |
 |:--------:|:----:|
 |main_user|The username this bastion is primerly being enabled for| 
-|ipa_install|Set to "yes" if you'd like to integrate with a backend IPA/IdM service|
-|ipa_domain|If `ipa_install` is set to "yes", set this domain to match what your environment uses (obtain from sys admin if not known)|
-|ipa_automount|If `ipa_install` is set to "yes", set the required automount location for home directories (obtain from sys admin if not known)|
-|ipa_username|If `ipa_install` is set to "yes", this is the username of an account that has the permission to join this host to the above IPA/IdM domain (obtain from sys admin if not known)|
-|ipa_password|If `ipa_install` is set to "yes", this is the password of an account that has the permission to join this host to the above IPA/IdM domain (obtain from sys admin if not known)
+|ipa_client_install|Set to "yes" if you'd like to integrate with a backend IPA/IdM service|
+|ipa_domain|If `ipa_client_install` is set to "yes", set this to the existing IdM / IPA domain your environment uses (obtain from sys admin if not known)|
+|ipa_automount|If `ipa_client_install` is set to "yes", set the required automount location for home directories (obtain from sys admin if not known)|
+|ipa_username|If `ipa_client_install` is set to "yes", this is the username of an account that has the permission to join this host to the above IPA/IdM domain (obtain from sys admin if not known)|
+|ipa_password|If `ipa_client_install` is set to "yes", this is the password of an account that has the permission to join this host to the above IPA/IdM domain (obtain from sys admin if not known)
 |docker_install|Set to "yes" if you'd like to enable docker on this host|
 |docker_username|Set to the desirable user (your username) to be added to the docker group (to allow for docker admin)|
 |xfce_install|Set to "yes" if you'd like XFCE enabled on this host for a graphical UI (note XFCE often works better than gnome for VNC)|

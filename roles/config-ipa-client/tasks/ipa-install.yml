@@ -17,14 +17,14 @@
     state: directory
 
 - name: "Obtain the current home dir for the ansible user"
-  shell: "grep '^{{ ansible_user }}' /etc/passwd| cut -d':' -f6" 
+  shell: "grep '^{{ ansible_user }}' /etc/passwd | cut -d':' -f6"
   register: current_home
 
 - name: "Set change flag" 
   set_fact:
     move_user: True
   when: 
-  - current_home.stdout == "/home/{{ ansible_user }}"
+  - current_home.stdout == '/home/' ~ ansible_user
 
 - name: "Create temporary account used to move the main account home dir"
   user:

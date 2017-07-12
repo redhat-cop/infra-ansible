@@ -8,5 +8,5 @@
 - name: "Install, configure and enable VNC server"
   include: vnc-server.yml
   when: 
-  - vnc_server_install == "yes"
+  - vnc_server_install|default('no') == "yes"
 
