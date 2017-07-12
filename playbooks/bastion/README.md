@@ -23,7 +23,7 @@ How to run the playbook may depend on the options selected. However, below is an
 
 ## Inventory Options
 
-**Note:** If you are intending to use the IdM/IPA integration, and are unfamiliar with the IdM/IPA variables below, please consult the IdM/IPA documentation or consult your sys admin for details.
+**Note:** If you are intending to use the IdM/IPA integration, and are unfamiliar with the IdM/IPA variables below, please consult the IdM/IPA documentation or your sys admin for details.
 
 | variable | info |
 |:--------:|:----:|
