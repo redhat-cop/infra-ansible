@@ -2,12 +2,13 @@
 module SELinuxVNC 1.0;
 
 require {
+	type user_home_t;
 	type geoclue_t;
 	type init_t;
 	type nfs_t;
 	type unconfined_service_t;
 	class dir search;
-	class file { getattr open read };
+	class file { getattr open read unlink };
 }
 
 #============= geoclue_t ==============
@@ -16,4 +17,4 @@ allow geoclue_t unconfined_service_t:file { getattr open read };
 
 #============= init_t ==============
 allow init_t nfs_t:file { open read };
-
+allow init_t user_home_t:file { open read unlink };

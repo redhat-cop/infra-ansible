@@ -24,13 +24,31 @@
   shell: "echo vncpasswd01 | vncpasswd -f > /home/{{ main_user }}/.vnc/passwd"
   when: passwd_info.stat.exists == False
 
-- name: "Add the xstartup configuration to the main user"
+- name: "Ensure correct ownership of the vnc password file"
+  file:
+    path: "/home/{{ main_user }}/.vnc/passwd"
+    owner: "{{ main_user }}"
+    mode: 0600
+
+- name: "Add the xstartup (gnome) configuration to the main user"
   copy :
-    src: xstartup
+    src: xstartup-gnome
     dest: "/home/{{ main_user }}/.vnc/xstartup"
     force: no
     owner: "{{ main_user }}"
     mode: 0755
+  when:
+  - gnome_install|default('no') == "yes"
+
+- name: "Add the xstartup (XFCE) configuration to the main user"
+  copy :
+    src: xstartup-xfce
+    dest: "/home/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+  when:
+  - xfce_install|default('no') == "yes"
 
 - name: "Copy VNC service file into place" 
   copy:
