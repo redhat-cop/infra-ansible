@@ -1,0 +1,20 @@
+---
+
+- name: "Ensure the ISO mount dir exist"
+  file:
+    path: "{{ item.iso_file_target }}"
+    state: directory
+  with_items:
+  - "{{ hosted_isos }}"
+
+- name: "Mount the ISOs"
+  mount:
+    path: "{{ item.iso_file_target }}"
+    src: "{{ item.iso_file_path }}"
+    fstype: iso9660
+    state: mounted
+  with_items:
+  - "{{ hosted_isos }}"
+
+
+

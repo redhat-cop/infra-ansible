@@ -1,0 +1,5 @@
+---
+
+- hosts: web-server
+  roles:
+  - config-httpd 

@@ -1,0 +1,19 @@
+[all:vars]
+
+# This role uses NFS to mount the repo, so make sure to specify a valid NFS server / path to where the ISOs can be found
+iso_repo_nfs: "my-nfs-server:/software"
+
+# Specify where the NFS server gets mounted locally
+iso_repo_dir: "/mnt/software"
+
+# A list of ISOs to mount. Note how the "iso_file_path" needs to exists on the above mentioned NFS server
+# The "iso_file_target" is the path to where it gets mounted on this target server
+hosted_isos:
+- name: "fedora25-server"
+  iso_file_path: "/mnt/software/ISOs/Fedora-Server-dvd-x86_64-25-1.3.iso"
+  iso_file_target: "/var/www/html/fedora/25/server/x86_64"
+
+
+[repo-server]
+192.168.1.10 ansible_user=fedora ansible_become=True
+
