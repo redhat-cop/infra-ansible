@@ -1,0 +1,30 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - firewalld
+  - python-firewall
+
+- name: 'Ensure firewalld is running'
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: 'Open Firewall for NFS use'
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+  - 5900/tcp
+  - 5901/tcp
+  - 5902/tcp
+  - 5903/tcp
+  - 5904/tcp
+  - 5905/tcp
+

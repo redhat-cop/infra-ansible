@@ -57,3 +57,9 @@
   tags:
   - configure_pxe_hosts
 
+- name: 'Configure OpenVPN'
+  hosts: openvpn_servers
+  roles:
+  - role: config-openvpn
+  tags:
+  - configure_openvpn
