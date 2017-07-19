@@ -1,0 +1,15 @@
+---
+- name: "Install additional packages for Docker"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - docker-compose
+  when:
+    (ansible_distribution == "Fedora") or
+    (ansible_distribution == "Red Hat Enterprise Linux")
+
+- fail:
+    msg: "CentOS is not supported for this feature."
+  when:
+  - ansible_distribution == "CentOS"
