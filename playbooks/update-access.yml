@@ -1,0 +1,9 @@
+---
+
+- name: 'Update root access'
+  hosts: all
+  roles:
+    - role: update-access
+  tags:
+  - update_access
+

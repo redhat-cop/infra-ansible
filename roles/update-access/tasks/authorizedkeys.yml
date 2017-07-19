@@ -1,0 +1,3 @@
+---
+- name: "Update authorized key file for root"
+  authorized_key: user=root key="{{ lookup('file', authorized_keyfile) }}"

@@ -1,0 +1,11 @@
+# Staging inventory file
+[all:vars]
+
+# create encrypted password with:
+# python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'
+root_password: $6$uli6pVSIQvDhxX/2$4vOEE0Jvum6OrNwoU78.wqa29m/je9ub3HXUpL6nqYxDjsqRyEAFSdbDAKxkCd0mgE9p2F/kRAPzAwFI5u8wQ1
+authorized_keyfile: "{{ inventory_dir }}/authorized_keys"
+
+[servers]
+server2.test.lab 
+server1.test.lab 
