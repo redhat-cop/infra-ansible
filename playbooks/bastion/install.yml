@@ -13,8 +13,8 @@
   - role: update-host
   - role: config-ipa-client
   - role: config-docker
+  - role: config-docker-compose
   - role: config-gnome
   - role: config-xfce
   - role: config-vnc-server
   - role: config-tools
-

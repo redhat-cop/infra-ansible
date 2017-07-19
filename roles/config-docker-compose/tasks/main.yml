@@ -1,0 +1,6 @@
+---
+
+- name: "Install, configure and enable Docker-compose"
+  include: docker-compose.yml
+  when:
+  - docker_compose_install|default('no') == "yes"
