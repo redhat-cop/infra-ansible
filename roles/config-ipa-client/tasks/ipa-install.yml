@@ -78,6 +78,8 @@
     state: latest
   with_items:
   - ipa-client
+  - libsss_sudo
+  - sssd-nfs-idmap
 
 - name: "Wait for the previous user to finish up"
   shell: "ps -ef | cut -d' ' -f1 | grep '{{ old_ansible_user }}'"
