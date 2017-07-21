@@ -27,3 +27,7 @@
   with_subelements:
   - "{{ dns_records_add | default({}) }}"
   - entries
+  register: nsupdate_result
+  until: nsupdate_result.rc == 0
+  retries: 10
+  delay: 1
