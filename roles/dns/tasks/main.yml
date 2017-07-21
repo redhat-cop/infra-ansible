@@ -28,6 +28,6 @@
   - "{{ dns_records_add | default({}) }}"
   - entries
   register: nsupdate_result
-  until: nsupdate_result.dns_rc == 0
+  until: nsupdate_result|succeeded
   retries: 10
   delay: 1
