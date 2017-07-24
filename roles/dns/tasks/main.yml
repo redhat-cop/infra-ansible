@@ -12,6 +12,10 @@
   with_subelements:
   - "{{ dns_records_rm | default({}) }}"
   - entries
+  register: nsupdate_remove_result
+  until: nsupdate_remove_result|succeeded
+  retries: 10
+  delay: 1
 
 - name: "Add DNS A records"
   nsupdate:
@@ -27,7 +31,7 @@
   with_subelements:
   - "{{ dns_records_add | default({}) }}"
   - entries
-  register: nsupdate_result
-  until: nsupdate_result|succeeded
+  register: nsupdate_add_result
+  until: nsupdate_add_result|succeeded
   retries: 10
   delay: 1
