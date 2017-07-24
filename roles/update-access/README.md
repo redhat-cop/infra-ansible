@@ -1,4 +1,4 @@
-update_access
+update_access role
 =========
 
 This role updates the password and authorized_key for the provided user
@@ -6,7 +6,8 @@ This role updates the password and authorized_key for the provided user
 ## Requirements
 This role needs to be executed by a user with 'become' privilages
 
-An easy way to create an encrypted password is with the following command
+An easy way to create an encrypted password is with the following command:
+
 `python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`
 
 ## Role Variables
@@ -22,7 +23,6 @@ An easy way to create an encrypted password is with the following command
 If the `authorized_keyfile` is not set, authorized_keys file update is ignored for the `user_name`
 
 If the `user_name_password` is not set, password update is ignored for the `user_name`
-
 
 
 ### Example Inventory
@@ -49,5 +49,5 @@ server2.test.lab
 
 ```
 ### Example Execution
-`ansible-playbook -i inventory2  playbooks/update-access.yml -e "user_name=root user_name_password=`python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`"
+`ansible-playbook -i inventory2  playbooks/update-access.yml -e "user_name=root user_name_password=\`python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`"
 ```
