@@ -23,7 +23,7 @@
   with_items:
   - dhcpd
   when: 
-  - dhcp_service_enabled == False
+  - dhcp_service_enabled|default(True) == False
 
 - name: 'Enable dhcp services'
   service:
