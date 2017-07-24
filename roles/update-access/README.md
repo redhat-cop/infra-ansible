@@ -4,7 +4,7 @@ update_access role
 This role updates the password and authorized_key for the provided user
 
 ## Requirements
-This role needs to be executed by a user with 'become' privilages
+This role needs to be executed by a user with 'become' privileges
 
 An easy way to create an encrypted password is with the following command:
 
@@ -12,7 +12,7 @@ An easy way to create an encrypted password is with the following command:
 
 ## Role Variables
 
-`update_access` variable controls which 
+The following variables controls the functionality of `update_access` role
 
 | Name | Purpose|Required|
 |---|---|---|

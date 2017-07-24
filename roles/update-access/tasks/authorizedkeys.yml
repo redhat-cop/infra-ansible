@@ -4,4 +4,5 @@
     user: "{{ user_name }}"
     key: "{{ lookup('file', authorized_keyfile) }}"
   when:
-    authorized_keyfile != ""
+  - authorized_keyfile is defined
+  - authorized_keyfile != ""
