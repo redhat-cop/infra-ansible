@@ -49,5 +49,5 @@ server2.test.lab
 
 ```
 ### Example Execution
-`ansible-playbook -i inventory2  playbooks/update-access.yml -e "user_name=root user_name_password=``python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`"
+`ansible-playbook -i inventory2  playbooks/update-access.yml -e "user_name=root user_name_password=`python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`"
 ```
