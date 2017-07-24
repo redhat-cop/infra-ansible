@@ -20,6 +20,7 @@ An easy way to create an encrypted password is with the following command
 |authorized_keyfile|Provide the path to the keyfile that should be installed for the user|No|
 
 If the `authorized_keyfile` is not set, authorized_keys file update is ignored for the `user_name`
+
 If the `user_name_password` is not set, password update is ignored for the `user_name`
 
 
