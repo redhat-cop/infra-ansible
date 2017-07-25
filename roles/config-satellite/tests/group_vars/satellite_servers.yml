@@ -3,7 +3,7 @@
 # NOTE: Make sure a valid 'manifest.zip' file exists in the `files` directory before running this test
 manifest_file_path: "{{ inventory_dir }}/files/manifest.zip"
 
-satellite_organization: "Example Org
+satellite_organization: "Example Org"
 satellite_location: "example"
 satellite_username: "admin"
 satellite_password: "admin01"
