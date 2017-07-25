@@ -14,3 +14,23 @@
     src: '{{ dhcp_config_temp_loc }}'
     dest: '{{ dhcp_config_dest_file }}'
   notify: 'reload dhcp'
+
+- name: 'Disable dhcp services'
+  service:
+    name: '{{ item }}'
+    enabled: no
+    state: stopped
+  with_items:
+  - dhcpd
+  when: 
+  - dhcp_service_enabled|default(True) == False
+
+- name: 'Enable dhcp services'
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+  - dhcpd
+  when: 
+  - dhcp_service_enabled|default(True) 
