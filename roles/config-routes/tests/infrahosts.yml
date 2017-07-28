@@ -3,4 +3,4 @@
 - name: 'Configure routes on the host'
   hosts: infra_hosts
   roles:
-  - role: config_routes
+  - role: config-routes

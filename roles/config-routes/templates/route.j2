@@ -3,5 +3,5 @@
 ADDRESS{{ i }}="{{ r.address }}"
 NETMASK{{ i }}="{{ r.netmask }}"
 GATEWAY{{ i }}="{{ r.gateway }}"
-{{ i++ }}
-{% endif %}
+{% set i = i + 1 %}
+{% endfor %}
