@@ -1,0 +1,88 @@
+---
+
+- name: "Create temporary account used to move the main account home dir"
+  user:
+    name: "lcluser"
+    groups: wheel
+
+- name: "Ensure new local home dir base path exists" 
+  file: 
+    path: "/lclhome"
+    state: directory
+
+- name: "Ensure new local home dir exists" 
+  file: 
+    path: "/home/lcluser/.ssh"
+    state: directory
+    mode: 0700
+    owner: lcluser
+    group: lcluser
+
+- name: "Copy over SSH key from the ansible_user"
+  copy:
+    src: "/home/{{ ansible_user }}/.ssh/authorized_keys"
+    dest: "/home/lcluser/.ssh/authorized_keys"
+    mode: 0600
+    owner: lcluser
+    group: lcluser
+    remote_src: True
+
+- name: "Ensure SUDO access for temporary user"
+  lineinfile: 
+    path: /etc/sudoers.d/10-local-user
+    regexp: "^lcluser" 
+    line: "lcluser ALL=(ALL) NOPASSWD:ALL"
+    create: yes
+
+- name: "Override the ansible_user now that a temporary user is enabled"
+  set_fact:
+    old_ansible_user: "{{ ansible_user }}"
+    ansible_user: "lcluser"
+  when: 
+  - ansible_user is defined
+  - ansible_user != ''
+
+- name: "Wait for the previous user to finish up"
+  shell: "ps -ef | cut -d' ' -f1 | grep '{{ old_ansible_user }}'"
+  register: cmdoutput
+  until: cmdoutput.rc == 1
+  retries: 60
+  delay: 2
+  failed_when: False
+  changed_when: False
+
+- name: "Move local sudo user home dir"
+  user:
+    name: "{{ old_ansible_user }}"
+    move_home: yes
+    home: "/lclhome/{{ old_ansible_user }}"
+  when: 
+  - ansible_user is defined
+  - ansible_user != ''
+
+- name: "Move back to the main sudo user"
+  set_fact:
+    ansible_user: "{{ old_ansible_user }}"
+  when: 
+  - old_ansible_user is defined
+  - old_ansible_user != ''
+
+- name: "Wait for the previous user to finish up"
+  shell: "ps -ef | cut -d' ' -f1 | grep 'lcluser'"
+  register: cmdoutput
+  until: cmdoutput.rc == 1
+  retries: 60
+  delay: 2
+  failed_when: false
+  changed_when: false
+
+- name: "Remove the temporary user"
+  user:
+    name: "lcluser" 
+    state: absent
+
+- name: "Remove the sudo access for the temporary user"
+  file:
+    path: /etc/sudoers.d/10-local-user
+    state: absent
+
