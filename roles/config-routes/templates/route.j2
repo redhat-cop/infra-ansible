@@ -1,0 +1,7 @@
+{% set i = 0 %}
+{% for r in route.entries %}
+ADDRESS{{ i }}="{{ r.address }}"
+NETMASK{{ i }}="{{ r.netmask }}"
+GATEWAY{{ i }}="{{ r.gateway }}"
+{{ i++ }}
+{% endif %}
