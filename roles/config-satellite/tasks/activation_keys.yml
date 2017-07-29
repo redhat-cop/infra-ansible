@@ -20,9 +20,6 @@
   - chk_ak.rc != 65
   - chk_ak.rc != 0
 
-- debug:
-    msg: "{{ subids }}"
-
 - name: "Add subs to activation key"
   command: >
      hammer
