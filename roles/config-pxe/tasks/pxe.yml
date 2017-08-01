@@ -19,9 +19,15 @@
   - "/usr/share/syslinux/vesamenu.c32"
   - "/usr/share/syslinux/menu.c32"
 
-# Note: the Ansible 'copy' module doesn't support resursive copy of directories as-is, hence the 'command'
+# Note: the Ansible 'copy' module doesn't support resursive copy of remote src directories as-is, hence the 'command'
 - name: "Copy in necessary PXE files for UEFI use"
   shell: "cp -r {{ uefi_source }}/* {{ tftpserver_root_dir }}/pxelinux"
+
+- name: "Workaround for buggy UEFI requiring lowercase"
+  copy: 
+    src: "{{ tftpserver_root_dir }}/pxelinux/BOOTX64.EFI"
+    dest: "{{ tftpserver_root_dir }}/pxelinux/bootx64.efi"
+    remote_src: True
 
 - name: "Ensure the hosted OS directories exists"
   file:
