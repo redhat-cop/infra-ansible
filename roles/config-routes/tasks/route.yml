@@ -8,3 +8,4 @@
   - '{{ routes }}'
   loop_control:
     loop_var: route
+  notify: 'Notify about Network reload'

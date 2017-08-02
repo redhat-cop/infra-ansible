@@ -1,7 +1,5 @@
-{% set i = 0 %}
 {% for r in route.entries %}
-ADDRESS{{ i }}="{{ r.address }}"
-NETMASK{{ i }}="{{ r.netmask }}"
-GATEWAY{{ i }}="{{ r.gateway }}"
-{% set i = i + 1 %}
+ADDRESS{{ loop.index0 }}="{{ r.address }}"
+NETMASK{{ loop.index0 }}="{{ r.netmask }}"
+GATEWAY{{ loop.index0 }}="{{ r.gateway }}"
 {% endfor %}
