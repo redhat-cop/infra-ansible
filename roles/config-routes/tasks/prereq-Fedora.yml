@@ -1,0 +1,8 @@
+---
+
+- name: "Install additional packages needed to process tasks"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - libselinux-python

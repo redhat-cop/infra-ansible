@@ -1,0 +1,9 @@
+[all:vars]
+
+[infra_hosts]
+infra-1.example.com ansible_user=fedora ansible_become=True ansible_host=192.168.1.10
+
+
+
+
+
