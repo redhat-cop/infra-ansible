@@ -5,11 +5,11 @@
 # python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'
 
 # Text: 'password'=> encrypted: '$6$z8S0Iw6iAVsJRY19$/YKREfgO2yxwbuayGmJ.w8MQb0gtVwjBaJr6yQp8alLuFj1S/YoKFWORsq/MyIjLhoBkj29TxUj.EdOT4PLD1.'
-user_name_password:$6$z8S0Iw6iAVsJRY19$/YKREfgO2yxwbuayGmJ.w8MQb0gtVwjBaJr6yQp8alLuFj1S/YoKFWORsq/MyIjLhoBkj29TxUj.EdOT4PLD1.
+user_name_password: $6$z8S0Iw6iAVsJRY19$/YKREfgO2yxwbuayGmJ.w8MQb0gtVwjBaJr6yQp8alLuFj1S/YoKFWORsq/MyIjLhoBkj29TxUj.EdOT4PLD1.
 user_name: user1
 
 authorized_keyfile: "{{ inventory_dir }}/authorized_keys"
 
 [servers]
-server2.test.lab 
-server1.test.lab 
+server2.test.lab ansible-host=192.168.1.1
+server1.test.lab ansible-host=192.168.1.2

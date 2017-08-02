@@ -8,7 +8,9 @@ This role needs to be executed by a user with 'become' privileges
 
 An easy way to create an encrypted password is with the following command:
 
-`python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`
+```
+python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'
+```
 
 ## Role Variables
 
@@ -36,18 +38,32 @@ user_name_password: $6$uli6pVSIQvDhxX/2$4vOEE0Jvum6OrNwoU78.wqa29m/je9ub3HXUpL6n
 authorized_keyfile: "{{ inventory_dir }}/authorized_keys"
 
 [servers]
-server1.test.lab 
-server2.test.lab 
+server1.test.lab
+server2.test.lab
 ```
 ### Example Playbook
+
 ```
 - hosts: all
   become: yes
 
   roles:
-    - update_access
+    - update_access ```
+
+### Example Execution
 
 ```
-### Example Execution
-`ansible-playbook -i inventory2  playbooks/update-access.yml -e "user_name=root user_name_password=&agrave;python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'&agrave;"
-```
+ansible-playbook -i inventory  test.yml -e "user_name=user1 :w
+user_name_password=`python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`" ```
+
+### Manual test
+Execute the 'Example' above and try both of the
+#### Test ssh key update
+`ssh -i id_rsa_user1 user1@server1.test.lab /usr/bin/hostnamectl`
+
+###### Note: No prompt required therefore using authorized_keys file
+
+#### Test password update
+`ssh user1@server1.test.lab /usr/bin/hostnamectl`
+
+##### Enter New password when prompted for new password, command executes with new password

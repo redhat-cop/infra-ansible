@@ -1,6 +1,13 @@
 ---
-- name: 'Update root access'
+
+- name: 'Add test user'
+  hosts: all
+  user:
+    name: {{ user_name }}
+    comment: "Test User"
+
+
+- name: 'Update {{ user_name }} access'
   hosts: all
   roles:
     - role: update-access
-
