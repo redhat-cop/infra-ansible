@@ -1,0 +1,9 @@
+---
+
+rhsm_server_hostname: "sat6.example.com"
+rhsm_org_id: "my_org"
+rhsm_activationkey: "my_activation_key"
+rhsm_pool: "^my_pool_name$"
+
+rhsm_repos:
+- "rhel-7-server-rpms"

@@ -4,23 +4,20 @@
   set_fact:
     move_user: False
 
-- name: "Install additional packages for SELinux"
-  package:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-  - libselinux-python
-
-- name: "Ensure new local home dir exists" 
-  file: 
-    path: "/lclhome"
-    state: directory
+- name: "Include prereqs per the type of OS"
+  include: "{{ distro_file }}"
+  with_first_found:
+  - files:
+    - prereq-{{ ansible_distribution }}.yml
+    skip: true
+  loop_control:
+    loop_var: distro_file
 
 - name: "Obtain the current home dir for the ansible user"
   shell: "grep '^{{ ansible_user }}' /etc/passwd | cut -d':' -f6"
   register: current_home
 
-- name: "Set change flag" 
+- name: "Attempt to move the main users home dir to free up /home"
   set_fact:
     move_user: True
   when: 
@@ -33,8 +30,15 @@
   when:
   - move_user|bool == True
 
-- name: "Ensure new local home dir exists" 
-  file: 
+- name: "Ensure new local home dir base path exists"
+  file:
+    path: "/lclhome"
+    state: directory
+  when:
+  - move_user|bool == True
+
+- name: "Ensure new local home dir exists"
+  file:
     path: "/home/lcluser/.ssh"
     state: directory
     mode: 0700
@@ -55,9 +59,9 @@
   - move_user|bool == True
 
 - name: "Ensure SUDO access for temporary user"
-  lineinfile: 
+  lineinfile:
     path: /etc/sudoers.d/10-local-user
-    regexp: "^lcluser" 
+    regexp: "^lcluser"
     line: "lcluser ALL=(ALL) NOPASSWD:ALL"
     create: yes
   when:
@@ -67,19 +71,8 @@
   set_fact:
     old_ansible_user: "{{ ansible_user }}"
     ansible_user: "lcluser"
-  when: 
-  - ansible_user is defined
-  - ansible_user != ''
+  when:
   - move_user|bool == True
-
-- name: "Install additional packages for IPA/IdM"
-  package:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-  - ipa-client
-  - libsss_sudo
-  - sssd-nfs-idmap
 
 - name: "Wait for the previous user to finish up"
   shell: "ps -ef | cut -d' ' -f1 | grep '{{ old_ansible_user }}'"
@@ -97,17 +90,14 @@
     name: "{{ old_ansible_user }}"
     move_home: yes
     home: "/lclhome/{{ old_ansible_user }}"
-  when: 
-  - ansible_user is defined
-  - ansible_user != ''
+  when:
   - move_user|bool == True
 
 - name: "Move back to the main sudo user"
   set_fact:
     ansible_user: "{{ old_ansible_user }}"
-  when: 
-  - old_ansible_user is defined
-  - old_ansible_user != ''
+  when:
+  - move_user|bool == True
 
 - name: "Wait for the previous user to finish up"
   shell: "ps -ef | cut -d' ' -f1 | grep 'lcluser'"
@@ -122,7 +112,7 @@
 
 - name: "Remove the temporary user"
   user:
-    name: "lcluser" 
+    name: "lcluser"
     state: absent
   when:
   - move_user|bool == True
@@ -131,13 +121,28 @@
   file:
     path: /etc/sudoers.d/10-local-user
     state: absent
+  when:
+  - move_user|bool == True
 
-- name: "Ensure SUDO access for main user"
+- name: "Ensure SUDO access for main user (if any)"
   lineinfile: 
     path: /etc/sudoers.d/10-idm-user
     regexp: "^{{ main_user }}" 
     line: "{{ main_user }} ALL=(ALL) NOPASSWD:ALL"
     create: yes
+  when: 
+  - main_user is defined
+  - main_user|trim != ""
+
+- name: "Ensure SUDO access for group (if any)"
+  lineinfile: 
+    path: /etc/sudoers.d/11-idm-admin-group
+    regexp: "^%{{ admin_group }}" 
+    line: "%{{ admin_group }} ALL=(ALL) NOPASSWD:ALL"
+    create: yes
+  when: 
+  - admin_group is defined
+  - admin_group|trim != ""
 
 - name: "Set up the IPA/IdM client integration"
   command: 'ipa-client-install -U --automount-location={{ ipa_automount_location }} -p "{{ ipa_username }}" -w "{{ ipa_password }}" --domain="{{ ipa_domain }}" --force-join'

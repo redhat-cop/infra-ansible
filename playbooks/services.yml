@@ -42,6 +42,13 @@
   tags:
   - configure_satellite
 
+- name: 'Configure www hosts'
+  hosts: www_servers
+  roles:
+  - role: config-httpd
+  tags:
+  - configure_www_hosts
+
 - name: 'Configure REPO hosts'
   hosts: repo_servers
   roles:

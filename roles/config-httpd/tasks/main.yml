@@ -1,3 +1,4 @@
 ---
 
 - include: prep.yml
+- include: seed.yml

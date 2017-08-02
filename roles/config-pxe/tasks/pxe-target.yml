@@ -1,0 +1,18 @@
+---
+
+- name: "Generate the ip line - if applicable"
+  set_fact:
+    ip_config: "{{ target_entry.ip }}::{{ target_entry.gateway }}:{{ target_entry.netmask }}::{{ target_entry.interface }}:none"
+  when: 
+  - target_entry.ip is defined
+  - target_entry.ip|trim != ''
+
+- name: "(re)set the pxe_entries"
+  set_fact:
+    pxe_entries: "{{ target_entry.pxe_entries }}"
+
+- name: "Populate the host specific grub.cfg (UEFI) file"
+  template:
+    src: pxelinux_uefi.j2
+    dest: "{{ tftpserver_root_dir }}/pxelinux/grub.cfg-01-{{ target_entry.mac|regex_replace(':', '-')|lower }}"
+
