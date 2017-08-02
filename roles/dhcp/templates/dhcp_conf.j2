@@ -24,6 +24,21 @@ host {{ entry.host }}  {
 
 {% endfor %}
 
+
+# Define the PXE clients filenames to use for PXE booting
+class "pxeclients" {
+     match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
+     if option pxe-system-type = 00:02 {
+             filename "ia64/elilo.efi";
+     } else if option pxe-system-type = 00:06 {
+             filename "pxelinux/bootia32.efi";
+     } else if option pxe-system-type = 00:07 {
+             filename "pxelinux/bootx64.efi";
+     } else {
+             filename "pxelinux.0";
+     }
+}
+
 # Define the Subnets section of the page
 #
 
@@ -38,19 +53,6 @@ subnet {{ entry.subnet }} netmask {{ entry.subnet_mask }} {
      option domain-name         "{{ entry.domain_name }}";
 
      next-server                {{ entry.next_server }};
-
-     class "pxeclients" {
-          match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
-          if option pxe-system-type = 00:02 {
-                  filename "ia64/elilo.efi";
-          } else if option pxe-system-type = 00:06 {
-                  filename "pxelinux/bootia32.efi";
-          } else if option pxe-system-type = 00:07 {
-                  filename "pxelinux/bootx64.efi";
-          } else {
-                  filename "pxelinux.0";
-          }
-     }
 }
 
 {% endfor %}
