@@ -18,20 +18,6 @@
   tags: 
   - configure_infra_hosts_networking
   
-- name: 'Configure libvirt on the infrastructure hosts'
-  hosts: infra_hosts
-  roles:
-  - role: config-libvirt
-  tags: 
-  - configure_infra_hosts_libvirt
-  
-- name: 'Configure the software source to ensure it is available for use'
-  hosts: infra_hosts
-  roles:
-  - role: config-software-src
-  tags: 
-  - configure_software_src
-
 - name: 'Make sure the host is running the latest'
   hosts: infra_hosts
   roles:

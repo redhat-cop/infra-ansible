@@ -6,6 +6,7 @@ NAME="{{ name | default(ifcfg.device) }}"
 PHYSDEV="{{ ifcfg.physdev }}"
 VLAN_ID="{{ ifcfg.vlan_id }}"
 BOOTPROTO="{{ ifcfg.bootproto | default('none') }}"
+MTU="{{ ifcfg.mtu | default('1500') }}"
 {% if ifcfg.ipaddr is defined %}
 IPADDR="{{ ifcfg.ipaddr }}"
 {% endif %}
