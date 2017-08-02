@@ -19,17 +19,6 @@
   failed_when: False
   changed_when: False
 
-- name: "Include prereqs per the type of OS"
-  include: "{{ distro_file }}"
-  with_first_found:
-  - files:
-    - prereq-{{ ansible_distribution }}.yml
-    skip: true
-  loop_control:
-    loop_var: distro_file
-  when:
-  - (sssd_status.rc != 0 or stat_result.stat.exists == false or check_conf.stdout == "")
-
 - name: "Configure IPA/IdM Integration if not already enabled and correctly configured"
   include: ipa-install.yml
   when: 

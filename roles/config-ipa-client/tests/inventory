@@ -6,5 +6,5 @@ ipa_automount_location=userhome
 ipa_username=testuser
 ipa_password=testuserpassword
 
-[bastion]
+[ipa-client]
 192.168.1.16 ansible_user=fedora ansible_become=True
