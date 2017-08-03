@@ -4,8 +4,6 @@
 
 - include: "infrahosts.yml"
 
-- include: "virthosts.yml"
-
 - include: "vm.yml"
 
 - include: "services.yml"
