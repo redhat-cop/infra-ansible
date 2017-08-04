@@ -1,8 +1,0 @@
----
-
-- name: 'restart multipathd'
-  service:
-    name: multipathd
-    state: restarted
-
-
