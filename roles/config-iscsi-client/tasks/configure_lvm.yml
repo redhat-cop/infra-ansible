@@ -42,6 +42,7 @@
   mount:
     src: "/dev/mapper/{{ disk.vg }}-{{ disk.lv }}"
     path: "{{ disk.mount_path }}"
+    opts: _netdev
     fstype: xfs 
     state: mounted
   when: 
