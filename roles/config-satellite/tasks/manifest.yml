@@ -1,0 +1,19 @@
+---
+
+- name: "Copy subscription manifest .zip file"
+  copy:
+    src: "{{ manifest_file_path | default(default_manifest_file_path) }}"
+    dest: /root/manifest.zip
+  register: copy_sub
+
+- name: "Upload manifest if new or updated file provided"
+  command: > 
+    hammer 
+      -u "{{ satellite_username }}"
+      -p "{{ satellite_password }}"
+      subscription upload
+      --file /root/manifest.zip
+      --organization "{{ satellite_organization }}"
+  when: copy_sub|changed
+
+
