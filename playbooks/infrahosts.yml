@@ -39,4 +39,10 @@
   tags: 
   - update_host
 
+- name: 'Setup iSCSI and MultiPathing - if applicable'
+  hosts: infra_hosts
+  roles:
+  - role: config-iscsi-client
+  tags:
+  - configure_iscsi_client
 
