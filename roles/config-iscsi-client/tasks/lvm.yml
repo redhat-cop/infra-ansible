@@ -1,0 +1,7 @@
+---
+
+- include: configure_lvm.yml
+  loop_control:
+    loop_var: disk
+  with_items:
+  - "{{ disk_mapping }}"

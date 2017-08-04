@@ -1,0 +1,9 @@
+---
+
+iscsi_initiatorname: iqn.1994-05.com.example:node-2
+
+disk_mapping:
+- lun: 0
+  vg: vg0
+  lv: lv0
+  mount_path: /mnt/vg0-lv0

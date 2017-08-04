@@ -1,0 +1,25 @@
+---
+
+- name: "Configure MultiPath configuration"
+  blockinfile: 
+    path: /etc/multipath.conf
+    block: |
+      blacklist {
+        devnode "{{ multipath_blacklist_node | default('^sda') }}"
+      }
+    create: yes
+    owner: root
+    group: root
+    mode: 0600
+    state: present
+  register: multipathconf
+
+- name: 'restart multipathd'
+  service:
+    name: multipathd
+    state: restarted
+  when: 
+  - multipathconf.changed 
+
+
+
