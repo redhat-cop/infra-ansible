@@ -54,7 +54,7 @@ server2.test.lab
 
 ```
 ansible-playbook -i inventory  test.yml -e "user_name=user1 :w
-user_name_password=`python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`" ```
+user_name_password=`python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'`  ```
 
 ### Manual test
 Execute the 'Example' above and try both of the
