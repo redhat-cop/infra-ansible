@@ -2,7 +2,9 @@
 
 - include: "prep.yml"
 
-- include: "infrahosts.yml"
+- include: "infra-hosts.yml"
+
+- include: "infra-virt-hosts.yml"
 
 - include: "vm.yml"
 
