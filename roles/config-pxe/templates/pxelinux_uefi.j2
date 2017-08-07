@@ -24,7 +24,7 @@ set timeout=60
 ### BEGIN /etc/grub.d/10_linux ###
 {% for entry in pxe_entries %}
 menuentry '{{ entry.name }}' --class fedora --class gnu-linux --class gnu --class os {
-        linuxefi {{ entry.kernel }} inst.gpt ksdevice=bootif inst.sshd inst.text ip=dhcp {{ entry.ks | default('') }} {{ entry.repo | default('') }}
+        linuxefi {{ entry.kernel }} inst.gpt ksdevice=bootif inst.sshd inst.text ip={{ ip_config | default('dhcp') }} {{ entry.ks | default('') }} {{ entry.repo | default('') }}
         initrdefi {{ entry.initrdefi }} 
 }
 {% endfor %}

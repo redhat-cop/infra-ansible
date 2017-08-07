@@ -1,0 +1,6 @@
+---
+
+- name: 'Configure routes on the host'
+  hosts: infra_hosts
+  roles:
+  - role: config-routes

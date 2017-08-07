@@ -1,0 +1,49 @@
+---
+
+- name: "Get current subscriptions"
+  shell: hammer -u "{{ satellite_username }}" -p "{{ satellite_password }}" --csv subscription list --organization "{{ satellite_organization }}" | grep "{{ item.value.subscription }}" | awk -F, '{print $1}'
+  register: subids
+  with_dict: "{{ satellite_activation_keys }}"
+
+- name: "Create activation key(s)"
+  command: > 
+    hammer
+      -u "{{ satellite_username }}"
+      -p "{{ satellite_password }}"
+      activation-key create
+      --name {{ item.key }}
+      --lifecycle-environment Library
+      --organization "{{ satellite_organization }}"
+  with_dict: "{{ satellite_activation_keys }}"
+  register: chk_ak
+  failed_when:
+  - chk_ak.rc != 65
+  - chk_ak.rc != 0
+
+- name: "Add subs to activation key"
+  command: >
+     hammer
+       -u "{{ satellite_username }}"
+       -p "{{ satellite_password }}"
+       activation-key add-subscription
+       --name "{{ item.item.key }}"
+       --subscription-id "{{ item.stdout }}"
+       --organization "{{ satellite_organization }}"
+  with_items:
+  - "{{ subids.results }}"
+  register: ak_chk
+  failed_when:
+  - ak_chk.rc != 128
+  - ak_chk.rc != 0
+
+- name: "Turn off autoattach on activation key(s)"
+  command: >
+    hammer
+      -u "{{ satellite_username }}"
+      -p "{{ satellite_password }}"
+      activation-key update
+      --auto-attach false
+      --name "{{ item.key }}"
+      --organization "{{ satellite_organization }}"
+  with_dict: "{{ satellite_activation_keys }}"
+
