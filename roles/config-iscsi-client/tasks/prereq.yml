@@ -1,0 +1,9 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - iscsi-initiator-utils
+  - device-mapper-multipath

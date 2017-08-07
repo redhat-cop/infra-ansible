@@ -1,0 +1,5 @@
+---
+
+- hosts: iscsi
+  roles:
+  - role: config-iscsi-client
