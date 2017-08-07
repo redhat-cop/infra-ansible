@@ -1,0 +1,6 @@
+---
+
+- name: "Only execute on the controller host"
+  include: packstack-install.yml
+  when: 
+  - "'controller' in osp_roles.split(',')" 

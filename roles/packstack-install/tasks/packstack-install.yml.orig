@@ -1,0 +1,139 @@
+---
+
+- name: "Include prereq"
+  include: prereq.yml
+
+- name: "Get the list of hosts part of this OSP cluster"
+  set_fact:
+    cluster_hosts: "{{ cluster_hosts | default(groups[group_names[0]]) | intersect(groups[item]) }}" 
+  with_items:
+  - "{{ group_names }}"
+
+- name: "Set OSP fact: Build Config Dictionary"
+  set_fact:
+    config[item.1]: "{{ hostvars[item.0].ansible_host }}"
+  with_nested:
+  - "{{ cluster_hosts }}"
+  - [ 'controller', 'cinder', 'amqp', 'mariadb' ]
+  when:
+  - "item[1] in hostvars[item.0].osp_roles.split(',')"
+
+- name: "Build OSP fact: Compute(nova) Host(s)"
+  set_fact:
+    compute_hosts: "{{ compute_hosts|default([]) }} + [ '{{ hostvars[item].ansible_host }}' ]"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'nova' in hostvars[item].osp_roles.split(',')"
+
+- name: "Build OSP fact: Network(neutron) Host(s)"
+  set_fact:
+    network_hosts: "{{ network_hosts|default([]) }} + [ '{{ hostvars[item].ansible_host }}' ]"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'neutron' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set OSP fact: Build Config Dictionary"
+  set_fact:
+    config['compute']: "{{ compute_hosts|join(',') }}"
+    config['network']: "{{ network_hosts|join(',') }}"
+
+- name: "Set OSP fact: Storage(cinder) Host"
+  set_fact:
+    storage_host: "{{ hostvars[item].ansible_host }}"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'cinder' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set OSP fact: AMQP Host"
+  set_fact:
+    amqp_host: "{{ hostvars[item].ansible_host }}"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'amqp' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set OSP fact: MariaDB Host"
+  set_fact:
+    mariadb_host: "{{ hostvars[item].ansible_host }}"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'mariadb' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set OSP fact: MongoDB Host"
+  set_fact:
+    mongodb_host: "{{ hostvars[item].ansible_host }}"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'mongodb' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set OSP fact: Keystone Host"
+  set_fact:
+    keystone_host: "{{ hostvars[item].ansible_host }}"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'keystone' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set OSP fact: Redis Host"
+  set_fact:
+    redis_host: "{{ hostvars[item].ansible_host }}"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'redis' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set answer-file fact"
+  set_fact:
+    answer_file: "answer-file-{{ ansible_date_time.date }}-{{ ansible_date_time.time }}"
+
+- name: "Generate the Initial answer file"
+  command: "packstack --gen-answer-file={{ answer_file }}"
+
+- name: "Populate the yes/no choices in the answer file"
+  lineinfile: 
+    path: "{{ answer_file }}"
+    regexp: '^{{ item.key }}'
+    line: '{{ item.key }}={{ item.value }}'
+  with_dict: "{{ osp_install_choices }}"
+
+- name: "Populate the answer file with OSP value: Controller Host"
+  lineinfile: 
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_CONTROLLER_HOST='
+    line: 'CONFIG_CONTROLLER_HOST={{ controller_host }}'
+
+- name: "Populate the answer file with OSP value: Compute Host(s)"
+  lineinfile: 
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_COMPUTE_HOSTS='
+    line: 'CONFIG_COMPUTE_HOSTS={{ compute_hosts }}'
+
+- name: "Populate the answer file with OSP value: Network Host(s)"
+  lineinfile: 
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NETWORK_HOSTS='
+    line: 'CONFIG_NETWORK_HOSTS={{ network_hosts }}'
+
+- name: "Populate the answer file with OSP value: Storage Host"
+  lineinfile: 
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_STORAGE_HOST='
+    line: 'CONIG_STORAGE_HOST={{ storage_host }}'
+
+- name: "Populate the answer file with OSP value: Storage Host"
+  lineinfile: 
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_STORAGE_HOST='
+    line: 'CONIG_STORAGE_HOST={{ storage_host }}'
+
+    amqp_host: "{{ hostvars[item].ansible_host }}"
+    mariadb_host: "{{ hostvars[item].ansible_host }}"
+    mongodb_host: "{{ hostvars[item].ansible_host }}"
+    keystone_host: "{{ hostvars[item].ansible_host }}"
+    redis_host: "{{ hostvars[item].ansible_host }}"
+
