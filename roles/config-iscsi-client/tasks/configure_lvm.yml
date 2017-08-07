@@ -25,7 +25,9 @@
   - disk.lv|trim != ''
 
 - name: "Create file system on share"
-  shell: "mkfs.xfs -f /dev/mapper/{{ disk.vg }}-{{ disk.lv }}"
+  filesystem:
+    fstype: xfs
+    dev: "/dev/mapper/{{ disk.vg }}-{{ disk.lv }}"
   when: 
   - disk.lv is defined
   - disk.lv|trim != ''
