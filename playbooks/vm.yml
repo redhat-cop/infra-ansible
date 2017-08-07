@@ -1,7 +1,7 @@
 ---
 
 - name: 'Create VM on infra hosts'
-  hosts: infra_vms
+  hosts: infra_hosts
   roles:
   - role: virt-install
   tags:
