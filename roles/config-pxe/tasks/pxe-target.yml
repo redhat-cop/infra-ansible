@@ -11,8 +11,17 @@
   set_fact:
     pxe_entries: "{{ target_entry.pxe_entries }}"
 
+- name: "Generate the mac-address specific grub.cfg"
+  set_fact:
+    target_file: "{{ tftpserver_root_dir }}/pxelinux/grub.cfg-01-{{ target_entry.mac|regex_replace(':', '-')|lower }}"
+
 - name: "Populate the host specific grub.cfg (UEFI) file"
   template:
     src: pxelinux_uefi.j2
-    dest: "{{ tftpserver_root_dir }}/pxelinux/grub.cfg-01-{{ target_entry.mac|regex_replace(':', '-')|lower }}"
+    dest: "{{ target_file }}"
 
+- name: "Workaround for a RHEL 7.4 uEFI bug where it expects a '-' at the end of the filename"
+  file:
+    src: "{{ target_file }}"
+    dest: "{{ target_file }}-"
+    state: link 
