@@ -1,0 +1,26 @@
+---
+- name: 'Add mongodb repo 3.0 and up'
+  yum_repository:
+    name: "mongodb-org-{{ mongodb_ver }}"
+    description: "MongoDB Repository"
+    baseurl: https://repo.mongodb.org/yum/{{ os_family }}/{{ os_ver }}/mongodb-org/{{ mongodb_ver }}/x86_64/
+    gpgcheck: yes
+    enabled: yes
+    gpgkey: https://www.mongodb.org/static/pgp/server-{{ mongodb_ver }}.asc
+    file: mongodb-org-{{ mongodb_ver }}
+  when: mongodb_ver|float() >= 3.0
+
+- name: 'Add mongodb repo before 3.0'
+  yum_repository:
+    name: "mongodb-org-{{ mongodb_ver }}"
+    description: "MongoDB {{ mongodb_ver }} Repository"
+    baseurl: http://downloads-distro.mongodb.org/repo/{{ os_family }}/os/x86_64/
+    gpgcheck: no
+    enabled: yes
+    file: mongodb-org-{{ mongodb_ver }}
+  when: mongodb_ver|float() < 3.0
+
+- name: 'Install mongodb-org'
+  package:
+    name: mongodb-org
+    state: latest
