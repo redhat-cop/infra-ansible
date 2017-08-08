@@ -22,6 +22,6 @@
 
 - name: "Workaround for a RHEL 7.4 uEFI bug where it expects a '-' at the end of the filename"
   file:
-    src: "{{ target_file }}"
+    src: "{{ target_file|basename }}"
     dest: "{{ target_file }}-"
     state: link 
