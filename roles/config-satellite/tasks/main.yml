@@ -1,0 +1,7 @@
+---
+
+- include: "prereq.yml"
+- include: "install.yml"
+- include: "manifest.yml"
+- include: "repos.yml"
+- include: "activation_keys.yml"

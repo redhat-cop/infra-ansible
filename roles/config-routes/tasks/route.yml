@@ -1,0 +1,15 @@
+---
+
+- name: "Configure route for the specific interface"
+  template:
+    src: route.j2 
+    dest: /etc/sysconfig/network-scripts/route-{{ route.device }}
+  with_items:
+  - '{{ routes }}'
+  loop_control:
+    loop_var: route
+  when:
+  - routes is defined
+  - routes.device is defined
+  - routes.device|trim != ""
+  notify: 'Notify about Network reload'

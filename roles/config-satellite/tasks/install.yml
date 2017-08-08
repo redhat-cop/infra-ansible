@@ -1,0 +1,12 @@
+---
+
+- name: "Install Satellite with default parameters"
+  command: > 
+    satellite-installer 
+      --scenario satellite
+      --foreman-initial-organization "{{ satellite_organization }}"
+      --foreman-initial-location "{{ satellite_location }}"
+      --foreman-admin-username "{{ satellite_username }}"
+      --foreman-admin-password "{{ satellite_password }}"
+      --foreman-proxy-dns-managed=false
+      --foreman-proxy-dhcp-managed=false
