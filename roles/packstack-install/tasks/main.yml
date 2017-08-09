@@ -1,5 +1,8 @@
 ---
 
+- name: "Prepare the OSP hosts"
+  include: host-prep.yml
+
 - name: "Only execute on the controller host"
   include: packstack-install.yml
   when: 

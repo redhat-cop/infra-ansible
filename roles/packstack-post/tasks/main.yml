@@ -1,0 +1,23 @@
+---
+
+- name: "Update mariadb/MySQL to handle additional open files"
+  copy:
+    src: "mariadb-limits.conf"
+    dest: "/etc/systemd/system/mariadb.service.d/limits.conf" 
+  notify: 'restart mariadb'
+
+- name: "Ensure 'dhcp_domain' is unset for nova"
+  lineinfile:
+    path: "/etc/nova/nova.conf"
+    regexp: '^dhcp_domain='
+    line: 'dhcp_domain='
+  notify: 'restart openstack-nova-compute'
+
+- name: "Ensure 'dhcp_domain' is unset for nova"
+  lineinfile:
+    path: "/etc/nova/nova.conf"
+    regexp: '^disk_allocation_ratio='
+    line: 'disk_allocation_ratio=5.0'
+  notify: 'restart openstack-nova-compute'
+
+

@@ -1,0 +1,11 @@
+---
+
+- name: 'restart mariadb'
+  service:
+    name: 'mariadb'
+    state: restarted
+
+- name: 'restart openstack-nova-compute'
+  service:
+    name: 'openstack-nova-compute'
+    state: restarted
