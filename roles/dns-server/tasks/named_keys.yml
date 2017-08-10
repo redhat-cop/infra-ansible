@@ -7,6 +7,7 @@
     owner: named
     group: named
     mode: 0660
+  notify: restart named
 
 - name: Get existing key files
   shell: 'ls -1 K{{ item }}*.key | sed -ne "s/K\({{ item }}\).*.key/\1/p"'
@@ -63,4 +64,5 @@
     mode: 0660
   with_items:
   - "{{ nsupdate_keys_captured.results }}"
+  notify: restart named
 

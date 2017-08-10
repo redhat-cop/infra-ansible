@@ -1,0 +1,7 @@
+---
+
+- name: "Print configured keys - if requested"
+  debug:
+    var: nsupdate_keys
+  when:
+  - print_dns_keys|default(False)

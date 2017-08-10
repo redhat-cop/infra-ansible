@@ -7,6 +7,7 @@
     owner: named 
     group: named
     mode: 0660
+  notify: restart named
 
 - name: Setup DNS Logging configuration
   template: 
@@ -15,6 +16,7 @@
     owner: named
     group: named
     mode: 0660
+  notify: restart named
 
 - name: Setup Controls configuration
   template:
@@ -23,6 +25,7 @@
     owner: named
     group: named
     mode: 0660
+  notify: restart named
 
 - name: Configure named options
   template:
@@ -30,6 +33,7 @@
     dest: /etc/named/named.conf.options
     owner: named
     group: named 
+  notify: restart named
 
 - name: Setup Domain Keys configuration
   template:
@@ -38,4 +42,5 @@
     owner: named
     group: named
     mode: 0660
+  notify: restart named
 

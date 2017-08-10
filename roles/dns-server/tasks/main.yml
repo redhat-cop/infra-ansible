@@ -4,3 +4,4 @@
 - include: named.yml
 - include: named_keys.yml
 - include: named_zones.yml
+- include: print_keys.yml
