@@ -1,5 +1,18 @@
 ---
 # tasks file for idm
+- name: Check installed packages
+  yum:
+    list: installed
+  register: pkgs
+
+- debug: var=item
+  with_items: "{{ pkgs | json_query(query) }}"
+  vars:
+    query: "results[?name=='ipa-server']"
+  register: ipa_query
 
 - include: 'prep.yml'
+  when: ipa_query.results == []
+
 - include: 'configure_idm.yml'
+  when: ipa_query.results == []
