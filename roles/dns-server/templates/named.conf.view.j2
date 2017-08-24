@@ -12,7 +12,7 @@ view "{{ view.name }}" {
 		masters {
 	{% for server in ansible_play_batch %}
 	{% if hostvars[server].dns_server_type|default(default_dns_server_type) == "master" %}
-			{{ hostvars[server].ansible_default_ipv4.address }};
+			{{ hostvars[server].ansible_default_ipv4.address }} key {{ view.name }}-{{ zone.dns_domain }};
 	{% endif %}
 	{% endfor %}
 		};

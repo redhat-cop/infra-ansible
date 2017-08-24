@@ -1,0 +1,47 @@
+---
+
+- name: Get existing key files
+  shell: 'ls -1 K{{ item }}*.key | sed -ne "s/K\({{ item }}\).*.key/\1/p"'
+  args: 
+    chdir: /var/named/
+  register: key_files
+  ignore_errors: yes
+  with_items:
+  - "{{ dns_views }}"
+
+- name: Build list of existing key files
+  set_fact: 
+    existing_key_files: "{{ existing_key_files | default([]) + [ item.stdout ] }}"
+  with_items:
+  - "{{ key_files.results }}"
+
+- name: Generate keys for nsupdate
+  command: >
+    /sbin/dnssec-keygen
+      -a {{ dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) }} 
+      -b {{ dnssec_keygen_size | default(default_dnssec_keygen_size) }}
+      -n USER
+      -r /dev/urandom 
+      -K /var/named {{ item }}
+  with_items:
+  - "{{ dns_views }}"
+  when:
+  - item not in existing_key_files 
+
+- name: Gather keys for nsupdate
+  shell: "grep Key: /var/named/K{{ item }}*.private | cut -d ' ' -f 2"
+  register: nsupdate_keys_captured
+  with_items:
+  - "{{ dns_views }}"
+
+# Build the dict with the proper keys, i.e.:
+#    private-view.example.com:
+#      algorithm: HMAC-MD5 
+#      secret: SKqKNdpfk7llKxZ57bbxUnUDobaaJp9t8CjXLJPl+fRI5mPcSBuxTAyvJPa6Y9R7vUg9DwCy/6WTpgLNqnV4Hg==
+#    public-view.example.com:
+#      algorithm: HMAC-MD5 
+#      secret: kVE2bVTgZjrdJipxPhID8BEZmbHD8cExlVPR+zbFpW6la8kL5wpXiwOh8q5AAosXQI5t95UXwq3Inx8QT58duw==
+- name: Set nsupdate_keys fact
+  set_fact:
+    nsupdate_keys: "{{ nsupdate_keys | default({}) | combine({ item.item : { 'key_algorithm': ( dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) ), 'key_secret': item.stdout } }) }}"
+  with_items: "{{ nsupdate_keys_captured.results }}"
