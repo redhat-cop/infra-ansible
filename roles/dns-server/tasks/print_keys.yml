@@ -1,0 +1,9 @@
+---
+
+- name: "Print configured keys - if requested"
+  debug:
+    var: nsupdate_keys
+  run_once: true
+  when:
+  - print_dns_keys|default(False)
+  delegate_to: "{{ ansible_play_hosts | first }}"
