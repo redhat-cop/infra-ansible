@@ -3,6 +3,10 @@
 - hosts: dns-server
   roles:
   - role: dns-server
+    named_config_recursion: 'no'
+    named_config_dnssec_enable: 'yes'
+    named_config_dnssec_validation: 'yes'
+    named_config_dnssec_lookaside: 'no'
     named_config_views:
     - name: private
       acl_entry: 
