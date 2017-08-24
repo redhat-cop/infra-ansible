@@ -1,0 +1,42 @@
+---
+
+- name: "Configure the keystone parameters to allow for multiple domains"
+  lineinfile:
+    path: "/etc/keystone/keystone.conf"
+    regexp: '^{{ item.key}} ='
+    line: '{{ item.key }} = {{ item.value }}'
+  with_items:
+  - { key: 'domain_specific_drivers_enabled', value: 'true' }
+  - { key: 'domain_config_dir', value: '/etc/keystone/domains' }
+  notify: 'restart keystone'
+
+- name: "Configure the openstack-dashboard parameters to allow for multiple domains"
+  lineinfile:
+    path: "/etc/openstack-dashboard/local_settings"
+    regexp: '^{{ item.key}} ='
+    line: '{{ item.key }} = {{ item.value }}'
+  with_items:
+  - { key: 'OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT', value: 'true' }
+  - { key: 'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN', value: {{ keystone_ldap.domain }} }
+  notify: 'restart keystone'
+
+- name: "Setup LDAP domain configuration"
+  template:
+    src: keystone_ldap.j2
+    dest: "/etc/keystone/domains/keystone.{{ keystone_ldap.domain }}.conf"
+  notify: 'restart keystone'
+
+- name: ""
+  environment: "{{ lookup('file', '/root/keystonerc_admin') }}"
+  
+
+  - /etc/keystone/keystone.conf
+       domain_specific_drivers_enabled = true
+       domain_config_dir = /etc/keystone/domains
+  - /etc/keystone/domains/keystone.ETL.conf
+  - /etc/openstack-dashboard/local_settings
+       OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+       OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'ETL'
+  - openstack domain create --description "ETL Domain" --enable ETL
+  - openstack role add --project admin --user obedin --user-domain ETL admin
+

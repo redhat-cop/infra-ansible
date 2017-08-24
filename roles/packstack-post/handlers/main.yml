@@ -9,3 +9,8 @@
   service:
     name: 'openstack-nova-compute'
     state: restarted
+
+- name: 'restart keystone'
+  service:
+    name: 'httpd'
+    state: restarted
