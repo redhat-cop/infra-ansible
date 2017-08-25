@@ -1,0 +1,55 @@
+---
+- name: Fail when source username or password is not set
+  fail: msg="This role requires source_confluence_site_username and source_confluence_site_password to be set and non empty"
+  when:
+    - (source_confluence_site_username == "") or (source_confluence_site_password == "")
+
+- name: Retrieve all contents from source space
+  uri:
+    url: '{{ confluence_space_source_url }}/rest/api/content?spaceKey={{ confluence_space_source_space_key }}&expand=ancestors'
+    method: GET
+    user: '{{ source_confluence_site_username }}'
+    password: '{{ source_confluence_site_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: contents_json
+  no_log: true
+
+- name: Create a tempfile for Content JSON
+  command: mktemp
+  register: uptemp
+  delegate_to: 127.0.0.1
+
+- name: Write content to file
+  copy:
+    content: "{{ contents_json.json.results | to_json }}"
+    dest: "{{ uptemp.stdout }}"
+
+- name: Initialise old to new id mapping
+  set_fact:
+    id_mapping: {}
+
+- name: Sort contents based on its dependencies
+  command: "./contents_order_parser.py '{{ uptemp.stdout }}'"
+  args:
+    chdir: "{{ role_path }}/files"
+  register: processed_contents
+  delegate_to: 127.0.0.1
+
+- name: Fail when destination username or password is not set
+  fail: msg="This role requires destination_confluence_site_username and destination_confluence_site_password to be set and non empty"
+  when:
+    - (destination_confluence_site_username == "") or (destination_confluence_site_password == "")
+
+- include: create_confluence_space.yml
+
+- include: copy_confluence_content.yml
+  with_items: '{{ processed_contents.stdout }}'
+  loop_control:
+    loop_var: confluence_space_content
+
+- include: copy_confluence_attachments.yml
+  with_dict: '{{ id_mapping }}'
+  loop_control:
+    loop_var: confluence_content_ids
