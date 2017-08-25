@@ -1,7 +1,8 @@
 {% for view in named_config_views %}
 view "{{ view.name }}" {
 	match-clients { "{{ view.name }}"; };
-	recursion {{ view.recursion | default('yes') }};
+
+	recursion {{ view.recursion | default(named_config_recursion) }};
 
 {% for zone in view.zone %}
 	zone "{{ zone.dns_domain }}" IN {
