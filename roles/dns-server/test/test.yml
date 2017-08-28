@@ -9,6 +9,7 @@
     named_config_dnssec_lookaside: 'no'
     named_config_views:
     - name: private
+      recursion: 'yes'
       acl_entry: 
       - 172.16.0.0/16
       - 172.17.0.0/16
