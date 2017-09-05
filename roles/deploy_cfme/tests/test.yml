@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+    - deploy_cfme
