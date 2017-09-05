@@ -1,0 +1,88 @@
+---
+
+- name: Get {{ cfme_project }} Project
+  command: >
+    oc get project {{ cfme_project }}
+  ignore_errors: true
+  register: cfme_project_result
+  
+- name: Create {{ cfme_project }} Project
+  command: >
+    oc adm new-project {{ cfme_project }}
+  when: cfme_project_result.rc != 0
+
+- name: Add default service account in {{ cfme_project }} Project to privileged SCC
+  command: >
+    oc adm policy add-scc-to-user privileged system:serviceaccount:{{ cfme_project }}:default
+
+- name: Add cfme-anyuid service account in {{ cfme_project }} Project to anyuid SCC
+  command: >
+    oc adm policy add-scc-to-user privileged system:serviceaccount:{{ cfme_project }}:default
+
+- name: Join Pod Networks
+  command: >
+    oc adm pod-network join-projects {{ cfme_project }} --to={{ infrastructure_project }}
+
+- name: Create Destination Directory
+  file:
+    dest: "{{ cfme_template_dest_dir }}"
+    state: directory
+
+- name: Copy CFME Template
+  copy:
+    src: "{{ role_path }}/files/{{ cfme_template_file_name }}"
+    dest: "{{ cfme_template_dest_dir }}"
+
+- name: Process CFME Template
+  shell: >
+    oc process -p "NAME={{ cfme_template_param_name }}"
+    -p "APPLICATION_MEM_REQ={{ cfme_template_param_application_mem_req }}"
+    -p "DATABASE_SERVICE_NAME={{ cfme_template_param_database_service_name }}"
+    -p "DATABASE_USER={{ cfme_template_param_database_user }}"
+    -p "DATABASE_PASSWORD={{ cfme_template_param_database_password }}"
+    -p "DATABASE_NAME={{ cfme_template_param_database_name }}"
+    -p "DATABASE_REGION={{ cfme_template_param_database_region }}"
+    -p "MEMCACHED_SERVICE_NAME={{ cfme_template_param_memcached_service_name }}"
+    -p "MEMCACHED_MAX_MEMORY={{ cfme_template_param_memcached_max_memory }}"
+    -p "MEMCACHED_SLAB_PAGE_SIZE={{ cfme_template_param_memcached_slab_page_size }}"
+    -p "POSTGRESQL_MAX_CONNECTIONS={{ cfme_template_param_postgresql_max_connections }}"
+    -p "POSTGRESQL_SHARED_BUFFERS={{ cfme_template_param_postgresql_shared_buffers }}"
+    -p "APPLICATION_CPU_REQ={{ cfme_template_param_application_cpu_req }}"
+    -p "POSTGRESQL_CPU_REQ={{ cfme_template_param_postgresql_cpu_req }}"
+    -p "MEMCACHED_CPU_REQ={{ cfme_template_param_memcached_cpu_req }}"
+    -p "POSTGRESQL_MEM_REQ={{ cfme_template_param_postgresql_mem_req }}"
+    -p "MEMCACHED_MEM_REQ={{ cfme_template_param_memcached_mem_req }}"
+    -p "APPLICATION_MEM_LIMIT={{ cfme_template_param_application_mem_limit }}"
+    -p "POSTGRESQL_MEM_LIMIT={{ cfme_template_param_postgresql_mem_limit }}"
+    -p "MEMCACHED_MEM_LIMIT={{ cfme_template_param_memcached_mem_limit }}"
+    -p "POSTGRESQL_IMG_NAME={{ cfme_template_param_postgresql_img_name }}"
+    -p "POSTGRESQL_IMG_TAG={{ cfme_template_param_postgresql_img_tag }}"
+    -p "MEMCACHED_IMG_NAME={{ cfme_template_param_memcached_img_name }}"
+    -p "MEMCACHED_IMG_TAG={{ cfme_template_param_memcached_img_tag }}"
+    -p "APPLICATION_IMG_NAME={{ cfme_template_param_application_img_name }}"
+    -p "APPLICATION_IMG_TAG={{ cfme_template_param_application_img_tag }}"
+    -p "APPLICATION_DOMAIN={{ cfme_template_param_application_domain }}"
+    -p "APPLICATION_INIT_DELAY={{ cfme_template_param_application_init_delay }}"
+    -p "APPLICATION_VOLUME_CAPACITY={{ cfme_template_param_application_volume_capacity }}"
+    -p "APPLICATION_REGION_VOLUME_CAPACITY={{ cfme_template_param_application_region_volume_capacity }}"
+    -p "DATABASE_VOLUME_CAPACITY={{ cfme_template_param_database_volume_capacity }}"
+    -f {{ cfme_template_dest_dir }}/{{ cfme_template_file_name }} | oc apply -n {{ cfme_project }} -f -
+
+- name: Remove CFME Template
+  file:
+    path: "{{ cfme_template_dest_dir }}/{{ cfme_template_file_name }}"
+    state: absent
+
+- name: Retrieve CFME Route
+  command: >
+    oc get routes {{ cfme_template_param_name }} -n {{ cfme_project }} --template='{{ '{{' }} .spec.host {{ '}}' }}'
+  register: cfme_route_result
+  
+- name: Wait for CFME Application to be Running
+  uri:
+    url: https://{{ cfme_route_result.stdout }}
+    validate_certs: false
+  register: cfme_app_result
+  until: cfme_app_result.status == 200
+  retries: 45
+  delay: 20

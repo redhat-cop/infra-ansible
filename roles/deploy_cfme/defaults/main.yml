@@ -1,0 +1,48 @@
+---
+
+cfme_project: cloudforms
+kubernetes_endpoint: kubernetes.default.svc.cluster.local
+kubernetes_port: 443
+hawkular_endpoint: hawkular-metrics.openshift-infra.svc.cluster.local
+hawkular_port: 443
+cfme_oauth_namespace: management-infra
+cfme_oauth_sa: management-admin
+cfme_template_dest_dir: /tmp/cfme-template
+cfme_template_file_name: cfme-template.yaml
+cfme_template_param_name: cloudforms
+cfme_template_param_database_service_name: postgresql
+cfme_template_param_database_user: root
+cfme_template_param_database_password: smartvm
+cfme_template_param_database_name: vmdb_production
+cfme_template_param_database_region: 0
+cfme_template_param_memcached_service_name: memcached
+cfme_template_param_memcached_max_memory: 64
+cfme_template_param_memcached_max_connections: 1024
+cfme_template_param_memcached_slab_page_size: 1m
+cfme_template_param_postgresql_max_connections: 100
+cfme_template_param_postgresql_shared_buffers: 256MB
+cfme_template_param_application_cpu_req: 1000m
+cfme_template_param_postgresql_cpu_req: 500m
+cfme_template_param_memcached_cpu_req: 200m
+cfme_template_param_application_mem_req: 6144Mi
+cfme_template_param_postgresql_mem_req: 1024Mi
+cfme_template_param_memcached_mem_req: 64Mi
+cfme_template_param_application_mem_limit: 16384Mi
+cfme_template_param_postgresql_mem_limit: 8192Mi
+cfme_template_param_memcached_mem_limit: 256Mi
+cfme_template_param_postgresql_img_name: registry.access.redhat.com/cloudforms45/cfme-openshift-postgresql
+cfme_template_param_postgresql_img_tag: latest
+cfme_template_param_memcached_img_name: registry.access.redhat.com/cloudforms45/cfme-openshift-memcached
+cfme_template_param_memcached_img_tag: latest
+cfme_template_param_application_img_name: registry.access.redhat.com/cloudforms45/cfme-openshift-app
+cfme_template_param_application_img_tag: latest
+cfme_template_param_application_domain:
+cfme_template_param_application_init_delay: 15
+cfme_template_param_application_volume_capacity: 5Gi
+cfme_template_param_application_region_volume_capacity: 5Gi
+cfme_template_param_database_volume_capacity: 15Gi
+infrastructure_project: openshift-infra
+
+
+
+
