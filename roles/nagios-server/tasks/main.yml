@@ -1,0 +1,46 @@
+---
+
+- name: Setup hostgroup directories
+  file:
+    path: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}
+    state: directory
+    mode: 0755
+  with_items: "{{groups['nagios-targets']}}"
+
+- name: Setup common hostgroup configuration
+  template:
+    src: common.cfg.j2 
+    dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/common.cfg
+    owner: root
+    group: root
+    mode: 0644 
+  with_items: "{{groups['nagios-targets']}}"
+
+- name: Setup the hosts in the hostgroup configuration
+  template:
+    src: host.cfg.j2 
+    dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/{{hostvars[item]['inventory_hostname_short']}}.cfg
+    owner: root
+    group: root
+    mode: 0644 
+  with_items: "{{groups['nagios-targets']}}"
+
+- name: Add common hostgroup configuration to master nagios configuration file
+  lineinfile:
+    dest: /etc/nagios/nagios.cfg
+    regexp: "^cfg_file=/etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/common.cfg"
+    line: "cfg_file=/etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/common.cfg"
+  with_items: "{{groups['nagios-targets']}}"
+
+- name: Add host configuration to master nagios configuration file
+  lineinfile:
+    dest: /etc/nagios/nagios.cfg
+    regexp: "^cfg_file=/etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/{{hostvars[item]['inventory_hostname_short']}}.cfg"
+    line: "cfg_file=/etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/{{hostvars[item]['inventory_hostname_short']}}.cfg"
+  with_items: "{{groups['nagios-targets']}}"
+
+- name: Restart nagios
+  service:
+    name: nagios
+    state: restarted
+
