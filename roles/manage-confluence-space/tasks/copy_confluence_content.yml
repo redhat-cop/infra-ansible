@@ -1,0 +1,68 @@
+---
+- name: Get Content from Source
+  uri:
+    url: '{{ confluence_space_source_url }}/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
+    method: GET
+    user: '{{ source_confluence_site_username }}'
+    password: '{{ source_confluence_site_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: content_json
+  no_log: true
+
+- name: Map ancestor ids if any
+  set_fact: 
+    content_ancestors: "{{ content_json.json.ancestors | map(attribute='id') | list | map('extract', id_mapping) | list }}"
+
+- name: Pick only the last ancestor
+  set_fact:
+    content_ancestors: "{{ [-1] | map('extract', content_ancestors) | list }}"
+  when: content_ancestors|length > 0
+
+- name: Create a tempfile for Content JSON
+  command: mktemp
+  register: jsontemp
+  delegate_to: 127.0.0.1
+
+- name: Generate Content JSON from Template
+  template:
+    src: content.j2
+    dest: '{{ jsontemp.stdout }}'
+  delegate_to: 127.0.0.1
+
+- name: Escape HTML Double Quotes
+  replace:
+    path: '{{ jsontemp.stdout }}'
+    regexp: '(?<==)(\")|(\")(?=[>\ ])'
+    replace: '\"'
+
+- name: Remove literal newlines
+  replace:
+    path: '{{ jsontemp.stdout }}'
+    regexp: '\n'
+    replace: ''
+
+- name: Unescape Single Quote
+  replace:
+    path: '{{ jsontemp.stdout }}'
+    regexp: "\\'"
+    replace: "'"
+
+- name: Create Content at Destination Site
+  uri:
+    url: '{{ confluence_space_destination_url }}/rest/api/content'
+    method: POST
+    user: '{{ destination_confluence_site_username }}'
+    password: '{{ destination_confluence_site_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    body: "{{ lookup('file', '{{ jsontemp.stdout }}') }}"
+    return_content: yes
+  register: new_content_json
+  no_log: true
+
+- name: Append New id to old id mapping
+  set_fact:
+    id_mapping: "{{ id_mapping|combine({ content_json.json.id : { 'id' : new_content_json.json.id }}) }}"

@@ -1,0 +1,15 @@
+{
+	"id": "{{ content_json.json.id }}",
+	"title": "{{ content_json.json.title }}",
+	"type": "{{ content_json.json.type }}",
+	"space": {
+		"key": "{{ confluence_space_key }}"
+	},
+	"body": {
+		"storage": {
+			"value": "{{ content_json.json.body.storage.value }}",
+			"representation": "storage"
+		}
+	},
+	"ancestors": {{ content_ancestors | to_json }}
+}

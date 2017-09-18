@@ -1,0 +1,23 @@
+---
+- name: Use a unique temporary file to store the Persistent Volume object
+  command: mktemp
+  register: jsontemp
+  delegate_to: 127.0.0.1
+
+- name: Create post json
+  template:
+    src: space.j2
+    dest: '{{ jsontemp.stdout }}'
+  delegate_to: 127.0.0.1
+
+- name: Create Confluence Space
+  uri:
+    url: '{{ confluence_space_destination_url }}/rest/api/space'
+    method: POST
+    user: '{{ destination_confluence_site_username }}'
+    password: '{{ destination_confluence_site_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    body: "{{ lookup('file', '{{ jsontemp.stdout }}') }}"
+  no_log: true
