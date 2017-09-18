@@ -1,0 +1,6 @@
+---
+- name: Create Atlassian Users
+  hosts: localhost
+  roles:
+    - manage-atlassian-users
+  no_log: true

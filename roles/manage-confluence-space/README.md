@@ -1,7 +1,7 @@
 Create Confluence Space Role
 =========
 
-An ansible role that creates a confluence space that is a copy of a source space.
+An ansible role that manage a confluence space that is a copy of a source space.
 
 Requirements
 ------------
@@ -32,7 +32,7 @@ Steps:
 Running the Playbook
 --------------------
 
-`$ ansible-playbook -e "@path/to/vars.yml" playbooks/create_confluence_space.yml --ask-vault-pass` and enter the password you've previously set for vars.yml
+`$ ansible-playbook -e "@path/to/vars.yml" playbooks/manage-confluence-space.yml --ask-vault-pass` and enter the password you've previously set for vars.yml
 
 Example Playbook
 ----------------
