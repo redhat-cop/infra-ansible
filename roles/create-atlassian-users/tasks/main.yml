@@ -1,0 +1,18 @@
+---
+- include: create_atlassian_groups.yml
+  with_items: "{{ atlassian_groups }}"
+  loop_control:
+    loop_var: group
+  when: atlassian_groups|length > 0
+
+- include: create_atlassian_users.yml
+  with_items: "{{ atlassian_users }}"
+  loop_control:
+    loop_var: atlassian_user
+  when: atlassian_users|length > 0
+
+- include: add_user_to_groups.yml
+  with_items: "{{ atlassian_users }}"
+  loop_control:
+    loop_var: atlassian_user
+  when: atlassian_users|length > 0
