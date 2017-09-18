@@ -1,0 +1,5 @@
+---
+- name: Clone confluence space
+  hosts: localhost
+  roles:
+  - manage-confluence-space
