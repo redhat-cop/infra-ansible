@@ -1,0 +1,7 @@
+---
+  - name: Create IPA group
+    ipa_group:
+      ipa_admin_user: "{{ ipa_admin_user }}"
+      ipa_admin_password: "{{ ipa_admin_password }}"
+      cn: "{{ item.name }}"
+    with_items: "{{ user_groups }}"
