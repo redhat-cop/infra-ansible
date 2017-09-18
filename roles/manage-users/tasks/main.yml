@@ -1,0 +1,11 @@
+---
+
+- include: create_user.yml
+
+- include: create_group.yml
+
+- include: add_user_to_group.yml
+  with_items: "{{ user_groups }}"
+  loop_control:
+    loop_var: "this_group"
+
