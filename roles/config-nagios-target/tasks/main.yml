@@ -1,0 +1,7 @@
+---
+
+# Ensure all prerequisites are met
+- include: prerequisites.yml
+
+# Setup and prepare NRPE (Nagios Remote Plugin Executor)
+- include: nrpe.yml

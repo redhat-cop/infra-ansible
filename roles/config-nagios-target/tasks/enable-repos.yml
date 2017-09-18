@@ -1,0 +1,6 @@
+---
+
+- name: Enable the 'rhel-7-server-optional-rpms' repo
+  command: "/usr/bin/subscription-manager repos --enable={{ item }}"
+  with_items:
+  - rhel-7-server-optional-rpms 

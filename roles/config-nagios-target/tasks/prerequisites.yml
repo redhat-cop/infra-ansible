@@ -1,0 +1,7 @@
+---
+
+# Ensure the correct repos and software packages are installed
+#- include: enable-repos.yml
+#- include: install-epel.yml
+#- include: install-nagios.yml
+

@@ -1,0 +1,10 @@
+---
+
+- name: Installing the Nagios Software Packages
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+  - nrpe
+  - nagios-plugins*
+  tags: epel
