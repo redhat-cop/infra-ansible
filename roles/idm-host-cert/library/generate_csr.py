@@ -40,7 +40,7 @@ options:
     required: true
   state:
     description:
-    - State or Porvince Name (full name) for the Certificate Signing Request
+    - State or Province Name (full name) for the Certificate Signing Request
     required: true
   location:
     description:
