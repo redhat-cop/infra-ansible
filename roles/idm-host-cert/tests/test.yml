@@ -17,4 +17,4 @@
     target_host_key_file: "/tmp/{{ host_name }}.key"
     target_ca_cert_file: "/tmp/ca.pem"
   roles:
-    - generate-host-cert
+  - idm-host-cert

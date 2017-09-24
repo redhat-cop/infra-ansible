@@ -1,11 +1,11 @@
 ---
 
-- name: "Fix newline characters in csr content"
+- name: "Update newline characters in CSR content"
   set_fact:
     cert_csr: "{{ csr_content.csr|replace('\n', '\\n') }}"
 
 - name: "Create Certificate for host"
-  uri: 
+  uri:
     url: "https://{{ idm_fqdn }}/ipa/session/json"
     method: POST
     body: '{"method": "cert_request", "params":[["{{ cert_csr }}"],{"principal": "host/{{ host_name }}@{{ host_realm }}", "request_type": "pkcs10", "add": False}],"id":0}'
@@ -18,4 +18,3 @@
       Content-Type: "application/json"
       Accept: "application/json"
   register: host_cert
-
