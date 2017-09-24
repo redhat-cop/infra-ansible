@@ -1,0 +1,14 @@
+---
+
+- name: "Register host"
+  uri: 
+    url: "https://{{ idm_fqdn }}/ipa/session/json"
+    method: POST
+    body: '{"method":"host_add","params":[["{{ host_name }}"],{"force": {{ host_force_add }}, "description": "{{ host_description }}"}],"id":0}'
+    body_format: json
+    validate_certs: no
+    headers:
+      Cookie: "{{ idm_session.set_cookie }}"
+      referer: "https://{{ idm_fqdn }}/ipa"
+      Content-Type: "application/json"
+      Accept: "application/json"
