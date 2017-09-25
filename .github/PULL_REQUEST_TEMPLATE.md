@@ -8,5 +8,8 @@ Automated tests are preferred, but not always doable - especially for infrastruc
 Provide a link to any open issues that describe the problem you are solving.
 resolves #<number>
 
+### Other Relevant info, PRs, etc.
+Please provide link to other PRs that may be related (blocking, resolves, etc. etc.)
+
 ### People to notify
-cc: @<username>
+cc: @redhat-cop/infra-ansible
