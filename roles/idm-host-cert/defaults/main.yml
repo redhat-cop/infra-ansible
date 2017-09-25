@@ -1,0 +1,10 @@
+---
+
+# 'host_force_add' is used to add the host even if no DNS record(s) exists for the host
+host_force_add: true
+
+# Description of the host entry being added/processed
+host_description: ''
+
+# Default API version to be passed
+api_version: '2.213'

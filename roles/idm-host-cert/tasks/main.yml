@@ -1,0 +1,15 @@
+---
+
+- include: "idm-login.yml"
+
+- include: "register-host.yml"
+
+- include: "generate-csr.yml"
+
+- include: "create-host-cert.yml"
+
+- include: "retrieve-ca-cert.yml"
+
+- include: "write-certs-to-file.yml"
+
+- include: "print-certs.yml"
