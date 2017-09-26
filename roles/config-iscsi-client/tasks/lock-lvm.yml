@@ -1,0 +1,18 @@
+---
+
+- name: "Obtain currently configured LVMs (pvs)"
+  shell: 'pvs | sed -ne "s/\(\/dev\/[^ ]*\) .*/\1/p"'
+  register: pvs_device_list
+
+- name: "Build fact for setting the LVM global_filter"
+  set_fact:
+    lvm_global_filter: '{{ lvm_global_filter | default("") }} "a|^{{ item|trim }}$|",'
+  with_items:
+  - "{{ pvs_device_list.stdout_lines }}"
+
+- name: "Ensure LVM does NOT claim too many devices"
+  lineinfile:
+    path: /etc/lvm/lvm.conf
+    state: present
+    regexp: "\t# global_filter = "
+    line: "\tglobal_filter = [ {{ lvm_global_filter }} \"a/^/dev/loop.*/\", \"r/.*/\" ]"

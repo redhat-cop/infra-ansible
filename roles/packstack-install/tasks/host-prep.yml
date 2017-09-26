@@ -16,4 +16,3 @@
     enabled: yes
   with_items:
   - 'network'
-

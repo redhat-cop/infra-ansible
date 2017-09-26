@@ -1,7 +1,7 @@
 ---
 
 - name: "Ensure the iSCSI initiatorname is set correctly"
-  lineinfile: 
+  lineinfile:
     path: /etc/iscsi/initiatorname.iscsi
     regexp: '^InitiatorName='
     line: 'InitiatorName={{ iscsi_initiatorname }}'
@@ -20,6 +20,5 @@
   open_iscsi:
     portal: '{{ iscsi_target }}'
     login: yes
-    discover: yes    
+    discover: yes
     auto_node_startup: yes
-

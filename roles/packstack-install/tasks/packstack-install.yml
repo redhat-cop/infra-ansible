@@ -9,7 +9,7 @@
 
 - name: "Get the list of hosts part of this OSP cluster"
   set_fact:
-    cluster_hosts: "{{ cluster_hosts | default(groups[group_names[0]]) | intersect(groups[item]) }}" 
+    cluster_hosts: "{{ cluster_hosts | default(groups[group_names[0]]) | intersect(groups[item]) }}"
   with_items:
   - "{{ group_names }}"
 
@@ -52,14 +52,14 @@
   command: "packstack --gen-answer-file={{ answer_file }}"
 
 - name: "Populate the yes/no choices in the answer file"
-  lineinfile: 
+  lineinfile:
     path: "{{ answer_file }}"
     regexp: '^{{ item.key }}'
     line: '{{ item.key }}={{ item.value }}'
   with_dict: "{{ osp_install_choices }}"
 
 - name: "Populate the answer file with OSP host values"
-  lineinfile: 
+  lineinfile:
     path: "{{ answer_file }}"
     regexp: '^{{ item.answer_key }}='
     line: '{{ item.answer_key }}={{ config[item.config_key] }}'
@@ -168,11 +168,35 @@
     regexp: '^CONFIG_NEUTRON_OVS_BRIDGES_COMPUTE='
     line: 'CONFIG_NEUTRON_OVS_BRIDGES_COMPUTE={{ neutron_ovs_bridges_compute }}'
 
+- name: "Set NTP servers"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NTP_SERVERS='
+    line: 'CONFIG_NTP_SERVERS={{ ntp_servers }}'
+
 - name: "Do not provision demo usage and testing"
   lineinfile:
     path: "{{ answer_file }}"
     regexp: '^CONFIG_PROVISION_DEMO='
     line: 'CONFIG_PROVISION_DEMO=n'
+
+- name: "Enable SSL for Horizon (dashboard)"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_HORIZON_SSL='
+    line: 'CONFIG_HORIZON_SSL=y'
+
+- name: "Disable self-signed certs"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CACERT_SELFSIGN='
+    line: 'CONFIG_SSL_CACERT_SELFSIGN=n'
+
+- name: "Set the cert directory"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CERT_DIR='
+    line: 'CONFIG_SSL_CERT_DIR={{ ssl_cert_directory }}'
 
 - name: "Provision Cinder related settings"
   lineinfile:
@@ -193,4 +217,3 @@
     regexp: '^CONFIG_KEYSTONE_LDAP_{{ item.key|upper }}='
     line: 'CONFIG_KEYSTONE_LDAP_{{ item.key|upper }}={{ item.value }}'
   with_dict: "{{ keystone_ldap }}"
-
