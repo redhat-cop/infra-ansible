@@ -1,15 +1,61 @@
-#CREATE IDENTITIES IN AN EXISTING IDM 
+#CREATE IDENTITIES IN AN EXISTING IDM SERVER
 
-An ansible role that consumes the model defined in the [Open Innovation Labs Automation API](https://github.com/rht-labs/api-design). The API declares a team of users needed for a project and the type of group role needed. This ansible role is responsible for creating the users and group roles that are defined there. In addition, this role intends to be able to decommission users based on information in the user/group nodes (ex. active date / expiry date). Both projects are in early stages, so unless otherwise noted, this work is being developed against the master branch of the Automation API. Future versions will look to stabilize against a tagged release of the API.
+An ansible role that consumes a JSON file/structure with the following information:
+```
+{
+    "users" : [
+        {
+            "user_name": "gdownie",
+            "first_name": "Gord",
+            "last_name": "Downie",
+            "email": "gdownie@example.com"
+        },
+        {
+            "user_name": "lcohen",
+            "first_name": "Leonard",
+            "last_name": "Cohen",
+            "email": "lcohen@example.com"
+        },
+        {
+            "user_name": "rhawkins",
+            "first_name": "Ron",
+            "last_name": "Hawkins",
+            "email": "rhawkins@example.com"
+        },
+        {
+            "user_name": "wclark",
+            "first_name": "Wendel",
+            "last_name": "Clark",
+            "email": "wclark@example.com"
+        }
+    ],
+    "user_groups": [
+        {
+            "name": "test-group1",
+            "members": [ "gdownie", "lcohen", "rhawkins" ]
+        },
+        {
+            "name": "test-group2",
+            "members": [ "rhawkins" ]
+        },
+        {
+            "name": "test-group3",
+            "members": [ "gdownie" ]
+          }
+    ]
+}
+
+```
 
 ---
 ##Testing
 
-run the test ```ansible-playbook -i inventory create_idm.yml```
+Run the test ```ansible-playbook -i inventory create_idm.yml```
 
-###Test Notes: 
+###Test Notes:
 
-* This requires that you have an existing idm available. The code is written expressly for and is tested against the idm provide by RHEL 7.2
-* change the value in the inventory file to point to a valid idm
-* You can test modfications by re-running the test pointing to a different json file ```ansible-playbook -i inventory create_idm.yml -e "@vars/idm_mod.json"
-
+* This requires that you have an existing IdM available.
+* Change the value in the inventory file to point to a valid IdM
+* Passwords are not set/changed in this role
+* Modify IdM credentials in create_idm.yml to match your IdM
+* You can test modfications by re-running the test pointing to a different json file ```ansible-playbook -i inventory create_idm.yml -e "@vars/idm_mod.json"```

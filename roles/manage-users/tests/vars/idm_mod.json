@@ -1,39 +1,24 @@
 {
     "users" : [
-        { 
+        {
             "user_name": "gdownie",
-            "first_name": "Gord",
-            "last_name": "Downie",
-            "email": "gdownie@redhat.com",
+            "first_name": "Gord-change",
+            "last_name": "Downie-change",
+            "email": "gdownie@example.com",
             "expiration_date": "2019-11-30T22:38:40.326Z"
-
-        }, 
-        { 
-            "user_name": "lcohen", 
-            "first_name": "Leonard",
-            "last_name": "Cohen",
-            "email": "lcohen@redhat.com"
-        }, 
-        { 
+        },
+        {
             "user_name": "rhawkins",
             "first_name": "Ron",
             "last_name": "Hawkins",
-            "email": "rhawkins@redhat.com",
+            "email": "rhawkins@example.com",
             "expiration_date": "2018-11-30T22:38:40.326Z"
-        }, 
-        { 
-            "user_name": "wclark",
-            "expiration_date": "2018-11-30T22:38:40.326Z"
-        } 
-    ],
+        }
+   ],
     "user_groups": [
-        { 
+        {
             "name": "test-group1",
-            "members": [
-                { "user_name": "gdownie" }, 
-                { "user_name": "lcohen" }, 
-                { "user_name": "wclark" }
-            ]
+            "members": [ "gdownie", "wclark" ]
         },
         {
             "name": "test-group2"
