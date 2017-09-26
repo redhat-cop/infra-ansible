@@ -1,32 +1,33 @@
 {
     "users" : [
-        { 
+        {
             "user_name": "gdownie",
             "first_name": "Gord",
             "last_name": "Downie",
-            "email": "gdownie@redhat.com"
-        }, 
-        { 
-            "user_name": "lcohen", 
+            "email": "gdownie@example.com",
+            "user_password": "P@55word"
+        },
+        {
+            "user_name": "lcohen",
             "first_name": "Leonard",
             "last_name": "Cohen",
-            "email": "lcohen@redhat.com"
-        }, 
-        { 
+            "email": "lcohen@example.com"
+        },
+        {
             "user_name": "rhawkins",
             "first_name": "Ron",
             "last_name": "Hawkins",
-            "email": "rhawkins@redhat.com"
-        }, 
-        { 
+            "email": "rhawkins@example.com"
+        },
+        {
             "user_name": "wclark",
             "first_name": "Wendel",
             "last_name": "Clark",
-            "email": "wclark@redhat.com"
-        } 
+            "email": "wclark@example.com"
+        }
     ],
     "user_groups": [
-        { 
+        {
             "name": "test-group1",
             "members": [ "gdownie", "lcohen", "rhawkins" ]
         },
