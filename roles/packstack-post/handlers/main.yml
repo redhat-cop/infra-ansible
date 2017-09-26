@@ -14,3 +14,23 @@
   service:
     name: 'httpd'
     state: restarted
+
+- name: 'restart openstack-cinder-api'
+  service:
+    name: 'openstack-cinder-api'
+    state: restarted
+
+- name: 'restart openstack-cinder-backup'
+  service:
+    name: 'openstack-cinder-backup'
+    state: restarted
+
+- name: 'restart openstack-cinder-scheduler'
+  service:
+    name: 'openstack-cinder-scheduler'
+    state: restarted
+
+- name: 'restart openstack-cinder-volume'
+  service:
+    name: 'openstack-cinder-volume'
+    state: restarted

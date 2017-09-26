@@ -1,0 +1,6 @@
+---
+
+- name: "Include 'keystone' processing"
+  include: "keystone.yml"
+  when:
+  - "'keystone' in osp_roles.split(',')"

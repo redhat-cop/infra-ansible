@@ -1,0 +1,15 @@
+---
+
+- name: "Ensure 'dhcp_domain' is unset for nova"
+  lineinfile:
+    path: "/etc/nova/nova.conf"
+    regexp: '^dhcp_domain='
+    line: 'dhcp_domain='
+  notify: 'restart openstack-nova-compute'
+
+- name: "Set a 'disk_alocation_ratio' to allow for overcommit on the local disk"
+  lineinfile:
+    path: "/etc/nova/nova.conf"
+    regexp: '^disk_allocation_ratio='
+    line: 'disk_allocation_ratio=2.0'
+  notify: 'restart openstack-nova-compute'

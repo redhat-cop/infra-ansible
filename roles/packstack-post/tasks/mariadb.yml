@@ -1,0 +1,12 @@
+---
+
+- name: "Ensure target directory exists"
+  file:
+    path: "/etc/systemd/system/mariadb.service.d"
+    state: directory
+
+- name: "Update mariadb/MySQL to handle additional open files"
+  copy:
+    src: "mariadb-limits.conf"
+    dest: "/etc/systemd/system/mariadb.service.d/limits.conf"
+  notify: 'restart mariadb'

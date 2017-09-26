@@ -1,23 +1,21 @@
 ---
 
-- name: "Update mariadb/MySQL to handle additional open files"
-  copy:
-    src: "mariadb-limits.conf"
-    dest: "/etc/systemd/system/mariadb.service.d/limits.conf" 
-  notify: 'restart mariadb'
+- name: "Include 'mariadb' processing"
+  include: "mariadb.yml"
+  when:
+  - "'mariadb' in osp_roles.split(',')"
 
-- name: "Ensure 'dhcp_domain' is unset for nova"
-  lineinfile:
-    path: "/etc/nova/nova.conf"
-    regexp: '^dhcp_domain='
-    line: 'dhcp_domain='
-  notify: 'restart openstack-nova-compute'
+- name: "Include 'keystone' processing"
+  include: "keystone.yml"
+  when:
+  - "'keystone' in osp_roles.split(',')"
 
-- name: "Set a 'disk_alocation_ratio' to allow for overcommit on the local disk"
-  lineinfile:
-    path: "/etc/nova/nova.conf"
-    regexp: '^disk_allocation_ratio='
-    line: 'disk_allocation_ratio=2.0'
-  notify: 'restart openstack-nova-compute'
+- name: "Include 'cinder' processing"
+  include: "cinder.yml"
+  when:
+  - "'cinder' in osp_roles.split(',')"
 
-- 
+- name: "Include 'nova' processing"
+  include: "nova.yml"
+  when:
+  - "'nova' in osp_roles.split(',')"
