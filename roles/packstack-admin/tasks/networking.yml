@@ -1,0 +1,27 @@
+---
+
+- name: "Set up Default Networks"
+  shell: >
+    source {{ admin_keystonerc_file }};
+    openstack network create
+      --project "{{ item.project }}"
+      --description "{{ item.description }}"
+      --{{ item.external_option }}
+      --provider-network-type {{ item.provider_network_type }}
+      --provider-physical-network {{ item.provider_physical_network }}
+      --provider-segment {{ item.provider_segment }}
+      {{ item.name }}
+
+- name: "Set up Default Subnets"
+  shell: >
+    source {{ admin_keystonerc_file }};
+    openstack subnet create
+      --project "{{ item.project }}"
+      --network "{{ item.network }}"
+      --allocation-pool "{{ item.allocation_pool }}"
+      --dns-nameserver "{{ item.dns_nameservers }}"
+      --dns-nameserver "{{ item.dns_nameservers }}"
+      --{{ item.dhcp_option }}
+      --subnet-range "{{ item.subnet-range }}"
+      --gateway "{{ item.gateway }}"
+      "{{ item.subnet-name }}"

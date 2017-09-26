@@ -1,0 +1,60 @@
+- Enable Horizon SSL in packstack
+  - DONE
+
+- Automate Cinder configuration
+
+- Automate LDAP configuration and ensure it's using ldaps
+  - /etc/keystone/keystone.conf
+       domain_specific_drivers_enabled = true
+       domain_config_dir = /etc/keystone/domains
+  - /etc/keystone/domains/keystone.ETL.conf
+  - /etc/openstack-dashboard/local_settings
+       OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+       OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'ETL'
+  - openstack domain create --description "ETL Domain" --enable ETL
+  - openstack role add --project admin --user obedin --user-domain ETL admin
+
+- Make all OpenStack services use https
+
+- Automate the initial setup
+  - External network
+  - Loading up default cloud images
+  - User access / tenants 
+  - Service Accounts
+
+- Test instance migration
+
+- Test adding nova nodes
+
+- Test removing nova nodes
+
+- Overcommit storage
+  - DONE ??
+
+
+- External network
+  - name: 'external'
+  - project: 'services'
+  - type: VLAN
+  - Physical Net: physnet1
+  - Segment: <VLAN>
+  - External Network = 'checked'
+
+- Create Subnet
+  - name: external
+  - network addres: <ip/24>
+  - gateway: <ip-gw>
+  - no DHCP
+  - Allocation Pools ---
+  - DNS servers
+
+- Create projects
+  - assign users
+
+- Upload Images
+  - 
+
+
+
+
+
