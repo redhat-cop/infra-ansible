@@ -4,12 +4,13 @@
 - name: Create Test Identities
   hosts: ipa
 
-  vars_files: 
+  vars_files:
     - vars/idm.json
 
   vars:
-    ipa_admin_password: todo
+    ipa_admin_password: test123
     ipa_admin_user: admin
+    ipa_host: util-1.dan.etl.rht-labs.com 
 
-  roles: 
-    - create-identities
+  roles:
+    - manage-users

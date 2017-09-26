@@ -1,12 +1,15 @@
 --- 
   - name: Create IPA user
     ipa_user:
-      ipa_admin_user: "{{ ipa_admin_user }}"
-      ipa_admin_password: "{{ ipa_admin_password }}"
-      givenname: "{{ item.first_name | default('Red') }}"
-      sn: "{{ item.last_name | default('Hat') }}"
-      uid: "{{ item.user_name }}"
-      password: "{{ item.user_name }}"
-      email: "{{ item.email | default('') }}"
-      expiration_date: "{{ item.expiration_date | default('') }}"
+      ipa_host: "{{ ipa_host | default(ansible_host)}}"
+      ipa_user: "{{ ipa_admin_user }}"
+      ipa_pass: "{{ ipa_admin_password }}"
+      validate_certs: "{{ ipa_validate_certs | default('False') }}"
+      givenname: "{{ item.first_name | trim }}"
+      sn: "{{ item.last_name | trim }}"
+# changed to name from uid
+      name: "{{ item.user_name | trim }}"
+      password: "{{ item.user_name  | trim}}"
+      mail: "{{ item.email | default('') }}"
+#      expiration_date: "{{ item.expiration_date | default('') }}"
     with_items: "{{ users }}"
