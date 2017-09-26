@@ -2,8 +2,8 @@
     "users" : [
         {
             "user_name": "gdownie",
-            "first_name": "Gord",
-            "last_name": "Donie",
+            "first_name": "Gord-change",
+            "last_name": "Donwie-change",
             "email": "gdownie@redhat.com",
             "expiration_date": "2019-11-30T22:38:40.326Z"
 

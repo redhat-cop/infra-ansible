@@ -8,9 +8,9 @@
     - vars/idm.json
 
   vars:
-    ipa_admin_password: test123
     ipa_admin_user: admin
-    ipa_host: util-1.dan.etl.rht-labs.com 
+    ipa_admin_password: test123
+    ipa_host: idm.example.com 
 
   roles:
     - manage-users
