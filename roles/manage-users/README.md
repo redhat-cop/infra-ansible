@@ -9,7 +9,6 @@ An ansible role that consumes a JSON file/structure with the following informati
             "first_name": "Gord",
             "last_name": "Downie",
             "email": "gdownie@example.com"
-            "user_password": "P@55word"
         },
         {
             "user_name": "lcohen",
