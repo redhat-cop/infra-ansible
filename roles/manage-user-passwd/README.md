@@ -1,4 +1,4 @@
-#SET/RESET USER PASSWORD ON IDM SERVER
+# SET/RESET USER PASSWORD ON IDM SERVER
 
 An ansible role that consumes a JSON structure with the following information and assumes the user is already created in IdM:
 ```
@@ -20,11 +20,11 @@ An ansible role that consumes a JSON structure with the following information an
 ```
 
 ---
-##Testing
+## Testing
 
 Run the test ```ansible-playbook -i inventory change_passwd.yml```
 
-###Test Notes:
+### Test Notes:
 
 * This requires that you have an existing IdM available.
 * Change the value in the inventory file to point to a valid IdM

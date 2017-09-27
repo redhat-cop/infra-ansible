@@ -6,23 +6,23 @@
     when: item.password is defined
 
 #
-# check if generate isset true and password != ''
+# check if generate is set true and password != ''
 #
   - name : Create random password
     set_fact:
       password: "{{ lookup('password','/dev/null length=15' ) }}"
-    when: 
+    when:
     - item.generate is defined
     - item.generate == True
     - (item.password == '' or item.password is not defined)
 
-# print password for capture. 
+# print password for capture.
   - name: "Password dump "
     debug:
       msg: "The password about to be set is: {{ password }}"
       verbosity: 2
 
-# call module to update 
+# call module to update
   - name: "Change IPA password for user: {{ item.user_name }}"
     ipa_user:
       ipa_host: "{{ ipa_host | default(ansible_host)}}"
@@ -30,6 +30,5 @@
       ipa_pass: "{{ ipa_admin_password }}"
       validate_certs: "{{ ipa_validate_certs | default(False) }}"
       name: "{{ item.user_name | trim }}"
-      password: "{{ password | default('P@55word') }}"
+      password: "{{ password }}"
     when: password != ""
-
