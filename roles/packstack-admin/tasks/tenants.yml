@@ -1,46 +1,48 @@
 ---
 
-openstack network create --project services --description "External Connectivity #1" --external --provider-network-type vlan --provider-physical-network physnet1 --provider-segment 253 external
-
-openstack subnet create --project services --network external --allocation-pool start=10.9.51.2,end=10.9.51.254 --dns-nameserver 10.9.48.31 --dns-nameserver 10.9.48.32 --no-dhcp --subnet-range 10.9.51.0/24 --gateway 10.9.51.1 external
-
-
-openstack project create --domain ETL --description "RHOIL Tenant" --enable RHOIL
-
-
-openstack role add --user obedin --user-domain ETL --project RHOIL _member_
-openstack role add --user obedin --user-domain ETL --project RHOIL heat_stack_owner
-
-
-openstack image create --public --file /mnt/software/QCOW2s/Fedora-Cloud-Base-26-1.5.x86_64.qcow2 "Fedora-Cloud-Base-26-1.5.x86_64"
-
-
-
-- name: "Get current LDAP domains"
+- name: "Obtain currently configured projects/tenants"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack domain list -f json
-  register: existing_domains
+    openstack project list -f yaml
+  register: project_list
 
-- name: "Store the target domain info (if found)"
+- name: "Store away the yaml output"
   set_fact:
-    existing_target_domain: "{{ item }}"
-  when:
-  - existing_domains is defined
-  - item.Name == keystone_ldap.domain
-  with_items:
-  - "{{ existing_domains.stdout|from_json }}"
+    project_list_yaml: "{{ project_list.stdout|from_yaml }}"
 
-- name: "Create the LDAP domain"
+- name: "Add projects / tenants"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack domain create --description "{{ keystone_ldap.domain }} Domain" --enable "{{ keystone_ldap.domain }}"
-  when:
-  - existing_target_domain is not defined
+    openstack project create \
+      --domain "{{ item.domain }}" \
+      --description "{{ item.description }}" \
+      --enable \
+      "{{ item.name }}"
+  with_items:
+  - "{{ osp_projects | get_remaining_items(project_list_yaml, 'name', 'Name') }}"
 
-- name: "Add admins from the LDAP domain"
+- name: "Assign roles for users/projects"
+  include: "tenant-roles.yml"
+  with_items:
+  - "{{ osp_projects }}"
+  loop_control:
+    loop_var: project
+
+- name: "Update tenant quotas"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack role add --project admin --user "{{ item }}" --user-domain "{{ keystone_ldap.domain }}" admin
+    openstack quota set \
+      --cores "{{ item.quota.vcpus }}" \
+      --instances "{{ item.quota.instances }}" \
+      --volumes "{{ item.quota.volumes }}" \
+      --gigabytes "{{ item.quota.total_vol_size }}" \
+      --ram "{{ item.quota.ram }}" \
+      --secgroups "{{ item.quota.security_groups }}" \
+      --secgroup-rules "{{ item.quota.security_group_rules }}" \
+      --floating-ips "{{ item.quota.floating_ips }}" \
+      --networks "{{ item.quota.networks }}" \
+      --routers "{{ item.quota.routers }}" \
+      --subnets "{{ item.quota.subnets }}" \
+      "{{ item.name }}"
   with_items:
-  - "{{ keystone_ldap.admins }}"
+  - "{{ osp_projects }}"

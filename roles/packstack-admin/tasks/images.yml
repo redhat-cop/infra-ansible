@@ -1,46 +1,21 @@
 ---
 
-openstack network create --project services --description "External Connectivity #1" --external --provider-network-type vlan --provider-physical-network physnet1 --provider-segment 253 external
-
-openstack subnet create --project services --network external --allocation-pool start=10.9.51.2,end=10.9.51.254 --dns-nameserver 10.9.48.31 --dns-nameserver 10.9.48.32 --no-dhcp --subnet-range 10.9.51.0/24 --gateway 10.9.51.1 external
-
-
-openstack project create --domain ETL --description "RHOIL Tenant" --enable RHOIL
-
-
-openstack role add --user obedin --user-domain ETL --project RHOIL _member_
-openstack role add --user obedin --user-domain ETL --project RHOIL heat_stack_owner
-
-
-openstack image create --public --file /mnt/software/QCOW2s/Fedora-Cloud-Base-26-1.5.x86_64.qcow2 "Fedora-Cloud-Base-26-1.5.x86_64"
-
-
-
-- name: "Get current LDAP domains"
+- name: "Obtain current images"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack domain list -f json
-  register: existing_domains
+    openstack image list -f yaml
+  register: image_list
 
-- name: "Store the target domain info (if found)"
+- name: "Store away the yaml output"
   set_fact:
-    existing_target_domain: "{{ item }}"
-  when:
-  - existing_domains is defined
-  - item.Name == keystone_ldap.domain
-  with_items:
-  - "{{ existing_domains.stdout|from_json }}"
+    image_list_yaml: "{{ image_list.stdout|from_yaml }}"
 
-- name: "Create the LDAP domain"
+- name: "Create the image"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack domain create --description "{{ keystone_ldap.domain }} Domain" --enable "{{ keystone_ldap.domain }}"
-  when:
-  - existing_target_domain is not defined
-
-- name: "Add admins from the LDAP domain"
-  shell: >
-    source {{ admin_keystonerc_file }};
-    openstack role add --project admin --user "{{ item }}" --user-domain "{{ keystone_ldap.domain }}" admin
+    openstack image create \
+      --{{ item.visibility }} \
+      --file "{{ item.path }}" \
+      "{{ item.name }}"
   with_items:
-  - "{{ keystone_ldap.admins }}"
+  - "{{ osp_default_images | get_remaining_items(image_list_yaml, 'name', 'Name') }}"

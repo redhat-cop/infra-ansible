@@ -1,0 +1,20 @@
+---
+
+- name: "Build DNS nameservers command line options"
+  set_fact:
+    dns_nameservers: "{{ dns_nameservers | default('') + '--dns-nameserver ' + item }}"
+  with_items:
+  - "{{ subnet.dns_nameservers }}"
+
+- name: "Set up subnet"
+  shell: >
+    source {{ admin_keystonerc_file }};
+    openstack subnet create \
+      --project "{{ subnet.project }}" \
+      --network "{{ subnet.network }}" \
+      --allocation-pool "{{ subnet.allocation_pool }}" \
+      "{{ dns_nameservers }}" \
+      --{{ subnet.dhcp_option }} \
+      --subnet-range "{{ subnet.subnet-range }}" \
+      --gateway "{{ subnet.gateway }}" \
+      "{{ subnet.name }}"

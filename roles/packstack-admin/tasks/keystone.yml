@@ -3,28 +3,19 @@
 - name: "Get current LDAP domains"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack domain list -f json
-  register: existing_domains
+    openstack domain list -f yaml
+  register: domain_list
 
-- name: "Store the target domain info (if found)"
+- name: "Store away the yaml output"
   set_fact:
-    existing_target_domain: "{{ item }}"
-  when:
-  - existing_domains is defined
-  - item.Name == keystone_ldap.domain
-  with_items:
-  - "{{ existing_domains.stdout|from_json }}"
+    domain_list_yaml: "{{ domain_list.stdout|from_yaml }}"
 
-- name: "Create the LDAP domain"
+- name: "Create the LDAP domain(s)"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack domain create --description "{{ keystone_ldap.domain }} Domain" --enable "{{ keystone_ldap.domain }}"
-  when:
-  - existing_target_domain is not defined
-
-- name: "Add admins from the LDAP domain"
-  shell: >
-    source {{ admin_keystonerc_file }};
-    openstack role add --project admin --user "{{ item }}" --user-domain "{{ keystone_ldap.domain }}" admin
+    openstack domain create \
+      --description "{{ item.domain }} Domain" \
+      --enable \
+      "{{ item.domain }}"
   with_items:
-  - "{{ keystone_ldap.admins }}"
+  - "{{ keystone_ldap | get_remaining_items(domain_list_yaml, 'domain', 'Name') }}"

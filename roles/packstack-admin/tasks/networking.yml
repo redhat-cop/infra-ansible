@@ -1,27 +1,39 @@
 ---
 
-- name: "Set up Default Networks"
+- name: "Obtain currently configured networks"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack network create
-      --project "{{ item.project }}"
-      --description "{{ item.description }}"
-      --{{ item.external_option }}
-      --provider-network-type {{ item.provider_network_type }}
-      --provider-physical-network {{ item.provider_physical_network }}
-      --provider-segment {{ item.provider_segment }}
-      {{ item.name }}
+    openstack network list -f yaml
+  register: network_list
 
-- name: "Set up Default Subnets"
+- name: "Obtain currently configured subnets"
   shell: >
     source {{ admin_keystonerc_file }};
-    openstack subnet create
-      --project "{{ item.project }}"
-      --network "{{ item.network }}"
-      --allocation-pool "{{ item.allocation_pool }}"
-      --dns-nameserver "{{ item.dns_nameservers }}"
-      --dns-nameserver "{{ item.dns_nameservers }}"
-      --{{ item.dhcp_option }}
-      --subnet-range "{{ item.subnet-range }}"
-      --gateway "{{ item.gateway }}"
-      "{{ item.subnet-name }}"
+    openstack subnet list -f yaml
+  register: subnet_list
+
+- name: "Store away the yaml output"
+  set_fact:
+    network_list_yaml: "{{ network_list.stdout|from_yaml }}"
+    subnet_list_yaml: "{{ subnet_list.stdout|from_yaml }}"
+
+- name: "Set up default networks"
+  shell: >
+    source {{ admin_keystonerc_file }};
+    openstack network create \
+      --project "{{ item.project }}" \
+      --description "{{ item.description }}" \
+      --{{ item.external_option }} \
+      --provider-network-type {{ item.provider_network_type }} \
+      --provider-physical-network {{ item.provider_physical_network }} \
+      --provider-segment {{ item.provider_segment }} \
+      {{ item.name }}
+  with_items:
+  - "{{ osp_default_networks | get_remaining_items(network_list_yaml, 'name', 'Name') }}"
+
+- name: "Set up default subnets"
+  include: create-subnet.yml
+  with_items:
+  - "{{ osp_default_subnets | get_remaining_items(subnet_list_yaml, 'name', 'Name') }}"
+  loop_control:
+    loop_var: subnet

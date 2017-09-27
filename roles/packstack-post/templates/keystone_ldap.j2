@@ -1,19 +1,19 @@
 
 [ldap]
-url = {{ keystone_ldap.url }}
-user = {{ keystone_ldap.user }}
-user_filter = {{ keystone_ldap.user_filter }}
-password = {{ keystone_ldap.password }}
-user_tree_dn = {{ keystone_ldap.user_tree_dn }}
-user_objectclass = {{ keystone_ldap.user_objectclass }}
-user_id_attribute = {{ keystone_ldap.user_id_attribute }}
-user_name_attribute = {{ keystone_ldap.user_name_attribute }}
-user_mail_attribute =  {{ keystone_ldap.user_mail_attribute }}
-user_pass_attribute = {{ keystone_ldap.user_pass_attribute }}
-user_allow_create =  {{ keystone_ldap.user_allow_create }}
-user_allow_update =  {{ keystone_ldap.user_allow_update }}
-user_allow_delete =  {{ keystone_ldap.user_allow_delete }}
-tls_cacertfile = {{ keystone_ldap.tls_cacertfile }}
+url = {{ item.url }}
+user = {{ item.user }}
+user_filter = {{ item.user_filter }}
+password = {{ item.password }}
+user_tree_dn = {{ item.user_tree_dn }}
+user_objectclass = {{ item.user_objectclass }}
+user_id_attribute = {{ item.user_id_attribute }}
+user_name_attribute = {{ item.user_name_attribute }}
+user_mail_attribute =  {{ item.user_mail_attribute }}
+user_pass_attribute = {{ item.user_pass_attribute }}
+user_allow_create =  {{ item.user_allow_create }}
+user_allow_update =  {{ item.user_allow_update }}
+user_allow_delete =  {{ item.user_allow_delete }}
+tls_cacertfile = {{ item.tls_cacertfile }}
 
 [identity]
 driver = keystone.identity.backends.ldap.Identity

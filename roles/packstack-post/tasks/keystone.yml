@@ -18,7 +18,7 @@
     line: '{{ item.key }} = {{ item.value }}'
   with_items:
   - { key: 'OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT', value: 'True' }
-  - { key: 'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN', value: '"{{ keystone_ldap.domain }}"' }
+  - { key: 'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN', value: 'default' }
   notify: 'restart keystone'
 
 - name: "Ensure target domain directory exists"
@@ -35,5 +35,7 @@
 - name: "Setup LDAP domain configuration"
   template:
     src: keystone_ldap.j2
-    dest: "/etc/keystone/domains/keystone.{{ keystone_ldap.domain }}.conf"
+    dest: "/etc/keystone/domains/keystone.{{ item.domain }}.conf"
   notify: 'restart keystone'
+  with_items:
+  - "{{ keystone_ldap }}"

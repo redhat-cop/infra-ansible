@@ -1,6 +1,11 @@
 ---
 
-- name: "Include 'keystone' processing"
-  include: "keystone.yml"
-  when:
-  - "'keystone' in osp_roles.split(',')"
+- include: "keystone.yml"
+
+- include: "networking.yml"
+
+- include: "images.yml"
+
+- include: "tenants.yml"
+
+- include: "service-accounts.yml"
