@@ -1,14 +1,27 @@
 #SET/RESET USER PASSWORD ON IDM SERVER
 
-An ansible role that consumes a JSON structure with the following information:
+An ansible role that consumes a JSON structure with the following information and assumes the user is already created in IdM:
 ```
 {
-    "user" : [
+    "user" :
         {
-            "user_name": "gdownie",
+            "user_name": "test",
             "user_password": "P@55word"
+            "generate": "False"
         }
-    ]
+}
+
+```
+or
+
+```
+{
+    "user" :
+        {
+            "user_name": "test",
+            "user_password": ""
+            "generate": "True"
+        }
 }
 
 ```
