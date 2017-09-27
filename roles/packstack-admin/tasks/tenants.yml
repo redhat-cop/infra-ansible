@@ -46,3 +46,5 @@
       "{{ item.name }}"
   with_items:
   - "{{ osp_projects }}"
+  when:
+  - item.quota is defined
