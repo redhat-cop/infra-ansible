@@ -2,7 +2,7 @@
 
 - name: "Build DNS nameservers command line options"
   set_fact:
-    dns_nameservers: "{{ dns_nameservers | default('') + '--dns-nameserver ' + item }}"
+    dns_nameservers: "{{ dns_nameservers | default('') + ' --dns-nameserver ' + item }}"
   with_items:
   - "{{ subnet.dns_nameservers }}"
 
@@ -13,8 +13,8 @@
       --project "{{ subnet.project }}" \
       --network "{{ subnet.network }}" \
       --allocation-pool "{{ subnet.allocation_pool }}" \
-      "{{ dns_nameservers }}" \
+      {{ dns_nameservers }} \
       --{{ subnet.dhcp_option }} \
-      --subnet-range "{{ subnet.subnet-range }}" \
+      --subnet-range "{{ subnet.subnet_range }}" \
       --gateway "{{ subnet.gateway }}" \
       "{{ subnet.name }}"
