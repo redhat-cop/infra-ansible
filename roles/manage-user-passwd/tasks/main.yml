@@ -1,0 +1,6 @@
+---
+
+- include: idm-set-passwd.yml
+  with_items:
+    - "{{ users }}"
+
