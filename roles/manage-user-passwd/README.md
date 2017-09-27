@@ -3,25 +3,18 @@
 An ansible role that consumes a JSON structure with the following information and assumes the user is already created in IdM:
 ```
 {
-    "user" :
+    "users" : [
         {
             "user_name": "test",
             "user_password": "P@55word"
             "generate": "False"
-        }
-}
-
-```
-or
-
-```
-{
-    "user" :
+        },
         {
             "user_name": "test",
             "user_password": ""
             "generate": "True"
         }
+    ]
 }
 
 ```

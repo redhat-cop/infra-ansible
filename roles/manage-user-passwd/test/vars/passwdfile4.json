@@ -1,7 +1,8 @@
 {
-  "user" : 
-  {
-    "user_name": "test",
-    "password": ""
-  }
+  "users" : [
+        {
+          "user_name": "test",
+          "password": ""
+        }
+  ]
 }

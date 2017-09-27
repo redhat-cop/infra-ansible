@@ -1,7 +1,9 @@
 {
-  "user" : {
-    "user_name": "test",
-    "password": "",
-    "generate": "True"
-  }
+  "users" : [
+      {
+        "user_name": "test",
+        "password": "",
+        "generate": True
+      }
+  ]
 }

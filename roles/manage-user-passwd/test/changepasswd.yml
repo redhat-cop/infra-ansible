@@ -29,7 +29,7 @@
   roles:
     - manage-user-passwd
 
-- name: "TEST 3: Change user's IdM when neither is set: skipped"
+- name: "TEST 3: Change user's IdM password: when neither is set: skipped"
   hosts: ipa
 
   vars_files:
@@ -43,7 +43,7 @@
   roles:
     - manage-user-passwd
 
-- name: "TEST 4:Change user's IdM missing generate field, no passwd: skipped "
+- name: "TEST 4:Change user's IdM password: missing generate field, no passwd: skipped "
   hosts: ipa
 
   vars_files:
@@ -57,11 +57,25 @@
   roles:
     - manage-user-passwd
 
-- name: "TEST 5:Change user's IdM missing generate=False, valid passwd: changed"
+- name: "TEST 5:Change user's IdM password: missing generate=False, valid passwd: changed"
   hosts: ipa
 
   vars_files:
     - vars/passwdfile5.json
+
+  vars:
+    ipa_admin_user: admin
+    ipa_admin_password: test123
+    ipa_host: idm.example.com 
+
+  roles:
+    - manage-user-passwd
+
+- name: "TEST 6: Change user's IdM password: with list"
+  hosts: ipa
+
+  vars_files:
+    - vars/passwordall.json
 
   vars:
     ipa_admin_user: admin
