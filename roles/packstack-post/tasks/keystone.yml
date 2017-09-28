@@ -18,7 +18,7 @@
     line: '{{ item.key }} = {{ item.value }}'
   with_items:
   - { key: 'OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT', value: 'True' }
-  - { key: 'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN', value: 'default' }
+  - { key: 'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN', value: '"default"' }
   notify: 'restart keystone'
 
 - name: "Ensure target domain directory exists"

@@ -1,0 +1,13 @@
+---
+
+#- include: infra-hosts.yml
+
+#- hosts: infra_osp_hosts[0]
+#  roles:
+#  - role: config-software-src    
+
+- hosts: infra_osp_hosts
+  roles:
+  - packstack-install
+  - packstack-post
+  - packstack-admin
