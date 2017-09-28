@@ -1,0 +1,8 @@
+---
+[all:vars]
+
+    csv_doc_file_name=sheet1.csv
+
+[identity]
+localhost
+

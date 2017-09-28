@@ -1,19 +1,16 @@
 ---
-# This test covers the full feature set provided by the role
-
-- name: Download the Google Sheet
-  command: "{{ gdrive_command_tool }} --service-account {{ google_service_account }} export {{ google_doc_file_id }} --force"
-
 - name: Convert csv to json - set facts
+  delegate_to: localhost
   set_fact:
-    users: "{{ lookup('csvtojson', 'file=' + google_doc_file_name + ' var=users') }}"
-    user_groups: "{{ lookup('csvtojson', 'file=' + google_doc_file_name + ' var=user_groups') }}"
+    users: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=users') }}"
+    user_groups: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=user_groups') }}"
 
-- name: Run role Create Identities
-  include_role: 
-    name: ../ansible-stacks/roles/create-identities
-
-- name: Clean up file
-  file: 
-    path: "{{ google_doc_file_name }}"
-    state: absent
+- name: "Display imported users values"
+  debug:
+    var: users
+    verbosity: 2
+  
+- name: "Display imported user_groups values"
+  debug:
+    var: user_groups
+    verbosity: 2

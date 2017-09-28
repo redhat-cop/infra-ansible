@@ -14,7 +14,7 @@
     when:
     - item.generate is defined
     - item.generate == True
-    - (item.password == '' or item.password is not defined)
+    - (item.password is not defined or item.password == '')
 
 # print password for capture.
   - name: "Password dump "

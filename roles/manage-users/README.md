@@ -1,4 +1,4 @@
-#CREATE IDENTITIES IN AN EXISTING IDM SERVER
+# CREATE IDENTITIES IN AN EXISTING IDM SERVER
 
 An ansible role that consumes a JSON file/structure with the following information:
 ```
@@ -48,11 +48,11 @@ An ansible role that consumes a JSON file/structure with the following informati
 ```
 
 ---
-##Testing
+## Testing
 
 Run the test ```ansible-playbook -i inventory create_idm.yml```
 
-###Test Notes:
+### Test Notes:
 
 * This requires that you have an existing IdM available.
 * Change the value in the inventory file to point to a valid IdM
