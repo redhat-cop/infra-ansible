@@ -15,16 +15,14 @@ Additional header values can be added to the csv file
 
 | Field | Default | Required | Description |
 | ------------- | ------------- | ------------- |------------- |
-| user_name| NULL | yes | login name |
-| first_name  | NULL | yes | First Name |
-| last_name | NULL | yes | Last Name |
-| email | NULL | yes | email address |
-| expiration_date | NULL | no | Account expiration date |
-| group | NULL | yes | Group the user blongs to |
+| user_name| | yes | login name |
+| first_name  | | yes | First Name |
+| last_name | | yes | Last Name |
+| email | | yes | email address |
+| expiration_date | | no | Account expiration date |
+| group | | yes | Group the user blongs to |
 | idm | true | no | Add user to IdM server |
 | atlassian | false | no | Add user to Atlassian |
-| user_password | NULL | no | Password to set account to initially |
-| generate | false | no | Flag for generation of random initial password |
 
 
 ### Test this role:
