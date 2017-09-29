@@ -14,6 +14,15 @@
     line: 'disk_allocation_ratio=2.0'
   notify: 'restart openstack-nova-compute'
 
+- name: "Ensure Nova Migration doesn't get blocked by host key checking"
+  lineinfile:
+    path: "/var/lib/nova/.ssh/config"
+    regexp: '^StrictHostKeyChecking '
+    line: 'StrictHostKeyChecking no'
+    create: yes
+    owner: nova
+    mode: 0644
+
 - name: "Copy SELinux .te file to remote host"
   copy:
     src: "nova-ssh.te"
@@ -24,6 +33,11 @@
 
 - name: "Build SELinux module (.pp) to allow Nova Migration"
   command: semodule_package -m /tmp/nova-ssh.mod -o /tmp/nova-ssh.pp
+
+- name: "Enable the 'nova' user's shell"
+  user:
+    name: nova
+    shell: /bin/bash
 
 - name: "Load SELinux module to allow Nova Migration"
   command: semodule -i /tmp/nova-ssh.pp

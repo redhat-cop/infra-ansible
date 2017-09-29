@@ -15,6 +15,11 @@
     name: 'libvirtd'
     state: restarted
 
+- name: 'restart iptables'
+  service:
+    name: 'iptables'
+    state: restarted
+
 - name: 'restart keystone'
   service:
     name: 'httpd'
