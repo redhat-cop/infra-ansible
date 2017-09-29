@@ -1,0 +1,6 @@
+---
+
+- hosts: infra_osp_hosts[0]
+  roles:
+  - role: config-software-src    
+  - packstack-admin

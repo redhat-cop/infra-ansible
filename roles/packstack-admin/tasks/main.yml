@@ -4,6 +4,12 @@
 
 - include: "networking.yml"
 
+- include: "cinder.yml"
+
+- include: "nova.yml"
+
+- include: "flavors.yml"
+
 - include: "images.yml"
 
 - include: "tenants.yml"

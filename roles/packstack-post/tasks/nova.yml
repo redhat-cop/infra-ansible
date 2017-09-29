@@ -13,3 +13,20 @@
     regexp: '^disk_allocation_ratio='
     line: 'disk_allocation_ratio=2.0'
   notify: 'restart openstack-nova-compute'
+
+- name: "Copy SELinux .te file to remote host"
+  copy:
+    src: "nova-ssh.te"
+    dest: "/tmp/nova-ssh.te"
+
+- name: "Build SELinux module (.mod) to allow Nova Migration"
+  command: checkmodule -M -m /tmp/nova-ssh.te -o /tmp/nova-ssh.mod
+
+- name: "Build SELinux module (.pp) to allow Nova Migration"
+  command: semodule_package -m /tmp/nova-ssh.mod -o /tmp/nova-ssh.pp
+
+- name: "Load SELinux module to allow Nova Migration"
+  command: semodule -i /tmp/nova-ssh.pp
+  notify:
+  - 'restart openstack-nova-compute'
+  - 'restart libvirtd'

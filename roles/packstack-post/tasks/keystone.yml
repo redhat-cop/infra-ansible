@@ -39,3 +39,12 @@
   notify: 'restart keystone'
   with_items:
   - "{{ keystone_ldap }}"
+
+- name: "Restart keystone (httpd) to apply config"
+  service:
+    name: httpd
+    state: restarted
+
+- name: "Wait a bit for keystone to catch up"
+  pause:
+    seconds: 10

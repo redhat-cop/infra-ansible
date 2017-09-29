@@ -1,0 +1,23 @@
+---
+
+- name: "Obtain current flavors"
+  shell: >
+    source {{ admin_keystonerc_file }};
+    openstack flavor list -f yaml
+  register: flavor_list
+
+- name: "Store away the yaml output"
+  set_fact:
+    flavor_list_yaml: "{{ flavor_list.stdout|from_yaml }}"
+
+- name: "Create the flavor"
+  shell: >
+    source {{ admin_keystonerc_file }};
+    openstack flavor create \
+      --vcpus "{{ item.vcpus }}" \
+      --ram "{{ item.ram }}" \
+      --disk "{{ item.disk }}" \
+      --public \
+      "{{ item.name }}"
+  with_items:
+  - "{{ osp_custom_flavors | get_remaining_items(flavor_list_yaml, 'name', 'Name') }}"

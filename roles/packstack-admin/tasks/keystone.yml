@@ -19,3 +19,12 @@
       "{{ item.domain }}"
   with_items:
   - "{{ keystone_ldap | get_remaining_items(domain_list_yaml, 'domain', 'Name') }}"
+
+- name: "Restart keystone (httpd) to ensure config has been applied"
+  service:
+    name: httpd
+    state: restarted
+
+- name: "Wait a bit for keystone to catch up"
+  pause:
+    seconds: 15
