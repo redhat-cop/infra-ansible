@@ -19,7 +19,7 @@
 # print password for capture.
   - name: "Password dump "
     debug:
-      msg: "The password about to be set is: {{ password }}"
+      msg: "The password for {{ item.user_name }} about to be set is: {{ password }}"
       verbosity: 2
 
 # call module to update

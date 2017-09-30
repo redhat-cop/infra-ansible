@@ -1,0 +1,19 @@
+---
+# Populate Dict [users, user_groups]
+- name: "Import user data from {{ csv_doc_file_name }}"
+  hosts: localhost
+  roles:
+    - populate-users
+
+# Add users to Identity managment system and update 'user' records
+- name: "Create users"
+  hosts: localhost
+  roles:
+    - manage-users
+
+# use pwd_users to set the random passwords
+- name: "Set Password of New Users"
+  hosts: localhost
+  roles:
+    - manage-user-passwd
+   
