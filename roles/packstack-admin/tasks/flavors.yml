@@ -5,6 +5,7 @@
     source {{ admin_keystonerc_file }};
     openstack flavor list -f yaml
   register: flavor_list
+  changed_when: False
 
 - name: "Store away the yaml output"
   set_fact:

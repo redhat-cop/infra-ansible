@@ -5,7 +5,7 @@
     source {{ admin_keystonerc_file }};
     nova service-disable {{ item }} nova-compute
   with_items:
-  - "{{ cluster_hosts }}"
+  - "{{ ansible_play_hosts }}"
   when:
   - hostvars[item].nova_service is defined
   - hostvars[item].nova_service == 'disabled'

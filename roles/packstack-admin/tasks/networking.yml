@@ -5,12 +5,14 @@
     source {{ admin_keystonerc_file }};
     openstack network list -f yaml
   register: network_list
+  changed_when: False
 
 - name: "Obtain currently configured subnets"
   shell: >
     source {{ admin_keystonerc_file }};
     openstack subnet list -f yaml
   register: subnet_list
+  changed_when: False
 
 - name: "Store away the yaml output"
   set_fact:

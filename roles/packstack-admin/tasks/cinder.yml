@@ -5,6 +5,7 @@
     source {{ admin_keystonerc_file }};
     openstack volume type list -f yaml
   register: volume_type_list
+  changed_when: False
 
 - name: "Store away the yaml output"
   set_fact:

@@ -5,6 +5,7 @@
     source {{ admin_keystonerc_file }};
     openstack image list -f yaml
   register: image_list
+  changed_when: False
 
 - name: "Store away the yaml output"
   set_fact:

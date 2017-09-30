@@ -5,6 +5,7 @@
     source {{ admin_keystonerc_file }};
     openstack domain list -f yaml
   register: domain_list
+  changed_when: False
 
 - name: "Store away the yaml output"
   set_fact:
