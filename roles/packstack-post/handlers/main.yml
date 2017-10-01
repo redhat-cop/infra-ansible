@@ -1,9 +1,13 @@
 ---
 
 - name: 'restart mariadb'
-  systemd:
+  service:
     name: 'mariadb'
-    daemon_reload: yes
+    state: restarted
+
+- name: 'restart rabbitmq-server'
+  service:
+    name: 'rabbitmq-server'
     state: restarted
 
 - name: 'restart openstack-nova-compute'

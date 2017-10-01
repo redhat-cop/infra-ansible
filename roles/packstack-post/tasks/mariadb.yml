@@ -9,4 +9,8 @@
   copy:
     src: "mariadb-limits.conf"
     dest: "/etc/systemd/system/mariadb.service.d/limits.conf"
-  notify: 'restart mariadb'
+  notify:
+  - 'restart mariadb'
+
+- name: "Perform daemon-reload to ensure the changes are picked up"
+  command: 'systemctl daemon-reload'
