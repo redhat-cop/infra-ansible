@@ -1,0 +1,25 @@
+---
+
+- name: "Obtain currently configured networks"
+  shell: >
+    openstack network list -f yaml
+  register: network_list
+  changed_when: False
+
+- name: "Obtain currently configured subnets"
+  shell: >
+    openstack subnet list -f yaml
+  register: subnet_list
+  changed_when: False
+
+- name: "Obtain currently configured routers"
+  shell: >
+    openstack router list -f yaml
+  register: router_list
+  changed_when: False
+
+- name: "Store away the yaml output"
+  set_fact:
+    network_list_yaml: "{{ network_list.stdout|from_yaml }}"
+    subnet_list_yaml: "{{ subnet_list.stdout|from_yaml }}"
+    router_list_yaml: "{{ router_list.stdout|from_yaml }}"

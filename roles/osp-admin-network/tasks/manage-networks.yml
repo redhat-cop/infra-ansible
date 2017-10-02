@@ -1,0 +1,9 @@
+---
+
+- name: "Set up network(s)"
+  shell: >
+    openstack network create \
+      --description "{{ item.description }}" \
+      {{ item.name }}
+  with_items:
+  - "{{ osp_networks | get_remaining_items(network_list_yaml, 'name', 'Name') }}"

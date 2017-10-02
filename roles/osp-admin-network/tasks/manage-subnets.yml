@@ -1,0 +1,8 @@
+---
+
+- name: "Set up subnet(s)"
+  include: create-subnet.yml
+  with_items:
+  - "{{ osp_subnets | get_remaining_items(subnet_list_yaml, 'name', 'Name') }}"
+  loop_control:
+    loop_var: subnet
