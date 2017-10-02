@@ -25,6 +25,8 @@ How to run the playbook may depend on the options selected. However, below is an
 
 **Note:** If you are intending to use the IdM/IPA integration, and are unfamiliar with the IdM/IPA variables below, please consult the IdM/IPA documentation or your sys admin for details.
 
+**Note:** When installing a GUI (i.e.: XFCE, LXDE, Gnome), it's recommended that only one is selected as selected multiple is not support nor tested.
+
 | variable | info |
 |:--------:|:----:|
 |main_user|The username this bastion is primerly being enabled for|
@@ -36,7 +38,8 @@ How to run the playbook may depend on the options selected. However, below is an
 |docker_install|Set to "yes" if you'd like to enable docker on this host|
 |docker_username|Set to the desirable user (your username) to be added to the docker group (to allow for docker admin)|
 |docker_compose_install|Set to "yes" if you'd like to have docker-compose installed on this host. NOTE: This will auto set docker_install=yes (not supported on CentOS)|
-|xfce_install|Set to "yes" if you'd like XFCE enabled on this host for a graphical UI (note XFCE often works better than gnome for VNC)|
+|xfce_install|Set to "yes" if you'd like XFCE enabled on this host for a graphical UI (note XFCE or LXDE often works better than gnome for VNC)|
+|lxde_install|Set to "yes" if you'd like LXDE enabled on this host for a graphical UI (note XFCE or LXDE often works better than gnome for VNC)|
 |gnome_install|Set to "yes" if you'd like gnome enabled on this host for a graphical UI|
 |vnc_server_install|Set to "yes" if you'd like to enable a VNC server on this host for graphical access to the host|
 |additional_tools_packages|List of additional packages (RPMs) to be installed at the end of the bastion host preparation, e.g.: `['git', 'vim']`|
