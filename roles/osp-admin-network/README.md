@@ -17,9 +17,9 @@ Role Variables
 
 See `Example Inventory` below for more specific details. At a high level, the following variables need to be defined:
 
-`osp_networks`: A list of networks to create
-`osp_subnets`: A list of subnets to be created with the above network(s)
-`osp_routers`: A list of routers to be created with the above subnet(s)
+- `osp_networks`: A list of networks to create
+- `osp_subnets`: A list of subnets to be created with the above network(s)
+- `osp_routers`: A list of routers to be created with the above subnet(s)
 
 
 Dependencies
