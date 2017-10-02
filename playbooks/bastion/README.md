@@ -25,7 +25,7 @@ How to run the playbook may depend on the options selected. However, below is an
 
 **Note:** If you are intending to use the IdM/IPA integration, and are unfamiliar with the IdM/IPA variables below, please consult the IdM/IPA documentation or your sys admin for details.
 
-**Note:** When installing a GUI (i.e.: XFCE, LXDE, Gnome), it's recommended that only one is selected as selected multiple is not support nor tested.
+**Note:** When installing a GUI (i.e.: XFCE, LXDE, Gnome), it's recommended that only one is selected as running multiple is not supported nor tested by this playbook/roles.
 
 | variable | info |
 |:--------:|:----:|
