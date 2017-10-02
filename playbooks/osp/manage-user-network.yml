@@ -1,0 +1,7 @@
+---
+
+# See the roles [README](https://github.com/oybed/infra-ansible/blob/master/roles/osp-admin-network/README.md) for detailed info on inventory requirements
+
+- hosts: localhost
+  roles:
+  - osp-admin-network
