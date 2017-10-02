@@ -20,9 +20,9 @@
       verbosity: 2
     with_items: "{{ the_user.results }}"
 
-  - name: "Create password generation structure"
+  - name: "Create password generation dataset"
     set_fact: 
-       pwd_users: "{{ pwd_users | default([]) + [{'user_name': item.item.user_name,'generate': true}] }}"
+       pwd_users: "{{ pwd_users | default([]) + [{'user_name': item.item.user_name,'generate': true, 'password': item.item.password|default('')}] }}"
     with_items: "{{ the_user.results }}"
     when:
       - item.user.has_password is defined

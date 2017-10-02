@@ -5,9 +5,7 @@
       password: "{{ item.password }}"
     when: item.password is defined
 
-#
 # check if generate is set true and password != ''
-#
   - name : Create random password
     set_fact:
       password: "{{ lookup('password','/dev/null length=15' ) }}"
@@ -17,12 +15,44 @@
     - (item.password is not defined or item.password == '')
 
 # print password for capture.
-  - name: "Password dump "
+  - name: "Password screendump "
     debug:
-      msg: "The password for {{ item.user_name }} about to be set is: {{ password }}"
+      msg: "The password for {{ item.user_name }} about to be set to: {{ password }}"
       verbosity: 2
 
+#  create local file to hold random passwords
+  - name: "create local tempfile "
+    delegate_to: localhost
+    tempfile:
+      path: "/tmp/"
+      prefix: new-users-
+    register: temppath
+    when:  user_file is not defined
+
+  - name: "store temp file name"
+    set_fact:
+      user_file: "{{ temppath.path }}"
+    when:  user_file is not defined
+
+#
+# check if generate is set true and password != ''
+#
+  - name : Create random password
+    set_fact:
+      password: "{{ lookup('password','/dev/null length=15' ) }}"
+    when:
+    - item.generate is defined
+    - item.generate == True
+
+# log to local file
+  - name: "Password dump to temp-file"
+    delegate_to: localhost
+    lineinfile:
+      path: "{{ user_file }}"
+      line: "The password for {{ item.user_name }} about to be set to: {{ password }}"
+
 # call module to update
+#
   - name: "Change IPA password for user: {{ item.user_name }}"
     ipa_user:
       ipa_host: "{{ ipa_host | default(ansible_host)}}"
@@ -32,3 +62,4 @@
       name: "{{ item.user_name | trim }}"
       password: "{{ password }}"
     when: password != ""
+

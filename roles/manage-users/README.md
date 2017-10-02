@@ -59,3 +59,7 @@ Run the test ```ansible-playbook -i inventory create_idm.yml```
 * Passwords are not set/changed in this role
 * Modify IdM credentials in create_idm.yml to match your IdM
 * You can test modfications by re-running the test pointing to a different json file ```ansible-playbook -i inventory create_idm.yml -e "@vars/idm_mod.json"```
+
+## Output
+
+This role produces `pwd_users` data structure that can bue used in the `manage-user-passwd` role
