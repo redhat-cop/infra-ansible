@@ -50,6 +50,16 @@
   when:
   - xfce_install|default('no') == "yes"
 
+- name: "Add the xstartup (LXDE) configuration to the main user"
+  copy :
+    src: xstartup-lxde
+    dest: "/home/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+  when:
+  - lxde_install|default('no') == "yes"
+
 - name: "Copy VNC service file into place" 
   copy:
     src: /usr/lib/systemd/system/vncserver@.service
