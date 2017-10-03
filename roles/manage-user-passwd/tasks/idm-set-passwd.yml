@@ -1,65 +1,55 @@
 ---
 
-  - name: "Default password value "
-    set_fact:
-      password: "{{ item.password }}"
-    when: item.password is defined
+- name: "Default password value"
+  set_fact:
+    password: ""
 
-# check if generate is set true and password != ''
-  - name : Create random password
-    set_fact:
-      password: "{{ lookup('password','/dev/null length=15' ) }}"
-    when:
-    - item.generate is defined
-    - item.generate == True
-    - (item.password is not defined or item.password == '')
+- name: "Set password to given value"
+  set_fact:
+    password: "{{ item.password }}"
+  when: item.password is defined
 
-# print password for capture.
-  - name: "Password screendump "
-    debug:
-      msg: "The password for {{ item.user_name }} about to be set to: {{ password }}"
-      verbosity: 2
+- name : "Create random password"
+  set_fact:
+    password: "{{ lookup('password','/dev/null length=16') }}"
+  when:
+  - item.generate_password is defined
+  - item.generate_password == True
+  - (item.password is not defined or item.password == '')
 
-#  create local file to hold random passwords
-  - name: "create local tempfile "
-    delegate_to: localhost
-    tempfile:
-      path: "/tmp/"
-      prefix: new-users-
-    register: temppath
-    when:  user_file is not defined
+- name: "Password screendump"
+  debug:
+    msg: "The password for {{ item.user_name }} about to be set to: {{ password }}"
+    verbosity: 2
 
-  - name: "store temp file name"
-    set_fact:
-      user_file: "{{ temppath.path }}"
-    when:  user_file is not defined
+#  need to set password field in users structure to avoid tempfile
+- name: "create local tempfile"
+  delegate_to: localhost
+  tempfile:
+    path: "/tmp/"
+    prefix: new-users-
+  register: temppath
+  when:  user_file is not defined
 
-#
-# check if generate is set true and password != ''
-#
-  - name : Create random password
-    set_fact:
-      password: "{{ lookup('password','/dev/null length=15' ) }}"
-    when:
-    - item.generate is defined
-    - item.generate == True
+- name: "store temp file name"
+  set_fact:
+    user_file: "{{ temppath.path }}"
+  when:  user_file is not defined
 
-# log to local file
-  - name: "Password dump to temp-file"
-    delegate_to: localhost
-    lineinfile:
-      path: "{{ user_file }}"
-      line: "The password for {{ item.user_name }} about to be set to: {{ password }}"
+- name: "Password dump to temp-file"
+  delegate_to: localhost
+  lineinfile:
+    path: "{{ user_file }}"
+    line: "The password for {{ item.user_name }} about to be set to: {{ password }}"
+# end set field
 
-# call module to update
-#
-  - name: "Change IPA password for user: {{ item.user_name }}"
-    ipa_user:
-      ipa_host: "{{ ipa_host | default(ansible_host)}}"
-      ipa_user: "{{ ipa_admin_user }}"
-      ipa_pass: "{{ ipa_admin_password }}"
-      validate_certs: "{{ ipa_validate_certs | default(False) }}"
-      name: "{{ item.user_name | trim }}"
-      password: "{{ password }}"
-    when: password != ""
+- name: "Change IPA password for user: {{ item.user_name }}"
+  ipa_user:
+    ipa_host: "{{ ipa_host }}"
+    ipa_user: "{{ ipa_admin_user }}"
+    ipa_pass: "{{ ipa_admin_password }}"
+    validate_certs: "{{ ipa_validate_certs | default(False) }}"
+    name: "{{ item.user_name | trim }}"
+    password: "{{ password }}"
+  when: password != ""
 

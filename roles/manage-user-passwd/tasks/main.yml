@@ -2,7 +2,7 @@
 
 - include: idm-set-passwd.yml
   with_items:
-    - "{{ pwd_users }}"
+    - "{{ users }}"
   when:
-    - pwd_users is defined
+    - users is defined
 

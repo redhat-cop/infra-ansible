@@ -20,19 +20,20 @@
       verbosity: 2
     with_items: "{{ the_user.results }}"
 
+  - name: "clear users"
+    set_fact: 
+       users: []
+
   - name: "Create password generation dataset"
     set_fact: 
-       pwd_users: "{{ pwd_users | default([]) + [{'user_name': item.item.user_name,'generate': true, 'password': item.item.password|default('')}] }}"
+       users: "{{ users + [idm_data.item | combine(idm_data.user | set_generate_password) ] }}"
     with_items: "{{ the_user.results }}"
-    when:
-      - item.user.has_password is defined
-      - item.user.has_password == false
+    loop_control:
+      loop_var: idm_data
 
-  - name: "Display results of pwd_user structure"
+  - name: "Display updated users structure"
     debug:
-      var: pwd_users
+      var: users
       verbosity: 2
-    when: 
-      - pwd_users is defined
 
 

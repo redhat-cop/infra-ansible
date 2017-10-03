@@ -61,5 +61,4 @@ Run the test ```ansible-playbook -i inventory create_idm.yml```
 * You can test modfications by re-running the test pointing to a different json file ```ansible-playbook -i inventory create_idm.yml -e "@vars/idm_mod.json"```
 
 ## Output
-
-This role produces `pwd_users` data structure that can bue used in the `manage-user-passwd` role
+This role augments the `users` data structure `generate_password` for use with `manage-user-passwd` role
