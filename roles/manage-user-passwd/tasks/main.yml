@@ -1,8 +1,28 @@
 ---
 
+- include: generate-passwords.yml
+  with_items:
+    - "{{ users }}"
+
+- name: "Add password to users dict"
+  set_fact: 
+    users_tmp: "{{ users_tmp|default([]) + [ item | combine( { 'password': new_passwd[item.user_name] } )] }}"
+  with_items:
+    - "{{ users }}"
+
+- name: "Copy rebuilt structure to users structure"
+  set_fact: 
+    users: "{{ users_tmp }}"
+
 - include: idm-set-passwd.yml
   with_items:
     - "{{ users }}"
   when:
     - users is defined
+    - item.password != ''
+
+- name: "New password list"
+  debug:
+    var: new_passwd
+    verbosity: 2
 

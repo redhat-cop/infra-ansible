@@ -1,48 +1,6 @@
 ---
 
-- name: "Default password value"
-  set_fact:
-    password: ""
-
-- name: "Set password to given value"
-  set_fact:
-    password: "{{ item.password }}"
-  when: item.password is defined
-
-- name : "Create random password"
-  set_fact:
-    password: "{{ lookup('password','/dev/null length=16') }}"
-  when:
-  - item.generate_password is defined
-  - item.generate_password == True
-  - (item.password is not defined or item.password == '')
-
-- name: "Password screendump"
-  debug:
-    msg: "The password for {{ item.user_name }} about to be set to: {{ password }}"
-    verbosity: 2
-
-#  need to set password field in users structure to avoid tempfile
-- name: "create local tempfile"
-  delegate_to: localhost
-  tempfile:
-    path: "/tmp/"
-    prefix: new-users-
-  register: temppath
-  when:  user_file is not defined
-
-- name: "store temp file name"
-  set_fact:
-    user_file: "{{ temppath.path }}"
-  when:  user_file is not defined
-
-- name: "Password dump to temp-file"
-  delegate_to: localhost
-  lineinfile:
-    path: "{{ user_file }}"
-    line: "The password for {{ item.user_name }} about to be set to: {{ password }}"
-# end set field
-
+#  new file to generate passwords one at a time
 - name: "Change IPA password for user: {{ item.user_name }}"
   ipa_user:
     ipa_host: "{{ ipa_host }}"
@@ -50,6 +8,5 @@
     ipa_pass: "{{ ipa_admin_password }}"
     validate_certs: "{{ ipa_validate_certs | default(False) }}"
     name: "{{ item.user_name | trim }}"
-    password: "{{ password }}"
-  when: password != ""
+    password: "{{ item.password }}"
 

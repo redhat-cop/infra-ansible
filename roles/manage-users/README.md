@@ -61,4 +61,53 @@ Run the test ```ansible-playbook -i inventory create_idm.yml```
 * You can test modfications by re-running the test pointing to a different json file ```ansible-playbook -i inventory create_idm.yml -e "@vars/idm_mod.json"```
 
 ## Output
-This role augments the `users` data structure `generate_password` for use with `manage-user-passwd` role
+This role augments the `users` data structure is expected to be:
+
+```
+
+   "users": [
+        {
+            "add'l info": "Internal user", 
+            "added_date": "", 
+            "atlassian": "FALSE", 
+            "email": "gdog@example.com", 
+            "expiration_date": "", 
+            "first_name": "Goofy", 
+            "generate_password": false, 
+            "group": "group2", 
+            "labs_sponsor": "core team", 
+            "last_name": "Dog", 
+            "password": "", 
+            "user_name": "goofy"
+        }, 
+        {
+            "add'l info": "Internal user", 
+            "added_date": "", 
+            "atlassian": "", 
+            "email": "pdog@example.com", 
+            "expiration_date": "", 
+            "first_name": "Pluto", 
+            "generate_password": true, 
+            "group": "group2", 
+            "labs_sponsor": "core team", 
+            "last_name": "Dog", 
+            "password": "nXeqH14OZQmx2D9y", 
+            "user_name": "pluto"
+        }, 
+        {
+            "add'l info": "Test user", 
+            "added_date": "", 
+            "atlassian": "", 
+            "email": "test1@example.com", 
+            "expiration_date": "", 
+            "first_name": "fName1", 
+            "generate_password": false, 
+            "group": "users", 
+            "labs_sponsor": "Micky Mouse", 
+            "last_name": "Lname1", 
+            "password": "", 
+            "user_name": "test1"
+        } 
+      ]
+
+```
