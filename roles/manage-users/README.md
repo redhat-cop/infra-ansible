@@ -61,10 +61,9 @@ Run the test ```ansible-playbook -i inventory create_idm.yml```
 * You can test modfications by re-running the test pointing to a different json file ```ansible-playbook -i inventory create_idm.yml -e "@vars/idm_mod.json"```
 
 ## Output
-This role augments the `users` data structure is expected to be:
+This role augments the `users` data structure which is expected to be:
 
 ```
-
    "users": [
         {
             "add'l info": "Internal user", 
