@@ -1,34 +1,16 @@
 ---
 
-  - name: "Default password value "
-    set_fact:
-      password: "{{ item.password }}"
-    when: item.password is defined
+- name: "Change IPA password for user: {{ item.user_name }}"
+  ipa_user:
+    ipa_host: "{{ ipa_host }}"
+    ipa_user: "{{ ipa_admin_user }}"
+    ipa_pass: "{{ ipa_admin_password }}"
+    validate_certs: "{{ ipa_validate_certs | default(False) }}"
+    name: "{{ item.user_name | trim }}"
+    password: "{{ item.password }}"
+  with_items: 
+    - "{{ users }}" 
+  when: 
+    - users is defined 
+    - item.password|trim != ''
 
-#
-# check if generate is set true and password != ''
-#
-  - name : Create random password
-    set_fact:
-      password: "{{ lookup('password','/dev/null length=15' ) }}"
-    when:
-    - item.generate is defined
-    - item.generate == True
-    - (item.password is not defined or item.password == '')
-
-# print password for capture.
-  - name: "Password dump "
-    debug:
-      msg: "The password about to be set is: {{ password }}"
-      verbosity: 2
-
-# call module to update
-  - name: "Change IPA password for user: {{ item.user_name }}"
-    ipa_user:
-      ipa_host: "{{ ipa_host | default(ansible_host)}}"
-      ipa_user: "{{ ipa_admin_user }}"
-      ipa_pass: "{{ ipa_admin_password }}"
-      validate_certs: "{{ ipa_validate_certs | default(False) }}"
-      name: "{{ item.user_name | trim }}"
-      password: "{{ password }}"
-    when: password != ""
