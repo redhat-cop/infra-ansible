@@ -1,6 +1,5 @@
 ---
 
-#  New file to generate passwords one at a time
 - name: "Change IPA password for user: {{ item.user_name }}"
   ipa_user:
     ipa_host: "{{ ipa_host }}"
