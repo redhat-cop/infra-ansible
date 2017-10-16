@@ -1,0 +1,9 @@
+---
+
+- name: 'Update {{ user_name }} access'
+  hosts: all
+  roles:
+    - role: manage-user-access
+  tags:
+    - manage-user-access
+

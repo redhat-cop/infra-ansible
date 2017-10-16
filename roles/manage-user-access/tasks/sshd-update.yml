@@ -1,0 +1,9 @@
+---
+- name: "Update ssh to restrict root password access" 
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    backup: yes
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin without-password'
+  notify: 'reload sshd'
+
