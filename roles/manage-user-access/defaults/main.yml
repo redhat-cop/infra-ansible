@@ -1,5 +1,0 @@
----
-# python -c 'import crypt; print crypt.crypt("password", crypt.mksalt(crypt.METHOD_SHA512))'
-user_name_password: ""
-user_name: ""
-authorized_keyfile: ""

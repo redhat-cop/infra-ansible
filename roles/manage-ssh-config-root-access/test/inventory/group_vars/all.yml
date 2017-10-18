@@ -1,0 +1,10 @@
+---
+# needed to setup for the test conditions
+user_name: root
+authorized_keyfile: "{{ inventory_dir }}/../authorized_keys"
+reset_keyfile: yes
+clear_text_password: test123
+
+#needed to test the role
+update_sshd_conf: True
+

@@ -1,5 +1,0 @@
----
-- name: "Update authorized key file for user: {{ user_name }}"
-  authorized_key: 
-    user: "{{ user_name }}"
-    key: "{{ lookup('file', authorized_keyfile) }}"
