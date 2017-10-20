@@ -75,7 +75,7 @@
   - move_user|bool == True
 
 - name: "Wait for the previous user to finish up"
-  shell: "ps -ef | cut -d' ' -f1 | grep '{{ old_ansible_user }}'"
+  shell: "ps -eo uname | grep '{{ old_ansible_user }}'"
   register: cmdoutput
   until: cmdoutput.rc == 1
   retries: 60
@@ -100,7 +100,7 @@
   - move_user|bool == True
 
 - name: "Wait for the previous user to finish up"
-  shell: "ps -ef | cut -d' ' -f1 | grep 'lcluser'"
+  shell: "ps -eo uname | grep 'lcluser'"
   register: cmdoutput
   until: cmdoutput.rc == 1
   retries: 60
