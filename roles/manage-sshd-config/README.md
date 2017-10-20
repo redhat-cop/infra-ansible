@@ -12,14 +12,14 @@ The following variables controls the functionality of `manage_ssh_config_root_ac
 
 | Name | Purpose|Required|
 |---|---|---|
-|update_sshd_config|This dictionary provides the lines that need to be changed in the `/etc/ssh/sshd_config` filesNo|
+|update_sshd_config|This dictionary provides the lines that need to be changed in the `/etc/ssh/sshd_config` files|No|
 
 ### Example Inventory: update /etc/ssh/sshd_config  
 
 ```
 [all:vars]
 update_sshd_config:
-  PermitRootLogin: without-password
+  PermitRootLogin: "without-password"
 
 [servers]
 server1.test.lab

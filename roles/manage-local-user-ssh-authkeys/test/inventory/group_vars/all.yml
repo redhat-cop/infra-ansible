@@ -1,7 +1,4 @@
 ---
-#user_name: root
-#update_sshd: True
-#
 
 user_name: user1
 clear_text_password: test123
