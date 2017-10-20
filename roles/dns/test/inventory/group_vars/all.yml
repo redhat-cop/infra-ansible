@@ -1,3 +1,5 @@
+---
+
 - role: dns
   dns_records_rm:
   - view: private
