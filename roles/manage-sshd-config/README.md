@@ -1,4 +1,4 @@
-manage_ssh_config_root_access role
+manage_sshd_config role
 =========
 
 This role updates `/etc/ssh/sshd_config` to deny ssh password authentication for root.
@@ -8,7 +8,7 @@ This role needs to be executed by a user with 'become' privileges
 
 ## Role Variables
 
-The following variables controls the functionality of `manage_ssh_config_root_access` role
+The following variables controls the functionality of `manage_sshd_config` role
 
 | Name | Purpose|Required|
 |---|---|---|
