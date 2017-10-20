@@ -1,0 +1,13 @@
+---
+# needed to setup for the test conditions
+user_name: root
+authorized_keyfile: "{{ inventory_dir }}/../authorized_keys"
+key_url: "{{ lookup('file', authorized_keyfile) }}"
+
+reset_keyfile: yes
+clear_text_password: test1234
+
+#needed to test the role
+update_sshd_config:
+  PermitRootLogin: "without-password"
+
