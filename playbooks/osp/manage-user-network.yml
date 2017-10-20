@@ -1,7 +1,7 @@
 ---
 
 # See the roles README for detailed info on inventory requirements.
-# https://github.com/oybed/infra-ansible/blob/master/roles/osp-admin-network/README.md
+# https://github.com/redhat-cop/infra-ansible/blob/master/roles/osp-admin-network/README.md
 
 - hosts: localhost
   roles:
