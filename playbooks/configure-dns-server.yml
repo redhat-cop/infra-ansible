@@ -1,0 +1,9 @@
+---
+
+# Make sure to check out the `dns-server` [README](https://github.com/redhat-cop/infra-ansible/blob/master/roles/dns-server/README.md) for details
+# on how to create the inventory
+
+
+- hosts: dns-server
+  roles:
+  - role: dns-server
