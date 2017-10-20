@@ -1,7 +1,7 @@
 ---
 
 - name: 'Configure IdM/IPA'
-  hosts: all
+  hosts: idm-clients
   roles:
   - role: config-ipa-client
   tags: 
