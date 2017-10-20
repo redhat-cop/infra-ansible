@@ -1,0 +1,9 @@
+---
+
+- name: "Install additional packages for IPA/IdM"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - ipa-client
+  - libsss_sudo
