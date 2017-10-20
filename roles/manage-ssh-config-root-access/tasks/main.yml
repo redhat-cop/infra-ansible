@@ -1,7 +1,0 @@
----
-
-- include: 'sshd-update.yml'
-  when: 
-  - update_sshd_conf is defined
-  - update_sshd_conf == True
-

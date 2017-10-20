@@ -7,15 +7,13 @@
   roles:
     - role: manage-local-user-ssh-authkeys
     - role: manage-local-user-password
-    - role: manage-ssh-config-root-access
+    - role: manage-sshd-config
 
 # Test the SSH Key access by running a remote command on machine
 #
 
 - name: "Testing authorized ssh keyfile" 
   hosts: all
-  vars: 
-    user: "{{ user_name }}"    
   tasks:
   - name: "Test authorized key for {{ user_name }} on {{ ansible_host }}"
     raw: "ssh -v -i id_rsa_user1 {{ user_name }}@{{ ansible_host }} /bin/true"

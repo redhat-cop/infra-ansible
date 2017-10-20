@@ -1,9 +1,0 @@
----
-
-- name: 'reload sshd'
-  service:
-    name: '{{ item }}'
-    state: restarted
-  with_items:
-  - sshd
-

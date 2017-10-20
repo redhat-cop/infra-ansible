@@ -1,7 +1,7 @@
 manage_ssh_config_root_access role
 =========
 
-This role updates `/etc/sshd_config` to deny ssh password authentication for root.
+This role updates `/etc/ssh/sshd_config` to deny ssh password authentication for root.
 
 ## Requirements
 This role needs to be executed by a user with 'become' privileges
@@ -12,13 +12,14 @@ The following variables controls the functionality of `manage_ssh_config_root_ac
 
 | Name | Purpose|Required|
 |---|---|---|
-|update_sshd|This variable when set to True will disable root's ability to login via SSH with a password|No|
+|update_sshd_config|This dictionary provides the lines that need to be changed in the `/etc/ssh/sshd_config` filesNo|
 
 ### Example Inventory: update /etc/ssh/sshd_config  
 
 ```
 [all:vars]
-update_sshd_config: True
+update_sshd_config:
+  PermitRootLogin: without-password
 
 [servers]
 server1.test.lab
@@ -32,13 +33,13 @@ server2.test.lab
   become: yes
 
   roles:
-    - manage_ssh_config_root_access
+    - manage_sshd_config
 ```
 
 ### Example Execution
 
 ```
-ansible-playbook -i inventory  test.yml -e "update_sshd=True"  ```
+ansible-playbook -i inventory  playbook.yml 
 
 ### Manual tests
 Execute 'Example' inventory above

@@ -13,8 +13,8 @@ The following variables controls the functionality of `manage_local_user_ssh_aut
 | Name | Purpose|Required|
 |---|---|---|
 |user_name|Identify the username that should be update|Yes|
-|key_url|Provide the a resource link to the authorized_keys that should be installed for the user|No|
-|reset_keyfile|When sent to `yes`, the user's `authorized_keys` file will be replaced with values from `key_url`, otherwise it will be augmented with the contents|No|
+|key_url|Provide a link to the authorized_keys file that should be installed for the user|No|
+|reset_keyfile|When set to `yes`, the user's `authorized_keys` file will be replaced with values from `key_url`, otherwise it will be augmented with the contents|No|
 
 When `key_url` is set, the authorized_keys file will be used for the `user_name` provided.
 
