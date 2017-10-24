@@ -38,7 +38,7 @@
     owner: "{{ main_user }}"
     mode: 0755
   when:
-  - gnome_install|default('no') == "yes"
+  - gnome_install|default(False)
 
 - name: "Add the xstartup (XFCE) configuration to the main user"
   copy :
@@ -48,7 +48,7 @@
     owner: "{{ main_user }}"
     mode: 0755
   when:
-  - xfce_install|default('no') == "yes"
+  - xfce_install|default(False)
 
 - name: "Add the xstartup (LXDE) configuration to the main user"
   copy :
@@ -58,7 +58,7 @@
     owner: "{{ main_user }}"
     mode: 0755
   when:
-  - lxde_install|default('no') == "yes"
+  - lxde_install|default(False)
 
 - name: "Copy VNC service file into place" 
   copy:

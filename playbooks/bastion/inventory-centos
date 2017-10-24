@@ -1,12 +1,12 @@
 [all:vars]
 main_user=testuser
 
-ipa_client_install=yes
+ipa_client_install=True
 ipa_domain=example.com
 ipa_automount_location=userhome
 ipa_username=testuser
 
-docker_install=yes
+docker_install=True
 docker_username=testuser
 
 [bastion]

@@ -9,5 +9,5 @@
   loop_control:
     loop_var: distro_file
   when:
-  - lxde_install|default('no') == "yes"
+  - lxde_install|default(False)
 

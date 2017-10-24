@@ -3,5 +3,5 @@
 - name: "Install, configure and enable Docker"
   include: docker.yml
   when: 
-  - docker_install|default('no') == "yes"
+  - docker_install|default(False)
 
