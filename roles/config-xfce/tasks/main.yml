@@ -9,5 +9,5 @@
   loop_control:
     loop_var: distro_file
   when:
-  - xfce_install|default('no') == "yes"
+  - xfce_install|default(False)
 
