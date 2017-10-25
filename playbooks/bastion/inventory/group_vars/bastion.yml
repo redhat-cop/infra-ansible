@@ -1,5 +1,7 @@
 ---
 
+ansible_become: True
+
 main_user: testuser
 
 ipa_client_install: True
@@ -15,6 +17,6 @@ docker_compose_install: True
 xfce_install: True
 vnc_server_install: True
 
-additional_tools_packages
+additional_tools_packages:
 - git
 
