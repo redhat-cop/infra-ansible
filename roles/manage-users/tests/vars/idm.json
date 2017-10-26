@@ -1,0 +1,42 @@
+{
+    "users" : [
+        {
+            "user_name": "gdownie",
+            "first_name": "Gord",
+            "last_name": "Downie",
+            "email": "gdownie@example.com"
+        },
+        {
+            "user_name": "lcohen",
+            "first_name": "Leonard",
+            "last_name": "Cohen",
+            "email": "lcohen@example.com"
+        },
+        {
+            "user_name": "rhawkins",
+            "first_name": "Ron",
+            "last_name": "Hawkins",
+            "email": "rhawkins@example.com"
+        },
+        {
+            "user_name": "wclark",
+            "first_name": "Wendel",
+            "last_name": "Clark",
+            "email": "wclark@example.com"
+        }
+    ],
+    "user_groups": [
+        {
+            "name": "test-group1",
+            "members": [ "gdownie", "lcohen", "rhawkins" ]
+        },
+        {
+            "name": "test-group2",
+            "members": [ "rhawkins" ]
+        },
+        {
+            "name": "test-group3",
+            "members": [ "gdownie" ]
+          }
+    ]
+}

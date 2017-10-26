@@ -1,0 +1,13 @@
+---
+- name: Create User
+  uri:
+    url: '{{ atlassian_url }}/rest/api/2/user'
+    method: POST
+    user: '{{ atlassian_username }}'
+    password: '{{ atlassian_password }}'
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json
+    body: "{'name': '{{ atlassian_user.email.split(\'@\') | first }}', 'password': '{{ atlassian_user.password }}', 'emailAddress': '{{ atlassian_user.email }}', 'displayName': '{{ atlassian_user.firstname }} {{ atlassian_user.lastname }}' }"
+    return_content: yes
+  register: user_data

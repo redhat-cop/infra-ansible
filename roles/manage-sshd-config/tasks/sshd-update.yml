@@ -1,0 +1,10 @@
+---
+- name: "Update sshd_config with provided values" 
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    backup: yes
+    regexp: '^{{ item.key }}'
+    line: '{{ item.key }} {{ item.value }}'
+  notify: 'reload sshd'
+  with_dict: "{{ update_sshd_config | default({}) }}"
+

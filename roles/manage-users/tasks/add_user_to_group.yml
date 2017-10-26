@@ -1,0 +1,10 @@
+---
+
+  - name: "Add Members to Group {{ this_group.name }}"
+    ipa_group:
+      ipa_host: "{{ ipa_host | default(ansible_host)}}"
+      ipa_user: "{{ ipa_admin_user }}"
+      ipa_pass: "{{ ipa_admin_password }}"
+      validate_certs: "{{ ipa_validate_certs | default(True) }}"
+      name: "{{ this_group.name }}"
+      user: "{{ this_group.members | default('[]') }}"

@@ -1,0 +1,11 @@
+---
+- name: Create Group
+  uri:
+    url: '{{ atlassian_url }}/rest/api/2/group'
+    method: POST
+    status_code: [201, 400]
+    user: '{{ atlassian_username }}'
+    password: '{{ atlassian_password }}'
+    force_basic_auth: yes
+    body_format: json
+    body: "{'name': '{{ group }}' }"

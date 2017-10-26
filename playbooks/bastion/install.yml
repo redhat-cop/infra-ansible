@@ -16,5 +16,6 @@
   - role: config-docker-compose
   - role: config-gnome
   - role: config-xfce
+  - role: config-lxde
   - role: config-vnc-server
   - role: config-tools

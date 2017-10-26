@@ -1,0 +1,22 @@
+---
+
+ansible_become: True
+
+main_user: testuser
+
+ipa_client_install: True
+ipa_domain: example.com
+ipa_automount_location: userhome
+ipa_username: testuser
+ipa_password: my-super-secret-password
+
+docker_install: True
+docker_username: testuser
+docker_compose_install: False
+
+xfce_install: False
+vnc_server_install: False
+
+additional_tools_packages:
+- git
+

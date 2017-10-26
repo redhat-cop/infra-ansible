@@ -1,0 +1,8 @@
+---
+
+- name: "Import user data from {{ csv_doc_file_name }} and create users"
+  hosts: localhost
+  roles:
+    - populate-users
+    - manage-users
+    - manage-user-passwd

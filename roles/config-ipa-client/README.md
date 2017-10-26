@@ -1,11 +1,12 @@
 Role Name
 =========
 
-This set up an IdM/IPA integration on a Fedora or RHEL based client.
+This set up an IdM/IPA integration on a Fedora, CentOS or RHEL based client.
 
 ## Requirements
 - The Fedora system needs to be configured to allow for Ansible interactions (i.e.: SSH enabled & Python2 installed)
 - The RHEL system needs to be subscribed/registered and have valid repos enabled for the IPA client (e.g.: rhel-7-server-rpms)
+- The CentOS system needs no additional configurations
 
 ## Dependencies
 

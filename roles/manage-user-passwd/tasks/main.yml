@@ -1,0 +1,10 @@
+---
+
+- include: generate-passwords.yml
+- include: idm-set-passwd.yml
+
+- name: "New password list"
+  debug:
+    var: user_passwords
+    verbosity: 2
+

@@ -1,0 +1,27 @@
+--- 
+  - name: Create IPA user
+    ipa_user:
+      ipa_host: "{{ ipa_host | default(ansible_host)}}"
+      ipa_user: "{{ ipa_admin_user }}"
+      ipa_pass: "{{ ipa_admin_password }}"
+      validate_certs: "{{ ipa_validate_certs | default(False) }}"
+      givenname: "{{ item.first_name | trim }}"
+      sn: "{{ item.last_name | trim }}"
+      name: "{{ item.user_name | trim }}"
+      mail: "{{ item.email | default('') }}"
+# The addition of expiration date is a request that will be submitted upstream
+#      expiration_date: "{{ item.expiration_date | default('') }}"
+    with_items: "{{ users }}"
+    register: idm_user_list
+
+  - name: "Clear users before re-building list with additional data"
+    set_fact: 
+       users: []
+
+  - name: "Create password generation dataset"
+    set_fact: 
+       users: "{{ users + [idm_data.item | combine(idm_data.user | set_generate_password) ] }}"
+    with_items: "{{ idm_user_list.results }}"
+    loop_control:
+      loop_var: idm_data
+

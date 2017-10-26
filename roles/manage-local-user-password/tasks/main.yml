@@ -1,0 +1,9 @@
+---
+
+- include: 'password.yml'
+  when: 
+  - user_name is defined
+  - user_name|trim != ""
+  - clear_text_password is defined
+  - clear_text_password|trim != ""
+

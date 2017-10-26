@@ -1,0 +1,27 @@
+---
+
+- name: "Update newline characters in CSR content"
+  set_fact:
+    cert_csr: "{{ csr_content.csr|replace('\n', '\\n') }}"
+
+- name: "Create Certificate for host"
+  uri:
+    url: "https://{{ idm_fqdn }}/ipa/session/json"
+    method: POST
+    body: '{"method": "cert_request", "params":[["{{ cert_csr }}"],{"principal": "host/{{ host_name }}@{{ host_realm }}", "request_type": "pkcs10", "add": False, "version": "{{ api_version }}" }],"id":0}'
+    body_format: json
+    validate_certs: no
+    return_content: yes
+    headers:
+      Cookie: "{{ idm_session.set_cookie }}"
+      referer: "https://{{ idm_fqdn }}/ipa"
+      Content-Type: "application/json"
+      Accept: "application/json"
+  register: host_cert
+
+- name: "Error out if the request returned an error"
+  fail:
+    msg: "ERROR: request failed with message: {{ host_cert.json.error.message }}"
+  when:
+  - host_cert.json.error is defined
+  - host_cert.json.error.message is defined

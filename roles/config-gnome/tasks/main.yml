@@ -9,5 +9,5 @@
   loop_control:
     loop_var: distro_file
   when:
-  - gnome_install|default('no') == "yes"
+  - gnome_install|default(False)
 

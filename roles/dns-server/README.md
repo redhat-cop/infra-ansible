@@ -11,6 +11,10 @@ This role installs and configures bind/named for use with multiple views and zon
   - hosts: dns-servers
     roles:
     - role: dns-server
+      named_config_recursion: 'no'
+      named_config_dnssec_enable: 'no'
+      named_config_dnssec_validation: 'no'
+      named_config_dnssec_lookaside: 'auto'
       named_config_allow_transfer:
       - "192.168.10.11"
       - "192.168.10.12"

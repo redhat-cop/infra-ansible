@@ -1,0 +1,16 @@
+---
+- name: Convert csv to json - set facts
+  delegate_to: localhost
+  set_fact:
+    users: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=users') }}"
+    user_groups: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=user_groups') }}"
+
+- name: "Display imported users values"
+  debug:
+    var: users
+    verbosity: 2
+  
+- name: "Display imported user_groups values"
+  debug:
+    var: user_groups
+    verbosity: 2

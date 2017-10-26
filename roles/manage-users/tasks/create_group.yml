@@ -1,0 +1,9 @@
+---
+  - name: Create IPA group
+    ipa_group:
+      ipa_host: "{{ ipa_host | default(ansible_host)}}"
+      ipa_user: "{{ ipa_admin_user }}"
+      ipa_pass: "{{ ipa_admin_password }}"
+      validate_certs: "{{ ipa_validate_certs | default(True) }}"
+      name: "{{ item.name | trim }}"
+    with_items: "{{ user_groups }}"

@@ -1,0 +1,16 @@
+---
+
+- name: "Change IPA password for user: {{ item.user_name }}"
+  ipa_user:
+    ipa_host: "{{ ipa_host }}"
+    ipa_user: "{{ ipa_admin_user }}"
+    ipa_pass: "{{ ipa_admin_password }}"
+    validate_certs: "{{ ipa_validate_certs | default(False) }}"
+    name: "{{ item.user_name | trim }}"
+    password: "{{ item.password }}"
+  with_items: 
+    - "{{ users }}" 
+  when: 
+    - users is defined 
+    - item.password|trim != ''
+

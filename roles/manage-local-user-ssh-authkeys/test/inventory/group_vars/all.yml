@@ -1,0 +1,10 @@
+---
+
+user_name: user1
+clear_text_password: test123
+
+authorized_keyfile: "{{ inventory_dir }}/../authorized_keys"
+reset_keyfile: yes
+
+
+key_url: "{{ lookup('file', authorized_keyfile) }}"
