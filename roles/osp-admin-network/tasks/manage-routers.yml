@@ -1,23 +1,11 @@
 ---
 
 - name: "Set up router(s)"
-  shell: >
-    openstack router create {{ item.name }}
+  os_router:
+    state: present
+    name: "{{ item.name }}"
+    network: "{{ item.external_gateway }}"
+    interfaces:
+    - "{{ item.subnet }}"
   with_items:
-  - "{{ osp_routers | get_remaining_items(router_list_yaml, 'name', 'Name') }}"
-
-- name: "Set up external interface for router(s)"
-  shell: >
-    openstack router set \
-      --external-gateway "{{ item.external_gateway }}" \
-      "{{ item.name }}"
-  with_items:
-  - "{{ osp_routers | get_remaining_items(router_list_yaml, 'name', 'Name') }}"
-
-- name: "Set up subnet interface for router(s)"
-  shell: >
-    openstack router add subnet \
-      "{{ item.name }}" \
-      "{{ item.subnet }}"
-  with_items:
-  - "{{ osp_routers | get_remaining_items(router_list_yaml, 'name', 'Name') }}"
+  - "{{ osp_routers }}"

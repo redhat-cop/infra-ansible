@@ -1,8 +1,14 @@
 ---
 
 - name: "Set up subnet(s)"
-  include: create-subnet.yml
+  os_subnet:
+    state: present
+    network_name: "{{ item.network }}"
+    name: "{{ item.name }}"
+    cidr: "{{ item.subnet_range }}"
+    dns_nameservers: "{{ item.dns_nameservers }}"
+    allocation_pool_start: "{{ item.allocation_pool_start | default(omit) }}"
+    allocation_pool_end: "{{ item.allocation_pool_end | default(omit) }}"
+    enable_dhcp: "{{ item.dhcp_enabled | default(True) }}"
   with_items:
-  - "{{ osp_subnets | get_remaining_items(subnet_list_yaml, 'name', 'Name') }}"
-  loop_control:
-    loop_var: subnet
+  - "{{ osp_subnets }}"

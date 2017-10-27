@@ -1,7 +1,5 @@
 ---
 
-- include: "data-gathering.yml"
-
 - include: "manage-networks.yml"
 
 - include: "manage-subnets.yml"
