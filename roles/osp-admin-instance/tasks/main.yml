@@ -1,0 +1,18 @@
+---
+
+- name: Manage OpenStack instance
+  os_server:
+    state: "{{ item.state | default('present') }}"
+    name: "{{ item.name }}"
+    image: "{{ item.image }}"
+    key_name: "{{ item.key_name }}"
+    timeout: 200
+    flavor: "{{ item.flavor }}"
+    network: "{{ item.network }}"
+    security_groups: "{{ item.security_groups }}"
+    auto_ip: "{{ item.auto_ip | default(True) }}"
+    delete_fip: "{{ item.delete_fip | default(omit) }}"
+    volumes: "{{ item.volumes | default(omit) }}"
+  with_items:
+  - "{{ osp_instances }}"
+

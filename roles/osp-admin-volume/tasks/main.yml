@@ -1,0 +1,11 @@
+---
+
+- name: Create Requested Volumes
+  os_volume:
+    state: "{{ item.state | default('present') }}"
+    name: "{{ item.name }}"
+    size: "{{ item.size }}"
+    display_name: "{{ item.display_name | default(omit) }}"
+    display_decsription: "{{ item.display_description | default(omit) }}"
+  with_items:
+  - "{{ osp_volumes | default([]) }}"
