@@ -6,6 +6,8 @@
 
 - include: "infra-virt-hosts.yml"
 
+- include: "virthosts.yml"
+
 - include: "vm.yml"
 
 - include: "services.yml"
