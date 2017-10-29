@@ -1,21 +1,24 @@
 ---
 
-- name: Create required Security Groups
+- name: Manage Security Groups
   os_security_group:
-    state: present
+    state: "{{ item.state | default(osp_resource_state) | default('present') }}"
     name: "{{ item.name }}"
-    description: "{{ item.description }}"
+    description: "{{ item.description | default(omit) }}"
   with_items:
   - "{{ osp_security_groups }}"
+  register: security_groups
 
 - name: Create Security Group Rules
   os_security_group_rule:
-    security_group: "{{ item.0.name }}"
-    protocol: "{{ item.1.protocol }}"
+    security_group: "{{ item.0.item.name }}"
+    protocol: "{{ item.1.protocol | default(omit) }}"
     port_range_min: "{{ item.1.port_range_min | default(omit) }}"
     port_range_max: "{{ item.1.port_range_max | default(omit) }}"
-    remote_ip_prefix: "{{ item.1.remote_ip_prefix }}"
+    remote_ip_prefix: "{{ item.1.remote_ip_prefix | default(omit) }}"
   with_subelements:
-  - "{{ osp_security_groups }}"
-  - rules 
+  - "{{ security_groups.results }}"
+  - item.rules 
+  when: 
+  - item.0.invocation.module_args.state == 'present'
 
