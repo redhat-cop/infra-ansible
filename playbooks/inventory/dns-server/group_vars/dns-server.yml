@@ -1,0 +1,11 @@
+---
+
+named_config_views:
+- name: mydnsview
+  recursion: 'yes'
+  zone:
+  - dns_domain: "first.example.com"
+  - dns_domain: "10.168.192.in-addr.arpa"
+  forwarder:
+  - 8.8.8.8
+  - 8.8.4.4

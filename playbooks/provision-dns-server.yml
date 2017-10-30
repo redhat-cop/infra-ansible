@@ -1,0 +1,7 @@
+---
+
+- include: osp/provision-osp-instance.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+
+- include: configure-dns-server.yml

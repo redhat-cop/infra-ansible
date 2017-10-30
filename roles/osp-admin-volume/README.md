@@ -1,7 +1,6 @@
 Role Name
 =========
 
-This role allow users to automatically create their OpenStack Platform (OSP) Networking - i.e.: network, subnets, and routers - based on their pre-defined inventory.
 
 Requirements
 ------------
@@ -15,11 +14,6 @@ Requirements
 Role Variables
 --------------
 
-See `Example Inventory` below for more specific details. At a high level, the following variables need to be defined:
-
-- `osp_networks`: A list of networks to create
-- `osp_subnets`: A list of subnets to be created with the above network(s)
-- `osp_routers`: A list of routers to be created with the above subnet(s)
 
 
 Dependencies
@@ -31,12 +25,11 @@ None
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
 ```
     - hosts: servers
       roles:
-      - role: osp-admin-sec-group
+      - role: osp-admin-volume
 ```
 
 **Note:** Make sure to source the OpenStack RC file (with proper access rights) before running this playbook/role.

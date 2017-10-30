@@ -3,9 +3,9 @@
 - name: Provision Instance(s)
   hosts: localhost
   roles:
-  - osp-admin-volume
-  - osp-admin-sec-group
-  - osp-admin-instance
+  - role: osp-admin-volume
+  - role: osp-admin-sec-group
+  - role: osp-admin-instance
 
 - name: Refresh Server inventory
   hosts: localhost
