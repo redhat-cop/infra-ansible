@@ -39,9 +39,9 @@ osp_instances:
   meta:
     group: osp_instances
   image: "Fedora-Cloud-Base-26-1.5.x86_64"
-  key_name: "obedin"
+  key_name: "my-keypair"
   flavor: "m1.medium"
-  network: "obedin-network"
+  network: "my-network"
   security_groups:
   - ssh-sec-group
   - icmp-sec-group
