@@ -1,5 +1,8 @@
 ---
 
+# Please see `inventory/dns-server` for an example inventory to be used with 
+# this playbook to provision a dns-server  
+
 - include: osp/provision-osp-instance.yml
   when:
   - hosting_infrastructure == 'openstack'
