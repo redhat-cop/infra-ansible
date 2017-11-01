@@ -2,7 +2,7 @@
 
 - name: "Set up network(s)"
   os_network:
-    state: present
+    state: "{{ item.state | default(osp_resource_state) | default('present') }}"
     name: "{{ item.name }}"
     external: "{{ item.external | default(False) }}"
   with_items:

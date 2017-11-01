@@ -2,7 +2,7 @@
 
 - name: "Set up router(s)"
   os_router:
-    state: present
+    state: "{{ item.state | default(osp_resource_state) | default('present') }}"
     name: "{{ item.name }}"
     network: "{{ item.external_gateway }}"
     interfaces:
