@@ -1,0 +1,49 @@
+---
+
+hosting_infrastructure: openstack
+ansible_user: centos
+ansible_become: True
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+- name: "dns-sec-group"
+  description: "My DNS Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 53
+    port_range_max: 53
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+  - protocol: udp
+    port_range_min: 53
+    port_range_max: 53
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+
+osp_instances:
+- name: "my-dns-server"
+  meta:
+    group: osp_instances
+  image: "CentOS-7-x86_64"
+  key_name: "my-keypair"
+  flavor: "m1.medium"
+  network: "my-network"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - dns-sec-group
+
+

@@ -1,0 +1,7 @@
+
+
+[dns-server:children]
+osp_instances
+
+[osp_instances]
+

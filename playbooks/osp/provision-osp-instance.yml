@@ -1,0 +1,31 @@
+---
+
+- name: Provision Instance(s)
+  hosts: localhost
+  roles:
+  - role: osp-admin-volume
+  - role: osp-admin-sec-group
+  - role: osp-admin-instance
+
+- name: Refresh Server inventory
+  hosts: localhost
+  gather_facts: False
+  tasks:
+  - meta: refresh_inventory
+
+- name: Print Instance info + Wait for Instances to come alive
+  hosts: osp_instances
+  gather_facts: false
+  tasks:
+  - name: Debug hostvar
+    debug:
+      msg: "{{ hostvars[inventory_hostname] }}"
+      verbosity: 2
+  - name: waiting for server to come back
+    local_action:
+      module: wait_for
+      host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
+      port: 22
+      delay: 30
+      timeout: 300
+
