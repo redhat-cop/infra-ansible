@@ -1,23 +1,40 @@
 Role Name
 =========
 
+This role allow users to automate the creation of their OpenStack Platform (OSP) instances based on their pre-defined inventory (see example below). 
 
 Requirements
 ------------
 
+1. A valid OpenStack RC file, with the proper access rights to an OpenStack tenant, needs to be sourced before using this role.
+1. The `openstack` python shade packages to allow for interactions with the platform.
 
 Role Variables
 --------------
+
+See `Example Inventory` below for more specific details. The following variable needs to be defined:
+
+- `osp_instances`: A list of instances to create
 
 
 Dependencies
 ------------
 
+1. A valid OSP tenant with the proper configuration for:
+  1. Network (can be done with the `osp-admin-network` role)
+  1. Security Groups (can be done with the `osp-admin-sec-group` role)
+  1. Volumes (can be done with the `osp-admin-volume` role) 
+
 
 Example Playbook
 ----------------
 
+``` 
+- hosts: servers
+  roles:
+  - role: osp-admin-instance
 
+**Note:** Make sure to source the OpenStack RC file (with proper access rights) before running this playbook/role.
 
 Example Inventory
 ----------------

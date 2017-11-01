@@ -1,20 +1,21 @@
 Role Name
 =========
 
+This role allow users to automate the creation of their OpenStack Platform (OSP) volumes (cinder). 
 
 Requirements
 ------------
 
-2 Requirements:
-
 1. A valid OpenStack RC file, with the proper access rights to an OpenStack tenant, needs to be sourced before using this role.
-1. The `openstack` binary, compatible with the target OpenStack environment, is accessible part of your path.
+1. The `openstack` python shade packages to allow for interactions with the platform.
 
 
 Role Variables
 --------------
 
+See `Example Inventory` below for more specific details. At a high level, the following variables need to be defined:
 
+- `osp_volumes`: A list of volumes to create
 
 Dependencies
 ------------
@@ -24,7 +25,6 @@ None
 
 Example Playbook
 ----------------
-
 
 ```
     - hosts: servers

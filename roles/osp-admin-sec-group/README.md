@@ -1,21 +1,22 @@
 Role Name
 =========
 
-TBD
+This role allow users to automate the creation of their OpenStack Platform (OSP) secrurity groups (with corresponding security rules). 
 
 Requirements
 ------------
 
-2 Requirements:
-
 1. A valid OpenStack RC file, with the proper access rights to an OpenStack tenant, needs to be sourced before using this role.
-1. The `openstack` binary, compatible with the target OpenStack environment, is accessible part of your path.
+1. The `openstack` python shade packages to allow for interactions with the platform.
+
 
 
 Role Variables
 --------------
 
-TBD
+See `Example Inventory` below for more specific details. At a high level, the following variable needs to be defined:
+
+- `osp_security_groups`: A list of security groups, with rules, to create
 
 
 Dependencies
@@ -26,8 +27,6 @@ None
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
 ```
     - hosts: servers

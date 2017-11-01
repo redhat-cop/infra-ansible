@@ -14,8 +14,8 @@ osp_volumes:
   size: 2
 
 osp_security_groups:
-- name: "ssh-sec-group"
-  description: "My SSH Sec Group"
+- name: "multi-sec-group"
+  description: "My Multi-Port Sec Group"
   rules:
   - protocol: tcp
     port_range_min: 22
@@ -43,7 +43,7 @@ osp_instances:
   flavor: "m1.medium"
   network: "my-network"
   security_groups:
-  - ssh-sec-group
+  - multi-sec-group
   - icmp-sec-group
   volumes:
   - vol1
