@@ -20,10 +20,10 @@ See `Example Inventory` below for more specific details. The following variable 
 Dependencies
 ------------
 
-1. A valid OSP tenant with the proper configuration for:
-  1. Network (can be done with the `osp-admin-network` role)
-  1. Security Groups (can be done with the `osp-admin-sec-group` role)
-  1. Volumes (can be done with the `osp-admin-volume` role) 
+* A valid OSP tenant with the proper configuration for:
+  * Network (can be done with the `osp-admin-network` role)
+  * Security Groups (can be done with the `osp-admin-sec-group` role)
+  * Volumes (can be done with the `osp-admin-volume` role) 
 
 
 Example Playbook
@@ -33,6 +33,7 @@ Example Playbook
 - hosts: servers
   roles:
   - role: osp-admin-instance
+```
 
 **Note:** Make sure to source the OpenStack RC file (with proper access rights) before running this playbook/role.
 
