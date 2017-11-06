@@ -1,0 +1,5 @@
+---
+
+- hosts: tower
+  roles:
+  - role: config-ansibletower
