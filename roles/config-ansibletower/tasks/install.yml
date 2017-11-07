@@ -1,0 +1,43 @@
+---
+
+- name: "install epel-release"
+  package:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+    state: present
+
+- name: "Set installation dir fact"
+  set_fact:
+    ansible_tower_dir: "{{ default_ansible_tower_url | basename | regex_replace('.tar.gz','') }}"
+
+- name: "Check if installer dir exists"
+  stat: 
+    path: "{{ ansible_tower_dir }}"
+  register: installer_dir
+
+- name: "Download & Unpack Ansible Tower installer"
+  shell: curl {{ default_ansible_tower_url }} | tar xzvf -
+  when: not installer_dir.stat.exists
+
+- name: "Set up the Ansible Tower inventory"
+  template:
+    src: inventory.j2
+    dest: "{{ ansible_tower_dir }}/inventory"
+  register: inventory
+
+- name: "run tower installer"
+  shell: ./setup.sh
+  args:
+    chdir: "{{ ansible_tower_dir }}"
+
+- name: "Add Tower license"
+  uri: 
+    url: https://localhost/api/v1/config/
+    method: POST
+    body: '{{ lookup("file", tower_license_file) | from_json | combine({"eula_accepted":"true"}) | to_json }}'
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}" 
+    validate_certs: no
