@@ -44,7 +44,7 @@ Example Inventory
 osp_instances:
 - name: "host1"
   meta:
-  - group: my-instances
+    group: my-instances
   image: "Fedora-Cloud-Base-26-1.5.x86_64"
   key_name: "my_keypair"
   flavor: "m1.medium"
@@ -56,7 +56,7 @@ osp_instances:
   - vol1
 - name: "host2"
   meta:
-  - group: my-instances
+    group: my-instances
   image: "CentOS-7-x86_64"
   key_name: "my_keypair"
   flavor: "m1.small"
