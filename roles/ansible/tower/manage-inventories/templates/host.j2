@@ -1,0 +1,7 @@
+{
+    "name": "{{ host.name }}",
+    "description": "{{ host.description | default('') }}",
+    "inventory": {{ inv_id }},
+    "enabled": true,
+    "variables": "{{ host.variables | default('---') }}"
+}

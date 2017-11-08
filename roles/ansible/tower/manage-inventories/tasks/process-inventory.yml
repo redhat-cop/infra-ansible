@@ -1,0 +1,56 @@
+---
+
+- name: "Get the org id based on the org name"
+  set_fact:
+    org_id: "{{ item.id }}"
+  when:
+  - item.name|trim == inventory.organization|trim
+  with_items:
+  - "{{ existing_organizations_output.json.results }}" 
+
+- name: "Load up the inventory"
+  uri: 
+    url: https://localhost/api/v1/inventories/
+    method: POST
+    body: "{{ lookup('template', 'inventory.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}" 
+    validate_certs: no
+    status_code: 200,201,400
+  register: inventory_output
+
+- name: "Get the existing inventories"
+  uri: 
+    url: https://localhost/api/v1/inventories/
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}" 
+    validate_certs: no
+    return_content: yes
+  register: existing_inventories_output
+
+- name: "Get the inventory id based on the inventory name"
+  set_fact:
+    inv_id: "{{ item.id }}"
+  when:
+  - item.name|trim == inventory.name|trim
+  with_items:
+  - "{{ existing_inventories_output.json.results }}" 
+
+- name: "Process the inventory host entries"
+  include: process-host.yml
+  with_items:
+  - "{{ inventory.hosts }}"
+  loop_control:
+    loop_var: host
+
+- name: "Clear fact(s)"
+  set_fact:
+    org_id: ''
+    inv_id: ''

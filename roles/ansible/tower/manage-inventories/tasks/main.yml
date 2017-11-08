@@ -1,0 +1,20 @@
+---
+
+- name: "Get the existing organizations"
+  uri: 
+    url: https://localhost/api/v1/organizations/
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}" 
+    validate_certs: no
+    return_content: yes
+  register: existing_organizations_output
+
+- name: "Process the inventory entries"
+  include: process-inventory.yml
+  with_items:
+  - "{{ ansible_tower_inventories }}"
+  loop_control:
+    loop_var: inventory
