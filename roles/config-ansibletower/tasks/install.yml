@@ -29,6 +29,18 @@
   args:
     chdir: "{{ ansible_tower_dir }}"
 
+- name: "Wait for Tower to become available before proceeding (30 sec max)"
+  uri:
+    url: https://localhost/api/v1/config/
+    method: GET
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+  register: status_output
+  until: status_output.status == 200
+  retries: 6
+  delay: 5
+
 - name: "Add Tower license"
   uri: 
     url: https://localhost/api/v1/config/
