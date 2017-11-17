@@ -1,0 +1,17 @@
+---
+
+- name: "Create the User Accounts"
+  os_user:
+    cloud: "{{ item.cloud }}"
+    domain: "{{ item.domain }}"
+    password: "{{ item.password }}"
+    name: "{{ item.name }}"
+  with_items:
+  - "{{ osp_users }}"
+  
+- name: "Grant access to accounts"
+  include: "roles.yml"
+  with_items:
+  - "{{ osp_users }}"
+  loop_control:
+    loop_var: role

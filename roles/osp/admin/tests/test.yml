@@ -1,5 +1,0 @@
----
-
-- hosts: infra_osp_hosts
-  roles:
-    - packstack-admin

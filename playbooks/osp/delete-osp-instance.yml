@@ -5,7 +5,7 @@
   vars:
     osp_resource_state: absent 
   roles:
-  - osp-admin-instance
-  - osp-admin-sec-group
-  - osp-admin-volume
+  - osp/admin-instance
+  - osp/admin-sec-group
+  - osp/admin-volume
 
