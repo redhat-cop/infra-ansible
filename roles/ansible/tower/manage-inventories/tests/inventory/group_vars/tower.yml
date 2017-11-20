@@ -5,7 +5,7 @@ tower_admin_password: "admin01"
 ansible_tower_inventories:
 - name: "Inventory1"
   description: "My Hosts"
-  organization: "My Org"
+  organization: "Default"
   variables: "---"
   hosts:
   - name: "localhost"

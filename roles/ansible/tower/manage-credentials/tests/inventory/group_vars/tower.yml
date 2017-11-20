@@ -1,0 +1,9 @@
+---
+
+tower_admin_password: "admin01"
+
+ansible_tower_credentials:
+- name: "Cred1"
+  description: "My Credential 1"
+  organization: "Default"
+  credential_type: "Machine"

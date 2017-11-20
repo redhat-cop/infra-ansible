@@ -1,20 +1,36 @@
 ---
 
+- name: "Set default values"
+  set_fact:
+    processed_inventories: []
+    existing_organizations_output: []
+
 - name: "Get the existing organizations"
-  uri: 
-    url: https://localhost/api/v1/organizations/
+  uri:
+    url: https://localhost/api/v2/organizations/
     method: GET
     headers:
       Content-Type: "application/json"
     user: admin
-    password: "{{ tower_admin_password }}" 
+    password: "{{ tower_admin_password }}"
     validate_certs: no
     return_content: yes
   register: existing_organizations_output
 
 - name: "Process the inventory entries"
-  include: process-inventory.yml
+  include_tasks: process-inventory.yml
   with_items:
   - "{{ ansible_tower_inventories }}"
   loop_control:
     loop_var: inventory
+
+- name: "Elminate the inventories that should not be present"
+  uri:
+    url: https://localhost/api/v2/inventories/{{ item.id }}/
+    method: DELETE
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    status_code: 200,202,204
+  with_items:
+  - "{{ existing_inventories_output.json.results | get_remaining_items(processed_inventories, 'name', 'name')}}"

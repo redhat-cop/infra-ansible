@@ -6,11 +6,11 @@
   when:
   - item.name|trim == inventory.organization|trim
   with_items:
-  - "{{ existing_organizations_output.json.results }}" 
+  - "{{ existing_organizations_output.json.results }}"
 
 - name: "Load up the inventory"
-  uri: 
-    url: https://localhost/api/v1/inventories/
+  uri:
+    url: https://localhost/api/v2/inventories/
     method: POST
     body: "{{ lookup('template', 'inventory.j2') }}"
     body_format: 'json'
@@ -18,19 +18,19 @@
       Content-Type: "application/json"
       Accept: "application/json"
     user: admin
-    password: "{{ tower_admin_password }}" 
+    password: "{{ tower_admin_password }}"
     validate_certs: no
     status_code: 200,201,400
   register: inventory_output
 
-- name: "Get the existing inventories"
-  uri: 
-    url: https://localhost/api/v1/inventories/
+- name: "Get the updated list of existing inventories"
+  uri:
+    url: https://localhost/api/v2/inventories/
     method: GET
     headers:
       Content-Type: "application/json"
     user: admin
-    password: "{{ tower_admin_password }}" 
+    password: "{{ tower_admin_password }}"
     validate_certs: no
     return_content: yes
   register: existing_inventories_output
@@ -41,16 +41,17 @@
   when:
   - item.name|trim == inventory.name|trim
   with_items:
-  - "{{ existing_inventories_output.json.results }}" 
+  - "{{ existing_inventories_output.json.results }}"
 
 - name: "Process the inventory host entries"
-  include: process-host.yml
+  include_tasks: process-host.yml
   with_items:
   - "{{ inventory.hosts }}"
   loop_control:
     loop_var: host
 
-- name: "Clear fact(s)"
+- name: "Clear/Update facts"
   set_fact:
     org_id: ''
     inv_id: ''
+    processed_inventories: "{{ processed_inventories + [ {'name': inventory.name } ] }}"

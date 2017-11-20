@@ -10,7 +10,7 @@
 
 - name: "Load up the project"
   uri:
-    url: https://localhost/api/v1/projects/
+    url: https://localhost/api/v2/projects/
     method: POST
     body: "{{ lookup('template', 'project.j2') }}"
     body_format: 'json'
@@ -23,7 +23,7 @@
     status_code: 200,201,400
   register: project_output
 
-- name: "Update facts"
+- name: "Clear/Update facts"
   set_fact:
     org_id: ''
     processed_projects: "{{ processed_projects + [ {'name': project.name } ] }}"

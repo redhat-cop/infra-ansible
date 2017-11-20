@@ -1,0 +1,37 @@
+---
+
+- name: "Get the inventory id based on the inventory name"
+  set_fact:
+    inventory_id: "{{ item.id }}"
+  when:
+  - item.name|trim == job_template.inventory|trim
+  with_items:
+  - "{{ existing_inventories_output.json.results }}"
+
+- name: "Get the project id based on the project name"
+  set_fact:
+    project_id: "{{ item.id }}"
+  when:
+  - item.name|trim == job_template.project|trim
+  with_items:
+  - "{{ existing_projects_output.json.results }}"
+
+- name: "Load up the job template"
+  uri:
+    url: https://localhost/api/v2/job_templates/
+    method: POST
+    body: "{{ lookup('template', 'job-template.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    status_code: 200,201,400
+
+- name: "Clear/Update facts"
+  set_fact:
+    inventory_id: ''
+    project_id: ''
+    processed_job_templates: "{{ processed_job_templates + [ {'name': job_template.name } ] }}"

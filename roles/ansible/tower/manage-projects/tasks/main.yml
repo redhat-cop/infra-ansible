@@ -7,7 +7,7 @@
 
 - name: "Get the existing organizations"
   uri:
-    url: https://localhost/api/v1/organizations/
+    url: https://localhost/api/v2/organizations/
     method: GET
     headers:
       Content-Type: "application/json"
