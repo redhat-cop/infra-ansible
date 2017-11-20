@@ -2,23 +2,16 @@
 
 - name: "Add projects / tenants"
   os_project:
-    cloud: "{{ item.cloud }}"
+    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
     domain_id: "{{ item.domain }}"
     description: "{{ item.description }}"
     name: "{{ item.name }}"
   with_items:
   - "{{ osp_projects }}"
 
-- name: "Assign roles for users/projects"
-  include: "tenant-roles.yml"
-  with_items:
-  - "{{ osp_projects }}"
-  loop_control:
-    loop_var: project
-
 - name: "Update tenant quotas"
   os_quota:
-    cloud: "{{ item.cloud }}"
+    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
     name: "{{ item.name }}"
     cores: "{{ item.quota.vcpus }}"
     instances: "{{ item.quota.instances }}"
@@ -36,3 +29,11 @@
   - "{{ osp_projects }}"
   when:
   - item.quota is defined
+
+- name: "Assign roles for users/projects"
+  include_tasks: "tenant-roles.yml"
+  with_items:
+  - "{{ osp_projects }}"
+  loop_control:
+    loop_var: project
+

@@ -2,7 +2,7 @@
 
 - name: "Create the image"
   os_image:
-    cloud: "{{ item.cloud }}"
+    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
     filename: "{{ item.filename }}"
     disk_format: "{{ item.disk_format | default(omit) }}"
     name: "{{ item.name }}"

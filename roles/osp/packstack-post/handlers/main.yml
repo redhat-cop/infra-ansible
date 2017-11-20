@@ -49,3 +49,15 @@
   service:
     name: 'openstack-cinder-volume'
     state: restarted
+
+- name: "remove temporary keystone rc file"
+  file:
+    path: "{{ keystonerc_file.path }}"
+    state: absent
+
+- name: "remove local temporary keystone rc file"
+  file:
+    path: "{{ keystonerc_file.path }}"
+    state: absent
+  delegate_to: localhost
+

@@ -2,7 +2,7 @@
 
 - name: "Create the LDAP domain(s)"
   os_keystone_domain:
-    cloud: "{{ item.cloud }}"
+    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
     description: "{{ item.domain }} Domain"
     name: "{{ item.domain }}"
   with_items:

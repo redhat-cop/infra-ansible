@@ -1,7 +1,7 @@
 ---
 
-- include: "manage-networks.yml"
+- import_tasks: "manage-networks.yml"
 
-- include: "manage-subnets.yml"
+- import_tasks: "manage-subnets.yml"
 
-- include: "manage-routers.yml"
+- import_tasks: "manage-routers.yml"

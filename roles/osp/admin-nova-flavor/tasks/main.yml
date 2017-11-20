@@ -2,7 +2,7 @@
 
 - name: "Create the flavor"
   os_nova_flavor:
-    cloud: "{{ item.cloud }}"
+    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
     vcpus: "{{ item.vcpus }}"
     ram: "{{ item.ram }}"
     disk: "{{ item.disk }}"

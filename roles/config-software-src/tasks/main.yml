@@ -1,6 +1,6 @@
 ---
 
-- include: prep.yml
-- include: mount-software.yml
+- import_tasks: prep.yml
+- import_tasks: mount-software.yml
 
 

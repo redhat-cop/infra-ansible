@@ -40,6 +40,30 @@
   with_items:
   - "{{ keystone_ldap }}"
 
+- name: "Create temporary file for keystone rc variables"
+  tempfile:
+    state: file
+    prefix: keystonerc
+  register: keystonerc_file
+  notify:
+  - "remove temporary keystone rc file"
+
+- name: "Source the admin keytstonerc file"
+  shell: "source ~/keystonerc_admin; env | grep '^OS_' > {{ keystonerc_file.path }}"
+
+- name: "Retrive the sourced rc content file"
+  fetch:
+    src: "{{ keystonerc_file.path }}"
+    dest: "{{ keystonerc_file.path }}"
+    flat: yes
+  notify:
+  - "remove local temporary keystone rc file"
+
+- name: "Configure the 'clouds.cfg' file for admin"
+  template:
+    src: clouds_yaml.j2
+    dest: '/etc/openstack/clouds.yaml'
+
 - name: "Restart keystone (httpd) to apply config"
   service:
     name: httpd

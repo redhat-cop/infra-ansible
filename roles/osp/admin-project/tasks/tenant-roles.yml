@@ -2,7 +2,7 @@
 
 - name: "Assign role for project {{ project.name }}"
   os_user_role:
-    cloud: "{{ project.cloud }}"
+    cloud: "{{ project.cloud | default(osp_default_cloud) }}"
     user: "{{ item.0.user }}"
     domain: "{{ item.0.user_domain | default(omit) }}"
     project: "{{ project.name }}"
