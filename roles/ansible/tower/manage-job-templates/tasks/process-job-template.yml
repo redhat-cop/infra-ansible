@@ -16,7 +16,7 @@
   with_items:
   - "{{ existing_projects_output.json.results }}"
 
-- name: "Get the credential id based on the project name"
+- name: "Get the credential id based on the credential name"
   set_fact:
     credential_id: "{{ item.id }}"
   when:
