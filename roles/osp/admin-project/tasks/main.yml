@@ -2,7 +2,7 @@
 
 - name: "Add projects / tenants"
   os_project:
-    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
     domain_id: "{{ item.domain }}"
     description: "{{ item.description | default(omit) }}"
     name: "{{ item.name }}"
@@ -11,7 +11,7 @@
 
 - name: "Update tenant quotas"
   os_quota:
-    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
     name: "{{ item.name }}"
     cores: "{{ item.quota.vcpus | default(omit) }}"
     instances: "{{ item.quota.instances | default(omit) }}"

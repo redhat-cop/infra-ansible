@@ -11,7 +11,7 @@
     dns_nameservers: "{{ item.dns_nameservers }}"
     allocation_pool_start: "{{ item.allocation_pool_start | default(omit) }}"
     allocation_pool_end: "{{ item.allocation_pool_end | default(omit) }}"
-    enable_dhcp: "{{ item.enable_dhcp | default(True) }}"
+    enable_dhcp: "{{ item.enable_dhcp | default(omit) }}"
     project: "{{ item.project | default(omit) }}"
   with_items:
   - "{{ osp_subnets | default([]) }}"

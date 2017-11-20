@@ -10,7 +10,6 @@
 
 - name: 'Fetch the public SSH key from the first host'
   fetch:
-    mode: pull
     src: "~/.ssh/id_rsa.pub"
     dest: "/tmp/id_rsa.pub"
     flat: yes
