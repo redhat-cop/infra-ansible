@@ -14,7 +14,7 @@
 - name: "Configure the openstack-dashboard parameters to allow for multiple domains"
   lineinfile:
     path: "/etc/openstack-dashboard/local_settings"
-    regexp: '^{{ item.key}} ='
+    regexp: '^{{ item.key }} ='
     line: '{{ item.key }} = {{ item.value }}'
   with_items:
   - { key: 'OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT', value: 'True' }
@@ -49,7 +49,7 @@
   - "remove temporary keystone rc file"
 
 - name: "Source the admin keytstonerc file"
-  shell: "source ~/keystonerc_admin; env | grep '^OS_' > {{ keystonerc_file.path }}"
+  shell: "source ~/{{ admin_keystonerc_file }}; env | grep '^OS_' > {{ keystonerc_file.path }}"
 
 - name: "Retrive the sourced rc content file"
   fetch:
@@ -62,7 +62,7 @@
 - name: "Configure the 'clouds.cfg' file for admin"
   template:
     src: clouds_yaml.j2
-    dest: '/etc/openstack/clouds.yaml'
+    dest: {{ clouds_yaml_file }}
 
 - name: "Restart keystone (httpd) to apply config"
   service:

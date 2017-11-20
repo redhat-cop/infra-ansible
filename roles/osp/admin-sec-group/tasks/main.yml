@@ -2,15 +2,17 @@
 
 - name: Manage Security Groups
   os_security_group:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
     state: "{{ item.state | default(osp_resource_state) | default('present') }}"
     name: "{{ item.name }}"
     description: "{{ item.description | default(omit) }}"
   with_items:
-  - "{{ osp_security_groups }}"
+  - "{{ osp_security_groups | default([]) }}"
   register: security_groups
 
 - name: Create Security Group Rules
   os_security_group_rule:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
     security_group: "{{ item.0.item.name }}"
     protocol: "{{ item.1.protocol | default(omit) }}"
     port_range_min: "{{ item.1.port_range_min | default(omit) }}"

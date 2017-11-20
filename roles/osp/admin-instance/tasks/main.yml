@@ -2,6 +2,7 @@
 
 - name: Manage OpenStack instance
   os_server:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
     state: "{{ item.state | default(osp_resource_state) | default('present') }}"
     name: "{{ item.name }}"
     image: "{{ item.image | default(omit) }}"
@@ -15,5 +16,5 @@
     volumes: "{{ item.volumes | default(omit) }}"
     meta: "{{ item.meta | default(omit) }}"
   with_items:
-  - "{{ osp_instances }}"
+  - "{{ osp_instances | default([]) }}"
 

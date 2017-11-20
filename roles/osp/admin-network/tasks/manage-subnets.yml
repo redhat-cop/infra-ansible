@@ -2,14 +2,16 @@
 
 - name: "Set up subnet(s)"
   os_subnet:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
     state: "{{ item.state | default(osp_resource_state) | default('present') }}"
-    network_name: "{{ item.network }}"
+    network_name: "{{ item.network_name }}"
     name: "{{ item.name | default(omit) }}"
-    cidr: "{{ item.subnet_range }}"
+    cidr: "{{ item.cidr }}"
     gateway_ip: "{{ item.gateway_ip | default(omit) }}"
     dns_nameservers: "{{ item.dns_nameservers }}"
     allocation_pool_start: "{{ item.allocation_pool_start | default(omit) }}"
     allocation_pool_end: "{{ item.allocation_pool_end | default(omit) }}"
-    enable_dhcp: "{{ item.dhcp_enabled | default(True) }}"
+    enable_dhcp: "{{ item.enable_dhcp | default(True) }}"
+    project: "{{ item.project | default(omit) }}"
   with_items:
-  - "{{ osp_subnets }}"
+  - "{{ osp_subnets | default([]) }}"

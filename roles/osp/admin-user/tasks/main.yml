@@ -7,11 +7,11 @@
     password: "{{ item.password }}"
     name: "{{ item.name }}"
   with_items:
-  - "{{ osp_users }}"
+  - "{{ osp_users | default([]) }}"
   
 - name: "Grant access to accounts"
   include_tasks: "roles.yml"
   with_items:
-  - "{{ osp_users }}"
+  - "{{ osp_users | default([]) }}"
   loop_control:
     loop_var: role
