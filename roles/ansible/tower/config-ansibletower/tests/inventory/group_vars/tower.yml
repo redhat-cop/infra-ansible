@@ -4,8 +4,13 @@ tower_admin_password: "admin01"
 pg_password: "pg_password01"
 rabbitmq_password: "rabbitmq_password01"
 
-# NOTE: example on how these files can be specified - please replace with valid files
+# Update this to a valid tower license file
 #tower_license_file: "{{ inventory_dir }}/../files/tower-license.json"
+
+# Overall flag to indicate if LDAP should be configured or not
+ldap_config: False
+
+# NOTE: example on how these files can be specified - please replace with valid files
 #ldap_ca_cert: "{{ inventory_dir }}/../files/ca.crt" 
 
 ldap_uri: "ldaps://idm.test.example.com:636"

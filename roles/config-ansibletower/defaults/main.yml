@@ -1,4 +1,0 @@
----
-
-default_ansible_tower_url: https://releases.ansible.com/awx/setup/ansible-tower-setup-3.2.1.tar.gz
-

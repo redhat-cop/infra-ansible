@@ -1,0 +1,13 @@
+---
+
+tower_admin_password: "admin01"
+
+ansible_tower_inventories:
+- name: "Inventory1"
+  description: "My Hosts"
+  organization: "Default"
+  variables: "---"
+  hosts:
+  - name: "localhost"
+    description: ""
+    variables: "---\\nansible_connection: local"

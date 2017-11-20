@@ -1,0 +1,15 @@
+{
+    "name": "{{ project.name }}",
+    "description": "{{ project.description | default('') }}",
+    "local_path": "",
+    "scm_type": "{{ project.scm_type | default('git') }}",
+    "scm_url": "{{ project.scm_url }}",
+    "scm_branch": "{{ project.scm_branch | default('master') }}",
+    "scm_clean": {{ project.scm_clean | default(false) }},
+    "scm_delete_on_update": {{ project.scm_delete_on_update | default(false) }},
+    "credential": null,
+    "timeout": 0,
+    "organization": {{ org_id }},
+    "scm_update_on_launch": false,
+    "scm_update_cache_timeout": 0
+}

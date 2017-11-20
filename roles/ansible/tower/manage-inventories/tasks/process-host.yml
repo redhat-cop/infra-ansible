@@ -1,0 +1,15 @@
+---
+
+- name: "Load up the inventory"
+  uri:
+    url: https://localhost/api/v2/hosts/
+    method: POST
+    body: "{{ lookup('template', 'host.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    status_code: 200,201,400
