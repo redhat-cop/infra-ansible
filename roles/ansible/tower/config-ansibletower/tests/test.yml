@@ -2,4 +2,4 @@
 
 - hosts: tower
   roles:
-  - role: config-ansibletower
+  - role: ansible/tower/config-ansibletower

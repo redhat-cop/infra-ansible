@@ -1,20 +1,48 @@
 ---
 
+- name: "Set default values"
+  set_fact:
+    processed_projects: []
+    existing_projects_output: []
+
 - name: "Get the existing organizations"
-  uri: 
+  uri:
     url: https://localhost/api/v1/organizations/
     method: GET
     headers:
       Content-Type: "application/json"
     user: admin
-    password: "{{ tower_admin_password }}" 
+    password: "{{ tower_admin_password }}"
     validate_certs: no
     return_content: yes
   register: existing_organizations_output
 
+- name: "Get the existing projects"
+  uri:
+    url: https://localhost/api/v2/projects/
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    return_content: yes
+  register: existing_projects_output
+
 - name: "Process the inventory projects"
-  include: process-project.yml
+  include_tasks: process-project.yml
   with_items:
   - "{{ ansible_tower_projects }}"
   loop_control:
     loop_var: project
+
+- name: "Elminate the projects that should not be present"
+  uri:
+    url: https://localhost/api/v2/projects/{{ item.id }}/
+    method: DELETE
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    status_code: 200,204
+  with_items:
+  - "{{ existing_projects_output.json.results | get_remaining_items(processed_projects, 'name', 'name')}}"

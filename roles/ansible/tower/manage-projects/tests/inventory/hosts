@@ -1,3 +1,5 @@
 
 [tower]
-192.168.1.21
+10.9.51.94 ansible_user=centos ansible_become=True
+
+# 192.168.1.21

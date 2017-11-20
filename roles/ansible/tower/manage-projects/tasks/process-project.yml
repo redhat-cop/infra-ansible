@@ -6,10 +6,10 @@
   when:
   - item.name|trim == project.organization|trim
   with_items:
-  - "{{ existing_organizations_output.json.results }}" 
+  - "{{ existing_organizations_output.json.results }}"
 
 - name: "Load up the project"
-  uri: 
+  uri:
     url: https://localhost/api/v1/projects/
     method: POST
     body: "{{ lookup('template', 'project.j2') }}"
@@ -18,10 +18,12 @@
       Content-Type: "application/json"
       Accept: "application/json"
     user: admin
-    password: "{{ tower_admin_password }}" 
+    password: "{{ tower_admin_password }}"
     validate_certs: no
     status_code: 200,201,400
+  register: project_output
 
-- name: "Clear fact(s)"
+- name: "Update facts"
   set_fact:
     org_id: ''
+    processed_projects: "{{ processed_projects + [ {'name': project.name } ] }}"
