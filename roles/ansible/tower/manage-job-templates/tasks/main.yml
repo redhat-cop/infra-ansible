@@ -4,6 +4,9 @@
   set_fact:
     processed_job_templates: []
     existing_job_templates_output: []
+    existing_inventories_output: []
+    existing_projects_output: []
+    existing_credentials_output: []
 
 - name: "Get the existing inventories"
   uri:
@@ -40,6 +43,18 @@
     validate_certs: no
     return_content: yes
   register: existing_job_templates_output
+
+- name: "Get the existing credentials"
+  uri:
+    url: https://localhost/api/v2/credentials/
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    return_content: yes
+  register: existing_credentials_output
 
 - name: "Process the inventory job template"
   include_tasks: process-job-template.yml

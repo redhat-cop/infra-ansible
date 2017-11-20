@@ -16,6 +16,14 @@
   with_items:
   - "{{ existing_projects_output.json.results }}"
 
+- name: "Get the credential id based on the project name"
+  set_fact:
+    credential_id: "{{ item.id }}"
+  when:
+  - item.name|trim == job_template.credential|trim
+  with_items:
+  - "{{ existing_credentials_output.json.results }}"
+
 - name: "Load up the job template"
   uri:
     url: https://localhost/api/v2/job_templates/

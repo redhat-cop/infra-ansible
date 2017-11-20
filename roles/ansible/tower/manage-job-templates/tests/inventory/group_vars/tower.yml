@@ -8,3 +8,4 @@ ansible_tower_job_templates:
   inventory: "Inventory1"
   project: "Project1"
   playbook: "playbooks/prep.yml"
+  credential: "Credential1"
