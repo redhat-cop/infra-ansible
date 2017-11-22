@@ -1,0 +1,14 @@
+---
+
+- hosts: infra_osp_hosts[0]
+  roles:
+  - role: config-software-src    
+  - role: osp/admin-keystone-domain
+  - role: osp/admin-network
+  - role: osp/admin-volume-type
+  - role: osp/admin-nova-service
+  - role: osp/admin-nova-flavor
+  - role: osp/admin-image
+  - role: osp/admin-project
+  - role: osp/admin-user
+

@@ -1,0 +1,7 @@
+---
+
+- import_tasks: "manage-networks.yml"
+
+- import_tasks: "manage-subnets.yml"
+
+- import_tasks: "manage-routers.yml"

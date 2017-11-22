@@ -1,0 +1,4 @@
+---
+
+- name: "Run packstack with the proper answer file"
+  command: "packstack --answer-file=''{{ answer_file }}''"

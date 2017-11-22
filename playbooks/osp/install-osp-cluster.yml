@@ -1,0 +1,15 @@
+---
+
+- import_playbook: ../infra-hosts.yml
+
+- hosts: infra_osp_hosts[0]
+  roles:
+  - role: config-software-src    
+
+- hosts: infra_osp_hosts
+  roles:
+  - role: osp/packstack-install
+  - role: osp/packstack-post
+
+- import_playbook: update-osp-cluster-admin.yml
+

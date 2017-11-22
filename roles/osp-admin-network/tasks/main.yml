@@ -1,7 +1,0 @@
----
-
-- include: "manage-networks.yml"
-
-- include: "manage-subnets.yml"
-
-- include: "manage-routers.yml"

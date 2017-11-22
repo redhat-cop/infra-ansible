@@ -1,0 +1,39 @@
+---
+
+- name: "Add projects / tenants"
+  os_project:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
+    domain_id: "{{ item.domain }}"
+    description: "{{ item.description | default(omit) }}"
+    name: "{{ item.name }}"
+  with_items:
+  - "{{ osp_projects | default([]) }}"
+
+- name: "Update tenant quotas"
+  os_quota:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
+    name: "{{ item.name }}"
+    cores: "{{ item.quota.vcpus | default(omit) }}"
+    instances: "{{ item.quota.instances | default(omit) }}"
+    volumes: "{{ item.quota.volumes | default(omit) }}"
+    gigabytes: "{{ item.quota.total_vol_size | default(omit) }}"
+    ram: "{{ item.quota.ram | default(omit) }}"
+    security_group: "{{ item.quota.security_groups | default(omit) }}"
+    security_group_rule: "{{ item.quota.security_group_rules | default(omit) }}"
+    floating_ips: "{{ item.quota.floating_ips | default(omit) }}"
+    network: "{{ item.quota.networks | default(omit) }}"
+    router: "{{ item.quota.routers | default(omit) }}"
+    subnet: "{{ item.quota.subnets | default(omit) }}"
+    port: "{{ item.quota.ports | default(omit) }}"
+  with_items:
+  - "{{ osp_projects | default([]) }}"
+  when:
+  - item.quota is defined
+
+- name: "Assign roles for users/projects"
+  include_tasks: "tenant-roles.yml"
+  with_items:
+  - "{{ osp_projects | default([]) }}"
+  loop_control:
+    loop_var: project
+

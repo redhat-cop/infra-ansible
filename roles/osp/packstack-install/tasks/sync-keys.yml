@@ -1,0 +1,40 @@
+---
+
+- name: 'Fetch the private SSH key from the first host'
+  fetch:
+    src: "~/.ssh/id_rsa"
+    dest: "/tmp/id_rsa"
+    flat: yes
+  run_once: true
+  delegate_to: "{{ ansible_play_hosts | first }}"
+
+- name: 'Fetch the public SSH key from the first host'
+  fetch:
+    src: "~/.ssh/id_rsa.pub"
+    dest: "/tmp/id_rsa.pub"
+    flat: yes
+  run_once: true
+  delegate_to: "{{ ansible_play_hosts | first }}"
+
+- name: 'Ensure hosts have the SSH private key loaded'
+  copy:
+    src: "/tmp/id_rsa"
+    dest: "~/.ssh/id_rsa"
+    force: yes
+    mode: 0600
+
+- name: 'Ensure hosts have the SSH public key loaded'
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '/tmp/id_rsa.pub') }}"
+
+- name: "Clean up files"
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - '/tmp/id_rsa'
+  - '/tmp/id_rsa.pub'
+  run_once: true
+  delegate_to: "localhost"

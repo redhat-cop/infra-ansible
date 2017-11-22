@@ -1,0 +1,18 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - openstack-packstack
+
+- name: 'Ensure necessary directories exists'
+  file:
+    path: "{{ ssl_cert_directory }}"
+    state: directory
+
+- name: 'Copy certificates over to the host'
+  copy:
+    src: "{{ ssl_cert_src_dir }}"
+    dest: "{{ ssl_cert_directory }}"

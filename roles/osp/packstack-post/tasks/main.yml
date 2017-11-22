@@ -1,0 +1,21 @@
+---
+
+- name: "Include 'mariadb' processing"
+  include: "mariadb.yml"
+  when:
+  - "'mariadb' in osp_roles.split(',')"
+
+- name: "Include 'keystone' processing"
+  include: "keystone.yml"
+  when:
+  - "'keystone' in osp_roles.split(',')"
+
+- name: "Include 'cinder' processing"
+  include: "cinder.yml"
+  when:
+  - "'cinder' in osp_roles.split(',')"
+
+- name: "Include 'nova' processing"
+  include: "nova.yml"
+  when:
+  - "'nova' in osp_roles.split(',')"

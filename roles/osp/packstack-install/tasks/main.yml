@@ -1,0 +1,14 @@
+---
+
+- name: "Prepare the OSP hosts"
+  include: host-prep.yml
+
+- include: packstack-install-prep.yml
+  run_once: true
+  delegate_to: "{{ ansible_play_hosts | first }}"
+
+- include: sync-keys.yml
+
+- include: packstack-install.yml
+  run_once: true
+  delegate_to: "{{ ansible_play_hosts | first }}"

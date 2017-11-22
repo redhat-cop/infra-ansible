@@ -1,0 +1,28 @@
+---
+
+# This is a workaround for iptables config "bug" whereas the IPs are wrong for
+# iSCSI traffic (i.e.: using the wrong interface)
+- name: "Update iptables config to use correct interfaces"
+  replace:
+    path: "/etc/sysconfig/iptables"
+    regexp: '-A INPUT -s {{ hostvars[item].mgmt_net_ip }}/32 -p tcp -m multiport --dports 3260 -m comment --comment "001 cinder incoming cinder_{{ hostvars[item].mgmt_net_ip }}" -j ACCEPT'
+    replace: '-A INPUT -s {{ hostvars[item].storage_net_ip }}/32 -p tcp -m multiport --dports 3260 -m comment --comment "001 cinder incoming cinder_{{ hostvars[item].storage_net_ip }}" -j ACCEPT'
+  with_items:
+  - "{{ ansible_play_hosts }}"
+  notify:
+  - 'restart iptables'
+
+- name: "Configure Cinder"
+  ini_file:
+    path: "/etc/cinder/cinder.conf"
+    section: "{{ item.0.section }}"
+    option: "{{ item.1.option }}"
+    value: "{{ item.1.value }}"
+  with_subelements:
+  - "{{ cinder_config }}"
+  - params
+  notify:
+  - 'restart openstack-cinder-api'
+  - 'restart openstack-cinder-backup'
+  - 'restart openstack-cinder-scheduler'
+  - 'restart openstack-cinder-volume'
