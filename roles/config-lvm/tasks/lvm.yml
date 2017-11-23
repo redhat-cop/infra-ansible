@@ -12,7 +12,9 @@
     size: "100%VG"
 
 - name: "Create file system on share"
-  shell: "mkfs.xfs -f /dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}"
+  filesystem:
+    fstype: "{{ lvm_fstype }}"
+    dev: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}"
 
 - name: "Ensure the mount dir exists" 
   file:
@@ -23,5 +25,5 @@
   mount:
     src: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}" 
     path: "{{ item.mount_path }}"
-    fstype: xfs 
+    fstype: "{{ lvm_fstype }}" 
     state: mounted
