@@ -26,6 +26,6 @@
       module: wait_for
       host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
       port: 22
-      delay: 30
+      delay: 10
       timeout: 300
 

@@ -1,0 +1,10 @@
+---
+
+#
+# Make sure to check out the `config-satellite` README for details on how to create the inventory
+# https://github.com/redhat-cop/infra-ansible/blob/master/roles/config-satellite/README.md
+#
+
+- hosts: satellite_servers
+  roles:
+  - role: config-satellite

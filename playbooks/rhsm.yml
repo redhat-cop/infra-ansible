@@ -8,6 +8,7 @@
     rhsm_password: "{{ hostvars['localhost'].rhsm_password }}"
   roles: 
   - role: rhsm
+    no_log: True
   tags:
   - configure_rhsm
 

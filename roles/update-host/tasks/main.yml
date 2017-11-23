@@ -19,9 +19,9 @@
 - name: "waiting for server to come back"
   local_action: wait_for
   args:
-    host: "{{ ansible_host }}"
+    host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
     port: 22
-    delay: 30
+    delay: 15
     timeout: 300
     state: started
   become: false

@@ -1,0 +1,7 @@
+---
+
+- include_tasks: prep.yml
+
+- include_tasks: lvm.yml
+  with_items:
+  - "{{ lvm_entries | default([]) }}"

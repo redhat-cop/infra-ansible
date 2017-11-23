@@ -1,0 +1,7 @@
+
+
+[satellite_servers:children]
+osp_instances
+
+[osp_instances]
+

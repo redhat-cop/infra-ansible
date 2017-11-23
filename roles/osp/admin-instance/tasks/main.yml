@@ -15,6 +15,7 @@
     delete_fip: "{{ item.delete_fip | default(omit) }}"
     volumes: "{{ item.volumes | default(omit) }}"
     meta: "{{ item.meta | default(omit) }}"
+  register: os_servers
   with_items:
   - "{{ osp_instances | default([]) }}"
 
