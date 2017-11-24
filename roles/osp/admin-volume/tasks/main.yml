@@ -8,5 +8,6 @@
     size: "{{ item.size | default(omit) }}"
     display_name: "{{ item.display_name | default(omit) }}"
     display_description: "{{ item.display_description | default(omit) }}"
+  register: os_volumes
   with_items:
   - "{{ osp_volumes | default([]) }}"

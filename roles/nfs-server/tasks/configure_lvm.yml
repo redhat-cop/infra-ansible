@@ -26,7 +26,9 @@
     size: "100%VG"
 
 - name: "Create file system on share"
-  shell: "mkfs.xfs -f /dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}"
+  filesystem:
+    fstype: xfs
+    dev: "/dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}"
 
 - name: "Ensure the base dir for NFS shares exists" 
   file:

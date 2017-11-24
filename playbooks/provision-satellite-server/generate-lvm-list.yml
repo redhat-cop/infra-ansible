@@ -1,0 +1,21 @@
+---
+
+- name: "Create a temporary list of device_name => storage_device mapping"
+  set_fact:
+    tmp_device_mapping: "{{ tmp_device_mapping | default([]) + [ {'name': item.1.name, 'device': item.1.device } ] }}"
+  with_subelements:
+  - "{{ hostvars['localhost'].os_servers.results }}"
+  - server.volumes
+
+- name: "Create the list of LVM devices / mounts"
+  set_fact:
+    tmp_lvm_entries: "{{ tmp_lvm_entries | default([]) + [ item.0 | combine({'storage_device': item.1.device}) ] }}"
+  when:
+  - item.0.device_name == item.1.name
+  with_nested:
+  - "{{ lvm_entries }}"
+  - "{{ tmp_device_mapping }}"
+
+- name: "Move tmp_lvm_entries back to lvm_entries"
+  set_fact:
+    lvm_entries: "{{ tmp_lvm_entries }}"

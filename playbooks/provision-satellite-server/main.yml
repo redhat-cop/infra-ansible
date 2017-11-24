@@ -1,0 +1,30 @@
+---
+
+# Please see `inventory/satellite-server` for an example inventory to be used with 
+# this playbook to provision a Satellite Server  
+
+- import_playbook: ../prep.yml
+
+- import_playbook: ../osp/manage-user-network.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+
+- import_playbook: ../osp/provision-osp-instance.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+
+- hosts: satellite_servers
+  vars:
+    rhsm_username: "{{ hostvars['localhost'].rhsm_username }}"
+    rhsm_password: "{{ hostvars['localhost'].rhsm_password }}"
+  roles: 
+  - role: rhsm
+  - role: update-host
+ 
+- hosts: satellite_servers
+  pre_tasks:
+  - import_tasks: generate-lvm-list.yml 
+  roles:
+  - role: config-lvm
+
+- import_playbook: configure-satellite-server.yml

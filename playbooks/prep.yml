@@ -13,6 +13,7 @@
   - set_fact:
       rhsm_username: "{{ rhsm_username }}"
       rhsm_password: "{{ rhsm_password }}"
+    no_log: True
   tags:
   - configure_rhsm
 

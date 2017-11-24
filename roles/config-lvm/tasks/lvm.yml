@@ -1,0 +1,29 @@
+---
+
+- name: "Setup and create PV & VG"
+  lvg:
+    vg: "{{ item.vg_name }}"
+    pvs: "{{ item.storage_device }}"
+
+- name: "Setup LV"
+  lvol: 
+    vg: "{{ item.vg_name }}"
+    lv: "{{ item.lv_name }}"
+    size: "100%VG"
+
+- name: "Create file system on share"
+  filesystem:
+    fstype: "{{ lvm_fstype }}"
+    dev: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}"
+
+- name: "Ensure the mount dir exists" 
+  file:
+    path: "{{ item.mount_path }}"
+    state: directory
+
+- name: "Mount LVM to directory"
+  mount:
+    src: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}" 
+    path: "{{ item.mount_path }}"
+    fstype: "{{ lvm_fstype }}" 
+    state: mounted
