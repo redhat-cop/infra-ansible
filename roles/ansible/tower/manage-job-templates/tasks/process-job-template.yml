@@ -53,24 +53,28 @@
 - name: "Assign the Team(s) Permission(s)"
   vars:
     permissions_object: "teams"
-    permissions_value: "{{ item }}"
+    permissions_value: "{{ team }}"
   include_tasks: set-permissions.yml
   when:
   - job_template.permissions is defined 
   - job_template.permissions.teams is defined
   with_items:
   - "{{ job_template.permissions.teams }}"
+  loop_control:
+    loop_var: team
 
 - name: "Assign the User(s) Permission(s)"
   vars:
     permissions_object: "users"
-    permissions_value: "{{ item }}"
+    permissions_value: "{{ user }}"
   include_tasks: set-permissions.yml
   when:
   - job_template.permissions is defined 
   - job_template.permissions.users is defined
   with_items:
   - "{{ job_template.permissions.users }}"
+  loop_control:
+    loop_var: user
 
 - name: "Clear/Update facts"
   set_fact:

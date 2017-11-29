@@ -22,6 +22,8 @@
   set_fact:
     role_id: "{{ item.id }}" 
   when:
+  - item.summary_fields is defined
+  - item.summary_fields.resource_name is defined
   - item.summary_fields.resource_name|trim == job_template.name|trim
   - item.name|trim == permissions_value.role|trim
   with_items:
@@ -31,7 +33,7 @@
   uri:
     url: "https://localhost/api/v2/{{ permissions_object }}/{{ object_id }}/roles/"
     method: POST
-    body: "{ id: {{ role_id }} }"
+    body: "{{ { 'id': role_id|int } }}"
     body_format: 'json'
     headers:
       Content-Type: "application/json"
@@ -40,4 +42,9 @@
     password: "{{ tower_admin_password }}"
     validate_certs: no
     status_code: 200,204
+  when:
+  - object_id is defined
+  - object_id|trim != ''
+  - role_id is defined
+  - role_id|trim != ''
 
