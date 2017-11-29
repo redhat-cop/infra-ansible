@@ -29,3 +29,13 @@
       delay: 10
       timeout: 300
 
+- name: Workaround for .novalocal
+  hosts: osp_instances
+  tasks:
+  - hostname:
+      name: "{{ ansible_fqdn | regex_replace('(.*).novalocal$', '\\1') }}"
+  - lineinfile:
+      path: /etc/hosts
+      regexp: "^{{ ansible_host }}.*"
+      line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn | regex_replace('(.*).novalocal$', '\\1') }}"
+
