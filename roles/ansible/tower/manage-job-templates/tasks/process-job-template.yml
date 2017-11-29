@@ -38,6 +38,40 @@
     validate_certs: no
     status_code: 200,201,400
 
+- name: "Obtain the current roles"
+  uri:
+    url: https://localhost/api/v2/roles/
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    return_content: yes
+  register: existing_roles_output
+
+- name: "Assign the Team(s) Permission(s)"
+  vars:
+    permissions_object: "teams"
+    permissions_value: "{{ item }}"
+  include_tasks: set-permissions.yml
+  when:
+  - job_template.permissions is defined 
+  - job_template.permissions.teams is defined
+  with_items:
+  - "{{ job_template.permissions.teams }}"
+
+- name: "Assign the User(s) Permission(s)"
+  vars:
+    permissions_object: "users"
+    permissions_value: "{{ item }}"
+  include_tasks: set-permissions.yml
+  when:
+  - job_template.permissions is defined 
+  - job_template.permissions.users is defined
+  with_items:
+  - "{{ job_template.permissions.users }}"
+
 - name: "Clear/Update facts"
   set_fact:
     inventory_id: ''

@@ -43,6 +43,30 @@
     rest_password: "{{ tower_admin_password }}"
   register: existing_credentials_output
 
+- name: "Get the existing users"
+  uri:
+    url: https://localhost/api/v2/users/
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    return_content: yes
+  register: existing_users_output
+
+- name: "Get the existing teams"
+  uri:
+    url: https://localhost/api/v2/teams/
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    return_content: yes
+  register: existing_teams_output
+
 - name: "Process the inventory job template"
   include_tasks: process-job-template.yml
   with_items:

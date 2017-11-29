@@ -1,0 +1,43 @@
+---
+
+- name: "Obtain team id based on the team name"
+  set_fact:
+    object_id: "{{ item.id }}" 
+  when:
+  - permissions_object == "teams"
+  - item.name|trim == permissions_value.name|trim
+  with_items:
+  - "{{ existing_teams_output.json.results }}"
+    
+- name: "Obtain user id based on the user name"
+  set_fact:
+    object_id: "{{ item.id }}" 
+  when:
+  - permissions_object == "users"
+  - item.name|trim == permissions_value.name|trim
+  with_items:
+  - "{{ existing_users_output.json.results }}"
+
+- name: "Obtain role id based on the job_template name + role name" 
+  set_fact:
+    role_id: "{{ item.id }}" 
+  when:
+  - item.summary_fields.resource_name|trim == job_template.name|trim
+  - item.name|trim == permissions_value.role|trim
+  with_items:
+  - "{{ existing_roles_output.json.results }}"
+
+- name: "Set Permission"
+  uri:
+    url: "https://localhost/api/v2/{{ permissions_object }}/{{ object_id }}/roles/"
+    method: POST
+    body: "{ id: {{ role_id }} }"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    status_code: 200,204
+

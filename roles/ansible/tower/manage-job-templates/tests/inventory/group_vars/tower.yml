@@ -9,3 +9,10 @@ ansible_tower_job_templates:
   project: "Project1"
   playbook: "playbooks/prep.yml"
   credential: "Credential1"
+  permissions:
+    teams:
+    - name: team1
+      role: Execute
+    users:
+    - name: user1
+      role: Execute
