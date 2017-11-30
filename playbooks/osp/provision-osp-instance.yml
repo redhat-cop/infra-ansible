@@ -29,13 +29,27 @@
       delay: 10
       timeout: 300
 
-- name: Workaround for .novalocal
+- name: "Workaround for .novalocal"
   hosts: osp_instances
   tasks:
-  - hostname:
+  - name: "Eliminate the .novalocal at the end of the FQDN"
+    hostname:
       name: "{{ ansible_fqdn | regex_replace('(.*).novalocal$', '\\1') }}"
-  - lineinfile:
+  - name: "Ensure the local host can resolve by its own IP"
+    lineinfile:
       path: /etc/hosts
-      regexp: "^{{ ansible_host }}.*"
+      regexp: "^{{ ansible_default_ipv4.address }}.*"
       line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn | regex_replace('(.*).novalocal$', '\\1') }}"
+  - name: "Ensure the changes stick during reboot"
+    stat: path=/etc/cloud/cloud.cfg
+    register: cloud_cfg
+  - lineinfile:
+      dest: /etc/cloud/cloud.cfg
+      state: present
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+    - { regexp: '^ - set_hostname', line: '# - set_hostname' }
+    - { regexp: '^ - update_hostname', line: '# - update_hostname' }
+    when: cloud_cfg.stat.exists == True
 
