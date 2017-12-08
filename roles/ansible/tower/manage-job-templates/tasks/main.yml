@@ -1,6 +1,6 @@
 ---
 
-- name: "Set default values"
+- name: "Initilize facts"
   set_fact:
     processed_job_templates: []
     existing_job_templates_output: []
@@ -8,52 +8,39 @@
     existing_projects_output: []
     existing_credentials_output: []
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing inventories"
-  uri:
-    url: https://localhost/api/v2/inventories/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/inventories/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_inventories_output
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing projects"
-  uri:
-    url: https://localhost/api/v2/projects/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/projects/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_projects_output
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing job templates"
-  uri:
-    url: https://localhost/api/v2/job_templates/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/job_templates/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_job_templates_output
 
 - name: "Get the existing credentials"
-  uri:
-    url: https://localhost/api/v2/credentials/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/credentials/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_credentials_output
 
 - name: "Process the inventory job template"
@@ -72,4 +59,4 @@
     validate_certs: no
     status_code: 200,204
   with_items:
-  - "{{ existing_job_templates_output.json.results | get_remaining_items(processed_job_templates, 'name', 'name')}}"
+  - "{{ existing_job_templates_output.rest_output | get_remaining_items(processed_job_templates, 'name', 'name')}}"

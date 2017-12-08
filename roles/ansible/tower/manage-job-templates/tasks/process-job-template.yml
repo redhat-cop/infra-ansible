@@ -6,7 +6,7 @@
   when:
   - item.name|trim == job_template.inventory|trim
   with_items:
-  - "{{ existing_inventories_output.json.results }}"
+  - "{{ existing_inventories_output.rest_output }}"
 
 - name: "Get the project id based on the project name"
   set_fact:
@@ -14,7 +14,7 @@
   when:
   - item.name|trim == job_template.project|trim
   with_items:
-  - "{{ existing_projects_output.json.results }}"
+  - "{{ existing_projects_output.rest_output }}"
 
 - name: "Get the credential id based on the credential name"
   set_fact:
@@ -22,7 +22,7 @@
   when:
   - item.name|trim == job_template.credential|trim
   with_items:
-  - "{{ existing_credentials_output.json.results }}"
+  - "{{ existing_credentials_output.rest_output }}"
 
 - name: "Load up the job template"
   uri:

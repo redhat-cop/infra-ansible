@@ -6,7 +6,7 @@
   when:
   - item.name|trim == inventory.organization|trim
   with_items:
-  - "{{ existing_organizations_output.json.results }}"
+  - "{{ existing_organizations_output.rest_output }}"
 
 - name: "Load up the inventory"
   uri:
@@ -23,16 +23,13 @@
     status_code: 200,201,400
   register: inventory_output
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the updated list of existing inventories"
-  uri:
-    url: https://localhost/api/v2/inventories/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/inventories/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_inventories_output
 
 - name: "Get the inventory id based on the inventory name"
@@ -41,7 +38,7 @@
   when:
   - item.name|trim == inventory.name|trim
   with_items:
-  - "{{ existing_inventories_output.json.results }}"
+  - "{{ existing_inventories_output.rest_output }}"
 
 - name: "Process the inventory host entries"
   include_tasks: process-host.yml
@@ -54,4 +51,4 @@
   set_fact:
     org_id: ''
     inv_id: ''
-    processed_inventories: "{{ processed_inventories + [ {'name': inventory.name } ] }}"
+    processed_inventories: "{{ processed_inventories + [ { 'name': inventory.name } ] }}"
