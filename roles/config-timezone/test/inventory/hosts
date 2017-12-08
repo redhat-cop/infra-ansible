@@ -1,0 +1,2 @@
+[node]
+192.168.177.8 ansible_user=centos ansible_become=True
