@@ -1,0 +1,31 @@
+---
+
+# Please see `inventory/dns-server` for an example inventory to be used with 
+# this playbook to provision a dns-server  
+
+- import_playbook: ../prep.yml
+  when:
+  - rhsm_register|default(False)
+
+- import_playbook: ../osp/manage-user-network.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+
+- import_playbook: ../osp/provision-osp-instance.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+
+- hosts: dns-server
+  vars:
+    rhsm_username: "{{ hostvars['localhost'].rhsm_username }}"
+    rhsm_password: "{{ hostvars['localhost'].rhsm_password }}"
+  roles: 
+  - role: rhsm
+  when:
+  - rhsm_register|default(False)
+
+- hosts: dns-server
+  roles: 
+  - role: update-host
+
+- import_playbook: configure-dns-server.yml

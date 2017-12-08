@@ -1,8 +1,28 @@
 ---
 
+pkg_update: true
 hosting_infrastructure: openstack
 ansible_user: centos
-ansible_become: True
+
+osp_networks:
+- name: "dns-network"
+  description: "DNS Network"
+
+osp_subnets:
+- name: "dns-subnet"
+  network_name: "dns-network"
+  cidr: "192.168.16.0/24"
+  gateway_ip: "192.168.16.1"
+  allocation_pool_start: "192.168.16.2"
+  allocation_pool_end: "192.168.16.254"
+  dns_nameservers:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+osp_routers:
+- name: "dns-router"
+  external_gateway: "external"
+  subnet: "dns-subnet"
 
 osp_security_groups:
 - name: "ssh-sec-group"
@@ -40,7 +60,7 @@ osp_instances:
   image: "CentOS-7-x86_64"
   key_name: "my-keypair"
   flavor: "m1.medium"
-  network: "my-network"
+  network: "dns-network"
   security_groups:
   - ssh-sec-group
   - icmp-sec-group
