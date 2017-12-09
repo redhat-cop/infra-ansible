@@ -10,6 +10,7 @@
 - name: 'Install and Configure the bastion host'
   hosts: bastion
   roles:
+  - role: config-timezone
   - role: update-host
   - role: config-ipa-client
   - role: config-docker

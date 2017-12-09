@@ -20,3 +20,6 @@ vnc_server_install: False
 additional_tools_packages:
 - git
 
+# 
+# Optional setting
+# timezone: America/Denver
