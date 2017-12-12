@@ -7,7 +7,7 @@
   - permissions_object == "teams"
   - item.name|trim == permissions_value.name|trim
   with_items:
-  - "{{ existing_teams_output.json.results }}"
+  - "{{ existing_teams_output.rest_output }}"
     
 - name: "Obtain user id based on the user name"
   set_fact:
@@ -16,7 +16,7 @@
   - permissions_object == "users"
   - item.name|trim == permissions_value.name|trim
   with_items:
-  - "{{ existing_users_output.json.results }}"
+  - "{{ existing_users_output.rest_output }}"
 
 - name: "Obtain role id based on the job_template name + role name" 
   set_fact:
@@ -27,7 +27,7 @@
   - item.summary_fields.resource_name|trim == job_template.name|trim
   - item.name|trim == permissions_value.role|trim
   with_items:
-  - "{{ existing_roles_output.json.results }}"
+  - "{{ existing_roles_output.rest_output }}"
 
 - name: "Set Permission"
   uri:
