@@ -1,6 +1,6 @@
 ---
 
-- hosts: demo-tower
+- hosts: tower
   roles:
   - role: ansible/tower/manage-projects
   - role: ansible/tower/manage-credentials
