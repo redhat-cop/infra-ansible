@@ -30,4 +30,4 @@
     validate_certs: no
     status_code: 200,202,204
   with_items:
-  - "{{ existing_inventories_output.json.results | get_remaining_items(processed_inventories, 'name', 'name')}}"
+  - "{{ existing_inventories_output.rest_output | get_remaining_items(processed_inventories, 'name', 'name')}}"

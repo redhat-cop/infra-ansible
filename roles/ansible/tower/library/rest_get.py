@@ -35,7 +35,7 @@ def main():
       host_url=dict(required=True),
       api_uri=dict(required=True),
       rest_user=dict(required=True),
-      rest_password=dict(required=True),
+      rest_password=dict(required=True, no_log=True),
     ),
     supports_check_mode=True,
   )
@@ -61,17 +61,17 @@ def main():
           verify=False
         )
 
-        # Fetch the next URI returned by the REST call
-        # TODO: better error handling when REST service returns non-200 OK
-        api_uri = r.json()['next']
+    # Fetch the next URI returned by the REST call
+    # TODO: better error handling when REST service returns non-200 OK
+    api_uri = r.json()['next']
 
-        # Append the results json to the output list of items
-        rest_output.append(r.json()['results'])
+    # Merge the results json to the output list of items
+    rest_output = rest_output + r.json()['results']
 
-    module.exit_json(
-      changed=False,
-      rest_output=rest_output
-    )
+  module.exit_json(
+    changed=False,
+    rest_output=rest_output
+  )
 
 if __name__ == '__main__':
     main()
