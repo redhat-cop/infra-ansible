@@ -5,28 +5,22 @@
     processed_projects: []
     existing_projects_output: []
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing organizations"
-  uri:
-    url: https://localhost/api/v2/organizations/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/organizations/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_organizations_output
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing projects"
-  uri:
-    url: https://localhost/api/v2/projects/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/projects/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_projects_output
 
 - name: "Process the inventory projects"
@@ -45,4 +39,4 @@
     validate_certs: no
     status_code: 200,204
   with_items:
-  - "{{ existing_projects_output.json.results | get_remaining_items(processed_projects, 'name', 'name')}}"
+  - "{{ existing_projects_output.rest_output | get_remaining_items(processed_projects, 'name', 'name')}}"

@@ -5,40 +5,31 @@
     processed_credentials: []
     existing_crede_output: []
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing organizations"
-  uri:
-    url: https://localhost/api/v2/organizations/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/organizations/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_organizations_output
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing credentials"
-  uri:
-    url: https://localhost/api/v2/credentials/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/credentials/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_credentials_output
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Get the existing credential types"
-  uri:
-    url: https://localhost/api/v2/credential_types/
-    method: GET
-    headers:
-      Content-Type: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
-    validate_certs: no
-    return_content: yes
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/credential_types/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
   register: existing_credential_types_output
 
 - name: "Process the inventory credentials"
@@ -57,4 +48,4 @@
     validate_certs: no
     status_code: 200,204
   with_items:
-  - "{{ existing_credentials_output.json.results | get_remaining_items(processed_credentials, 'name', 'name')}}"
+  - "{{ existing_credentials_output.rest_output | get_remaining_items(processed_credentials, 'name', 'name')}}"

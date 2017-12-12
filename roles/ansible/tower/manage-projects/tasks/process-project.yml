@@ -6,7 +6,7 @@
   when:
   - item.name|trim == project.organization|trim
   with_items:
-  - "{{ existing_organizations_output.json.results }}"
+  - "{{ existing_organizations_output.rest_output }}"
 
 - name: "Load up the project"
   uri:
@@ -26,4 +26,4 @@
 - name: "Clear/Update facts"
   set_fact:
     org_id: ''
-    processed_projects: "{{ processed_projects + [ {'name': project.name } ] }}"
+    processed_projects: "{{ processed_projects + [ { 'name': project.name } ] }}"
