@@ -1,0 +1,9 @@
+---
+
+- hosts: tower
+  roles:
+  - role: ansible/tower/manage-projects
+  - role: ansible/tower/manage-credentials
+  - role: ansible/tower/manage-inventories
+  - role: ansible/tower/manage-job-templates
+

@@ -10,7 +10,7 @@
     "forks": 0,
     "limit": "",
     "verbosity": 0,
-    "extra_vars": "",
+    "extra_vars": "{{ job_template.extra_vars | default('') }}",
     "job_tags": "",
     "force_handlers": false,
     "skip_tags": "",
