@@ -80,7 +80,7 @@ osp_instances:
   meta:
     group: osp_instances
   image: "rhel-server-7.4-x86_64"
-  key_name: "mykey"
+  key_name: "my-keypair"
   flavor: "m1.large"
   network: "sat-network"
   security_groups:

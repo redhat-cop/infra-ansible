@@ -29,6 +29,12 @@
       delay: 10
       timeout: 300
 
+- name: "Ensure the host is ready for Ansible"
+  hosts: osp_instances
+  gather_facts: no
+  roles:
+  - role: ansible/prep-for-ansible
+
 - name: "Workaround for .novalocal"
   hosts: osp_instances
   tasks:

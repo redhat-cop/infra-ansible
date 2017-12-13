@@ -1,5 +1,8 @@
 ---
 
+# Need to become "root" to preform the install
+ansible_become: True
+
 named_config_views:
 - name: mydnsview
   recursion: 'yes'
