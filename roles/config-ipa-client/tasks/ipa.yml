@@ -20,6 +20,6 @@
   changed_when: False
 
 - name: "Configure IPA/IdM Integration if not already enabled and correctly configured"
-  include: ipa-install.yml
+  import_tasks: ipa-install.yml
   when: 
   - (sssd_status.rc != 0 or stat_result.stat.exists == false or check_conf.stdout == "")
