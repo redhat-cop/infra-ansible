@@ -16,13 +16,10 @@
   - hosting_infrastructure == 'openstack'
 
 - hosts: dns-server
-  vars:
-    rhsm_username: "{{ hostvars['localhost'].rhsm_username }}"
-    rhsm_password: "{{ hostvars['localhost'].rhsm_password }}"
-  roles: 
-  - role: rhsm
-  when:
-  - rhsm_register|default(False)
+  tasks:
+  - import_tasks: subscribe-rhel.yml
+    when:
+    - rhsm_register|default(False)
 
 - hosts: dns-server
   roles: 

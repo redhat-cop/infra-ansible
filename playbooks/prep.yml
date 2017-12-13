@@ -2,17 +2,18 @@
 
 - name: 'Configure RHSM usernames/passwords'
   hosts: localhost
-  vars_prompt: 
-  - name: 'rhsm_username'
-    prompt: 'Please enter your Red Hat Subscription username'
-    private: no
-  - name: 'rhsm_password'
-    prompt: 'Please enter your Red Hat Subscription password'
-    private: yes
   tasks: 
+  - pause:
+      prompt: 'Please enter your Red Hat Subscription username'
+    register: username
   - set_fact:
-      rhsm_username: "{{ rhsm_username }}"
-      rhsm_password: "{{ rhsm_password }}"
+      rhsm_username: "{{ username.user_input }}"
+  - pause:
+      prompt: 'Please enter your Red Hat Subscription password'
+    no_log: True
+    register: password
+  - set_fact:
+      rhsm_password: "{{ password }}"
     no_log: True
   tags:
   - configure_rhsm

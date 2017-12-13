@@ -4,6 +4,13 @@ pkg_update: true
 hosting_infrastructure: openstack
 ansible_user: centos
 
+# Uncomment the below if a RHEL installation is use - which requires a valid subscription
+# RHSM registration details for the DNS server
+#rhsm_register: True
+#rhsm_pool: '^my pool$'
+#rhsm_repos:
+#- "rhel-7-server-rpms"
+
 osp_networks:
 - name: "dns-network"
   description: "DNS Network"
@@ -65,5 +72,4 @@ osp_instances:
   - ssh-sec-group
   - icmp-sec-group
   - dns-sec-group
-
 

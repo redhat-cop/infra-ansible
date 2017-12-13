@@ -1,0 +1,9 @@
+---
+
+- name: "Subscribe RHEL based instances" 
+  vars:
+    rhsm_username: "{{ hostvars['localhost'].rhsm_username }}"
+    rhsm_password: "{{ hostvars['localhost'].rhsm_password }}"
+  include_role: 
+    name: rhsm
+
