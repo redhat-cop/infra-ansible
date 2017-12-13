@@ -13,7 +13,7 @@
     no_log: True
     register: password
   - set_fact:
-      rhsm_password: "{{ password }}"
+      rhsm_password: "{{ password.user_input }}"
     no_log: True
   tags:
   - configure_rhsm
