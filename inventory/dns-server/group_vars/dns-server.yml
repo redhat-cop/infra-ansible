@@ -3,11 +3,12 @@
 # Need to become "root" to preform the install
 ansible_become: True
 
+# Uncomment the below if a RHEL installation is use - which requires a valid subscription
 # RHSM registration details for the DNS server
-rhsm_register: True
-rhsm_pool: '^my pool$"
-rhsm_repos:
-- "rhel-7-server-rpms"
+#rhsm_register: True
+#rhsm_pool: '^my pool$"
+#rhsm_repos:
+#- "rhel-7-server-rpms"
 
 named_config_views:
 - name: mydnsview
