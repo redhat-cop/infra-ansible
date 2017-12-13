@@ -16,11 +16,6 @@
   - hosting_infrastructure == 'openstack'
 
 - hosts: dns-server
-  gather_facts: no
-  roles:
-  - role: ansible/prep-for-ansible
-
-- hosts: dns-server
   tasks:
   - import_tasks: subscribe-rhel.yml
     when:
