@@ -2,14 +2,14 @@
 
 pkg_update: true
 hosting_infrastructure: openstack
-ansible_user: cloud-user
+ansible_user: centos
 
 # Uncomment the below if a RHEL installation is use - which requires a valid subscription
 # RHSM registration details for the DNS server
-rhsm_register: True
-rhsm_pool: '^8a85f9815dc5571e015dc5772d8f42b9$'
-rhsm_repos:
-- "rhel-7-server-rpms"
+#rhsm_register: True
+#rhsm_pool: '^my pool$'
+#rhsm_repos:
+#- "rhel-7-server-rpms"
 
 osp_networks:
 - name: "dns-network"
@@ -64,8 +64,8 @@ osp_instances:
 - name: "my-dns-server"
   meta:
     group: osp_instances
-  image: "rhel-server-7.4-x86_64"
-  key_name: "obedin"
+  image: "CentOS-7-x86_64"
+  key_name: "my-keypair"
   flavor: "m1.medium"
   network: "dns-network"
   security_groups:
