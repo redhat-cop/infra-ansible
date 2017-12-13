@@ -5,7 +5,7 @@
     move_user: False
 
 - name: "Include prereqs per the type of OS"
-  include: "{{ distro_file }}"
+  include_tasks: "{{ distro_file }}"
   with_first_found:
   - files:
     - prereq-{{ ansible_distribution }}.yml

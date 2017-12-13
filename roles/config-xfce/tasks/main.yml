@@ -1,7 +1,7 @@
 ---
 
 - name: "Install, configure and enable XFCE"
-  include: "{{ distro_file }}"
+  include_tasks: "{{ distro_file }}"
   with_first_found:
   - files:
     - xfce-{{ ansible_distribution }}.yml
