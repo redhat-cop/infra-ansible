@@ -3,7 +3,7 @@
 In this directory, you will find an example inventory and test playbook to test this role. Note the following:
 
 1. Update the inventory, in particular IPs and usernames, to match you needs
-2. Currently, the test will have to be run in 2 parts 
+2. Currently, the test will have to be run in 2 parts (see issue https://github.com/redhat-cop/infra-ansible/issues/115 )
 
 ```
   1. > ansible-playbook -i inventory test.yml -l dns-server
