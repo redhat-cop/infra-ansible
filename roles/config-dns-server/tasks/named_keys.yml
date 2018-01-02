@@ -9,7 +9,7 @@
     mode: 0660
   notify: restart named
 
-- include: generate_keys.yml
+- import_tasks: generate_keys.yml
   run_once: true
   delegate_to: "{{ ansible_play_hosts | first }}"
 

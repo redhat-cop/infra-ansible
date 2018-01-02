@@ -1,0 +1,10 @@
+
+[dns-servers:children]
+dns-server
+forward-server
+
+[dns-server]
+192.168.10.15 ansible_user=centos ansible_become=True dns_server_type=master
+
+[forward-server]
+192.168.10.17 ansible_user=centos ansible_become=True dns_server_type=master

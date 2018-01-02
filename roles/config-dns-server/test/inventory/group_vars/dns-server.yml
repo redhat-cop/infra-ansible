@@ -8,19 +8,22 @@ named_config_views:
 - name: private
   recursion: 'yes'
   acl_entry: 
-  - 172.16.0.0/16
-  - 172.17.0.0/16
+  - 192.168.10.0/24
   zone:
   - dns_domain: first.example.com
   - dns_domain: second.example.com
   - dns_domain: third.example.com
   - dns_domain: fifth.example.com
+  - dns_domain: forward.example.com
+    type: forward
+    forwarders:
+    - 192.168.10.17
 - name: public
   zone:
   - dns_domain: first.example.com
   - dns_domain: second.example.com
   - dns_domain: third.example.com
   - dns_domain: forth.example.com
-  forwarder:
+  default_forwarders:
   - 8.8.8.8
   - 8.8.4.4

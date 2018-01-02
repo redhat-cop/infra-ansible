@@ -6,10 +6,18 @@ view "{{ view.name }}" {
 
 {% for zone in view.zone %}
 	zone "{{ zone.dns_domain }}" IN {
-		type {{ dns_server_type|default(default_dns_server_type) }};
+		type {{ zone.type | default(dns_server_type) }};
+{% if zone.type|default(dns_server_type) == "forward" %}
+                forward only;
+		forwarders {
+	{% for forwarder in zone.forwarders %}
+		{{ forwarder }};
+	{% endfor %}
+		};
+{% else %}
 		file "static/{{ view.name }}-{{ zone.dns_domain }}.db";
 		allow-update { key {{ view.name }}-{{ zone.dns_domain }}; };
-{% if dns_server_type|default(default_dns_server_type) == "slave" %}
+{% if dns_server_type == "slave" %}
 		masters {
 	{% for server in ansible_play_batch %}
 	{% if hostvars[server].dns_server_type|default(default_dns_server_type) == "master" %}
@@ -18,17 +26,18 @@ view "{{ view.name }}" {
 	{% endfor %}
 		};
 {% endif %}
+{% endif %}
 	};
 
 {% endfor %}
 
-{% if view.forwarder is defined %}
+{% if view.default_forwarders is defined %}
 	include "/etc/named.rfc1912.zones";
 
 	zone "." {
 		type forward;
 		forwarders {
-	{% for forwarder in view.forwarder %}
+	{% for forwarder in view.default_forwarders %}
 		{{ forwarder }};
 	{% endfor %}
 		};

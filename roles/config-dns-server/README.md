@@ -24,13 +24,18 @@ This role installs and configures bind/named for use with multiple views and zon
         - "172.16.0.0/16"
         - "172.17.0.0/16"
         zone:
-        - "dns_domain": "first.example.com"
-        - "dns_domain": "second.example.com"
+        - dns_domain: first.example.com
+        - dns_domain: second.example.com
+        - dns_domain: forward.example.com
+          type: forward
+          forwarders:
+          - 192.168.10.11
+          - 192.168.10.12
       - name: "public"
         zone:
-        - "dns_domain": "first.example.com"
-        - "dns_domain": "second.example.com"
-        forwarder:
-        - "8.8.8.8"
-        - "8.8.4.4"
+        - dns_domain: first.example.com
+        - dns_domain: second.example.com
+        default_forwarders:
+        - 8.8.8.8
+        - 8.8.4.4
 ```
