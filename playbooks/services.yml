@@ -10,14 +10,14 @@
 - name: 'Configure DNS (internal)'
   hosts: dns_servers_internal
   roles:
-  - role: dns-server
+  - role: config-dns-server
   tags:
   - configure_dns_internal
 
 - name: 'Configure DNS (external)'
   hosts: dns_servers_external
   roles:
-  - role: dns-server
+  - role: config-dns-server
   tags:
   - configure_dns_external
 

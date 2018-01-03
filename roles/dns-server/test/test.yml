@@ -1,5 +1,0 @@
----
-
-- hosts: dns-server
-  roles:
-  - role: dns-server

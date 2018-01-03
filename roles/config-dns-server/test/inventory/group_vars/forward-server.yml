@@ -1,0 +1,11 @@
+---
+
+named_config_recursion: 'yes'
+named_config_dnssec_enable: 'yes'
+named_config_dnssec_validation: 'yes'
+named_config_dnssec_lookaside: 'no'
+named_config_views:
+- name: my_forward_zone
+  recursion: 'yes'
+  zone:
+  - dns_domain: forward.example.com
