@@ -20,7 +20,7 @@ view "{{ view.name }}" {
 {% if dns_server_type == "slave" %}
 		masters {
 	{% for server in ansible_play_batch %}
-	{% if hostvars[server].dns_server_type|default(default_dns_server_type) == "master" %}
+	{% if hostvars[server].dns_server_type|default(dns_server_type) == "master" %}
 			{{ hostvars[server].ansible_default_ipv4.address }} key {{ view.name }}-{{ zone.dns_domain }};
 	{% endif %}
 	{% endfor %}
