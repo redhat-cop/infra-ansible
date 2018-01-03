@@ -1,0 +1,7 @@
+---
+
+- hosts: all
+  connection: local
+  roles:
+  - role: osp/admin-sec-group
+
