@@ -51,7 +51,7 @@ osp_networks:
 
 osp_subnets:
 - name: "my-subnet"
-  network: "my-network"
+  network_name: "my-network"
   allocation_pool_start: "192.168.10.2"
   allocation_pool_end: "192.168.10.254"
   dns_nameservers:
