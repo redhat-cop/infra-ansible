@@ -1,0 +1,7 @@
+{
+    "name": "{{ group_member.name }}",
+    "description": "{{ group_member.description | default('') }}",
+    "enabled": "true",
+    "instance_id": "",
+    "variables": "{{ group_member.variables | default('') }}"
+}

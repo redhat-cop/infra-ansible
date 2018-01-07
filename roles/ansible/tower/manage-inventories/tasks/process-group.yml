@@ -1,0 +1,43 @@
+---
+
+- name: "Load up the inventory (group)"
+  uri:
+    url: https://localhost/api/v2/groups/
+    method: POST
+    body: "{{ lookup('template', 'group.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    user: admin
+    password: "{{ tower_admin_password }}"
+    validate_certs: no
+    status_code: 200,201,400
+
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
+- name: "Get the updated list of existing groups"
+  rest_get:
+    host_url: "{{ tower_url }}"
+    api_uri: "/api/v2/groups/"
+    rest_user: "{{ tower_admin_username }}"
+    rest_password: "{{ tower_admin_password }}"
+  register: existing_groups_output
+
+- name: "Get the group id based on the group name"
+  set_fact:
+    group_id: "{{ item.id }}"
+  when:
+  - item.name|trim == group.name|trim
+  with_items:
+  - "{{ existing_groups_output.rest_output }}"
+
+- name: "Process the inventory group members"
+  include_tasks: process-group-member.yml
+  with_items:
+  - "{{ group.hosts }}"
+  loop_control:
+    loop_var: group_member
+
+- name: "Clear/Update facts"
+  set_fact:
+    group_id: ''

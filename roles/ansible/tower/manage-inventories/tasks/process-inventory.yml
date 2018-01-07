@@ -47,6 +47,13 @@
   loop_control:
     loop_var: host
 
+- name: "Process the inventory group entries"
+  include_tasks: process-group.yml
+  with_items:
+  - "{{ inventory.groups }}"
+  loop_control:
+    loop_var: group
+
 - name: "Clear/Update facts"
   set_fact:
     org_id: ''
