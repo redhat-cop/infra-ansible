@@ -1,0 +1,8 @@
+---
+- name: Import required libraries
+  pip:
+    name: '{{ item }}'
+  with_items:
+  - gspread
+  - oauth2client
+

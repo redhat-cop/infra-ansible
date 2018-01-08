@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - fetch_user_data_gsheets
+  vars:
+    credentials_src: '/path/to/.../credentials.json'
+    spreadsheet_url: 'https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxx'
+    worksheet_name: 'Sheet1'
