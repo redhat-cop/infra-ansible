@@ -1,2 +1,5 @@
 ---
-# tasks file for admin-route53
+
+- import_tasks: pre-reqs.yml
+- name: Ensure the zone {{ zone }} is on the desired state
+  
