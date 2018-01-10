@@ -35,6 +35,13 @@ def list_all(spreadsheet_url, worksheet_name, cred_file):
     for user in vals:
         user_data = dict(zip(headers, user))
         user_data['user_name'] = user_data['email'].split("@")[0]
+        if 'expiration_date' in user_data and user_data['expiration_date'] != '':
+            try:
+                user_data['expiration_date'] = datetime.datetime.strptime(user_data['expiration_date'],
+                                                                      '%Y-%m-%d').strftime('%Y%m%d%H%M%S')
+            except ValueError:
+                user_data['expiration_date'] = ''
+                print("Wrong date format.")
         user_data['group'] = user_data['group'].split()
         users.append(user_data)
         for grp in user_data['group']:
