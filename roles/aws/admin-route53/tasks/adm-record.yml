@@ -1,0 +1,30 @@
+---
+- name: Ensure the record exist
+  route53:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.0.zone }}"
+    record: "{{ item.1.hostname }}.{{ item.0.zone }}"
+    type: "{{ item.1.type }}"
+    value: "{{ item.1.ip }}"
+    overwrite: yes
+    ttl: 300
+    state: present
+  with_subelements:
+    - "{{ zone_add | default({}) }}"
+    - entries
+
+- name: Ensure the record does not exist
+  route53:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.0.zone }}"
+    record: "{{ item.1.hostname }}.{{ item.0.zone }}"
+    type: "{{ item.1.type }}"
+    value: "{{ item.1.ip }}"
+    overwrite: yes
+    ttl: 300
+    state: absent
+  with_subelements:
+    - "{{ zone_rm | default({}) }}"
+    - entries

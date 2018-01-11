@@ -1,5 +1,7 @@
 ---
 
 - import_tasks: pre-reqs.yml
-- name: Ensure the zone {{ zone }} is on the desired state
-  
+
+- import_tasks: adm-zone.yml
+
+- import_tasks: adm-record.yml
