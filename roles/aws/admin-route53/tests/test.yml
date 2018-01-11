@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+    - aws/admin-route53

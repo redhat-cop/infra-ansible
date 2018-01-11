@@ -1,0 +1,20 @@
+---
+- name: Ensure the zone exists
+  route53_zone:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.zone }}"
+    state: present
+  with_items:
+    - "{{ zone_add | default({}) }}"
+
+- name: Ensure the zone does not exist
+  route53_zone:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.zone }}"
+    state: absent
+  with_items:
+    - "{{ zone_rm | default({}) }}"
+  when:
+    - not item.entries
