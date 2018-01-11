@@ -1,4 +1,15 @@
-zone_add: []
+zone_add:
+- zone: roletest4.com
+  entries:
+  - type: NS
+    hostname: ns1.subdomain1
+    ip: 172.16.10.23
+  - type: NS
+    hostname: ns2.subdomain1
+    ip: 172.16.10.24
+  - type: A
+    hostname: myfirsthost
+    ip: 172.16.10.25
 
 zone_rm:
 - zone: roletest1.com
@@ -13,9 +24,9 @@ zone_rm:
   entries:
   - type: NS
     hostname: ns1.subdomain1
-    ip: 172.16.10.20
+    ip: 172.16.10.21
   - type: NS
     hostname: ns2.subdomain1
-    ip: 172.16.10.20
+    ip: 172.16.10.22
 - zone: roletest3.com
   entries: []
