@@ -1,0 +1,11 @@
+---
+- name: Convert json to atlassian format
+  json_to_atlassian:
+    json_input: '{{ json_list }}'
+  register: result
+- set_fact:
+    atlassian_users: "{{ result.meta.atlassian_users }}"
+    atlassian_groups: "{{ result.meta.atlassian_groups }}"
+- debug: var=atlassian_users
+- debug: var=atlassian_groups
+

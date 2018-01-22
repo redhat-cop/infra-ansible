@@ -2,13 +2,13 @@
 
 DOCUMENTATION = '''  
 ---
-module: fetch_user_data_gsheets
+module: fetch-data-gsheets
 short_description: Grab users and user_groups info from google sheet and return it as a json string.
 '''
 
 EXAMPLES = '''  
 - name: Pull data from google sheet & store it as users and user_groups facts.
-  fetch_user_data_gsheets:
+  fetch-data-gsheets:
     spreadsheet_url: 'https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
     worksheet_name: 'Sheet1'
     credentials_src: '/path/to/instance/credentials.json'
@@ -20,6 +20,7 @@ from ansible.module_utils.basic import *
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
+import datetime
 
 
 # Function to extract the values from the google spreadsheet
@@ -31,27 +32,11 @@ def list_all(spreadsheet_url, worksheet_name, cred_file):
     for header in vals[0]:
         headers.append(header)
     del vals[0]
-    users, groups = [], []
-    for user in vals:
-        user_data = dict(zip(headers, user))
-        user_data['user_name'] = user_data['email'].split("@")[0]
-        if 'expiration_date' in user_data and user_data['expiration_date'] != '':
-            try:
-                user_data['expiration_date'] = datetime.datetime.strptime(user_data['expiration_date'],
-                                                                      '%Y-%m-%d').strftime('%Y%m%d%H%M%S')
-            except ValueError:
-                user_data['expiration_date'] = ''
-                print("Wrong date format.")
-        user_data['group'] = user_data['group'].split()
-        users.append(user_data)
-        for grp in user_data['group']:
-            if not any(group['name'] == grp for group in groups):
-                groups.append({'name': grp, 'members': [user_data['user_name']]})
-            else:
-                for group in groups:
-                    if group['name'] == grp:
-                        group['members'].append(user_data['user_name'])
-    return json.dumps({'users': users, 'user_groups': groups}, ensure_ascii=True)
+    json_list = []
+    for row in vals:
+        row_data = dict(zip(headers, row))
+        json_list.append(dict((k, v) for k, v in row_data.items() if v))
+    return json_list
 
 
 # Grabs the credentials for Google sheets from an inputted credentials file.
@@ -64,9 +49,9 @@ def get_credentials(cred_file):
 # Takes the outputted json from the list_all function and returns it as the expected
 # Ansible format.
 def return_json(data):
-    json = list_all(data['spreadsheet_url'], data['worksheet_name'], data['credentials_src'])
+    json_list = list_all(data['spreadsheet_url'], data['worksheet_name'], data['credentials_src'])
     has_changed = False
-    meta = {"status": "Pulled data", "json": json}
+    meta = {"status": "Pulled data", "json": json_list}
     return has_changed, meta
 
 

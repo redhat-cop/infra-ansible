@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - json-to-idm
+  vars:
+    json_input: '{{ json_list }}'

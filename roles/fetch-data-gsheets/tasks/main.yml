@@ -1,15 +1,13 @@
 ---
 - include_tasks: prereqs.yml
 - name: Pull data from Google spreadsheet
-  fetch_user_data_gsheets:
+  fetch_data_gsheets:
     spreadsheet_url: '{{ spreadsheet_url }}'
     worksheet_name: '{{ worksheet_name }}'
     credentials_src: '{{ credentials_src }}'
     state: 'present'
   register: result
 - set_fact:
-    clean_json: "{{ result.meta.json }}"
-- set_fact:
-    user_groups: "{{ clean_json.user_groups }}"
-    users: "{{ clean_json.users }}"
+    json_list: "{{ result.meta.json }}"
+- debug: var=json_list
 

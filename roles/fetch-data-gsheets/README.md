@@ -1,9 +1,9 @@
-fetch_user_data_gsheets
-=======================
+fetch_data_gsheets
+==================
 
-This role/module works to extract the user and user group details from Google Sheets. This info is stored in json format as facts which can be used by the manage-users role and any others looking for the users and user_groups variables.
+This role/module works to extract the data from a Google Sheet and returns it in json format for use by other roles.
 
-An example spreadsheet would look like this (the order doesn't matter, but the header names do):
+An example spreadsheet would look like this:
 
 | user_name | first_name | last_name | email                 | expiration_date | group      |
 |-----------|------------|-----------|-----------------------|-----------------|------------|
@@ -54,5 +54,5 @@ Example Playbook
     spreadsheet_url: https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxx
     worksheet_name: Sheet1
   roles:
-    - fetch_user_data_gsheets
+    - fetch_data_gsheets
 ```

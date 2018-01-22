@@ -1,5 +1,16 @@
 ---
-- name: Create User
+- name: Check if user exists
+  uri:
+    url: "{{ atlassian_url }}/rest/api/2/user?username={{ atlassian_user.email.split(\'@\') | first }}"
+    method: GET
+    user: '{{ atlassian_username }}'
+    password: '{{ atlassian_password }}'
+    force_basic_auth: yes
+    status_code: [200, 404]
+  ignore_errors: yes
+  register: user_check
+- debug: var=user_check
+- name: Create User with password
   uri:
     url: '{{ atlassian_url }}/rest/api/2/user'
     method: POST
@@ -10,4 +21,20 @@
     body_format: json
     body: "{'name': '{{ atlassian_user.email.split(\'@\') | first }}', 'password': '{{ atlassian_user.password }}', 'emailAddress': '{{ atlassian_user.email }}', 'displayName': '{{ atlassian_user.firstname }} {{ atlassian_user.lastname }}' }"
     return_content: yes
-  register: user_data
+  when:
+  - user_check.status == 404
+  - atlassian_user.password is defined
+- name: Create User and generate password
+  uri:
+    url: '{{ atlassian_url }}/rest/api/2/user'
+    method: POST
+    user: '{{ atlassian_username }}'
+    password: '{{ atlassian_password }}'
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json
+    body: "{'name': '{{ atlassian_user.email.split(\'@\') | first }}', 'emailAddress': '{{ atlassian_user.email }}', 'displayName': '{{ atlassian_user.firstname }} {{ atlassian_user.lastname }}' }"
+    return_content: yes
+  when:
+  - user_check.status == 404
+  - atlassian_user.password is not defined
