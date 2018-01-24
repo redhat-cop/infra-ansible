@@ -1,0 +1,23 @@
+---
+- name: Ensure the Zone has no records
+  debug:
+    msg: "Removing record: {{ r53.1.Value }}"
+  with_subelements:
+    - "{{ dns_records_rm }}"
+    - entries
+  when:
+    - r53.1.Value == item.1.ip
+    - r53.0.Name == item.0.zone
+
+#- name: Ensure the Zone has no rec
+#  route53:
+#    aws_access_key: "{{ aws_access_key }}"
+#    aws_secret_key: "{{ aws_secret_key }}"
+#    zone: "{{ item.0.zone }}"
+#    record: "{{ item.1.Name }}"
+#    type: "{{ item.1.Type }}"
+#    #value: "{{ item.1.value }}"
+#    state: absent
+#  with_together:
+#    - "{{ dns_records_rm | default({}) }}"
+#    - "{{ zones_records.results[0].ResourceRecordSets }}"

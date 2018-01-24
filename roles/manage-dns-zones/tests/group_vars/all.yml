@@ -1,0 +1,31 @@
+dns_records_rm:
+- view: "private"
+  zone: "roletest4.com"
+  route53:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    vpc_id: vpc-9dcde6f8
+    vpc_region: eu-west-1
+  entries:
+  - type: A
+    hostname: server_a
+    ip: 192.168.1.1
+    ttl: 400
+  - type: A
+    hostname: server_b
+    ip: 192.168.1.2
+    ttl: 500
+- view: "public"
+  zone: "roletest3.com"
+  route53:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+  entries:
+  - type: A
+    hostname: server_a
+    ip: 192.168.1.1
+    ttl: 400
+  - type: A
+    hostname: server_b
+    ip: 192.168.1.2
+    ttl: 500
