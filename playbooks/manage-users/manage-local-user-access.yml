@@ -1,7 +1,7 @@
 ---
 
 - name: 'Update local access for account:{{ user_name }}'
-  hosts: all
+  hosts: update_access
   roles:
     - role: manage-local-user-password
     - role: manage-local-user-ssh-authkeys
