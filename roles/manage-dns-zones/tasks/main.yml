@@ -1,16 +1,16 @@
 ---
-- debug:
-    msg: "{{ dns_records_add|length }}"
+#- debug:
+ #   msg: "{{ dns_records_add|length }}"
 
-- debug:
-    msg: "{{ dns_records_rm|length }}"
+#- debug:
+ #   msg: "{{ dns_records_rm|length }}"
 
-- debug:
-     msg: "{{ dns_records_rm.0.route53 }}"
+#- debug:
+ #    msg: "{{ dns_records_rm.0.route53 }}"
 
-- debug: var=dns_records_add.0.view
+#- debug: var=dns_records_add.0.view
 
-- debug: var=dns_records_rm.route53.view
+#- debug: var=dns_records_rm.route53.view
 
 #- debug: var=dns_records_add
 
@@ -22,10 +22,11 @@
   when:
     - dns_records_rm.0.route53 is defined
 
-- import_tasks: loop-route53-records.yml
-  when:
-    - dns_records_rm.0.view is defined
-    - dns_records_rm.0.route53 is defined
+#- import_tasks: loop-route53-zones.yml
+#- import_tasks: tests.yml
+#  when:
+#    - dns_records_rm.0.view is defined
+#    - dns_records_rm.0.route53 is defined
 
 #- debug: var=hosted_zones
 
@@ -35,12 +36,12 @@
     #- "{{ hosted_zones.results[0].HostedZones | default({}) }}"
 #- debug: var=hosted_zones
 
-- debug: var=zones_records
+#- debug: var=zones_records
 
-- import_tasks: adm-zone-route53.yml
-  when: (dns_records_rm.route53 is defined) or
-        (dns_records_add.route53 is defined)
+#- import_tasks: adm-zone-route53.yml
+#  when: (dns_records_rm.route53 is defined) or
+#        (dns_records_add.route53 is defined)
 
-- import_tasks: adm-zone-named.yml
-  when: (dns_records_rm.nsupdate is defined) or
-        (dns_records_add.nsupdate is defined)
+#- import_tasks: adm-zone-named.yml
+#  when: (dns_records_rm.nsupdate is defined) or
+#        (dns_records_add.nsupdate is defined)

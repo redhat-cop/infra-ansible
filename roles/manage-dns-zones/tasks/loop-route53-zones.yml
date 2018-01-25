@@ -1,0 +1,16 @@
+---
+- name: "Loop over all zones"
+  include_tasks: loop-route53-records.yml
+  with_items:
+    #- "{{ hosted_zones.results[0].HostedZones }}"
+    - "{{ zones_records.results[1].item }}"
+  loop_control:
+    loop_var: r53_zone
+
+
+- name: "Loop over all zones"
+      include_tasks: rm_zones.yml
+      with_items:
+        - "{{ route53_data }}"
+      loop_control:
+        loop_var: r53_zone

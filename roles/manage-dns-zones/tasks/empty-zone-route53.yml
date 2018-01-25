@@ -1,13 +1,34 @@
 ---
-- name: Ensure the Zone has no records
+#- debug:
+#    msg: 
+#      - "r53_zone: {{ r53_zone }}"
+#      - "item.0.zone: {{ item.0.zone }}"
+#      - "r53_rcord: {{ r53_record}}"
+#      - "item.1.hostname: {{ item.1.hostname }}"
+
+- name: "Remove records in zone"
   debug:
-    msg: "Removing record: {{ r53.1.Value }}"
-  with_subelements:
+    msg: 
+      - "r53_zone: {{ r53_zone }}"
+      - "item.zone: {{ item.zone }}"
+      - "r53_record: {{ r53_record}}"
+      #- "Removing record: {{ r53_zone.Name }} {{ r53_record.Name }}"
+  with_items: 
     - "{{ dns_records_rm }}"
-    - entries
-  when:
-    - r53.1.Value == item.1.ip
-    - r53.0.Name == item.0.zone
+  #when:
+  #  - r53_zone.Name == item.0.zone
+  #- r53_record.Name == item.1.hostname
+
+#---
+#- name: Ensure the Zone has no records
+#  debug:
+#    msg: "Removing record: {{ r53.1.Value }}"
+#  with_subelements:
+#    - "{{ dns_records_rm }}"
+#    - entries
+#  when:
+#    - r53.1.Value == item.1.ip
+#    - r53.0.Name == item.0.zone
 
 #- name: Ensure the Zone has no rec
 #  route53:
@@ -21,3 +42,6 @@
 #  with_together:
 #    - "{{ dns_records_rm | default({}) }}"
 #    - "{{ zones_records.results[0].ResourceRecordSets }}"
+
+#And I want to remove any entry from *zones_records.results[0].ResourceRecordSets.Name* 
+#when *zones_records.results[1].item.Name* matches *dns_records_rm.zone

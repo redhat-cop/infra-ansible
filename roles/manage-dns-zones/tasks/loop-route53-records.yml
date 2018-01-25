@@ -1,8 +1,13 @@
 ---
-- name: "Loop over records"
+- name: "Loop through zone records"
   include_tasks: empty-zone-route53.yml
-  with_subelements:
-    - "{{ zones_records.results[0].ResourceRecordSets }}"
-    - ResourceRecords
+  with_items:
+    #- "{{ zones_records.results[0].ResourceRecordSets }}" 
+    - "{{ zones_records.results[0].ResourceRecordSets }}" 
   loop_control:
-    loop_var: r53 
+    loop_var: r53_record
+
+
+
+
+

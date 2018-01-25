@@ -1,0 +1,8 @@
+- debug:
+    msg: 
+      - "record: {{ item.0.Name }}"
+      - "type: {{ item.0.Type }}"
+      - "zone: {{ item.1.item.Name }}"
+  with_together:
+    - "{{ zones_records.results[0].ResourceRecordSets }}"
+    - "{{ zones_records.results }}"
