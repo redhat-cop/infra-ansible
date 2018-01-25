@@ -22,11 +22,11 @@
   when:
     - dns_records_rm.0.route53 is defined
 
-#- import_tasks: loop-route53-zones.yml
+- import_tasks: loop-route53-zones.yml
 #- import_tasks: tests.yml
-#  when:
-#    - dns_records_rm.0.view is defined
-#    - dns_records_rm.0.route53 is defined
+  when:
+    - dns_records_rm.0.view is defined
+    - dns_records_rm.0.route53 is defined
 
 #- debug: var=hosted_zones
 

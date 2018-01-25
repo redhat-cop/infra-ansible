@@ -1,5 +1,5 @@
 ---
-- debug: var=dns_records_rm
+#- debug: var=dns_records_rm
 
 - name: Get all hosted zones
   route53_facts:
@@ -10,7 +10,7 @@
   #  - "{{ dns_records_rm | default({}) }}"
   register: hosted_zones
 
-- debug: var=hosted_zones
+#- debug: var=hosted_zones
 #- debug:
 #    msg: "{{ hosted_zones|length }}"
 
@@ -27,7 +27,7 @@
     - hosted_zones|length > 0
 
 
-- debug: var=zones_records
+#- debug: var=zones_records
 
 #- set_fact:
 #    recordsets: "{{ recordsets|default([]) + [ {'recordset': item.ResourceRecordSets} ] }}"
@@ -47,7 +47,7 @@
 #      - "Removing entry {{ item.0.zone }} with type {{ item.1.zone }} "
 #    with_subelements:
 #      - "{{ alltogether }}"
-#      - recordset
+ #     - recordset
 
 #- debug:
 #    msg:
