@@ -1,32 +1,24 @@
 ---
-#- debug:
- #   msg: "{{ dns_records_add|length }}"
-
-#- debug:
- #   msg: "{{ dns_records_rm|length }}"
-
-#- debug:
- #    msg: "{{ dns_records_rm.0.route53 }}"
-
-#- debug: var=dns_records_add.0.view
-
-#- debug: var=dns_records_rm.route53.view
-
-#- debug: var=dns_records_add
-
-#- debug: var=dns_records_rm
-
 - import_tasks: pre-reqs.yml
+
+- import_tasks: evaluate_providers.yml
 
 - import_tasks: get-route53-zone-records.yml
   when:
-    - dns_records_rm.0.route53 is defined
+    - p_route53 == true
 
 - import_tasks: loop-route53-zones.yml
-#- import_tasks: tests.yml
   when:
-    - dns_records_rm.0.view is defined
-    - dns_records_rm.0.route53 is defined
+    - p_route53 == true
+
+- import_tasks: adm-zone-route53.yml
+  when:
+    - p_route53 == true
+
+
+
+
+
 
 #- debug: var=hosted_zones
 

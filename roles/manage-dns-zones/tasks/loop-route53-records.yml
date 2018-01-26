@@ -1,26 +1,15 @@
 ---
+#- name: "Loop through zone records"
+#  include_tasks: empty-zone-route53.yml
+#  with_items: 
+#    - "{{ r53_zone.ResourceRecordSets }}"
+#  loop_control:
+#    loop_var: r53_record
+
 - name: "Loop through zone records"
-  #include_tasks: empty-zone-route53.yml
-  debug:
-    msg: 
-      - "r53_zone: {{ r53_zone.item.Name }}"
-      #- "item.zone: {{ item.zone }}"
-      - "r53_record: {{ r53_record.Name }}"
-      - "Removing record: {{ r53_zone.item.Name }} {{ r53_record.Name }}"
-  with_items: 
-    - "{{ r53_zone.ResourceRecordSets }}" 
+  include_tasks: empty-zone-route53.yml
+  with_subelements: 
+    - "{{ r53_zone.ResourceRecordSets }}"
+    - ResourceRecords
   loop_control:
     loop_var: r53_record
-
-
-
-#- name: "Remove records in zone"
-#  debug:
-#    msg: 
-#      - "r53_zone: {{ r53_zone }}"
-#      - "item.zone: {{ item.zone }}"
-#      - "r53_record: {{ r53_record}}"
-#      - "Removing record: {{ r53_zone.Name }} {{ r53_record.Name }}"
-#  with_items: 
-#    - "{{ dns_records_rm }}"
-

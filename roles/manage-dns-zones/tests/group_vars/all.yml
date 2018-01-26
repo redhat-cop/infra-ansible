@@ -1,6 +1,7 @@
-dns_records_rm:
+dns_data:
 - view: "private"
   zone: "roletest4.com"
+  state: absent
   route53:
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
@@ -11,12 +12,15 @@ dns_records_rm:
     hostname: server_a
     ip: 192.168.1.1
     ttl: 400
+    state: present
   - type: A
     hostname: server_b
     ip: 192.168.1.2
     ttl: 500
+    state: present
 - view: "public"
   zone: "roletest3.com"
+  state: absent
   route53:
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
@@ -25,7 +29,17 @@ dns_records_rm:
     hostname: server_a
     ip: 192.168.1.1
     ttl: 400
+    state: present
   - type: A
     hostname: server_b
     ip: 192.168.1.2
     ttl: 500
+    state: present
+- view: "public"
+  zone: "roletest5.com"
+  state: present
+  route53:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+
+  

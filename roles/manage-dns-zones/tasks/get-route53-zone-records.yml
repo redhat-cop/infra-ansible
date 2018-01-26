@@ -1,18 +1,13 @@
 ---
-#- debug: var=dns_records_rm
-
 - name: Get all hosted zones
   route53_facts:
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
     query: hosted_zone
-  #with_items:
-  #  - "{{ dns_records_rm | default({}) }}"
   register: hosted_zones
 
-#- debug: var=hosted_zones
-#- debug:
-#    msg: "{{ hosted_zones|length }}"
+- debug:
+    msg: "{{ hosted_zones|length }}"
 
 - name: Get all records from zones
   route53_facts:
@@ -25,78 +20,3 @@
   register: zones_records
   when:
     - hosted_zones|length > 0
-
-
-#- debug: var=zones_records
-
-#- set_fact:
-#    recordsets: "{{ recordsets|default([]) + [ {'recordset': item.ResourceRecordSets} ] }}"
-#  with_items:
-#    - "{{ zones_records.results }}"
-
-#- set_fact:
-#    alltogether: "{{ alltogether|default([]) + [ {'zone': item.1.item.Name, 'recordset': item.0.ResourceRecordSets} ] }}"
-#  with_together:
-#    - "{{ zones_records.results }}"
-#    - "{{ zones_records.results }}"
-
-#- debug: var=alltogether
-
-#- debug:
-#    msg:
-#      - "Removing entry {{ item.0.zone }} with type {{ item.1.zone }} "
-#    with_subelements:
-#      - "{{ alltogether }}"
- #     - recordset
-
-#- debug:
-#    msg:
-#      - "Removing entry {{ item.1.Name }} with type {{ item.1.Type }} "
-#      - "Zone is: item.0.zone"
-#    with_subelements:
-#      - "{{ alltogether }}"
-#      - recordset
-    
-
-
-#- debug: var=recordsets
-
-#- debug: var=alltogether
-
-#- debug:
-#    msg:
-#      - "record: {{ item.1.Name }}"
-#      - "type: {{ item.1.Type }}"
-#  with_subelements:
-#    - "{{ recordsets }}"
-#    - recordset
-
-#- debug:
-#    msg:
-#      - "record: {{ item.1.Name }}"
-#      - "type: {{ item.1.Type }}"
-#      - "zone: {{ item"
-#  with_subelements:
-#    - "{{ recordsets }}"
-#    - recordset
-
-#- debug:
-#    msg: 
-#      - "zonename: {{ item.0.item.Name }}"
-#      - "entries: {{ item.1.ResourceRecordSets }}"
-#  with_together:
-#    - "{{ zones_records.results }}"
-#    - "{{ zones_records.results }}"
-
-#- debug:
-#    msg: 
-#      - "item.0: {{ item.0 }}"
-#      - "item.1: {{ item.1 }}"
-#  with_subelements:
-#    - "{{ zones_records.results[0] }}"
-#    - item
-
-#- debug: 
-#    msg: "zone_record.results[1] {{ item.ResourceRecordSets }}"
-#  with_items:
-#    - "{{ rm_records }}"
