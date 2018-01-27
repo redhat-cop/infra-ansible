@@ -15,25 +15,3 @@
   when:
     - p_route53 == true
 
-
-
-
-
-
-#- debug: var=hosted_zones
-
-#- debug:
-#    msg: "Hosted Zones: {{ item.Id | replace('/hostedzone/', '')}}"
-  #with_items:
-    #- "{{ hosted_zones.results[0].HostedZones | default({}) }}"
-#- debug: var=hosted_zones
-
-#- debug: var=zones_records
-
-#- import_tasks: adm-zone-route53.yml
-#  when: (dns_records_rm.route53 is defined) or
-#        (dns_records_add.route53 is defined)
-
-#- import_tasks: adm-zone-named.yml
-#  when: (dns_records_rm.nsupdate is defined) or
-#        (dns_records_add.nsupdate is defined)

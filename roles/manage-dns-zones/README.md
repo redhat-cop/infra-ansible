@@ -28,26 +28,27 @@ The following packages are required:
         - aws_access_key
         - aws_secret_key
 
-  Role Variables
-  --------------
+Role Variables
+--------------
 
-  Two different lists can be defined as variables, with another nested list included on each:
+A dictionary with the following variables is expected:
 
-    - dns_records_add --> This list with the nested elements will be used to asure the zone exists on the DNS service
-    - dns_records_add --> This list with the nested elements will be used to asure the zone does not exist on Route 53 DNS service
-    - view --> The name of the view
-    - zone --> The Domain Name for the Hosted Zone
+  - dns_data: This list with the nested elements will be used to asure the views/zones are on the desired state on the DNS service
+  - view: The name of the view
+  - zone: The Domain Name for the Hosted Zone
+  - state: The desired state, present or absent
 
-    Role specific **`named`** variables
-    -----------------------------------
+    Role specific variables for **`route53`**
+    -----------------------------------------
+    - route53: To interact with route53 dns provider
+      - aws_access_key: AWS key ID, defined on AWS_ACCESS_KEY_ID environment variable
+      - aws_secret_key: AWS secret KEY, defined on AWS_SECRET_ACCESS_KEY environment variable
+      - vpc_id: This variable is required when creating private Zones
+      - vpc_region: This variable is required when creating private Zones
 
-      The following nested list called
 
 
-Dependencies
-------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
 
 Example Playbook
 ----------------
@@ -55,8 +56,28 @@ Example Playbook
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
     - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+      role: manage-dns-zones
+      dns_data:
+      - view: "private"
+        zone: "roletest4.com"
+        state: absent
+        route53:
+          aws_access_key: "{{ aws_access_key }}"
+          aws_secret_key: "{{ aws_secret_key }}"
+          vpc_id: vpc-9dcde6f8
+          vpc_region: eu-west-1
+      - view: "public"
+        zone: "roletest3.com"
+        state: present
+        route53:
+          aws_access_key: "{{ aws_access_key }}"
+          aws_secret_key: "{{ aws_secret_key }}"
+      - view: "public"
+        zone: "roletest5.com"
+        state: absent
+        route53:
+          aws_access_key: "{{ aws_access_key }}"
+          aws_secret_key: "{{ aws_secret_key }}"
 
 License
 -------
@@ -66,4 +87,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role has be created by the Red Hat Containers & PaaS Community of Practice
