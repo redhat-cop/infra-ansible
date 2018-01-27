@@ -1,6 +1,4 @@
 ---
-#- debug: var=zones_records
-
 - name: "Loop over all zones"
   include_tasks: loop-route53-records.yml
   with_items:
