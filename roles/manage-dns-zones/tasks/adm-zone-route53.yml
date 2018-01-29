@@ -1,0 +1,51 @@
+---
+- name: Ensure the private zone does not exist
+  route53_zone:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.zone }}"
+    vpc_id: "{{ item.route53.vpc_id }}"
+    vpc_region: "{{ item.route53.vpc_region }}"
+    state: absent
+  with_items:
+    - "{{ dns_data | default({}) }}"
+  when:
+    - item.view == "private"
+    - item.state == "absent"
+
+- name: Ensure the public zone does not exist
+  route53_zone:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.zone }}"
+    state: absent
+  with_items:
+    - "{{ dns_data | default({}) }}"
+  when:
+    - item.view == "public"
+    - item.state == "absent"
+
+- name: Ensure the private zone exists
+  route53_zone:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.zone }}"
+    vpc_id: "{{ item.route53.vpc_id }}"
+    vpc_region: "{{ item.route53.vpc_region }}"
+  with_items:
+    - "{{ dns_data | default({}) }}"
+  when:
+    - item.view == "private"
+    - item.state == "present"
+
+- name: Ensure the public zone exists
+  route53_zone:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    zone: "{{ item.zone }}"
+    state: present
+  with_items:
+    - "{{ dns_data | default({}) }}"
+  when:
+    - item.view == "public"
+    - item.state == "present"
