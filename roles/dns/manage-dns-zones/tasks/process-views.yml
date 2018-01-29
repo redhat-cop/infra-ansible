@@ -1,0 +1,17 @@
+---
+
+- include_tasks: named/main.yml
+  when:
+    - zone.named
+  with_items:
+    -  "{{ view.zones }}"
+  loop_control:
+    loop_var: "zone"
+
+- include_tasks: route53/main.yml
+  when:
+    - zone.route53 is defined
+  with_items:
+    -  "{{ view.zones }}"
+  loop_control:
+    loop_var: "zone"

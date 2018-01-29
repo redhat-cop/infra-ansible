@@ -55,29 +55,40 @@ Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      role: manage-dns-zones
-      dns_data:
-      - view: "private"
-        zone: "roletest4.com"
-        state: absent
-        route53:
-          aws_access_key: "{{ aws_access_key }}"
-          aws_secret_key: "{{ aws_secret_key }}"
-          vpc_id: vpc-9dcde6f8
-          vpc_region: eu-west-1
-      - view: "public"
-        zone: "roletest3.com"
-        state: present
-        route53:
-          aws_access_key: "{{ aws_access_key }}"
-          aws_secret_key: "{{ aws_secret_key }}"
-      - view: "public"
-        zone: "roletest5.com"
-        state: absent
-        route53:
-          aws_access_key: "{{ aws_access_key }}"
-          aws_secret_key: "{{ aws_secret_key }}"
+```
+- hosts: servers
+  roles:
+    - role: manage-dns-zones
+```
+
+Example Inventory
+-----------------
+
+```
+dns_data:
+- view: "private"
+  zones:
+    - dns_domain: "roletest4.com"
+      state: absent
+      named: True
+      route53:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        vpc_id: vpc-9dcde6f8
+        vpc_region: eu-west-1
+- view: "public"
+  zones:
+    - dns_domain: "roletest3.com"
+      named: True
+      route53:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+    - dns_domain: "roletest5.com"
+      state: absent
+      route53:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+```
 
 License
 -------

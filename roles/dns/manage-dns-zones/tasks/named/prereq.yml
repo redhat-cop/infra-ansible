@@ -1,18 +1,8 @@
 ---
 
-- name: Fail when NAMED KEY environment variables are not defined
-  debug:
-    msg: "Both 'TSIG_KEY_NAME' and 'TSIG_KEY_SECRET' environment variables must be defined"
-  failed_when: (lookup('env','TSIG_KEY_NAME')  == "") or
-               (lookup('env','TSIG_KEY_SECRET')  == "")
-  with_items:
-    - "{{ dns_data | default({}) }}"
-  when:
-    - item.nsupdate is defined
-
 - name: Build list of DNS views/zones
   set_fact:
     dns_views: "{{ dns_views | default([]) + [ item.0.name + '-' + item.1.dns_domain ] }}"
   with_subelements:
-    - "{{ named_config_views }}"
-    - zone
+    - "{{ zone }}"
+    - zones
