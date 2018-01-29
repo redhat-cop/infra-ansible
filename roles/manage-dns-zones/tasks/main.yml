@@ -1,0 +1,17 @@
+---
+- import_tasks: pre-reqs.yml
+
+- import_tasks: evaluate_providers.yml
+
+- import_tasks: get-route53-zone-records.yml
+  when:
+    - p_route53 == true
+
+- import_tasks: loop-route53-zones.yml
+  when:
+    - p_route53 == true
+
+- import_tasks: adm-zone-route53.yml
+  when:
+    - p_route53 == true
+
