@@ -3,7 +3,6 @@
 - name: 'Update DNS records'
   hosts: localhost
   roles:
-  - role: dns
+  - role: dns/manage-dns-records
   tags:
   - update_dns_records
-
