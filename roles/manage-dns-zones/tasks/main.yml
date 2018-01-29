@@ -1,17 +1,15 @@
 ---
-- import_tasks: pre-reqs.yml
 
-- import_tasks: evaluate_providers.yml
+- import_tasks: prereq.yml
 
-- import_tasks: get-route53-zone-records.yml
+- include_tasks: named/main.yml
   when:
-    - p_route53 == true
+    - item.named is defined
+  with_items:
+    -  "{{ dns_data }}"
 
-- import_tasks: loop-route53-zones.yml
+- include_tasks: route53/main.yml
   when:
-    - p_route53 == true
-
-- import_tasks: adm-zone-route53.yml
-  when:
-    - p_route53 == true
-
+    - item.route53 is defined
+  with_items:
+    -  "{{ dns_data }}"

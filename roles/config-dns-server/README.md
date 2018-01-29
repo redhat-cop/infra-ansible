@@ -1,41 +1,45 @@
-# The rhc-ose ansible dns-server role
+Role Name: config-dns-server
+=========
+
+This role installs and configures a DNS server with multiple views and zones.
+
+  - named
 
 
-This role installs and configures bind/named for use with multiple views and zones. 
+Requirements
+------------
 
 
-## Example Playbook
+Role Variables
+--------------
+
+The following dictionary is expected:
+
+  - dns_data: This list with the nested dictionaries will be used to ensure the DNS server is properly configured and set up for use with the remaining data in this dictionary.
+
+
+Example Playbook
+----------------
+
+Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
 ```
-
-  - hosts: dns-servers
-    roles:
-    - role: dns-server
-      named_config_recursion: 'no'
-      named_config_dnssec_enable: 'no'
-      named_config_dnssec_validation: 'no'
-      named_config_dnssec_lookaside: 'auto'
-      named_config_allow_transfer:
-      - "192.168.10.11"
-      - "192.168.10.12"
-      named_config_views:
-      - name: "private"
-        acl_entry: 
-        - "172.16.0.0/16"
-        - "172.17.0.0/16"
-        zone:
-        - dns_domain: first.example.com
-        - dns_domain: second.example.com
-        - dns_domain: forward.example.com
-          type: forward
-          forwarders:
-          - 192.168.10.11
-          - 192.168.10.12
-      - name: "public"
-        zone:
-        - dns_domain: first.example.com
-        - dns_domain: second.example.com
-        default_forwarders:
-        - 8.8.8.8
-        - 8.8.4.4
+- hosts: servers
+  role: config-dns-server
 ```
+
+Example Inventory
+----------------
+
+Please see the example inventory [at the top level of this repo](../../inventory/dns-server)
+
+
+License
+-------
+
+BSD
+
+Author Information
+------------------
+
+This role has be created by the Red Hat Containers & PaaS Community of Practice

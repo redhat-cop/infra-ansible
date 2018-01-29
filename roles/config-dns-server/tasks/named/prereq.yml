@@ -5,12 +5,12 @@
     name: "{{ item }}"
     state: latest
   with_items:
-  - bind
-  - bind-utils
-  - firewalld
-  - python-firewall
-  - libsemanage-python
-  - python-dns
+    - bind
+    - bind-utils
+    - firewalld
+    - python-firewall
+    - libsemanage-python
+    - python-dns
 
 - name: Enable named
   service:
@@ -24,14 +24,14 @@
     state: started
 
 - name: Open Firewall for DNS
-  firewalld: 
+  firewalld:
     port: "{{item}}"
     permanent: yes
     state: enabled
     immediate: yes
   with_items:
-  - 53/tcp
-  - 53/udp
+    - 53/tcp
+    - 53/udp
 
 - name: Configure named
   copy:
@@ -42,33 +42,30 @@
     mode: 0660
 
 - name: Setup Zone Directory
-  file: 
-    dest: /var/named/static 
-    state: directory 
-    owner: named 
-    group: named 
+  file:
+    path: /var/named/static
+    state: directory
+    owner: named
+    group: named
     mode: 0770
 
 - name: Setup key for service named status to communicate with BIND
   command: "/sbin/rndc-confgen -a -r /dev/urandom"
 
-- name: Ensure correct permissions and ownerships on rndc.key file
+- name: Ensure various files/directories exists with the proper permissions
   file:
-    path: /etc/rndc.key
+    path: "{{ item }}"
     owner: root
     group: named
     mode: 0640
+   with_items:
+     - "/etc/rdnc.key"
+     - "/etc/named/named.conf.domain-keys"
+     - "/etc/named/named.conf.acl"
+     - "/etc/named/named.conf.view"
 
 - name: Configure SELinux
   seboolean:
     name: named_write_master_zones
     state: yes
     persistent: yes
-
-- name: Build list of DNS views/zones
-  set_fact:
-    dns_views: "{{ dns_views | default([]) + [ item.0.name + '-' + item.1.dns_domain ] }}"
-  with_subelements:
-  - "{{ named_config_views }}"
-  - zone
-
