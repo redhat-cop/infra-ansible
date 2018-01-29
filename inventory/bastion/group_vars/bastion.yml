@@ -1,0 +1,17 @@
+---
+ansible_user: fedora
+ansible_become: True
+main_user: bob
+ipa_client_install: True
+ipa_domain: ipa-realm.example.com
+ipa_automount_location: userhome
+ipa_username: bob
+docker_install: True
+docker_compose_install: True
+docker_username: bob
+vnc_server_install: False
+additional_tools_packages:
+- git
+- screen
+- bash-completion
+- ansible

@@ -1,0 +1,4 @@
+[bastion]
+
+[osp_instances:children]
+bastion
