@@ -2,7 +2,7 @@
 
 - name: Setup Domain Keys configuration
   template:
-    src: named.conf.domain-keys.j2
+    src: named/domain-keys.j2
     dest: /etc/named/named.conf.domain-keys
     owner: named
     group: named
@@ -15,12 +15,11 @@
 
 - name: Setup key files for nsupdate
   template:
-    src: domain-key.j2
+    src: named/domain-key.j2
     dest: /var/named/{{ item.item }}.key
     owner: named
     group: named
     mode: 0660
   with_items:
-  - "{{ hostvars[ansible_play_hosts | first].nsupdate_keys_captured.results }}"
+    - "{{ hostvars[ansible_play_hosts | first].nsupdate_keys_captured.results }}"
   notify: restart named
-
