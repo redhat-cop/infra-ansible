@@ -1,9 +1,5 @@
 ---
 
 - import_tasks: prereq.yml
-
-- include_tasks: process-views.yml
-  with_items:
-    - "{{ dns_data }}"
-  loop_control:
-    loop_var: "view"
+- import_tasks: named/main.yml
+- import_tasks: route53/main.yml
