@@ -1,0 +1,33 @@
+---
+
+- name: Ensure the view directory exists
+  file:
+    path: "{{ tempdir }}/{{ view.name }}"
+    state: directory
+
+- name: Prepare the view pre-zones content
+  template:
+    src: named/view-config-1.j2
+    dest: "{{ tempdir }}/{{ view.name }}/0001-{{ view.name }}.cfg"
+    owner: named
+    group: named
+    mode: 0660
+
+- include_tasks: process-one-zone.yml
+  with_items:
+    -  "{{ view.zones }}"
+  loop_control:
+    loop_var: "zone"
+
+- name: Prepare the view post-zones content
+  template:
+    src: named/view-config-2.j2
+    dest: "{{ tempdir }}/{{ view.name }}/0003-{{ view.name }}.cfg"
+    owner: named
+    group: named
+    mode: 0660
+
+- name: Assemble the complete view file
+  assemble:
+    src: "{{ tempdir }}/{{ view.name }}"
+    dest: "{{ tempdir }}/view/{{ view.name }}.cfg"

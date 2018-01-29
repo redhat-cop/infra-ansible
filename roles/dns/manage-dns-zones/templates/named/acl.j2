@@ -1,17 +1,17 @@
-{% for view in named_config_views %}
-acl "{{ view.name }}" {
-{% for zone in view.zone %}
-        key "{{ view.name }}-{{ zone.dns_domain }}";
+{% for v in dns_data %}
+acl "{{ v.name }}" {
+{% for z in v.zones %}
+        key "{{ v.name }}-{{ z.dns_domain }}";
 {% endfor %}
-{% for view_exclude in named_config_views %}
-{% if view_exclude.name != view.name %}
+{% for view_exclude in dns_data %}
+{% if view_exclude.name != v.name %}
 {% for zone_exclude in view_exclude.zone %}
         !key "{{ view_exclude.name }}-{{ zone_exclude.dns_domain }}";
 {% endfor %}
 {% endif %}
 {% endfor %}
-{% if view.acl_entry is defined %}
-{% for acl_entry in view.acl_entry %}
+{% if v.acl_entry is defined %}
+{% for acl_entry in v.acl_entry %}
 	{{ acl_entry }};
 {% endfor %}
 {% else %}

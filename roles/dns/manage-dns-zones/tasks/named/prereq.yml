@@ -1,8 +1,10 @@
 ---
 
-- name: Build list of DNS views/zones
+- name: 'Use a unique temporary directory to store the config files pre-assemble'
+  command: mktemp -d
+  register: tempdir
+
+- name: 'Store away the temp names'
   set_fact:
-    dns_views: "{{ dns_views | default([]) + [ item.0.name + '-' + item.1.dns_domain ] }}"
-  with_subelements:
-    - "{{ zone }}"
-    - zones
+    temp_dir: '{{ tempdir.stdout }}'
+  notify: 'cleanup temp'

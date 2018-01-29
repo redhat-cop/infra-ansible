@@ -1,10 +1,3 @@
-{% for view in named_config_views %}
-view "{{ view.name }}" {
-	match-clients { "{{ view.name }}"; };
-
-	recursion {{ view.recursion | default(named_config_recursion) }};
-
-{% for zone in view.zone %}
 	zone "{{ zone.dns_domain }}" IN {
 		type {{ zone.type | default(dns_server_type) }};
 {% if zone.type|default(dns_server_type) == "forward" %}
@@ -28,29 +21,3 @@ view "{{ view.name }}" {
 {% endif %}
 {% endif %}
 	};
-
-{% endfor %}
-
-{% if view.default_forwarders is defined %}
-	include "/etc/named.rfc1912.zones";
-
-	zone "." {
-		type forward;
-		forwarders {
-	{% for forwarder in view.default_forwarders %}
-		{{ forwarder }};
-	{% endfor %}
-		};
-	};
-{% else %}
-	zone "." {
-		type forward;
-		forwarders {
-			127.0.0.1;
-		};
-	};
-{% endif %}
-
-};
-
-{% endfor %}
