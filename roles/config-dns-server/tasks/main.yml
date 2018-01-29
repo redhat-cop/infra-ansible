@@ -1,7 +1,5 @@
 ---
 
-- import_tasks: prereq.yml
-- import_tasks: named.yml
-- import_tasks: named_keys.yml
-- import_tasks: named_zones.yml
-- import_tasks: print_keys.yml
+- import_tasks: named/main.yml
+
+# Add calls to additional providers here ...
