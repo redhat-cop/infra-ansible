@@ -1,0 +1,8 @@
+---
+
+- name: 'Update DNS zones'
+  hosts: all
+  roles:
+  - role: dns/manage-dns-zones
+  tags:
+  - update_dns_zones
