@@ -1,7 +1,17 @@
 ---
-# defaults file for admin-route53
+
+###############################################################################
+# common defaults
+ttl: 300
+
+
+###############################################################################
+# defaults for named
+default_dnssec_keygen_size: 256
+default_dnssec_keygen_algorithm: HMAC-SHA256
+
+
+###############################################################################
+# defaults for Route53
 aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
 aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
-ttl: 300
-p_route53: false
-p_named: false
