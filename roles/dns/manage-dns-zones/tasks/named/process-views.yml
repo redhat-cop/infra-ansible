@@ -1,0 +1,28 @@
+---
+
+- name: Ensure the final view directory exists
+  file:
+    path: "{{ tempdir }}/view"
+    state: directory
+
+- include_tasks: process-zones.yml
+  with_items:
+    -  "{{ dns_data }}"
+  loop_control:
+    loop_var: "view"
+
+- name: Assemble the final view configuration
+  assemble:
+    src: "{{ tempdir }}/view"
+    dest: "/etc/named/named.conf.view"
+  notify: restart named
+
+# re-factor to avoid using `dns_data` in the template
+- name: Setup ACLs
+  template:
+    src: named/acl.j2
+    dest: /etc/named/named.conf.acl
+    owner: named
+    group: named
+    mode: 0660
+  notify: restart named
