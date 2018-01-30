@@ -5,7 +5,7 @@ acl "{{ v.name }}" {
 {% endfor %}
 {% for view_exclude in dns_data %}
 {% if view_exclude.name != v.name %}
-{% for zone_exclude in view_exclude.zone %}
+{% for zone_exclude in view_exclude.zones %}
         !key "{{ view_exclude.name }}-{{ zone_exclude.dns_domain }}";
 {% endfor %}
 {% endif %}

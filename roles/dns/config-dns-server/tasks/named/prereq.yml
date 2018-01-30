@@ -58,11 +58,11 @@
     owner: root
     group: named
     mode: 0640
-   with_items:
-     - "/etc/rdnc.key"
-     - "/etc/named/named.conf.domain-keys"
-     - "/etc/named/named.conf.acl"
-     - "/etc/named/named.conf.view"
+  with_items:
+    - "/etc/rndc.key"
+    - "/etc/named/named.conf.domain-keys"
+    - "/etc/named/named.conf.acl"
+    - "/etc/named/named.conf.view"
 
 - name: Configure SELinux
   seboolean:
