@@ -1,5 +1,12 @@
 ---
 
+- name: Build a list of view/zone items
+  set_fact:
+    dns_views: "{{ dns_views | default([]) + [ item.0.name + '-' + item.1.dns_domain ] }}"
+  with_subelements:
+    - "{{ dns_data }}"
+    - zones
+
 - name: Get existing key files
   shell: 'ls -1 K{{ item }}*.key | sed -ne "s/K\({{ item }}\).*.key/\1/p"'
   args:

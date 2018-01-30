@@ -1,6 +1,11 @@
 ---
 
-- import_tasks: prereq.yml
-- import_tasks: get-route53-zone-records.yml
-- import_tasks: loop-route53-zones.yml
-- import_tasks: adm-zone-route53.yml
+- import_tasks: determine-action.yml
+
+- block:
+    - import_tasks: prereq.yml
+    - import_tasks: get-route53-zone-records.yml
+    - import_tasks: loop-route53-zones.yml
+    - import_tasks: adm-zone-route53.yml
+  when:
+    - route53_processing

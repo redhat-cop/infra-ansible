@@ -1,0 +1,11 @@
+---
+
+- name: Determine if named processing is required
+  set_fact:
+    named_processing: True
+  when:
+    - item.1.named
+  with_subelements:
+    - "{{ dns_data | default({}) }}"
+    - zones
+
