@@ -1,14 +1,9 @@
 ---
 
-  when:
-    - zone.named
-  with_items:
-    -  "{{ view.zones }}"
-  loop_control:
-    loop_var: "zone"
-
-
 - import_tasks: prereq.yml
+
+- include_tasks: process-views.yml
+
 - import_tasks: keys.yml
-- import_tasks: zones.yml
+
 - import_tasks: print_keys.yml

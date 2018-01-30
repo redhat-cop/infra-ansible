@@ -1,0 +1,26 @@
+---
+
+- name: Prepare Zone Files
+  template:
+    src: named/zone.db.j2
+    dest: "/var/named/static/{{ view.name + '-' + zone.dns_domain }}.db"
+    owner: named
+    group: named
+    mode: 0660
+  notify: restart named
+
+- name: Prepare the zone config content
+  template:
+    src: named/zone-config.j2
+    dest: "{{ tempdir }}/{{ view.name }}/0002-{{ zone.dns_domain }}.cfg"
+    owner: named
+    group: named
+    mode: 0660
+
+- name: Prepare the zone config content
+  template:
+    src: named/zone-config.j2
+    dest: "{{ tempdir }}/{{ view.name }}/0002-{{ zone.dns_domain }}.cfg"
+    owner: named
+    group: named
+    mode: 0660

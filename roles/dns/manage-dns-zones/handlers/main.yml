@@ -9,3 +9,8 @@
   service:
     name: named
     state: reloaded
+
+- name: cleanup temp
+  file:
+    path: "{{ temp_dir }}"
+    state: absent
