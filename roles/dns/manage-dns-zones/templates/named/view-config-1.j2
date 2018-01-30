@@ -1,0 +1,5 @@
+
+view "{{ view.name }}" {
+	match-clients { "{{ view.name }}"; };
+
+	recursion {{ view.recursion | default(named_config_recursion) }};
