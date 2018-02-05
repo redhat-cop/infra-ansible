@@ -10,7 +10,7 @@
   - firewalld
   - python-firewall
   - libsemanage-python
-  notify: 'enable and start haproxy services'
+  notify: 'enable and start service(s)'
 
 - name: 'Start firewalld'
   service: 
