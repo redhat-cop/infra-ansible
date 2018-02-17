@@ -1,6 +1,6 @@
 ---
 - name: "Loop over all zones"
-  include_tasks: loop-route53-records.yml
+  include_tasks: loop-records.yml
   with_items:
     - "{{ zones_records.results }}"
   loop_control:
