@@ -2,7 +2,7 @@ dns_data:
 - view: "private"
   zones:
     - dns_domain: "roletest1.com"
-      state: present
+      state: absent
       route53:
         aws_access_key: "{{ aws_access_key }}"
         aws_secret_key: "{{ aws_secret_key }}"
@@ -20,7 +20,7 @@ dns_data:
         ttl: 500
         state: present
     - dns_domain: "roletest2.com"
-      state: present
+      state: absent
       route53:
         aws_access_key: "{{ aws_access_key }}"
         aws_secret_key: "{{ aws_secret_key }}"
@@ -40,7 +40,7 @@ dns_data:
 - view: "public"
   zones:
     - dns_domain: "roletest3.com"
-      state: absent
+      state: present
       route53:
         aws_access_key: "{{ aws_access_key }}"
         aws_secret_key: "{{ aws_secret_key }}"
@@ -56,7 +56,7 @@ dns_data:
         ttl: 500
         state: present
     - dns_domain: "roletest4.com"
-      state: absent
+      state: present
       route53:
         aws_access_key: "{{ aws_access_key }}"
         aws_secret_key: "{{ aws_secret_key }}"
