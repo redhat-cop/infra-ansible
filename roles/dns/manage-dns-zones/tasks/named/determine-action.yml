@@ -4,8 +4,7 @@
   set_fact:
     named_processing: True
   when:
-    - item.1.named
+    - item.1.named is defined
   with_subelements:
     - "{{ dns_data | default({}) }}"
     - zones
-

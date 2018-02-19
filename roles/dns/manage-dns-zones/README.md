@@ -35,7 +35,8 @@ A dictionary with the following variables is expected:
 
   - dns_data: This list with the nested elements will be used to asure the views/zones are on the desired state on the DNS service
   - view: The name of the view
-  - zone: The Domain Name for the Hosted Zone
+  - zones: List of Hosted Zones
+  - dns_domain: The Domain Name for the Hosted Zone
   - state: The desired state, present or absent
 
     Role specific variables for **`route53`**

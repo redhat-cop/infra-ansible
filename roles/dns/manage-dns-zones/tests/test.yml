@@ -1,4 +1,4 @@
 ---
 - hosts: localhost
   roles:
-    - manage-dns-zones
+    - dns/manage-dns-zones
