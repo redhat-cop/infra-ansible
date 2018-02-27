@@ -1,0 +1,7 @@
+---
+
+# Example run (localhost needed to source username/password with "prep.yml") 
+# > ansible-playbook -i <inventory> subscribe-host.yml -l "myhosts,localhost" 
+
+- import_playbook: "prep.yml"
+- import_playbook: "rhsm.yml"
