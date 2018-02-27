@@ -1,7 +1,7 @@
 ---
 
-- include: prereq.yml
-- include: iscsi-config.yml
-- include: multipath-config.yml
-- include: lvm-config.yml
-- include: lock-lvm.yml
+- import_tasks: prereq.yml
+- import_tasks: iscsi-config.yml
+- import_tasks: multipath-config.yml
+- import_tasks: lvm-config.yml
+- import_tasks: lock-lvm.yml

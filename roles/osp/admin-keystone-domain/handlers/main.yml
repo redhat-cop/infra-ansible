@@ -1,0 +1,7 @@
+---
+
+- name: yum-clean-metadata
+  command: yum clean metadata
+  args:
+    warn: no
+
