@@ -1,11 +1,13 @@
 ---
 
-# Make sure to run the "prep.yml" playbook before running this playbook
+# If you want to use username/password for subscription, please ensure 
+# to run the "prep.yml" playbook before running this playbook 
+# - alternatively use the "subscribe-host.yml" playbook instead
 
-- hosts: infra_vms
+- hosts: rhsm_hosts
   vars:
-    rhsm_username: "{{ hostvars['localhost'].rhsm_username }}"
-    rhsm_password: "{{ hostvars['localhost'].rhsm_password }}"
+    rhsm_username: "{{ hostvars['localhost'].rhsm_username | default(omit) }}"
+    rhsm_password: "{{ hostvars['localhost'].rhsm_password | default(omit) }}"
   roles: 
   - role: rhsm
     no_log: True
