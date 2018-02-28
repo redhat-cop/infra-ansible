@@ -48,8 +48,8 @@
   notify:
   - "remove temporary keystone rc file"
 
-- name: "Source the admin keytstonerc file"
-  shell: "source ~/{{ admin_keystonerc_file }}; env | grep '^OS_' > {{ keystonerc_file.path }}"
+- name: "Source the admin keystonerc file"
+  shell: "source {{ admin_keystonerc_file }}; env | grep '^OS_' > {{ keystonerc_file.path }}"
 
 - name: "Retrive the sourced rc content file"
   fetch:
@@ -59,10 +59,15 @@
   notify:
   - "remove local temporary keystone rc file"
 
+- name: "Ensure target directory for 'clouds.cfg' exists"
+  file:
+    path: "{{ clouds_yaml_file | dirname }}"
+    state: directory
+
 - name: "Configure the 'clouds.cfg' file for admin"
   template:
     src: clouds_yaml.j2
-    dest: {{ clouds_yaml_file }}
+    dest: "{{ clouds_yaml_file }}"
 
 - name: "Restart keystone (httpd) to apply config"
   service:

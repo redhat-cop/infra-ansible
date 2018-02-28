@@ -2,9 +2,9 @@
 
 - import_playbook: ../infra-hosts.yml
 
-- hosts: infra_osp_hosts[0]
+- hosts: infra_osp_hosts
   roles:
-  - role: config-software-src    
+  - { role: config-software-src, when: '"controller" in osp_roles' }
 
 - hosts: infra_osp_hosts
   roles:

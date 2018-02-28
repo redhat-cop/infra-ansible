@@ -1,7 +1,7 @@
 ---
 
 - name: "Include prereq"
-  include: prereq.yml
+  import_tasks: prereq.yml
 
 - name: "Initialize variables"
   set_fact:

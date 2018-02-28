@@ -14,6 +14,12 @@
     line: 'disk_allocation_ratio=2.0'
   notify: 'restart openstack-nova-compute'
 
+- name: "Workaround for OSP >12 to allow for Nova Migrations"
+  replace:
+    path: "/var/lib/nova/.ssh/config"
+    regexp: '(.*)'
+    replace: '# \1'
+
 - name: "Ensure Nova Migration doesn't get blocked by host key checking"
   lineinfile:
     path: "/var/lib/nova/.ssh/config"

@@ -1,6 +1,6 @@
 ---
 
-- include: 'prereq.yml'
-- include: 'route.yml'
+- import_tasks: 'prereq.yml'
+- import_tasks: 'route.yml'
 
 

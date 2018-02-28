@@ -1,6 +1,6 @@
 ---
 
-- include: 'prereq.yml'
-- include: 'interfaces.yml'
+- import_tasks: 'prereq.yml'
+- import_tasks: 'interfaces.yml'
 
 
