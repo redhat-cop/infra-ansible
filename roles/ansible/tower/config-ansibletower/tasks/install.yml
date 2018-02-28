@@ -7,7 +7,7 @@
 
 - name: "Set installation dir fact"
   set_fact:
-    ansible_tower_dir: "{{ default_ansible_tower_url | basename | regex_replace('.tar.gz','') }}"
+    ansible_tower_dir: "{{ ansible_tower_download_url | basename | regex_replace('.tar.gz','') }}"
 
 - name: "Check if installer dir exists"
   stat: 
@@ -15,7 +15,7 @@
   register: installer_dir
 
 - name: "Download & Unpack Ansible Tower installer"
-  shell: curl {{ default_ansible_tower_url }} | tar xzvf -
+  shell: curl {{ default_ansible_tower_url }} | tar xzf -
   when: not installer_dir.stat.exists
 
 - name: "Set up the Ansible Tower inventory"
@@ -53,3 +53,6 @@
     user: admin
     password: "{{ tower_admin_password }}" 
     validate_certs: no
+
+- name: "Download and Install the 'oc' client for OpenShift interactions"
+  shell: curl {{ oc_client_download_url }} | tar -C /bin/ -xzf -

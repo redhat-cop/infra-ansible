@@ -10,6 +10,7 @@ ansible_tower_job_templates:
   playbook: "playbooks/prep.yml"
   credential: "Credential1"
   extra_vars: "---\\nhello: world\\n"
+  ask_variables_on_launch: true
   permissions:
     teams:
     - name: team1
