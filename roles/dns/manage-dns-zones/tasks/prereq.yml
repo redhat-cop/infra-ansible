@@ -4,7 +4,7 @@
   debug:
     msg: "view name and zones must be defined for each dictionary record"
   failed_when:
-    - (item.name is not defined) or
+    - (item.view is not defined) or
       (item.zones is not defined)
   with_items:
     - "{{ dns_data | default({}) }}"
