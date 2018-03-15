@@ -1,22 +1,14 @@
 
-{% if view.default_forwarders is defined %}
 	include "/etc/named.rfc1912.zones";
 
 	zone "." {
 		type forward;
 		forwarders {
-	{% for forwarder in view.default_forwarders %}
+	{% for forwarder in view_forwarders %}
 		{{ forwarder }};
 	{% endfor %}
 		};
 	};
-{% else %}
-	zone "." {
-		type forward;
-		forwarders {
-			127.0.0.1;
-		};
-	};
-{% endif %}
+
 
 };

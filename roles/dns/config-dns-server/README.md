@@ -1,7 +1,7 @@
 Role Name: config-dns-server
 =========
 
-This role installs and configures a DNS server with multiple views and zones.
+This role installs and configures a DNS server. The following technologies are supported:
 
   - named
 
@@ -15,7 +15,9 @@ Role Variables
 
 The following dictionary is expected:
 
-  - dns_data: This list with the nested dictionaries will be used to ensure the DNS server is properly configured and set up for use with the remaining data in this dictionary.
+  - named_config: This dictionary will be used to ensure the DNS server is properly configured.
+
+> **Note:** This role does **not** configure any views/zones - please use the `manage-dns-zones` for this purpose.
 
 
 Example Playbook
@@ -24,20 +26,33 @@ Example Playbook
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
 ```
-- hosts: servers
+- hosts: dns-servers
   role: config-dns-server
 ```
 
 Example Inventory
 ----------------
 
-Please see the example inventory [at the top level of this repo](../../inventory/dns-server)
+```
+named_config:
+  recursion: 'no'
+  dnssec_enable: 'yes'
+  dnssec_validation: 'yes'
+  dnssec_lookaside: 'no'
+  allow_query:
+    - 192.168.48.21
+    - 192.168.48.22
+  allow_transfer:
+    - 192.168.48.21
+    - 192.168.48.22
+```
 
 
 License
 -------
 
-BSD
+Apache License 2.0
+
 
 Author Information
 ------------------

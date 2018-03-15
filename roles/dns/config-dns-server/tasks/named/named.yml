@@ -19,6 +19,8 @@
   notify: restart named
 
 - name: Configure named options
+  vars:
+    named_config: "{{ dns_data.named_global_config }}"
   template:
     src: named/options.j2
     dest: /etc/named/named.conf.options

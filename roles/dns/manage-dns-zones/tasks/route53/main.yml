@@ -7,4 +7,4 @@
     - import_tasks: get-zone-records.yml
     - import_tasks: process-views.yml
   when:
-    - route53_processing
+    - route53_processing|bool == True

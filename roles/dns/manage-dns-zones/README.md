@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This role can be used to manage views and zones for different DNS services providers. These are the supported ones:
+This role can be used to manage views and zones for different DNS service providers. The supported ones are:
 
   - named
   - route53
@@ -31,12 +31,13 @@ The following packages are required:
 Role Variables
 --------------
 
-A dictionary with the following variables is expected:
+A dictionary, `dns_data`, with the following variables is expected:
 
-  - dns_data: This list with the nested elements will be used to asure the views/zones are on the desired state on the DNS service
-  - view: The name of the view
-  - zones: List of Hosted Zones
-  - dns_domain: The Domain Name for the Hosted Zone
+  - named_global_config: if `named` is used, this will be the global configuration for the named/bind server.
+  - views: List with views to configure as part of the DNS server/service.
+    - name: Name of the view
+    - zones: List of Hosted Zones
+      - dns_domain: The Domain Name for the Hosted Zone
   - state: The desired state, present or absent
 
     Role specific variables for **`route53`**
@@ -54,8 +55,6 @@ A dictionary with the following variables is expected:
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
 ```
 - hosts: servers
   roles:
@@ -65,36 +64,14 @@ Including an example of how to use your role (for instance, with variables passe
 Example Inventory
 -----------------
 
-```
-dns_data:
-- view: "private"
-  zones:
-    - dns_domain: "roletest4.com"
-      state: absent
-      named: True
-      route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        vpc_id: vpc-9dcde6f8
-        vpc_region: eu-west-1
-- view: "public"
-  zones:
-    - dns_domain: "roletest3.com"
-      named: True
-      route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-    - dns_domain: "roletest5.com"
-      state: absent
-      route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-```
+See the [top level README](../README.md)
+
 
 License
 -------
 
-BSD
+Apache License 2.0
+
 
 Author Information
 ------------------
