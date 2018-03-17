@@ -1,0 +1,5 @@
+---
+
+# Send mail
+- import_tasks: "mailit.yml"
+

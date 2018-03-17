@@ -1,0 +1,15 @@
+---
+# mail an individual user
+- mail:
+    subject: "{{ smtp_subject }}"
+    host: "{{ smtp_host | default(omit) }}"
+    port: "{{ smtp_port | default (omit) }}"
+    username: "{{ smtp_username | default(omit) }}"
+    password: "{{ smtp_password | default(omit) }}"
+    to: "{{ smtp_to | default(omit) }}"
+    from: "{{ smtp_from | default(omit)}}"
+    headers: "{{ smtp_header | default(omit)}}"
+    body: "{{ smtp_body | default(omit) }}"
+    secure: "{{ smtp_secure | default(omit) }}"
+    subtype: "{{ smtp_subtype | default('html') }}"
+  delegate_to: localhost
