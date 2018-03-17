@@ -1,0 +1,15 @@
+---
+
+# create email
+- import_tasks: "prereq.yml"
+  when:
+    - body is defined
+    - body | trim != ''
+
+# create email
+- import_tasks: "template.yml"
+  when:
+    - body is defined
+    - body | trim != ''
+
+# cleanup is done by handlers

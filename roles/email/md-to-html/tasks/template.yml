@@ -1,0 +1,31 @@
+---
+  # this will be called when there was a template generated as
+  # part of the mailing process.
+- name: "generate a random local directory in /tmp"
+  tempfile:
+    path: '{{ email_template_temp_dir }}'
+    state: directory
+    prefix: email
+  register: email_temp_dir
+  notify: template email cleanup
+
+- name: 'Add Read/Execute permissions on directory'
+  file:
+    path: '{{ email_temp_dir.path }}'
+    mode: 0755
+    state: directory
+
+- name: "Set email template dir or default"
+  set_fact:
+    smtp_body_file: "{{ email_temp_dir.path }}/{{ email_template_temp_file | default('email_template')}}"
+
+- name: "Generate local template file for mailing"
+  template:
+  #DRJ this needs to be a variable passed in from inventory
+    src: "{{ mail_template }}"
+    dest: "{{ smtp_body_file }}"
+  notify: template email cleanup
+
+- name: "populate message content from template"
+  set_fact:
+    smtp_body: "{{ lookup('file', smtp_body_file )}}"

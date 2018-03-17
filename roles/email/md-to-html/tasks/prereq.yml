@@ -1,0 +1,8 @@
+---
+
+- name: "Install additional packages"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - pandoc

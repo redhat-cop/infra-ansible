@@ -1,0 +1,12 @@
+---
+smtp_username: "user1@gmail.com"
+smtp_password: "pa55word"
+smtp_host: "smtp.gmail.com"
+smtp_port: "465"
+
+smtp_subject: "Test Message 1"
+smtp_to: "person1@example.com, person2@example.com"
+smtp_header: 'Reply-To=user2@gmail.com'
+smtp_body: "<html><body><h1>This is a H1 header</h1></body></html>"
+smtp_secure: "always"
+

@@ -1,0 +1,7 @@
+---
+# handlers file for notify-email
+- name: 'template email cleanup'
+  delegate_to: localhost
+  file:
+    path: '{{ email_template_temp_dir }}'
+    state: absent
