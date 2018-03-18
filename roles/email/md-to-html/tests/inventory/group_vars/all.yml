@@ -1,11 +1,26 @@
 ---
+ansible_become: true
 
+# Send role variables
 smtp_username: "user1@gmail.com"
-smtp_password: "pa55word"
+smtp_password: "Pa55word"
 smtp_host: "smtp.gmail.com"
 smtp_port: "465"
 
-smtp_subject: "Test Message 1"
-smtp_to: "person1@example.com, person2@example.com"
-smtp_header: 'Reply-To=user2@gmail.com'
+smtp_subject: "{{ title }}"
+smtp_to: "bob@example.com, user21@yahoo.com"
+smtp_header: 'Reply-To=user3@gmail.com'
 smtp_secure: "always"
+
+# Template variables
+customer:
+  name: "ABC"
+  start_date: "1 March 2018"
+
+table_data: |  
+  |  Instance    |   Version  |  DNS/FQDN |Instance Sizing
+  |:------------:|:-----------------:|:---------:|:---------------:|
+  |master1|7.14|console.example.com|16G ram
+  |node1|7.14| |24 ram
+  |node2|7.14| |24 ram
+  |node3|7.14| |24 ram
