@@ -4,13 +4,5 @@
 - name: Test notify-email role
   hosts: localhost
 
-#  vars_files:
-#    - vars/idm.json
-#
-#  vars:
-#    ipa_admin_user: admin
-#    ipa_admin_password: test123
-#    ipa_host: idm.example.com 
-
   roles:
-    - notify-email
+    - email/md-to-html

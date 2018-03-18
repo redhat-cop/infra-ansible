@@ -6,3 +6,4 @@
     state: latest
   with_items:
   - pandoc
+  

@@ -2,14 +2,10 @@
 
 # create email
 - import_tasks: "prereq.yml"
-  when:
-    - body is defined
-    - body | trim != ''
-
-# create email
+# create markdown email
 - import_tasks: "template.yml"
-  when:
-    - body is defined
-    - body | trim != ''
 
+- name: Send email
+  import_role:
+    name:  email/send
 # cleanup is done by handlers

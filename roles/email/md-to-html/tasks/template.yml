@@ -17,15 +17,18 @@
 
 - name: "Set email template dir or default"
   set_fact:
-    smtp_body_file: "{{ email_temp_dir.path }}/{{ email_template_temp_file | default('email_template')}}"
+    smtp_body_file: "{{ email_temp_dir.path }}/email_template_file"
 
 - name: "Generate local template file for mailing"
   template:
-  #DRJ this needs to be a variable passed in from inventory
-    src: "{{ mail_template }}"
+    src: "email.j2"
     dest: "{{ smtp_body_file }}"
   notify: template email cleanup
 
+- name: "convert markdown to HTML"
+  shell: "pandoc -f markdown -t html {{smtp_body_file}}"
+  register: result
+
 - name: "populate message content from template"
   set_fact:
-    smtp_body: "{{ lookup('file', smtp_body_file )}}"
+    smtp_body: "<html><body>{{ result.stdout}}</body></html>"

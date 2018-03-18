@@ -1,0 +1,18 @@
+---
+title: Welcome email for {{ customer.name }}
+body: |
+  **Hi**,
+
+  Welcome {{ customer.name }}, this is an automated email.
+
+  You will be recieving email on {{ customer.start_date }}.
+
+  *The table below describes the configuration*
+
+  {{ table_data }}
+
+  *Questions?*
+  Please reach to the Open Source community.
+
+  Regards
+  Anonymous

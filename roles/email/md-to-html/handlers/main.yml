@@ -3,5 +3,5 @@
 - name: 'template email cleanup'
   delegate_to: localhost
   file:
-    path: '{{ email_template_temp_dir }}'
+    path: '{{ email_temp_dir.path }}'
     state: absent
