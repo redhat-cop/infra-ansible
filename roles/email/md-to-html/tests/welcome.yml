@@ -5,7 +5,7 @@ body: |
 
   Welcome {{ customer.name }}, this is an automated email.
 
-  You will be recieving email on {{ customer.start_date }}.
+  You will be receiving email on {{ customer.start_date }}.
 
   *The table below describes the configuration*
 
