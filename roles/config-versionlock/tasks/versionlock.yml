@@ -1,0 +1,7 @@
+---
+
+- name: "Add version locks for specified packages"
+  command: >
+    yum versionlock "{{ item }}"
+  with_items:
+    - "{{ versionlock_packages }}"
