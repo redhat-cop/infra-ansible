@@ -1,0 +1,9 @@
+---
+
+- name: "Install required packages"
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+  - python2-dnf-plugins-extras-versionlock
+  - python3-dnf-plugins-extras-versionlock

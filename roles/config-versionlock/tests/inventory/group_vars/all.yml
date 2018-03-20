@@ -1,0 +1,5 @@
+---
+
+versionlock_packages:
+  - 'bash-*'
+  - 'NetworkManager-1.8.6'

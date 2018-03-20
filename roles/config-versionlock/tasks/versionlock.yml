@@ -1,7 +1,8 @@
 ---
 
 - name: "Add version locks for specified packages"
-  command: >
-    yum versionlock "{{ item }}"
+  shell: >
+    {{ ansible_pkg_mgr }} versionlock {{ item }}
   with_items:
     - "{{ versionlock_packages }}"
+

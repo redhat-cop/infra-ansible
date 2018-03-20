@@ -1,8 +1,8 @@
 ---
 
-- name: 'Install required packages'
+- name: "Install required packages"
   package:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: installed
   with_items:
   - yum-plugin-versionlock
