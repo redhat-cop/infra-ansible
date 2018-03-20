@@ -14,7 +14,10 @@ Role Variables
 - versionlock_packages : a list of packages to lock, e.g.:
 
 ```
-versionlock_packages: [ 'docker-1.12.6', 'chrony-3.1-2' ]
+versionlock_packages:
+  - 'docker-1.12.6'
+  - 'chrony-3.1-2'
+  - 'bash-*'
 
 ```
 
