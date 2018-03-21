@@ -1,0 +1,6 @@
+---
+
+- name: "Configure SELinux"
+  selinux:
+    state: "{{ target_state | default('enforcing') }}"
+    policy: "{{ (target_state == 'disabled') | ternary(omit, target_policy) }}"
