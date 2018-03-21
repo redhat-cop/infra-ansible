@@ -1,0 +1,10 @@
+---
+
+- name: "Update the host"
+  package:
+    name: "*"
+    state: latest
+  register: host_updated
+  when: 
+    - pkg_update|default(False) 
+
