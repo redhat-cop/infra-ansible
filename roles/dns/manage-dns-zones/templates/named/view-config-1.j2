@@ -1,5 +1,7 @@
 
-view "{{ view.name }}" {
-	match-clients { "{{ view.name }}"; };
+view "{{ view_name }}" {
+	match-clients { "{{ view_name }}"; };
 
-	recursion {{ view.recursion | default(named_config_recursion) }};
+	recursion {{ view_recursion }};
+
+  # End of 'view' defined in the next template file

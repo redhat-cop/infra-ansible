@@ -7,7 +7,7 @@
 
 - include_tasks: process-zones.yml
   with_items:
-    -  "{{ dns_data }}"
+    -  "{{ dns_data.views }}"
   loop_control:
     loop_var: "view"
 
@@ -17,8 +17,9 @@
     dest: "/etc/named/named.conf.view"
   notify: restart named
 
-# re-factor to avoid using `dns_data` in the template
 - name: Setup ACLs
+  vars:
+    named_views: "{{ dns_data.views }}"
   template:
     src: named/acl.j2
     dest: /etc/named/named.conf.acl

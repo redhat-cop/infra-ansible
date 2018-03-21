@@ -13,7 +13,7 @@
     vpc_region: "{{ zone.route53.vpc_region }}"
     state: "{{ zone.state | default('present') }}"
   when:
-    - view.view == "private"
+    - view.name == "private"
 
 - name: Ensure the public zone is on the desired state
   route53_zone:
@@ -22,4 +22,4 @@
     zone: "{{ zone.dns_domain }}"
     state: "{{ zone.state | default('present') }}"
   when:
-    - view.view == "public"
+    - view.name == "public"

@@ -1,6 +1,8 @@
 ---
 
 - name: Setup Domain Keys configuration
+  vars:
+    named_views: "{{ dns_data.views }}"
   template:
     src: named/domain-keys.j2
     dest: /etc/named/named.conf.domain-keys
