@@ -10,7 +10,7 @@ docker_install: True
 docker_compose_install: True
 docker_username: bob
 vnc_server_install: False
-additional_tools_packages:
+list_of_packages_to_install:
 - git
 - screen
 - bash-completion
