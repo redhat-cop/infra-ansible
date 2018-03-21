@@ -1,62 +1,63 @@
 dns_data:
-- view: "private"
-  zones:
-    - dns_domain: "roletest1.com"
-      state: present
-      route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        vpc_id: vpc-9dcde6f8
-        vpc_region: eu-west-1
-      entries:
-      - type: A
-        hostname: server_a
-        ip: 192.168.1.1
-        ttl: 400
-        state: present
-      - type: A
-        hostname: server_b
-        ip: 192.168.1.2
-        ttl: 500
-        state: present
-    - dns_domain: "roletest2.com"
-      state: present
-      route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        vpc_id: vpc-9dcde6f8
-        vpc_region: eu-west-1
-      entries:
-      - type: A
-        hostname: server_a
-        ip: 192.168.1.1
-        ttl: 400
-        state: present
-      - type: A
-        hostname: server_b
-        ip: 192.168.1.2
-        ttl: 500
-        state: present
-- view: "public"
-  zones:
-    - dns_domain: "roletest3.com"
-      state: absent
-      route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-      entries:
-      - type: A
-        hostname: server_a
-        ip: 192.168.1.1
-        ttl: 400
-        state: present
-      - type: A
-        hostname: server_b
-        ip: 192.168.1.2
-        ttl: 500
-        state: present
-    - dns_domain: "roletest4.com"
-      state: absent
-      route53:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+  views:
+    - name: "private"
+      zones:
+        - dns_domain: "roletest1.com"
+          state: present
+          route53:
+            aws_access_key: "{{ aws_access_key }}"
+            aws_secret_key: "{{ aws_secret_key }}"
+            vpc_id: vpc-9dcde6f8
+            vpc_region: eu-west-1
+          entries:
+          - type: A
+            record: server_a
+            value: 192.168.1.1
+            ttl: 400
+            state: present
+          - type: A
+            record: server_b
+            value: 192.168.1.2
+            ttl: 500
+            state: present
+        - dns_domain: "roletest2.com"
+          state: present
+          route53:
+            aws_access_key: "{{ aws_access_key }}"
+            aws_secret_key: "{{ aws_secret_key }}"
+            vpc_id: vpc-9dcde6f8
+            vpc_region: eu-west-1
+          entries:
+          - type: A
+            record: server_a
+            value: 192.168.1.1
+            ttl: 400
+            state: present
+          - type: A
+            record: server_b
+            value: 192.168.1.2
+            ttl: 500
+            state: present
+    - name: "public"
+      zones:
+        - dns_domain: "roletest3.com"
+          state: absent
+          route53:
+            aws_access_key: "{{ aws_access_key }}"
+            aws_secret_key: "{{ aws_secret_key }}"
+          entries:
+          - type: A
+            record: server_a
+            value: 192.168.1.1
+            ttl: 400
+            state: present
+          - type: A
+            record: server_b
+            value: 192.168.1.2
+            ttl: 500
+            state: present
+        - dns_domain: "roletest4.com"
+          state: absent
+          route53:
+            aws_access_key: "{{ aws_access_key }}"
+            aws_secret_key: "{{ aws_secret_key }}"

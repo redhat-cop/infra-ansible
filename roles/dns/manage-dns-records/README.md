@@ -1,11 +1,9 @@
-## The rhc-ose ansible dns role
+## The infra-ansible manage-dns-records roles
 
 
-This role allows the caller to populate DNS records (currently only supports A records) based on input data (see example below). The caller may choose to use hostvars to access information from other hosts (e.g.: hostname and ip address) to create records. 
+This role allows the caller to populate DNS records based on input data (see example below). The caller may choose to use hostvars to access information from other hosts (e.g.: hostname and ip address) to create records.
 
-Both additions and removals are supported by this role, by the use of the `dns_records_rm` and `dns_records_add` variables (see example below).
-
-> NOTE: removal of records is done before additions
+Both additions and removals are supported by this role, by the use of the `dns_data` variable (see example below).
 
 
 Example Playbook
@@ -23,8 +21,8 @@ Example Playbook
         key_algorithm: "hmac-sha256"
         entries:
         - type: A
-          hostname: server_1
-          ip: 192.168.1.1
+          record: server_1
+          value: 192.168.1.1
       dns_records_add:
       - view: "private"
         zone: "first.example.com"
@@ -34,11 +32,11 @@ Example Playbook
         key_algorithm: "hmac-sha256"
         entries:
         - type: A
-          hostname: server_a
-          ip: 192.168.1.1
+          record: server_a
+          value: 192.168.1.1
         - type: A
-          hostname: server_b
-          ip: 192.168.1.2
+          record: server_b
+          value: 192.168.1.2
       - view: "private"
         server: "192.168.1.100"
         key_name: "my_private_key"
@@ -47,6 +45,6 @@ Example Playbook
         zone: "second.example.com"
         entries:
         - type: A
-          hostname: server_x
-          ip: 192.168.2.1
+          record: server_x
+          value: 192.168.2.1
 ```

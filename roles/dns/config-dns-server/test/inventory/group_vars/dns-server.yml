@@ -1,29 +1,10 @@
 ---
 
-named_config_recursion: 'no'
-named_config_dnssec_enable: 'yes'
-named_config_dnssec_validation: 'yes'
-named_config_dnssec_lookaside: 'no'
-named_config_views:
-- name: private
-  recursion: 'yes'
-  acl_entry: 
-  - 192.168.10.0/24
-  zone:
-  - dns_domain: first.example.com
-  - dns_domain: second.example.com
-  - dns_domain: third.example.com
-  - dns_domain: fifth.example.com
-  - dns_domain: forward.example.com
-    type: forward
-    forwarders:
-    - 192.168.10.17
-- name: public
-  zone:
-  - dns_domain: first.example.com
-  - dns_domain: second.example.com
-  - dns_domain: third.example.com
-  - dns_domain: forth.example.com
-  default_forwarders:
-  - 8.8.8.8
-  - 8.8.4.4
+named_config:
+  recursion: 'no'
+  dnssec_enable: 'yes'
+  dnssec_validation: 'yes'
+  dnssec_lookaside: 'no'
+  allow_transfer:
+    - 192.168.48.21
+    - 192.168.48.22
