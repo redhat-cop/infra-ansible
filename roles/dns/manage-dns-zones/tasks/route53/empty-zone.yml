@@ -12,7 +12,7 @@
     ttl: "{{ r53_record.0.TTL }}"
     type: "{{ r53_record.0.Type }}"
   when: (zone.dns_domain + "." == r53_zone.item.Name) and
-        (view.view == "private") and
+        (view.name == "private") and
         ((r53_record.0.Name != r53_zone.item.Name) and
         (r53_record.0.Type != "SOA") and
         (r53_record.0.Type != "NS"))
@@ -28,7 +28,7 @@
     value: "{{ r53_record.1.Value }}"
     type: "{{ r53_record.0.Type }}"
   when: (zone.dns_domain + "." == r53_zone.item.Name) and
-        (view.view == "public") and
+        (view.name == "public") and
         ((r53_record.0.Name != r53_zone.item.Name) and
         (r53_record.0.Type != "SOA") and
         (r53_record.0.Type != "NS"))
