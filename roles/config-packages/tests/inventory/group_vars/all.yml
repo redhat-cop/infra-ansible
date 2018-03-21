@@ -1,0 +1,6 @@
+---
+
+list_of_packages_to_install:
+ - 'vim'
+ - 'git'
+ - 'ansible'
