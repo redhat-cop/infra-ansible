@@ -1,9 +1,3 @@
 ---
 
-- block:
-   - include_tasks: nsupdate/main.yml
-  with_subelements:
-    - "{{ dns_data }}"
-    - zones
-  loop_control:
-    loop_var: dns   
+- include_tasks: nsupdate/main.yml
