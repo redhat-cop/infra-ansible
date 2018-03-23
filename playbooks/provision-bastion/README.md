@@ -42,5 +42,5 @@ How to run the playbook may depend on the options selected. However, below is an
 |lxde_install|Set to `True` if you'd like LXDE enabled on this host for a graphical UI (note XFCE or LXDE often works better than gnome for VNC)|
 |gnome_install|Set to `True` if you'd like gnome enabled on this host for a graphical UI|
 |vnc_server_install|Set to `True` if you'd like to enable a VNC server on this host for graphical access to the host|
-|additional_tools_packages|List of additional packages (RPMs) to be installed at the end of the bastion host preparation, e.g.: `['git', 'vim']`|
+|list_of_packages_to_install|List of additional packages (RPMs) to be installed at the end of the bastion host preparation, e.g.: `['git', 'vim']`|
 |timezone| `Optional` Timezone of the Bastion ie `America/Denver`|

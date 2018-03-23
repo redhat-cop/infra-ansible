@@ -19,4 +19,4 @@
   - role: config-xfce
   - role: config-lxde
   - role: config-vnc-server
-  - role: config-tools
+  - role: config-packages
