@@ -10,7 +10,7 @@
   register: existing_vms
 
 - name: 'Compose Command for new VM provisioning'
-  include: 'virt-install.yml'
+  include_tasks: 'virt-install.yml'
   when:
   - inventory_hostname == hostvars[vm]['infrahost']
   - hostvars[vm]['libvirt_name'] not in existing_vms.stdout_lines

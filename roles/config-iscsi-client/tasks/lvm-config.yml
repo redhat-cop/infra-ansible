@@ -1,6 +1,6 @@
 ---
 
-- include: configure_lvm.yml
+- include_tasks: configure_lvm.yml
   loop_control:
     loop_var: disk
   with_items:

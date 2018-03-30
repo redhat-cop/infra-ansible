@@ -1,5 +1,5 @@
 ---
 
-- include: prep.yml
-- include: lvm.yml
-- include: shares.yml
+- import_tasks: prep.yml
+- import_tasks: lvm.yml
+- import_tasks: shares.yml

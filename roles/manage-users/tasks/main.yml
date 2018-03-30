@@ -1,10 +1,10 @@
 ---
 
-- include: create_user.yml
+- import_tasks: create_user.yml
 
-- include: create_group.yml
+- import_tasks: create_group.yml
 
-- include: add_user_to_group.yml
+- include_tasks: add_user_to_group.yml
   with_items: "{{ user_groups }}"
   loop_control:
     loop_var: "this_group"

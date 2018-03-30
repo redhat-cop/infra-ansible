@@ -1,7 +1,7 @@
 ---
 
-- include: generate-passwords.yml
-- include: idm-set-passwd.yml
+- import_tasks: generate-passwords.yml
+- import_tasks: idm-set-passwd.yml
 
 - name: "New password list"
   debug:

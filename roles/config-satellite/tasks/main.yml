@@ -1,7 +1,7 @@
 ---
 
-- include: "prereq.yml"
-- include: "install.yml"
-- include: "manifest.yml"
-- include: "repos.yml"
-- include: "activation_keys.yml"
+- import_tasks: "prereq.yml"
+- import_tasks: "install.yml"
+- import_tasks: "manifest.yml"
+- import_tasks: "repos.yml"
+- import_tasks: "activation_keys.yml"

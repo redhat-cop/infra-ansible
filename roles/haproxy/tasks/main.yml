@@ -1,4 +1,4 @@
 ---
 
-- include: prereq.yml
-- include: haproxy.yml
+- import_tasks: prereq.yml
+- import_tasks: haproxy.yml

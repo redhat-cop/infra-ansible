@@ -1,5 +1,5 @@
 ---
 
-- include: prep.yml
-- include: pxe.yml
-- include: kickstart.yml
+- import_tasks: prep.yml
+- import_tasks: pxe.yml
+- import_tasks: kickstart.yml
