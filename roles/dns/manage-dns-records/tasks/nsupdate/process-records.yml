@@ -10,11 +10,12 @@
     record: "{{ item.record }}"
     value: "{{ item.value | default(omit) }}"
     type: "{{ item.type }}"
-    state: present
-  when:
-    - dns.1.entries is defined
+    ttl: "{{ item.ttl | default(omit) }}"
+    state: "{{ item.state | default(present) }}"
   with_items:
     - "{{ dns.1.entries }}"
+  when:
+    - dns.1.entries is defined
   register: nsupdate_result
   until: nsupdate_result | succeeded
   retries: 10
