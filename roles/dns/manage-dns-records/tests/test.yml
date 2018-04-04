@@ -2,4 +2,4 @@
 
 - hosts: localhost
   roles:
-  - role: dns
+  - role: dns/manage-dns-records
