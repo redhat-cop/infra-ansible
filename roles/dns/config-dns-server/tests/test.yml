@@ -2,4 +2,4 @@
 
 - hosts: dns-servers
   roles:
-  - role: config-dns-server
+  - role: dns/config-dns-server

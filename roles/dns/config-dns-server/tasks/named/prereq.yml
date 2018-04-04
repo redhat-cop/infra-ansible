@@ -11,6 +11,7 @@
     - python-firewall
     - libsemanage-python
     - python-dns
+    - libselinux-python
 
 - name: Enable named
   service:

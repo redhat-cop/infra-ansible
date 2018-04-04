@@ -1,0 +1,21 @@
+---
+
+- name: "Manage DNS records for view: {{ dns.0.name }}, zone: {{ dns.1.dns_domain }}, server: {{ nsupdate.server }}"
+  nsupdate:
+    server: "{{ nsupdate.server }}"
+    key_name: "{{ nsupdate.key_name }}"
+    key_secret: "{{ nsupdate.key_secret }}"
+    key_algorithm: "{{ nsupdate.key_algorithm }}"
+    zone: "{{ dns.1.dns_domain }}"
+    record: "{{ item.record }}"
+    value: "{{ item.value | default(omit) }}"
+    type: "{{ item.type }}"
+    state: present
+  when:
+    - dns.1.entries is defined
+  with_items:
+    - "{{ dns.1.entries }}"
+  register: nsupdate_result
+  until: nsupdate_result | succeeded
+  retries: 10
+  delay: 1

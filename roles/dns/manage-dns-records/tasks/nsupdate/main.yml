@@ -1,22 +1,8 @@
 ---
 
-- name: "Manage DNS records for view: {{ dns.0.view }}, zone: {{ dns.1.dns_domain }}"
-  nsupdate:
-    server: "{{ dns.1.nsupdate.server }}"
-    key_name: "{{ dns.1.nsupdate.key_name }}"
-    key_secret: "{{ dns.1.nsupdate.key_secret }}"
-    key_algorithm: "{{ dns.1.nsupdate.key_algorithm }}"
-    zone: "{{ dns.1.dns_domain }}"
-    record: "{{ item.record }}"
-    value: "{{ item.value | default(omit) }}"
-    type: "{{ item.type }}"
-    state: present
-  when:
-    - dns.1.nsupdate is defined
-    - dns.1.entries is defined
-  with_items:
-    - "{{ dns.1.entries }}"
-  register: nsupdate_result
-  until: nsupdate_result | succeeded
-  retries: 10
-  delay: 1
+- include_tasks: nsupdate-server.yml
+  with_subelements:
+    - "{{ dns_data.views }}"
+    - zones
+  loop_control:
+    loop_var: dns
