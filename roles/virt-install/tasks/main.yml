@@ -1,4 +1,4 @@
 ---
 
-- include: "prereq.yml"
-- include: "create_vm.yml"
+- import_tasks: "prereq.yml"
+- import_tasks: "create_vm.yml"

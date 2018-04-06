@@ -1,5 +1,5 @@
 ---
 
-- include: "prereq.yml"
-- include: "chrony.yml"
+- import_tasks: "prereq.yml"
+- import_tasks: "chrony.yml"
 

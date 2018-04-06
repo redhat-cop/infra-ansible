@@ -1,4 +1,4 @@
 ---
 
-- include: 'sshd-update.yml'
+- import_tasks: 'sshd-update.yml'
 

@@ -1,4 +1,4 @@
 ---
 
-- include: prereq.yml
-- include: keepalived-config.yml
+- import_tasks: prereq.yml
+- import_tasks: keepalived-config.yml

@@ -53,7 +53,7 @@
     dest: "{{ tftpserver_root_dir }}/pxelinux/grub.cfg"
 
 - name: "Generate target specific UEFI grub.cfg file"
-  include: pxe-target.yml
+  include_tasks: pxe-target.yml
   loop_control:
     loop_var: target_entry
   with_items:
