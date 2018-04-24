@@ -60,6 +60,16 @@
   when:
   - lxde_install|default(False)
 
+- name: "Add the xstartup (MATE) configuration to the main user"
+  copy :
+    src: xstartup-mate
+    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+  when:
+  - mate_install|default(False)
+
 - name: "Copy VNC service file into place" 
   copy:
     src: /usr/lib/systemd/system/vncserver@.service
