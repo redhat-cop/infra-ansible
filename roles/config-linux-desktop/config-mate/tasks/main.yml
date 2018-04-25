@@ -1,0 +1,13 @@
+---
+
+- name: "Install, configure and enable MATE Desktop"
+  include_tasks: "{{ distro_file }}"
+  with_first_found:
+  - files:
+    - mate-{{ ansible_distribution }}.yml
+    skip: true
+  loop_control:
+    loop_var: distro_file
+  when:
+  - mate_install|default(False)
+

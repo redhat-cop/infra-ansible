@@ -1,0 +1,71 @@
+---
+
+- name: "Move local user's home directory to allow for automount"
+  block:
+  - name: "Create temporary account used to move the main account home dir"
+    user:
+      name: "{{ temporary_username }}"
+      groups: wheel
+  - name: "Ensure new local home dir base path exists"
+    file:
+      path: "{{ new_local_home_dir }}"
+      state: directory
+  - name: "Ensure new local home .ssh dir exists"
+    file:
+      path: "/home/{{ temporary_username }}/.ssh"
+      state: directory
+      mode: 0700
+      owner: "{{ temporary_username }}"
+      group: "{{ temporary_username }}"
+  - name: "Copy over SSH key from the ansible_user"
+    copy:
+      src: "/home/{{ ansible_user }}/.ssh/authorized_keys"
+      dest: "/home/{{ temporary_username }}/.ssh/authorized_keys"
+      mode: 0600
+      owner: "{{ temporary_username }}"
+      group: "{{ temporary_username }}"
+      remote_src: True
+  - name: "Ensure SUDO access for temporary user"
+    lineinfile:
+      path: /etc/sudoers.d/10-local-user
+      regexp: "^{{ temporary_username }}"
+      line: "{{ temporary_username }} ALL=(ALL) NOPASSWD:ALL"
+      create: yes
+  - name: "Override the ansible_user now that a temporary user is enabled"
+    set_fact:
+      old_ansible_user: "{{ ansible_user }}"
+      ansible_user: "{{ temporary_username }}"
+  - name: "Wait for the previous user to finish up"
+    shell: "ps -eo uname | grep '{{ old_ansible_user }}'"
+    register: cmdoutput
+    until: cmdoutput.rc == 1
+    retries: 60
+    delay: 2
+    failed_when: False
+    changed_when: False
+  - name: "Move local sudo user home dir"
+    user:
+      name: "{{ old_ansible_user }}"
+      move_home: yes
+      home: "{{ new_local_home_dir }}/{{ old_ansible_user }}"
+  - name: "Switch back to the main sudo user"
+    set_fact:
+      ansible_user: "{{ old_ansible_user }}"
+  - name: "Wait for the previous user to finish up"
+    shell: "ps -eo uname | grep '{{ temporary_username }}'"
+    register: cmdoutput
+    until: cmdoutput.rc == 1
+    retries: 60
+    delay: 2
+    failed_when: false
+    changed_when: false
+  - name: "Remove the temporary user"
+    user:
+      name: "{{ temporary_username }}"
+      state: absent
+  - name: "Remove the sudo access for the temporary user"
+    file:
+      path: /etc/sudoers.d/10-local-user
+      state: absent
+  when:
+  - move_local_user_home|bool == True

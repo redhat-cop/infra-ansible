@@ -38,9 +38,10 @@ How to run the playbook may depend on the options selected. However, below is an
 |docker_install|Set to `True` if you'd like to enable docker on this host|
 |docker_username|Set to the desirable user (your username) to be added to the docker group (to allow for docker admin)|
 |docker_compose_install|Set to `True` if you'd like to have docker-compose installed on this host. NOTE: This will auto set docker_install=True (not supported on CentOS)|
-|xfce_install|Set to `True` if you'd like XFCE enabled on this host for a graphical UI (note XFCE or LXDE often works better than gnome for VNC)|
-|lxde_install|Set to `True` if you'd like LXDE enabled on this host for a graphical UI (note XFCE or LXDE often works better than gnome for VNC)|
+|xfce_install|Set to `True` if you'd like XFCE enabled on this host for a graphical UI (note MATE, XFCE or LXDE often works better than gnome for VNC)|
+|lxde_install|Set to `True` if you'd like LXDE enabled on this host for a graphical UI (note MATE, XFCE or LXDE often works better than gnome for VNC)|
 |gnome_install|Set to `True` if you'd like gnome enabled on this host for a graphical UI|
+|mate_install|Set to `True` if you'd like MATE Desktop enabled on this host for a graphical UI (note MATE, XFCE or LXDE often works better than gnome for VNC)|
 |vnc_server_install|Set to `True` if you'd like to enable a VNC server on this host for graphical access to the host|
 |list_of_packages_to_install|List of additional packages (RPMs) to be installed at the end of the bastion host preparation, e.g.: `['git', 'vim']`|
 |timezone| `Optional` Timezone of the Bastion ie `America/Denver`|
