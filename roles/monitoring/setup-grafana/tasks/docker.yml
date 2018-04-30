@@ -24,5 +24,5 @@
     volumes:
     - /home/centos/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:Z
     env:
-      GF_SECURITY_ADMIN_PASSWORD: super_secure_password
+      GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_password }}"
     state: "{{ provision_state }}"
