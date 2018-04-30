@@ -1,0 +1,10 @@
+---
+- name: Run the node_exporter
+  docker_container:
+    name: node_exporter
+    image: "{{ node_exporter_image }}:{{ node_exporter_image_version }}"
+    pid_mode: "host"
+    network_mode: "host"
+    state: "{{ provision_state }}"
+    published_ports:
+    - "{{ node_exporter_port }}:9100"

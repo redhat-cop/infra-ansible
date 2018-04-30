@@ -1,0 +1,20 @@
+---
+- name: Run the prometheus.yml template
+  template:
+    src: prometheus.yml.j2
+    dest: /home/centos/prometheus.yml
+    mode: 0755
+    owner: centos
+    group: centos
+  vars:
+    target_nodes: "{{ groups['prom_node'] }}"
+
+- name: Run Prometheus Docker container
+  docker_container:
+    name: prometheus
+    image: "{{ prometheus_image }}:{{ prometheus_image_version }}"
+    published_ports:
+    - "{{ prometheus_port }}:9090"
+    volumes:
+    - /home/centos/prometheus.yml:/etc/prometheus/prometheus.yml:Z
+    state: "{{ provision_state }}"

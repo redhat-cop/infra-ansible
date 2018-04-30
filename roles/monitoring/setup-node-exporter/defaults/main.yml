@@ -1,0 +1,6 @@
+---
+node_exporter_image: 'prom/node-exporter'
+node_exporter_image_version: 'latest'
+node_exporter_port: '9100'
+
+provision_state: "started"

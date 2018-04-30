@@ -1,0 +1,6 @@
+---
+- name: Run prereqs
+  import_tasks: prereqs.yml
+
+- name: Run the docker images
+  import_tasks: docker.yml

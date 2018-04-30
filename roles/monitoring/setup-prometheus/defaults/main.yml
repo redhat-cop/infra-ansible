@@ -1,0 +1,6 @@
+---
+prometheus_image: 'prom/prometheus'
+prometheus_image_version: 'latest'
+prometheus_port: '9090'
+
+provision_state: "started"

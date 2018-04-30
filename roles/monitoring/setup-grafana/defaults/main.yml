@@ -1,0 +1,8 @@
+---
+grafana_image: 'grafana/grafana'
+grafana_image_version: 'latest'
+grafana_port: '3000'
+
+prometheus_port: '9090'
+
+provision_state: "started"

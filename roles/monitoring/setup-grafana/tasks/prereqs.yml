@@ -1,0 +1,19 @@
+---
+- name: Ensure epel-release is installed
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - epel-release
+
+- name: Ensure pip is installed
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - python-pip
+
+- name: Install required python libraries
+  pip:
+    name: "docker-py"
+    state: present
