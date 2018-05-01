@@ -1,0 +1,24 @@
+---
+
+- name: "Send HTML e-mail message to a list of users who are members of a group"
+  hosts: mail-host
+  gather_facts: no
+  tasks:
+  - include_vars:
+      file: "{{ email_content_file }}"
+  - include_role:
+      name: notifications/md-to-html
+      vars:
+        markdown_content: "{{ body }}"
+  - set_fact:
+      mail:
+        subject: "{{ subject }}"
+        body: "{{ md_to_html.html_body_message }}"
+  - include_role:
+      name: roles/user-management/list-users-by-group
+  - set_fact:
+      list_of_mail_to: "{{ list_of_mail_to | default([]) }} + [ {{ item.email }} ]"
+    with_items: 
+    - "{{ list_of_users }}"
+  - include_role:
+      name: notifications/send-email

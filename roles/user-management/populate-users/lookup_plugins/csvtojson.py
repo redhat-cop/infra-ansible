@@ -3,6 +3,7 @@ from ansible.plugins.lookup import LookupBase
 
 import csv
 import json
+import os
 
 try:
     from __main__ import display
@@ -17,8 +18,7 @@ class LookupModule(LookupBase):
 
         ret = []
 
-        #Needed for Ansible 2.1.2.0
-        basedir = self.get_basedir(variables)
+        cwd = os.getcwd()
 
         for term in terms:
 
@@ -39,13 +39,10 @@ class LookupModule(LookupBase):
             except (ValueError, AssertionError) as e:
                 raise AnsibleError(e)
 
-            display.debug("File lookup term: %s" % term)
-
-            # Find the file in the expected search path - version 2.1.2.0
-            lookupfile = self._loader.path_dwim_relative(basedir, 'files', paramvals['file'])
-            
-            #Newer version of ansible uses this lookup - 
-            #lookupfile = self.find_file_in_search_path(variables, 'files', term)
+            if os.path.isabs(paramvals['file']):
+              lookupfile = paramvals['file']
+            else:
+              lookupfile = cwd + '/' + paramvals['file']
 
             display.vvvv(u"File lookup using %s as file" % paramvals['file'])
             try:
