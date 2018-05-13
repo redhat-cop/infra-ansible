@@ -2,13 +2,11 @@ def set_user_flags(entry):
 
     data = {
         'generate_password': False,
-	'notify_user': False
+        'notify_user': False
     }
 
     if 'user' in entry.keys() and 'has_password' in entry['user'].keys() and entry['user']['has_password'] == False:
         data['generate_password'] = True
-
-    if entry['changed'] == True:
         data['notify_user'] = True
 
     return data
