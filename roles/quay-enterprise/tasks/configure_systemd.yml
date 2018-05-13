@@ -1,0 +1,21 @@
+---
+
+- name: Configure systemd environment files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  notify: "Restart quay service"
+  with_items:
+    - { src: quay.j2, dest: "{{ systemd_environmenfile_dir}}/{{ quay_name }}" }
+    - { src: postgresql.j2, dest: "{{ systemd_environmenfile_dir}}/{{ postgresql_name }}" }
+    - { src: redis.j2, dest: "{{ systemd_environmenfile_dir}}/{{ redis_name }}" }
+
+- name: Configure systemd unit files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  notify: "Restart quay service"
+  with_items:
+    - { src: quay.service.j2, dest: "{{ systemd_service_dir}}/{{ quay_service }}" }
+    - { src: postgresql.service.j2, dest: "{{ systemd_service_dir}}/{{ postgresql_service }}" }
+    - { src: redis.service.j2, dest: "{{ systemd_service_dir}}/{{ redis_service }}" }
