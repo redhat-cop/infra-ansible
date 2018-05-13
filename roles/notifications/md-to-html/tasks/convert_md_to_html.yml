@@ -1,0 +1,12 @@
+---
+
+- name: "Convert markdown(md) to HTML"
+  shell: >
+    echo "{{ markdown_content }}" | pandoc -f markdown -t html
+  register: result
+
+- name: "Store away converted Markdown(md) in a dict"
+  set_fact:
+    md_to_html: 
+      html_body_message: "<html><body>{{ result.stdout }}</body></html>"
+      html_message: "{{ result.stdout }}"
