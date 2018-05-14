@@ -1,8 +1,12 @@
 ---
 
 - name: "Import user data from {{ csv_doc_file_name }} and create users"
-  hosts: localhost
+  hosts: identity-hosts
+  gather_facts: no
   roles:
-    - populate-users
-    - manage-users
-    - manage-user-passwd
+    - user-management/populate-users
+    - user-management/manage-users
+    - user-management/manage-user-passwd
+
+- name: "Notify users"
+  import_playbook: ../notifications/email-notify-users.yml

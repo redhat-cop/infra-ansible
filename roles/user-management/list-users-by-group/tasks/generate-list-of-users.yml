@@ -1,0 +1,10 @@
+---
+
+- name: "Populate list of users"
+  set_fact:
+    list_of_users: "{{ list_of_users | default([]) }} + [ {{ item }} ]"
+  when:
+  - item.user_name in user_group.members
+  with_items:
+  - "{{ users }}"
+

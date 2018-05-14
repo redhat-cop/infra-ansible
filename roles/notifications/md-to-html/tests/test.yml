@@ -1,0 +1,12 @@
+---
+
+- name: Test converting MD to HTML
+  hosts: localhost
+  roles:
+    - notifications/md-to-html
+  tasks:
+    - debug:
+        msg: "{{ md_to_html.html_body_message }}"
+    - debug:
+        msg: "{{ md_to_html.html_message }}"
+

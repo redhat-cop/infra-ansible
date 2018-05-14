@@ -1,0 +1,10 @@
+---
+- name: Install mongodb
+  hosts: dbserver
+  become: yes
+  vars:
+    mongodb_ver: 3.4
+    os_family: redhat
+    os_ver: 7
+  roles:
+    - install-mongodb

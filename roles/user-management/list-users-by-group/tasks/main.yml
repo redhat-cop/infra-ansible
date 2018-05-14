@@ -1,0 +1,11 @@
+---
+
+- name: "Find users part of group and generate list of users"
+  include_tasks: generate-list-of-users.yml
+  when:
+  - user_group.name == target_group
+  with_items:
+  - "{{ user_groups }}"
+  loop_control:
+    loop_var: user_group
+

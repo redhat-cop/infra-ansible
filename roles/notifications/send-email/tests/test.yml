@@ -1,0 +1,8 @@
+---
+# This test covers the full feature set provided by the role
+
+- name: Test email/send role
+  hosts: localhost
+
+  roles:
+    - email/send
