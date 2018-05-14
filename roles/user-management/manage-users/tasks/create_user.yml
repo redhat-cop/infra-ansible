@@ -20,7 +20,7 @@
 
   - name: "Create password generation dataset"
     set_fact: 
-       users: "{{ users + [idm_data.item | combine(idm_data.user | set_generate_password) ] }}"
+       users: "{{ users + [idm_data.item | combine(idm_data | set_user_flags) ] }}"
     with_items: "{{ idm_user_list.results }}"
     loop_control:
       loop_var: idm_data

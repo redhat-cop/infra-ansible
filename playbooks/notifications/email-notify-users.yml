@@ -1,0 +1,17 @@
+---
+
+- name: "Send HTML e-mail message to a user"
+  hosts: mail-host
+  gather_facts: no
+  tasks:
+  - include_tasks: email-notify-single-user.yml
+    vars:
+      first_name: "{{ item.first_name }}"
+      user_name: "{{ item.user_name }}"
+      password: "{{ item.password }}"
+      email_to: "{{ item.email }}"
+    when:
+    - item.notify_user == True
+    with_items:
+    - "{{ users }}"
+

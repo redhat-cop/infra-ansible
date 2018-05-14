@@ -1,0 +1,36 @@
+---
+
+users:
+- user_name: user1
+  first_name: user
+  last_name: one
+  email: user1@example.com
+- user_name: user2
+  first_name: user
+  last_name: two
+  email: user2@example.com
+- user_name: user3
+  first_name: user
+  last_name: three
+  email: user3@example.com
+- user_name: user4
+  first_name: user
+  last_name: four
+  email: user4@example.com
+- user_name: user5
+  first_name: user
+  last_name: five
+  email: user5@example.com
+
+user_groups:
+- name: group1
+  members:
+  - user1
+  - user2
+  - user3
+- name: group2
+  members:
+  - user2
+  - user4
+  - user5
+

@@ -1,0 +1,9 @@
+---
+
+- hosts: manage-users-host
+  gather_facts: no
+  roles:
+  - role: list-users-by-group 
+  tasks:
+  - debug:
+      msg: "{{ list_of_users }}"
