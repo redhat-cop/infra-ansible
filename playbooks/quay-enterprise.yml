@@ -2,9 +2,6 @@
 
 - name: Install Quay Enterprise
   hosts: quay_enterprise
-  vars:
-    docker_username: root
-    docker_install: false
   tasks:
     - name: Configure Docker
       include_role:
