@@ -1,0 +1,5 @@
+docker_dev: /dev/vdb
+docker_vg: docker-vol
+docker_data_size: 95%VG
+container_root_lv_name: dockerlv
+container_root_lv_mount_path: /var/lib/docker
