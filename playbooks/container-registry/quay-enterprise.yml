@@ -5,7 +5,7 @@
   tasks:
     - name: Configure Docker
       include_role:
-        name: container-storage-setup
+        name: config-container-storage-setup
       when: docker_install|default(false)
 
     - name: Install Docker
@@ -15,5 +15,5 @@
 
     - name: Include Quay Role
       include_role:
-        name: quay-enterprise
+        name: config-quay-enterprise
 
