@@ -36,7 +36,7 @@ quay_registry_auth: "<Base64 encoded value in Basic Authentication format (usern
 - name: Install Quay Enterprise
   hosts: quay_enterprise
   roles:
-    - role: quay-enterprise
+    - role: config-quay-enterprise
 ```
 
 ## License
