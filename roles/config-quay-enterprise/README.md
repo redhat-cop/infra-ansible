@@ -14,7 +14,9 @@ This role contains a number of variables to customize the deployment of Quay Ent
 |---|---|---|
 |quay_registry_server|Image server containing Quay images|`quay.io`|
 |quay_registry_auth|Authentication credentials to pull images from the Quay registry|``|
+|database_type|Database to use (`postgresql` or `mysql`)|`postgresql`|
 |postgresql_image|PostgreSQL image|`registry.access.redhat.com/rhscl/postgresql-96-rhel7:latest`|
+|mysql_image|MySQL image|`registry.access.redhat.com/rhscl/mysql-57-rhel7:latest`|
 |redis_image|Redis image|`quay.io/quay/redis:latest`|
 |quay_image|Quay Enterprise image|`quay.io/coreos/quay:v2.9.1`|
 |quay_server_hostname|Hostname configured within Quay| `inventory_hostname` Ansible variable|
@@ -36,7 +38,7 @@ quay_registry_auth: "<Base64 encoded value in Basic Authentication format (usern
 - name: Install Quay Enterprise
   hosts: quay_enterprise
   roles:
-    - role: quay-enterprise
+    - role: config-quay-enterprise
 ```
 
 ## License
