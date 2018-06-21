@@ -37,4 +37,3 @@
   - role: update-host
   tags:
   - update_host
- 

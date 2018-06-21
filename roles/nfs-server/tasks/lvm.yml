@@ -5,5 +5,5 @@
   register: lvm_check
   ignore_errors: yes
 
-- include: configure_lvm.yml
+- include_tasks: configure_lvm.yml
   when: lvm_check.rc != 0

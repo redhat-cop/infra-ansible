@@ -2,29 +2,29 @@
 
 - name: Include Docker related configuration (if enabled)
   when: '"docker" in nagios_services'
-  include: nrpe_docker.yml
+  include_tasks: nrpe_docker.yml
 
 - name: Include DNS related configuration (if enabled)
   when: '"dns" in nagios_services'
-  include: nrpe_dns.yml
+  include_tasks: nrpe_dns.yml
 
 - name: Include NFS related configuration (if enabled)
   when: '"nfs" in nagios_services'
-  include: nrpe_nfs.yml
+  include_tasks: nrpe_nfs.yml
 
 - name: Include Memory related configuration
-  include: nrpe_mem.yml
+  import_tasks: nrpe_mem.yml
 
 - name: Include Disk related configuration
-  include: nrpe_disk.yml
+  import_tasks: nrpe_disk.yml
 
 - name: Include OpenShift Master related configuration (if enabled)
   when: '"openshift-master" in nagios_services'
-  include: nrpe_openshift_master.yml
+  include_tasks: nrpe_openshift_master.yml
 
 - name: Include OpenShift Node related configuration (if enabled)
   when: '"openshift-node" in nagios_services'
-  include: nrpe_openshift_node.yml
+  include_tasks: nrpe_openshift_node.yml
 
 - name: Adjust the number of total processes allowed
   lineinfile:
@@ -50,7 +50,7 @@
     firewall_protocol: "tcp"
  
 - name: Update the firewall configuration
-  include: firewall.yml
+  import_tasks: firewall.yml
 
 - name: Ensure NRPE is enabled at boot
   service:
@@ -61,4 +61,3 @@
   service:
     name: nrpe
     state: restarted
-
