@@ -72,6 +72,11 @@ dns_data:
         - dns_domain: first.example.com
           state: present
           named: True
+          route53:
+            aws_access_key: "ADFGIASDF343FMSDFF5431A"
+            aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
+            vpc_id: vpc-9dcde6f8
+            vpc_region: eu-west-1
           nsupdate:
             - server: "192.168.48.26"
               key_name: "private-first.example.com"
@@ -81,10 +86,12 @@ dns_data:
             - type: A
               record: master
               value: 172.16.10.20
+              ttl: 60
               state: present
             - type: A
               record: node1
               value: 172.16.10.21
+              ttl: 60
               state: present
         - dns_domain: second.example.com
           state: present
@@ -116,10 +123,8 @@ dns_data:
       zones:
         - dns_domain: first.example.com
           route53:
-            aws_access_key: "{{ aws_access_key }}"
-            aws_secret_key: "{{ aws_secret_key }}"
-            vpc_id: vpc-9dcde6f8
-            vpc_region: eu-west-1
+            aws_access_key: "ADFGIASDF343FMSDFF5431A"
+            aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
           entries:
             - type: A
               record: master
