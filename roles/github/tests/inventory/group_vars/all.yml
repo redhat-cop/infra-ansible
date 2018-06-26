@@ -1,4 +1,4 @@
-github_org_name: rht-labs
+github_org_name: a-github-org
 github_api_username: aGithubUser
 github_api_password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
