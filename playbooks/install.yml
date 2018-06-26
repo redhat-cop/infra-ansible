@@ -1,13 +1,13 @@
 ---
 
-- include: "prep.yml"
+- import_playbook: "prep.yml"
 
-- include: "infra-hosts.yml"
+- import_playbook: "infra-hosts.yml"
 
-- include: "infra-virt-hosts.yml"
+- import_playbook: "infra-virt-hosts.yml"
 
-- include: "vm.yml"
+- import_playbook: "vm.yml"
 
-- include: "services.yml"
+- import_playbook: "services.yml"
 
-- include: "lb-vms.yml"
+- import_playbook: "lb-vms.yml"

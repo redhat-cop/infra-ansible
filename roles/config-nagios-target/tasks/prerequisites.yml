@@ -1,7 +1,6 @@
 ---
 
 # Ensure the correct repos and software packages are installed
-#- include: enable-repos.yml
-#- include: install-epel.yml
-#- include: install-nagios.yml
-
+#- import_tasks: enable-repos.yml
+#- import_tasks: install-epel.yml
+#- import_tasks: install-nagios.yml

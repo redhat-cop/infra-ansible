@@ -1,6 +1,6 @@
 ---
 
-- include: 'password.yml'
+- include_tasks: 'password.yml'
   when: 
   - user_name is defined
   - user_name|trim != ""
