@@ -7,6 +7,11 @@ rabbitmq_password: "rabbitmq_password01"
 # Update this to a valid tower license file
 #tower_license_file: "{{ inventory_dir }}/../files/tower-license.json"
 
+# Update this to a valid tower cert and key 
+#tower_custom_ssl_certificate:
+#   cert: "{{ inventory_dir }}/../certs/tower.cert"
+#   key: "{{ inventory_dir }}/../certs/tower.key"
+
 # Overall flag to indicate if LDAP should be configured or not
 ldap_config: False
 
