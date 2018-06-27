@@ -9,12 +9,12 @@
   with_items:
   - "{{ existing_teams_output.rest_output }}"
     
-- name: "Obtain user id based on the user name"
+- name: "Obtain user id based on the username"
   set_fact:
     object_id: "{{ item.id }}" 
   when:
   - permissions_object == "users"
-  - item.name|trim == permissions_value.name|trim
+  - item.username|trim == permissions_value.name|trim
   with_items:
   - "{{ existing_users_output.rest_output }}"
 
