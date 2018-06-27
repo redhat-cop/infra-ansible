@@ -3,4 +3,4 @@
   remote_user: root
   tasks:
     - include_role:
-        name: "{{ playbook_dir }}/../../github"
+        name: "{{ playbook_dir }}/../../github.com"
