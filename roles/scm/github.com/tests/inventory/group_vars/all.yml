@@ -8,7 +8,8 @@ github_api_password: !vault |
       38623834633062333931633933636435376166613935643238306138636136663537383634346263
       3537
 
-team_name: The Avengers
+team:
+  name: The Avengers
 
 repos:
 - repo_name: test-ci-cd

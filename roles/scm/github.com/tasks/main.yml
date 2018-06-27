@@ -1,5 +1,5 @@
 ---
-- name: Concatenate the public keys
+- name: Concatenate the users
   set_fact:
     list_of_users: "{{ users | join(',') }}"
 
@@ -15,15 +15,15 @@
     status_code: 201
     body_format: json
     body: '{
-             "name": "{{ team_name }}",
-             "description": "A great team",
-             "permission": "admin",
-             "privacy": "closed",
+             "name": "{{ team.name }}",
+             "description": "{{ team.description | default(team.name) }}",
+             "permission": "{{ team.permission | default("admin") }}",
+             "privacy": "{{ team.privacy | default("closed") }}",
              "maintainers": [ {{ list_of_users }} ]
            }'
   register: teams_json_response
 
-- name: Add CI/CD Repo to existing Github Organization
+- name: Add Repo to existing Github Organization
   uri:
     url: '{{ github_api_repos }}'
     headers:
@@ -57,7 +57,7 @@
     read_only: "{{ item.deploy_key_read_only | default('no') }}"
     username: "{{ github_api_username }}"
     password: "{{ github_api_password }}"
-    otp: 123456
+    otp: "{{ otp | default('123456') }}"
   with_items: "{{ repos }}"
   register: deploy_keys_json_response
 
@@ -65,6 +65,7 @@
   tempfile:
     state: directory
   register: tmp_dir
+  notify: github.com cleanup temp
 
 - name: Seed Repo with another repo
   git:
