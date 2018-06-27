@@ -57,7 +57,7 @@
     read_only: "{{ item.deploy_key_read_only | default('no') }}"
     username: "{{ github_api_username }}"
     password: "{{ github_api_password }}"
-    otp: "{{ otp | default('123456') }}"
+    otp: "{{ github_api_otp | default('123456') }}"
   with_items: "{{ repos }}"
   register: deploy_keys_json_response
 
