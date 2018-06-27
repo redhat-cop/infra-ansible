@@ -56,6 +56,8 @@ Example Inventory
 ----------------
 
 ```
+print_dns_keys: True
+
 dns_data:
   named_global_config:
     recursion: 'no'
@@ -68,6 +70,8 @@ dns_data:
         recursion: 'yes'
         acl_entry:
           - 192.168.10.0/24
+      default_forwarders:
+      - 8.8.8.8
       zones:
         - dns_domain: first.example.com
           state: present
