@@ -5,7 +5,7 @@
   ignore_errors: yes
 
 - name: 'Install mongodb if not installed'
-  include: 'install_mongodb.yml'
+  include_tasks: 'install_mongodb.yml'
   when: mongod_check != '/usr/bin/mongod'
 
 - name: 'Start MongoDB'
