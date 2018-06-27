@@ -1,0 +1,5 @@
+---
+# defaults file for gitlab
+gitlab_api_base: https://gitlab.com/api/v4
+gitlab_api_projects: "{{ gitlab_api_base }}/projects"
+gitlab_api_groups: "{{ gitlab_api_base }}/groups"

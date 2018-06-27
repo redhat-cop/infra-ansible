@@ -1,0 +1,88 @@
+---
+- name: Create new Gitlab Group in {{ gitlab_group_name }}
+  uri:
+    url: '{{ gitlab_api_groups }}'
+    headers:
+      Accept: application/json
+      Private-Token: '{{ gitlab_api_private_token }}'
+    method: POST
+    status_code: 201
+    body_format: json
+    body: '{
+             "name": "{{ group.name }}",
+             "path": "{{ group.path | default(group.name) }}",
+             "description": "{{ group.description | default(group.name) }}",
+             "visibility": "{{ group.visibility | default("private") }}",
+             "lfs_enabled": {{ group.lfs_enabled | default("false") }},
+             "request_access_enabled": {{ group.request_access_enabled | default("false") }},
+           }'
+  register: groups_json_response
+
+- debug: msg={{ groups_json_response.json.id }}
+
+- name: Add Users to Gitlab Group
+  uri:
+    url: '{{ gitlab_api_groups }}/{{ group.name }}/members'
+    headers:
+      Accept: application/json
+      Private-Token: '{{ gitlab_api_private_token }}'
+    method: POST
+    status_code: 201
+    body_format: json
+    body: '{
+             "user_id": "{{ item.id }}",
+             "access_level": "{{ item.access_level | default(40) }}"
+           }'
+  register: users_json_response
+  with_items: "{{ users }}"
+
+- debug: msg={{ users_json_response }}
+
+- name: Add Project to existing Gitlab Group
+  uri:
+    url: '{{ gitlab_api_projects }}'
+    headers:
+      Accept: application/json
+      Private-Token: '{{ gitlab_api_private_token }}'
+    method: POST
+    status_code: 201
+    body_format: json
+    body: '{
+             "name": "{{ item.repo_name }}",
+             "path": "{{ item.path | default(item.repo_name) }}",
+             "namespace_id": {{ groups_json_response.json.id }},
+             "description": "{{ item.description | default(item.repo_name) }}",
+             "issues_enabled": {{ item.issues_enabled | default("true") }},
+             "merge_requests_enabled": {{ item.merge_requests_enabled | default("true") }},
+             "wiki_enabled": {{ item.wiki_enabled | default("true") }},
+             "visibility": "{{ item.visibility | default("private") }}",
+             "import_url": "{{ item.import_url }}",
+             "lfs_enabled": {{ item.lfs_enabled | default("false") }},
+             "printing_merge_request_link_enabled": {{ item.printing_merge_request_link_enabled | default("true") }}
+           }'
+  register: projects_json_response
+  with_items: "{{ projects }}"
+
+- debug: msg={{ projects_json_response }}
+
+- name: Add a new deploy key to the gitlab repositories
+  uri:
+    url: '{{ gitlab_api_projects }}/{{ item.1.json.id }}/deploy_keys'
+    headers:
+      Accept: application/json
+      Private-Token: '{{ gitlab_api_private_token }}'
+    method: POST
+    status_code: 201
+    body_format: json
+    body: '{
+             "title": "deploy-key-{{ item.0.repo_name }}",
+             "key": "{{ item.0.deploy_key_location }}",
+             "can_push": {{ item.0.can_push | default("true") }}
+           }'
+  register: deploy_keys_json_response
+  when: item.0.repo_name == item.1.json.name
+  with_together:
+    - "{{ projects }}"
+    - "{{ projects_json_response.results }}"
+
+- debug: msg={{ deploy_keys_json_response }}
