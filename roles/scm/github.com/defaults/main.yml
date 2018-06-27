@@ -1,0 +1,6 @@
+---
+# defaults file for github
+github_api_base: https://api.github.com/orgs/{{ github_org_name }}
+github_api_proj: "{{ github_api_base }}/projects"
+github_api_teams: "{{ github_api_base }}/teams"
+github_api_repos: "{{ github_api_base }}/repos"

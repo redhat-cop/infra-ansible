@@ -1,0 +1,89 @@
+---
+- name: Concatenate the users
+  set_fact:
+    list_of_users: "{{ users | join(',') }}"
+
+- name: Create new Github Team in {{ github_org_name }}, and add users {{ users }}
+  uri:
+    url: '{{ github_api_teams }}'
+    headers:
+      Accept: application/vnd.github.hellcat-preview+json
+    method: POST
+    user: '{{ github_api_username }}'
+    password: '{{ github_api_password }}'
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json
+    body: '{
+             "name": "{{ team.name }}",
+             "description": "{{ team.description | default(team.name) }}",
+             "permission": "{{ team.permission | default("admin") }}",
+             "privacy": "{{ team.privacy | default("closed") }}",
+             "maintainers": [ {{ list_of_users }} ]
+           }'
+  register: teams_json_response
+
+- name: Add Repo to existing Github Organization
+  uri:
+    url: '{{ github_api_repos }}'
+    headers:
+      Accept: application/json
+    method: POST
+    user: '{{ github_api_username }}'
+    password: '{{ github_api_password }}'
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json
+    body: '{
+             "name": "{{ item.repo_name }}",
+             "description": "{{ item.description }}",
+             "homepage": "https://github.com",
+             "private": {{ item.private_repo_bool | default("false") }},
+             "has_issues": {{ item.has_issues | default("true") }},
+             "has_projects": {{ item.has_projects | default("false") }},
+             "has_wiki": {{ item.has_wiki | default("true") }},
+             "team_id": {{ teams_json_response.json.id }},
+             "auto_init": {{ item.auto_init | default("false") }}
+           }'
+  with_items: "{{ repos }}"
+  register: repos_json_response
+
+- name: Add a new deploy key to the GitHub repositories using basic authentication
+  github_deploy_key:
+    organization: "{{ github_org_name }}"
+    repo: "{{ item.repo_name }}"
+    name: "deploy-key-{{ item.repo_name }}"
+    key: "{{ item.deploy_key_location }}"
+    read_only: "{{ item.deploy_key_read_only | default('no') }}"
+    username: "{{ github_api_username }}"
+    password: "{{ github_api_password }}"
+    otp: "{{ github_api_otp | default('123456') }}"
+  with_items: "{{ repos }}"
+  register: deploy_keys_json_response
+
+- name: "Create a temporary directory to use"
+  tempfile:
+    state: directory
+  register: tmp_dir
+  notify: github.com cleanup temp
+
+- name: Seed Repo with another repo
+  git:
+    repo: '{{ item.seed_repo_url }}'
+    dest: '{{ tmp_dir.path }}/{{ item.repo_name }}'
+    version: '{{ item.seed_repo_version | default("HEAD") }}'
+  with_items: '{{ repos }}'
+
+- name: Set seed repo to new locations
+  command: >
+    git remote set-url origin https://{{ github_api_username }}:{{ github_api_password }}@github.com/{{ github_org_name }}/{{ item.repo_name }}.git
+  args:
+    chdir: "{{ tmp_dir.path }}/{{ item.repo_name }}"
+  with_items: "{{ repos }}"
+
+- name: Push repos up to new locations
+  command: >
+    git push origin master
+  args:
+    chdir: "{{ tmp_dir.path }}/{{ item.repo_name }}"
+  with_items: "{{ repos }}"
