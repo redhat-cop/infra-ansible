@@ -40,13 +40,13 @@ A dictionary, `dns_data`, with the following variables is expected:
       - dns_domain: The Domain Name for the Hosted Zone
   - state: The desired state, present or absent
 
-    Role specific variables for **`route53`**
-    -----------------------------------------
-    - route53: To interact with route53 dns provider
-      - aws_access_key: AWS key ID, defined on AWS_ACCESS_KEY_ID environment variable
-      - aws_secret_key: AWS secret KEY, defined on AWS_SECRET_ACCESS_KEY environment variable
-      - vpc_id: This variable is required when creating private Zones
-      - vpc_region: This variable is required when creating private Zones
+  Role specific variables for **`route53`**
+  -----------------------------------------
+  - route53: To interact with route53 dns provider
+    - aws_access_key: AWS key ID, defined on AWS_ACCESS_KEY_ID environment variable
+    - aws_secret_key: AWS secret KEY, defined on AWS_SECRET_ACCESS_KEY environment variable
+    - vpc_id: This variable is required when creating private Zones
+    - vpc_region: This variable is required when creating private Zones
 
 
 

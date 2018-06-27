@@ -33,19 +33,7 @@ Including an example of how to use your role (for instance, with variables passe
 Example Inventory
 ----------------
 
-```
-named_config:
-  recursion: 'no'
-  dnssec_enable: 'yes'
-  dnssec_validation: 'yes'
-  dnssec_lookaside: 'no'
-  allow_query:
-    - 192.168.48.21
-    - 192.168.48.22
-  allow_transfer:
-    - 192.168.48.21
-    - 192.168.48.22
-```
+See README one level up.
 
 
 License
