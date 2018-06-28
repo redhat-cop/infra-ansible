@@ -1,0 +1,32 @@
+---
+ansible_user: cloud-user
+ansible_become: True
+idm_master_hostname: idm.example.com
+idm_domain: example.com
+idm_realm: example.com
+idm_dm_password: my_dm_password
+idm_admin_password: my_admin_password
+rhsm_username: my_rhsm_username
+rhsm_password: my_rhsm_password
+rhsm_pool: my_pool_id
+rhsm_repos:
+ - rhel-7-server-rpms
+ - rhel-7-server-extras-rpms
+
+dns_records:
+  view: "example.com"
+  server: "my_ip"
+  reverse:
+    zone: "myzone"
+    key_name: 'reverse_key_name'
+    key_secret: 'key_secret'
+    key_algorithm: 'hmac-sha256'
+    hostname: '11'
+    target: 'idm.example.com.'
+  forward:
+    zone: "myzone"
+    key_name: 'forward_key_name'
+    key_secret: 'my_key_secret'
+    key_algorithm: 'hmac-sha256'
+    hostname: 'idm'
+    ip: 'my_ip'

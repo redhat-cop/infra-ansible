@@ -1,0 +1,8 @@
+[idm]
+idm.example.com
+
+[dns-server]
+localhost ansible_connection=local
+
+[osp_instances:children]
+idm
