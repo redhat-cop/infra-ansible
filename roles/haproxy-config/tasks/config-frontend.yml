@@ -1,0 +1,11 @@
+---
+
+- set_fact:
+    lb_frontend_name: '{{ fe.lb_name }}'
+    lb_host_port: '{{ fe.lb_host_port }}'
+    lb_host_vip: '{{ fe.lb_host_vip }}'
+    lb_ssl_enabled: '{{ fe.lb_ssl_enabled | default((fe.lb_host_port == "443") | ternary(True, False)) }}'
+
+- template:
+    src: lb_frontend.j2
+    dest: '{{ haproxy_temp_dir }}/0002_lb_{{ fe.lb_name }}_{{ fe.lb_host_vip }}_{{ fe.lb_host_port }}.cfg'

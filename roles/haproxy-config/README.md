@@ -1,6 +1,6 @@
 # HAproxy
 
-This role generates a `haproxy.cfg` file (the haproxy role can be used to copy it to the target HAproxy servers). 
+This role generates a `haproxy.cfg` file (the haproxy role can be used to copy it to the target HAproxy servers).
 
 ## Example
 The following is an example of an inventory definition and the resulting haproxy.cfg file
@@ -8,30 +8,45 @@ The following is an example of an inventory definition and the resulting haproxy
 ### Inventory
 
 ```
-lb_https_entries:
-- fqdn: master.env1.example.com
-  port: 8443
-  backends: 
-  - fqdn: master.env1.example.com
-    port: 8443
-- fqdn: .apps.env1.example.com
-  name: router.env1.example.com
-  port: 443
-  backends: 
-  - fqdn: router1.env1.example.com
-    port: 443
-  - fqdn: router2.env1.example.com
-    port: 443
+lb_server_config:
+  stats_page:
+    enabled: True
+    host_vip: '192.168.1.10'
+    host_port: 8080
+    username: admin
+    password: admin
+  frontends:
+  - lb_name: my-web-server
+    lb_host_vip: '192.168.1.10'
+    lb_host_port: 80
+  - lb_name: my-secure-web-server
+    lb_host_vip: '192.168.1.10'
+    lb_host_port: 443
+    lb_ssl_enabled: True [optional for port 443]
+```
 
-lb_http_entries:
-- fqdn: apps.env1.example.com
-  name: router.env1.example.com
-  port: 80
-  backends: 
-  - fqdn: router1.env1.example.com
-    port: 80
-  - fqdn: router2.env1.example.com
-    port: 80
+```
+lb_entries:
+- lb_host: master.env1.example.com
+  lb_port: 8443
+  lb_ssl_enabled: True
+  backends:
+  - lb_host: master.env1.example.com
+    lb_port: 8443
+- lb_host: .apps.env1.example.com
+  lb_port: 443
+  backends:
+  - lb_host: router1.env1.example.com
+    lb_port: 443
+  - lb_host: router2.env1.example.com
+    lb_port: 443
+- lb_host: apps.env1.example.com
+  lb_port: 80
+  backends:
+  - lb_host: router1.env1.example.com
+    lb_port: 80
+  - lb_host: router2.env1.example.com
+    lb_port: 80
 ```
 
 
@@ -147,4 +162,3 @@ backend lb_http_default
     stats auth admin:admin
 
 ```
-
