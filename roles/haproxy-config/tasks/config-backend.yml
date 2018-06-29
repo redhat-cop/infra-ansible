@@ -1,4 +1,0 @@
----
-
-- set_fact:
-    lb_ssl_enabled: '{{ be.lb_ssl_enabled | default((be.lb_port == "443") | ternary(True, False)) }}'
