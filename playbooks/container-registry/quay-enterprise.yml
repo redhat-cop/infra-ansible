@@ -1,7 +1,16 @@
 ---
 
-- name: Install Quay Enterprise
-  hosts: quay_enterprise
+- name: Preflight Checks
+  hosts: localhost
+  tasks:
+    - name: Validate Required Group Configuration
+      fail:
+        msg: "'database', 'redis' and 'quay_enterprise' groups must be specified"
+      when:
+        - "'redis' not in groups or groups['redis']| length == 0 or 'database' not in groups or groups['database']| length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise']| length == 0"
+
+- name: Install Docker
+  hosts: database:redis:quay_enterprise
   tasks:
     - name: Configure Docker
       include_role:
@@ -13,7 +22,47 @@
         name: config-docker
       when: docker_install|default(false)
 
-    - name: Include Quay Role
+- name: Install Database
+  hosts: database
+  tasks:
+    - name: Install MySQL
+      include_role:
+        name: config-mysql
+      vars:
+        mode: containerized
+        mysql_username: "{{ database_username }}"
+        mysql_password: "{{ database_password }}"
+        mysql_root_username: "{{ database_admin_username }}"
+        mysql_admin_password: "{{ database_admin_password }}"
+        mysql_database: "{{ database_name }}"
+      when: database_type == "mysql"
+
+    - name: Install PostgreSQL
+      include_role:
+        name: config-postgresql
+      vars:
+        mode: containerized
+        postgresql_username: "{{ database_username }}"
+        postgresql_password: "{{ database_password }}"
+        postgresql_admin_password: "{{ database_admin_password }}"
+        postgresql_database: "{{ database_name }}"
+      when: database_type == "postgresql"
+
+- name: Install Redis
+  hosts: redis
+  tasks:
+    - name: Install Redis
+      include_role:
+        name: config-redis
+      vars:
+        mode: containerized
+
+- name: Install Quay Enterprise
+  hosts: quay_enterprise
+  tasks:
+    - name: Install Quay
       include_role:
         name: config-quay-enterprise
-
+      vars:
+        database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        redis_host: "{{ hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
