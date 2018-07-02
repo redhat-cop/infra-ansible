@@ -4,6 +4,7 @@
   tasks:
    - set_fact: 
        dns_records: "{{ hostvars[groups['idm'][0]]['dns_records'] }}" 
+       
 - name: 'Add DNS records for IdM'
   hosts: dns-server
   roles:

@@ -1,0 +1,17 @@
+---
+- hosts: idm
+  tasks:
+    - name: Set required ip address for forward dns
+      set_fact:
+        dns_records: "{{ dns_records|combine({
+          'view': inventory_hostname.split('.')[1:-1],
+          'forward': { 'ip': openstack.private_v4,
+                        'hostname': inventory_hostname.split('.')[0]  }, 
+          'reverse': { 'hostname': openstack.private_v4.split('.')[-1],
+                        'target': inventory_hostname + '.'  }
+        }, recursive=True) }}"
+      when: 
+      - hosting_infrastructure == 'openstack'
+
+    - debug:
+        msg: "{{ dns_records }}"

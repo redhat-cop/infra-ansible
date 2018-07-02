@@ -7,7 +7,7 @@
   when:
   - hosting_infrastructure == 'openstack'
 
-- import_playbook: forward-ip.yml
+- import_playbook: set_facts.yml
 
 - name: "Subscribe RHEL based instances" 
   hosts: idm
