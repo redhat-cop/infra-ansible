@@ -32,6 +32,8 @@
     group: root
     mode: g+rw
     path: "{{ postgresql_storage_dir }}"
+  notify: "Restart PostgreSQL Service"
+
 
 - name: Configure systemd environment files
   template:

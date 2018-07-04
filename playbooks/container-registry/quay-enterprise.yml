@@ -37,15 +37,31 @@
         mysql_database: "{{ database_name }}"
       when: database_type == "mysql"
 
-    - name: Install PostgreSQL
-      include_role:
-        name: config-postgresql
-      vars:
-        mode: containerized
-        postgresql_username: "{{ database_username }}"
-        postgresql_password: "{{ database_password }}"
-        postgresql_admin_password: "{{ database_admin_password }}"
-        postgresql_database: "{{ database_name }}"
+    - name: Install and Configure PostgreSQL
+      block:
+        - name: Install PostgreSQL
+          include_role:
+            name: config-postgresql
+          vars:
+            mode: containerized
+            postgresql_username: "{{ database_username }}"
+            postgresql_password: "{{ database_password }}"
+            postgresql_admin_password: "{{ database_admin_password }}"
+            postgresql_database: "{{ database_name }}"
+        
+        - name: Flush Handlers
+          meta: flush_handlers
+
+        - name: Locate PostgreSQL Container
+          command: docker ps --filter=name=postgresql.service -q
+          register: postgresql_container
+
+        - name: Configure PostgreSQL
+          shell: docker exec -i {{ postgresql_container.stdout }} /bin/bash -c 'PGPASSWORD={{ database_admin_password }} psql {{ database_name }} -c "CREATE EXTENSION pg_trgm;"'
+          register: shell_result
+          failed_when:
+            - shell_result.rc != 0
+            - "'already exists' not in shell_result.stderr"
       when: database_type == "postgresql"
 
 - name: Install Redis
@@ -64,5 +80,97 @@
       include_role:
         name: config-quay-enterprise
       vars:
+        quay_ssl_generate_hostname: "{{ quay_hostname | default(inventory_hostname) }}"
         database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
         redis_host: "{{ hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
+
+- name: Install HAProxy
+  hosts: lb
+  vars: 
+    haproxy_temp_file: '/tmp/haproxy.cfg'
+  tasks:
+    - name: Setup
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: true
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+    - name: Create Status Page Object
+      set_fact:
+        stats_page:
+          enabled: "{{ (haproxy_stats_enabled | bool) | default(True) }}"
+          host_vip: "{{ haproxy_stats_vip if haproxy_stats_vip is defined else hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}"
+          host_port: "{{ (haproxy_stats_port | int) if haproxy_stats_port is defined else 8080 }}"
+          username: "{{ haproxy_stats_username if haproxy_stats_username is defined else 'admin' }}"
+          password: "{{ haproxy_stats_password if haproxy_stats_password is defined else 'admin' }}"
+        lb_http_entries:
+          name: quay-http
+          lb_host: "{{ haproxy_lb_hostname | default(inventory_hostname) }}"
+          lb_port: 80
+          lb_ssl_enabled: False
+        lb_https_entries:
+          name: quay-https
+          lb_host: "{{ haproxy_lb_hostname | default(inventory_hostname) }}"
+          lb_port: 443
+          lb_ssl_enabled: True
+    - name: Add Stats Page to 'lb_server_config' object
+      set_fact:
+        lb_server_config: "{{ lb_server_config | default({}) | combine({'stats_page': stats_page}) }}"
+      when: haproxy_stats_enabled is defined and haproxy_stats_enabled|bool
+    - name: Generate HTTP FrontEnd
+      set_fact:
+        lb_frontends: "{{ lb_frontends | default([]) + [ {'lb_name':'quay-' + item.type + '-'+item.port,'lb_host_vip': haproxy_host_vip | default('*'),'lb_host_port': item.port | int,'lb_ssl_enabled': item.ssl_enabled | bool } ] }}"
+      with_items:
+        - { type: "http", port: "80", ssl_enabled: "False"  }
+        - { type: "https", port: "443", ssl_enabled: "True"  }
+    - name: Add Frontends to 'lb_server_config' object
+      set_fact:
+        lb_server_config: "{{ lb_server_config | combine({'frontends': lb_frontends}) }}"
+      with_items:
+        - { type: "http", port: "80", ssl_enabled: "False" }
+        - { type: "https", port: "443", ssl_enabled: "True" }
+    - name: Generate HTTP Backend
+      set_fact:
+        lb_http_backends: "{{ lb_http_backends | default([]) + [ { 'lb_host': hostvars[item]['ansible_eth0']['ipv4']['address'],'lb_port': 80 } ] }}"
+      with_items:
+        - "{{ groups.quay_enterprise }}"
+    - name: Attach Backends to HTTP LB Entry
+      set_fact:
+        lb_http_entries: "{{ lb_http_entries | combine({'backends': lb_http_backends}) }}"
+    - name: Generate HTTPS Backend
+      set_fact:
+        lb_https_backends: "{{ lb_https_backends | default([]) + [ { 'lb_host': hostvars[item]['ansible_eth0']['ipv4']['address'],'lb_port': 443 } ] }}"
+      with_items:
+        - "{{ groups.quay_enterprise }}"
+    - name: Attach Backends to HTTPS LB Entry
+      set_fact:
+        lb_https_entries: "{{ lb_https_entries | combine({'backends': lb_https_backends}) }}"
+    - name: Combine lb_entries
+      set_fact:
+        lb_entries: "{{ (lb_entries | default([])) + [ item ] }}"
+      with_items:
+        - "{{ lb_http_entries }}"
+        - "{{ lb_https_entries }}"
+    - name: HAProxy Configuration
+      include_role:
+        name: haproxy-config
+      delegate_to: "{{ groups['lb'][0] }}"
+    - name: Fetch HAProxy file
+      fetch:
+        src: "{{ haproxy_temp_file }}"
+        dest: "{{ haproxy_temp_file }}"
+        flat: yes
+      delegate_to: "{{ groups['lb'][0] }}"
+    - name: Delete HAProxy Configuration File from Remote
+      file:
+        state: absent
+        path: "{{ haproxy_temp_file }}"
+      delegate_to: "{{ groups['lb'][0] }}"
+    - name: Install HAProxy
+      include_role:
+        name: haproxy
+    - name: Delete Local HAProxy Configuration File
+      file:
+        state: absent
+        path: "{{ haproxy_temp_file }}"
+      delegate_to: "localhost"
