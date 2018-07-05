@@ -1,7 +1,7 @@
 ---
 
 - name: Get channels info
-  include: get_channel_info.yml
+  include_tasks: get_channel_info.yml
 
 - name: Convert channel name to its mapped id
   set_fact:
@@ -9,6 +9,6 @@
 
 - name: Invite user
   uri:
-    url: "https://slack.com/api/users.admin.invite?token={{ slack_token }}&channels={{ channels_ids|join(',') }}&email={{ user.email }}&first_name={{ user.first_name }}&last_name={{ user.last_name }}&set_active=true"
+    url: "https://slack.com/api/users.admin.invite?token={{ slack_token }}&channels={{ channels_ids|join(',') }}&email={{ user.email }}&first_name={{ user.first_name | urlencode }}&last_name={{ user.last_name | urlencode }}&set_active=true"
     method: GET
     status_code: [200]

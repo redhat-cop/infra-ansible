@@ -4,13 +4,13 @@
     channel_mapping: {}
 
 - name: Create channels
-  include: create_channels.yml
+  include_tasks: create_channels.yml
   with_items: "{{ slack_channels }}"
   loop_control:
     loop_var: channel
 
 - name: Invite users
-  include: invite_users.yml
+  include_tasks: invite_users.yml
   with_items: "{{ slack_users }}"
   loop_control:
     loop_var: user

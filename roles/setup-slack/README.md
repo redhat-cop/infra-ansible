@@ -40,7 +40,6 @@ Steps:
 
 **Important note:** 
 * You must be running this as an Admin user in the Slack workspace.
-* If a username includes special characters (including spaces) it must be URL encoded.
 
 
 Running the Playbook
