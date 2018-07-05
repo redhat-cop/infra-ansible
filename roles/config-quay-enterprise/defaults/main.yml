@@ -11,7 +11,7 @@ database_type: mysql
 
 #Systemd
 systemd_service_dir: /usr/lib/systemd/system
-systemd_environmenfile_dir: /etc/sysconfig
+systemd_environmentfile_dir: /etc/sysconfig
 
 # Quay
 quay_image: quay.io/coreos/quay:v2.9.2

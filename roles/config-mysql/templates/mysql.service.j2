@@ -1,10 +1,10 @@
 [Unit]
-Description=MySQL Docker Container
+Description=MySQL Docker Container - {{ mysql_name }}
 After=docker.service
 Requires=docker.service
 
 [Service]
-EnvironmentFile={{ systemd_environmenfile_dir }}/{{ mysql_name }}
+EnvironmentFile={{ systemd_environmentfile_dir }}/{{ mysql_name }}
 TimeoutStartSec=0
 Restart=always
 ExecStartPre=/usr/bin/docker pull ${MYSQL_IMAGE}

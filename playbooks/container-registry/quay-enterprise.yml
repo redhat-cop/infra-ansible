@@ -22,6 +22,43 @@
         name: config-docker
       when: docker_install|default(false)
 
+- name: Install HAProxy
+  hosts: lb
+  tasks:
+    - name: Setup
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: true
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+    - name: Set Configuration File Facts
+      set_fact:
+        haproxy_cfg_tmp_file: "/tmp/haproxy-{{ inventory_hostname }}.cfg"
+    - name: Create HAProxy Template
+      template:
+        src: "haproxy.cfg.j2"
+        dest: "{{ haproxy_cfg_tmp_file }}"
+    - name: Fetch HAProxy file
+      fetch:
+        src: "{{ haproxy_cfg_tmp_file }}"
+        dest: "{{ haproxy_cfg_tmp_file }}"
+        flat: yes
+      delegate_to: "{{ groups['lb'][0] }}"
+    - name: Delete HAProxy Configuration File from Remote
+      file:
+        state: absent
+        path: "{{ haproxy_cfg_tmp_file }}"
+    - name: Install HAProxy
+      include_role:
+        name: haproxy
+      vars:
+        haproxy_temp_file: "{{ haproxy_cfg_tmp_file }}"
+    - name: Delete Local HAProxy Configuration File
+      file:
+        state: absent
+        path: "{{ haproxy_cfg_tmp_file }}"
+      delegate_to: "localhost"
+
 - name: Install Database
   hosts: database
   tasks:
@@ -33,7 +70,7 @@
         mysql_username: "{{ database_username }}"
         mysql_password: "{{ database_password }}"
         mysql_root_username: "{{ database_admin_username }}"
-        mysql_admin_password: "{{ database_admin_password }}"
+        mysql_root_password: "{{ database_admin_password }}"
         mysql_database: "{{ database_name }}"
       when: database_type == "mysql"
 
@@ -51,6 +88,10 @@
         
         - name: Flush Handlers
           meta: flush_handlers
+
+        - name: Sleep to give PostgreSQL a chance to finish starting up
+          pause:
+            seconds: 10
 
         - name: Locate PostgreSQL Container
           command: docker ps --filter=name=postgresql.service -q
@@ -83,94 +124,3 @@
         quay_ssl_generate_hostname: "{{ quay_hostname | default(inventory_hostname) }}"
         database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
         redis_host: "{{ hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
-
-- name: Install HAProxy
-  hosts: lb
-  vars: 
-    haproxy_temp_file: '/tmp/haproxy.cfg'
-  tasks:
-    - name: Setup
-      setup:
-      delegate_to: "{{ item }}"
-      delegate_facts: true
-      with_items:
-        - "{{ groups['quay_enterprise'] }}"
-    - name: Create Status Page Object
-      set_fact:
-        stats_page:
-          enabled: "{{ (haproxy_stats_enabled | bool) if haproxy_stats_enabled is defined else True }}"
-          host_vip: "{{ haproxy_stats_vip if haproxy_stats_vip is defined else hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}"
-          host_port: "{{ (haproxy_stats_port | int) if haproxy_stats_port is defined else 8080 }}"
-          username: "{{ haproxy_stats_username if haproxy_stats_username is defined else 'admin' }}"
-          password: "{{ haproxy_stats_password if haproxy_stats_password is defined else 'admin' }}"
-        lb_http_entries:
-          name: quay-http
-          lb_host: "{{ haproxy_lb_hostname | default(inventory_hostname) }}"
-          lb_port: 80
-          lb_ssl_enabled: False
-        lb_https_entries:
-          name: quay-https
-          lb_host: "{{ haproxy_lb_hostname | default(inventory_hostname) }}"
-          lb_port: 443
-          lb_ssl_enabled: True
-    - name: Add Stats Page to 'lb_server_config' object
-      set_fact:
-        lb_server_config: "{{ lb_server_config | default({}) | combine({'stats_page': stats_page}) }}"
-      when: stats_page.enabled is defined and stats_page.enabled|bool
-    - name: Generate HTTP FrontEnd
-      set_fact:
-        lb_frontends: "{{ lb_frontends | default([]) + [ {'lb_name':'quay-' + item.type + '-'+item.port,'lb_host_vip': haproxy_host_vip | default('*'),'lb_host_port': item.port | int,'lb_ssl_enabled': item.ssl_enabled | bool } ] }}"
-      with_items:
-        - { type: "http", port: "80", ssl_enabled: "False"  }
-        - { type: "https", port: "443", ssl_enabled: "True"  }
-    - name: Add Frontends to 'lb_server_config' object
-      set_fact:
-        lb_server_config: "{{ lb_server_config | default({}) | combine({'frontends': lb_frontends}) }}"
-      with_items:
-        - { type: "http", port: "80", ssl_enabled: "False" }
-        - { type: "https", port: "443", ssl_enabled: "True" }
-    - name: Generate HTTP Backend
-      set_fact:
-        lb_http_backends: "{{ lb_http_backends  | default([]) + [ { 'lb_host': hostvars[item]['ansible_eth0']['ipv4']['address'],'lb_port': 80 } ] }}"
-      with_items:
-        - "{{ groups.quay_enterprise }}"
-    - name: Attach Backends to HTTP LB Entry
-      set_fact:
-        lb_http_entries: "{{ lb_http_entries | combine({'backends': lb_http_backends}) }}"
-    - name: Generate HTTPS Backend
-      set_fact:
-        lb_https_backends: "{{ lb_https_backends | default([]) + [ { 'lb_host': hostvars[item]['ansible_eth0']['ipv4']['address'],'lb_port': 443 } ] }}"
-      with_items:
-        - "{{ groups.quay_enterprise }}"
-    - name: Attach Backends to HTTPS LB Entry
-      set_fact:
-        lb_https_entries: "{{ lb_https_entries | combine({'backends': lb_https_backends}) }}"
-    - name: Combine lb_entries
-      set_fact:
-        lb_entries: "{{ (lb_entries | default([])) + [ item ] }}"
-      with_items:
-        - "{{ lb_http_entries }}"
-        - "{{ lb_https_entries }}"
-    - name: HAProxy Configuration
-      include_role:
-        name: haproxy-config
-      delegate_to: "{{ groups['lb'][0] }}"
-    - name: Fetch HAProxy file
-      fetch:
-        src: "{{ haproxy_temp_file }}"
-        dest: "{{ haproxy_temp_file }}"
-        flat: yes
-      delegate_to: "{{ groups['lb'][0] }}"
-    - name: Delete HAProxy Configuration File from Remote
-      file:
-        state: absent
-        path: "{{ haproxy_temp_file }}"
-      delegate_to: "{{ groups['lb'][0] }}"
-    - name: Install HAProxy
-      include_role:
-        name: haproxy
-    - name: Delete Local HAProxy Configuration File
-      file:
-        state: absent
-        path: "{{ haproxy_temp_file }}"
-      delegate_to: "localhost"

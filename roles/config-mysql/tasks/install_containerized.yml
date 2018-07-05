@@ -1,9 +1,5 @@
 ---
 
-#- name: Verify Required Parameters are Provided
-#  fail:
-#    msg: "Required Parameters Have Not Been Provided!"
-
 - name: Generate Random DB Username
   set_fact:
     mysql_username: "{{ lookup('password', '/dev/null length=5 chars=ascii_letters') | lower }}"
@@ -12,8 +8,8 @@
 
 - name: Generate Random DB Admin Username
   set_fact:
-    mysql_admin_user: "root"
-  when: mysql_admin_user is undefined and mysql_admin_user|trim == ""
+    mysql_root_username: "root"
+  when: mysql_root_username is undefined and mysql_root_username|trim == ""
   run_once: True
 
 - name: Generate Random DB Password
@@ -39,7 +35,7 @@
 - name: Configure systemd environment files
   template:
     src: "{{ mysql_name }}.j2"
-    dest: "{{ systemd_environmenfile_dir}}/{{ mysql_name }}"
+    dest: "{{ systemd_environmentfile_dir}}/{{ mysql_name }}"
   notify: "Restart MySQL Service"
 
 - name: Configure systemd unit files

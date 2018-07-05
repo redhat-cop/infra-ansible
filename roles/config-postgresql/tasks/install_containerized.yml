@@ -1,9 +1,5 @@
 ---
 
-#- name: Verify Required Parameters are Provided
-#  fail:
-#    msg: "Required Parameters Have Not Been Provided!"
-
 - name: Generate Random DB Username
   set_fact:
     postgresql_username: "{{ lookup('password', '/dev/null length=5 chars=ascii_letters') | lower }}"
@@ -38,7 +34,7 @@
 - name: Configure systemd environment files
   template:
     src: "{{ postgresql_name }}.j2"
-    dest: "{{ systemd_environmenfile_dir}}/{{ postgresql_name }}"
+    dest: "{{ systemd_environmentfile_dir}}/{{ postgresql_name }}"
   notify: "Restart PostgreSQL Service"
 
 - name: Configure systemd unit files

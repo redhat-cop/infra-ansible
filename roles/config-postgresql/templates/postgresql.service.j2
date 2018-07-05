@@ -1,10 +1,10 @@
 [Unit]
-Description=PostgreSQL Docker Container
+Description=PostgreSQL Docker Container - {{ postgresql_name }}
 After=docker.service
 Requires=docker.service
 
 [Service]
-EnvironmentFile={{ systemd_environmenfile_dir }}/{{ postgresql_name }}
+EnvironmentFile={{ systemd_environmentfile_dir }}/{{ postgresql_name }}
 TimeoutStartSec=0
 Restart=always
 ExecStartPre=/usr/bin/docker pull ${POSTGRESQL_IMAGE}

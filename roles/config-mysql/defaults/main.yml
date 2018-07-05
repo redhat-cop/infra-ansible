@@ -2,12 +2,14 @@
 
 mode: containerized
 
+# Name of the database installation and service
+# (different from actual database name)
 mysql_name: mysql
 mysql_service: "{{ mysql_name }}.service"
 
-#Systemd
+# Systemd
 systemd_service_dir: /usr/lib/systemd/system
-systemd_environmenfile_dir: /etc/sysconfig
+systemd_environmentfile_dir: /etc/sysconfig
 
 # MySQL
 mysql_image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest

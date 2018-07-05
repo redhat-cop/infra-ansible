@@ -45,6 +45,7 @@
       delegate_to: "{{ groups['quay_enterprise'][0] }}"
 
     - name: Create Local Temporary Directory
+      become: false
       command: mktemp -d /tmp/quay-ssl-XXXXXXX
       register: ssl_local_tmp_dir
       delegate_to: localhost
@@ -81,6 +82,7 @@
     - { src: "{{ quay_ssl_cert_file }}", dest: "{{ quay_config_dir }}/ssl.cert" }
 
 - name: Delete Local Temporary SSL Directory
+  become: false
   file:
     state: absent
     path: "{{ ssl_local_tmp_dir.stdout }}"
