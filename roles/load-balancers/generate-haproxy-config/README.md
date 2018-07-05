@@ -8,7 +8,7 @@ The following is an example of an inventory definition and the resulting haproxy
 ### Inventory
 
 ```
-lb_server_config:
+lb_config:
   stats_page:
     enabled: True
     host_vip: '192.168.1.10'
@@ -23,30 +23,27 @@ lb_server_config:
     lb_host_vip: '192.168.1.10'
     lb_host_port: 443
     lb_ssl_enabled: True [optional for port 443]
-```
-
-```
-lb_entries:
-- lb_host: master.env1.example.com
-  lb_port: 8443
-  lb_ssl_enabled: True
-  backends:
-  - lb_host: master.env1.example.com
-    lb_port: 8443
-- lb_host: .apps.env1.example.com
-  lb_port: 443
-  backends:
-  - lb_host: router1.env1.example.com
-    lb_port: 443
-  - lb_host: router2.env1.example.com
-    lb_port: 443
-- lb_host: apps.env1.example.com
-  lb_port: 80
-  backends:
-  - lb_host: router1.env1.example.com
-    lb_port: 80
-  - lb_host: router2.env1.example.com
-    lb_port: 80
+  lb_entries:
+  - lb_match_fqdn: master.env1.example.com
+    lb_match_port: 8443
+    lb_ssl_enabled: True
+    backends:
+    - host: master.env1.example.com
+      port: 8443
+  - lb_match_fqdn: .apps.env1.example.com
+    lb_match_port: 443
+    backends:
+    - host: router1.env1.example.com
+      port: 443
+    - host: router2.env1.example.com
+      port: 443
+  - lb_match_fqdn: apps.env1.example.com
+    lb_match_port: 80
+    backends:
+    - host: router1.env1.example.com
+      port: 80
+    - host: router2.env1.example.com
+      port: 80
 ```
 
 
