@@ -1,7 +1,7 @@
 ---
 
 - name: Get channels info
-  include_tasks: get_channel_info.yml
+  import_tasks: get_channel_info.yml
 
 - name: Convert channel name to its mapped id
   set_fact:
