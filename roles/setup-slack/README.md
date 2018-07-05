@@ -37,6 +37,12 @@ Steps:
 1. `$ ansible-vault create vars.yml` it will ask for a password and it will be needed when we're running the playbook later
 2. Specify the variables in the file and save it
 
+
+**Important note:** 
+* You must be running this as an Admin user in the Slack workspace.
+* If a username includes special characters (including spaces) it must be URL encoded.
+
+
 Running the Playbook
 --------------------
 
