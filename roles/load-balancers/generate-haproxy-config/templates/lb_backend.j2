@@ -4,6 +4,8 @@
 {% if ((be.lb_ssl_enabled is defined and be.lb_ssl_enabled) or
        (be.lb_ssl_enabled is undefined and be.lb_port|string == '443')) %}
 {% set lb_ssl_enabled = True %}
+{% else %}
+{% set lb_ssl_enabled = False %}
 {% endif %}
 
 {% set lb_host = (be.name | default(be.lb_host)) | regex_replace('^\.', '') %}
