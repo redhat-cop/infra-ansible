@@ -1,0 +1,9 @@
+---
+
+# Authentication to access Quay Registry
+#quay_registry_auth:
+
+# Install Docker
+#docker_install: True
+
+

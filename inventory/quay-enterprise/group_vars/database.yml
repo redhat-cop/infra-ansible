@@ -1,0 +1,9 @@
+---
+
+# Database Configuration
+database_type: postgresql
+database_name: quay
+database_username: quay
+database_password: quay
+database_admin_username: root
+database_admin_password: quayadmin

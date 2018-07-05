@@ -1,0 +1,4 @@
+---
+
+## Custom hostname for Load Balancing and SSL Certificates
+#quay_hostname: 

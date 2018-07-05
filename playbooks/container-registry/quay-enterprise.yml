@@ -10,7 +10,7 @@
         - "'redis' not in groups or groups['redis']| length == 0 or 'database' not in groups or groups['database']| length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise']| length == 0"
 
 - name: Install Docker
-  hosts: database:redis:quay_enterprise
+  hosts: docker_hosts
   tasks:
     - name: Configure Docker
       include_role:
@@ -98,7 +98,7 @@
     - name: Create Status Page Object
       set_fact:
         stats_page:
-          enabled: "{{ (haproxy_stats_enabled | bool) | default(True) }}"
+          enabled: "{{ (haproxy_stats_enabled | bool) if haproxy_stats_enabled is defined else True }}"
           host_vip: "{{ haproxy_stats_vip if haproxy_stats_vip is defined else hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}"
           host_port: "{{ (haproxy_stats_port | int) if haproxy_stats_port is defined else 8080 }}"
           username: "{{ haproxy_stats_username if haproxy_stats_username is defined else 'admin' }}"
@@ -116,7 +116,7 @@
     - name: Add Stats Page to 'lb_server_config' object
       set_fact:
         lb_server_config: "{{ lb_server_config | default({}) | combine({'stats_page': stats_page}) }}"
-      when: haproxy_stats_enabled is defined and haproxy_stats_enabled|bool
+      when: stats_page.enabled is defined and stats_page.enabled|bool
     - name: Generate HTTP FrontEnd
       set_fact:
         lb_frontends: "{{ lb_frontends | default([]) + [ {'lb_name':'quay-' + item.type + '-'+item.port,'lb_host_vip': haproxy_host_vip | default('*'),'lb_host_port': item.port | int,'lb_ssl_enabled': item.ssl_enabled | bool } ] }}"
@@ -125,13 +125,13 @@
         - { type: "https", port: "443", ssl_enabled: "True"  }
     - name: Add Frontends to 'lb_server_config' object
       set_fact:
-        lb_server_config: "{{ lb_server_config | combine({'frontends': lb_frontends}) }}"
+        lb_server_config: "{{ lb_server_config | default({}) | combine({'frontends': lb_frontends}) }}"
       with_items:
         - { type: "http", port: "80", ssl_enabled: "False" }
         - { type: "https", port: "443", ssl_enabled: "True" }
     - name: Generate HTTP Backend
       set_fact:
-        lb_http_backends: "{{ lb_http_backends | default([]) + [ { 'lb_host': hostvars[item]['ansible_eth0']['ipv4']['address'],'lb_port': 80 } ] }}"
+        lb_http_backends: "{{ lb_http_backends  | default([]) + [ { 'lb_host': hostvars[item]['ansible_eth0']['ipv4']['address'],'lb_port': 80 } ] }}"
       with_items:
         - "{{ groups.quay_enterprise }}"
     - name: Attach Backends to HTTP LB Entry

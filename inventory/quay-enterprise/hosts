@@ -1,0 +1,14 @@
+[quay_enterprise]
+
+[redis]
+
+[database]
+
+[lb]
+
+[docker_hosts]
+
+[docker_hosts:children]
+quay_enterprise
+redis
+database
