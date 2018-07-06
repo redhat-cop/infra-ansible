@@ -7,6 +7,7 @@
     group: root
     mode: g+rw
     path: "{{ redis_storage_dir }}"
+  notify: "Restart Redis Service"
 
 - name: Configure systemd environment files
   template:

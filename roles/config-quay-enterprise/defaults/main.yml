@@ -6,7 +6,7 @@ quay_name: quay
 #mysql_name: mysql
 #redis_name: redis
 quay_service: "{{ quay_name }}.service"
-quay_server_hostname: ""
+quay_server_hostname:
 database_type: mysql
 
 #Systemd
