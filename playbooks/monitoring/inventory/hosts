@@ -1,0 +1,17 @@
+[prom_master]
+
+[prom_master:vars]
+ansible_user=centos
+
+[prom_node]
+
+[prom_node:vars]
+ansible_user=centos
+
+[all_prometheus:children]
+prom_master
+prom_node
+
+[osp_instances:children]
+prom_master
+prom_node

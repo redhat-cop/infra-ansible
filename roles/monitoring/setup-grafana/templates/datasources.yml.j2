@@ -1,0 +1,12 @@
+---
+apiVersion: 1
+
+datasources:
+- name: Prometheus
+  type: prometheus
+  access: proxy
+  orgId: 1
+  url: "http://{{ ansible_host }}:{{ prometheus_port }}"
+  jsonData:
+    tlsSkipVerify: true
+  editable: true

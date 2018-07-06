@@ -1,0 +1,23 @@
+---
+- name: Install Docker
+  hosts: all_prometheus
+  become: True
+  roles:
+    - config-docker
+
+- name: Setup node exporters
+  hosts: prom_node
+  become: True
+  vars:
+    provision_state: "absent"
+  roles:
+    - monitoring/setup-node-exporter
+
+- name: Setup prometheus
+  hosts: prom_master
+  become: True
+  vars:
+    provision_state: "absent"
+  roles:
+    - monitoring/setup-prometheus
+    - monitoring/setup-grafana
