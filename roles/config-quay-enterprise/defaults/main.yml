@@ -42,4 +42,3 @@ quay_ssl_generate_country: US
 quay_ssl_generate_organization: Red Hat
 quay_ssl_generate_organizational_unit: CoP
 quay_ssl_generate_days_validity: 365
-quay_ssl_generate_hostname: localhost

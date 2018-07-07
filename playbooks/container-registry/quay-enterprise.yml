@@ -132,11 +132,14 @@
 - name: Install Quay Enterprise
   hosts: quay_enterprise
   tasks:
+    - name: Set Quay Hostname
+      set_fact:
+        quay_hostname: "{{ hostvars[groups['lb'][0]]['inventory_hostname'] }}"
+      when: quay_hostname is undefined and groups['lb'] | length > 0
     - name: Install Quay
       include_role:
         name: config-quay-enterprise
       vars:
-        quay_ssl_generate_hostname: "{{ quay_hostname | default(hostvars[groups['lb'][0]]['inventory_hostname']) if groups['lb'] | length > 0 else default(inventory_hostname) }}"
         database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
         redis_host: "{{ quay_hostname | default(hostvars[groups['lb'][0]]['inventory_hostname']) if groups['lb'] | length > 0 else hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
-        quay_server_hostname: "{{ quay_hostname | default(hostvars[groups['lb'][0]]['inventory_hostname']) if groups['lb'] | length > 0 else default(inventory_hostname) }}"
+        quay_server_hostname: "{{ quay_hostname | default(inventory_hostname) }}"
