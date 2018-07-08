@@ -71,6 +71,7 @@
         state: absent
         path: "{{ ssl_remote_tmp_dir.stdout }}"
       delegate_to: "{{ groups['quay_enterprise'][0] }}"
+  when: quay_ssl_enable|bool and (quay_ssl_key_file is not defined or quay_ssl_key_file|trim == "" or quay_ssl_cert_file is not defined or quay_ssl_cert_file|trim == "")
 
 - name: Copy SSL Certificates
   copy:
@@ -87,6 +88,7 @@
     state: absent
     path: "{{ ssl_local_tmp_dir.stdout }}"
   delegate_to: localhost
+  when: ssl_local_tmp_dir is not defined
 
 - name: Check if quay configuration exists
   stat:

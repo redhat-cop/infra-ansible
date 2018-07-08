@@ -7,7 +7,7 @@ quay_name: quay
 #redis_name: redis
 quay_service: "{{ quay_name }}.service"
 quay_server_hostname:
-database_type: mysql
+database_type: postgresql
 
 #Systemd
 systemd_service_dir: /usr/lib/systemd/system
@@ -34,8 +34,8 @@ quay_registry_email:
 
 # SSL
 quay_ssl_enable: True
-quay_ssl_key_file:
-quay_ssl_cert_file:
+quay_ssl_key_file: ""
+quay_ssl_cert_file: ""
 quay_ssl_generate_city: Raleigh
 quay_ssl_generate_state: NC
 quay_ssl_generate_country: US

@@ -4,7 +4,7 @@ Ansible Role to help configure [Quay Enterprise](https://coreos.com/quay-enterpr
 
 ## Requirements
 
-A Linux Distribution which supports `systemd` and `package` modules
+A Linux Distribution which supports `systemd` and `package` modules along with docker install and configured.
 
 ## Role Variables
 

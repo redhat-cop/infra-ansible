@@ -36,6 +36,8 @@ The following is a list of the most commonly utilized inventory variables used t
 |docker_install|Boolean whether |
 |quay_hostname|Hostname to configure the optionally generated SSL certificate|
 
+Additional variables can be utilized by inspecting the variables provided by each role.
+
 ## Playbook Execution
 
 Execute the following command to provision the Quay ecosystem:
