@@ -23,7 +23,7 @@ backend {{ lb_match_fqdn }}-{{ entry.lb_match_port }}
 
 {% for backend in entry.backends %}
 {% set lb_backend_host = backend.name | default(backend.host) %}
-{% set lb_backend_port = backend.port | default(entry.port) %}
+{% set lb_backend_port = backend.port | default(entry.lb_match_port) %}
 
 {% if lb_ssl_enabled %}
     server {{ lb_backend_host }} {{ backend.host }}:{{ lb_backend_port }} check
