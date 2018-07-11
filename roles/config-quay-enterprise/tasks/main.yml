@@ -1,5 +1,22 @@
 ---
 
+- name: Verify Storage Type
+  fail:
+    msg: "Invalid Database Type. 'database_type' must be 'postgres' or 'mysql'"
+  when: database_type not in ["postgresql","mysql"]
+
+- name: Set PostgreSQL Facts
+  set_fact:
+    persistent_storage_dir: "{{ postgresql_storage_dir }}"
+    quay_db_uri: "{{ postgresql_db_uri }}"
+  when: database_type == "postgresql"
+
+- name: Set MySQL Facts
+  set_fact:
+    persistent_storage_dir: "{{ mysql_storage_dir }}"
+    quay_db_uri: "{{ mysql_db_uri }}"
+  when: database_type == "mysql"
+
 - name: Include Container Credentials
   include_tasks: container_credentials.yml
   when: (quay_registry_server | trim != "") and ((quay_registry_auth | trim != "") or (quay_registry_email | trim != ""))
@@ -14,7 +31,7 @@
   with_items:
     - "{{ quay_config_dir }}"
     - "{{ quay_storage_dir }}"
-    - "{{ postgresql_storage_dir }}"
+    - "{{ persistent_storage_dir }}"
     - "{{ redis_storage_dir }}"
 
 - name: Include systemd configurations

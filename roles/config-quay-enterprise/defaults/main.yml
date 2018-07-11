@@ -3,11 +3,13 @@
 # Base Configurations
 quay_name: quay
 postgresql_name: postgresql
+mysql_name: mysql
 redis_name: redis
 quay_service: "{{ quay_name }}.service"
-postgresql_service: "{{ postgresql_name }}.service"
 redis_service: "{{ redis_name }}.service"
 quay_server_hostname: ""
+database_type: postgresql
+database_service: "{{ database_type }}.service"
 
 #Systemd
 systemd_service_dir: /usr/lib/systemd/system
@@ -29,6 +31,18 @@ postgresql_admin_user: postgres
 postgresql_username: quay
 postgresql_password: quay
 postgresql_admin_password: quay
+postgresql_db_uri: "postgresql://{{ postgresql_admin_user }}:{{ postgresql_admin_password }}@{{ database_service }}/{{ postgresql_database }}"
+
+# MySQL
+mysql_image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest
+mysql_storage_dir: /opt/mysql/data
+mysql_container_storage_dir: /var/lib/mysql/data
+mysql_database: quay
+mysql_root_username: root
+mysql_username: quay
+mysql_password: quay
+mysql_root_password: quay
+mysql_db_uri: "mysql+pymysql://{{ mysql_root_username }}:{{ mysql_root_password }}@{{ database_service }}/{{ mysql_database }}"
 
 # Redis
 redis_image: quay.io/quay/redis:latest

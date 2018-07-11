@@ -7,7 +7,7 @@
   notify: "Restart quay service"
   with_items:
     - { src: quay.j2, dest: "{{ systemd_environmenfile_dir}}/{{ quay_name }}" }
-    - { src: postgresql.j2, dest: "{{ systemd_environmenfile_dir}}/{{ postgresql_name }}" }
+    - { src: "{{ database_type }}.j2", dest: "{{ systemd_environmenfile_dir}}/{{ database_type }}" }
     - { src: redis.j2, dest: "{{ systemd_environmenfile_dir}}/{{ redis_name }}" }
 
 - name: Configure systemd unit files
@@ -17,5 +17,5 @@
   notify: "Restart quay service"
   with_items:
     - { src: quay.service.j2, dest: "{{ systemd_service_dir}}/{{ quay_service }}" }
-    - { src: postgresql.service.j2, dest: "{{ systemd_service_dir}}/{{ postgresql_service }}" }
+    - { src: "{{ database_service }}.j2", dest: "{{ systemd_service_dir}}/{{ database_service }}" }
     - { src: redis.service.j2, dest: "{{ systemd_service_dir}}/{{ redis_service }}" }
