@@ -1,0 +1,20 @@
+---
+- name: Create Jira Permission Scheme
+  uri:
+    url: "{{ atlassian.jira.url }}/rest/api/2/permissionscheme"
+    method: POST
+    user: "{{ atlassian.jira.username }}"
+    password: "{{ atlassian.jira.password }}"
+    return_content: yes
+    force_basic_auth: yes
+    body_format: json
+    header:
+      - Accept: 'application/json'
+      - Content-Type: 'application/json'
+    body: "{{ lookup('template','permissionScheme.json.j2') }}"
+    status_code: 201
+  register: permissionScheme
+
+- name: Set fact for Permission Scheme ID
+  set_fact:
+    PermissionScheme: "{{ permissionScheme.json.id }}"

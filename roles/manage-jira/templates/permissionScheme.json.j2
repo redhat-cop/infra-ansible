@@ -1,0 +1,946 @@
+{ "name": "{{ atlassian.jira.permission_scheme.name }}",
+  "description": "{{ atlassian.jira.permission_scheme.description }}",
+  "permissions": [
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "ADMINISTER_PROJECTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "BROWSE_PROJECTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "MANAGE_SPRINTS_PERMISSION"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "VIEW_DEV_TOOLS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "VIEW_READONLY_WORKFLOW"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "ASSIGNABLE_USER"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "ASSIGN_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "CLOSE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "CREATE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "DELETE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "EDIT_ISSUES"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "LINK_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "MODIFY_REPORTER"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "MOVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "RESOLVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "SCHEDULE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "SET_ISSUE_SECURITY"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "TRANSITION_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "MANAGE_WATCHERS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "VIEW_VOTERS_AND_WATCHERS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "ADD_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "DELETE_ALL_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "DELETE_OWN_COMMENTS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "EDIT_ALL_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "EDIT_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "CREATE_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "DELETE_ALL_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "DELETE_OWN_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "DELETE_ALL_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "DELETE_OWN_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "EDIT_ALL_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "EDIT_OWN_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.jira_admin }}"
+       },
+       "permission": "WORK_ON_ISSUES"
+     },
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "ASSIGNABLE_USER"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "ASSIGN_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "BROWSE_PROJECTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "CLOSE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "CREATE_ISSUES"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "DELETE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "EDIT_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "LINK_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "MOVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "RESOLVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "SCHEDULE_ISSUES"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "TRANSITION_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "ADD_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "DELETE_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "EDIT_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "CREATE_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "DELETE_OWN_ATTACHMENTS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "DELETE_OWN_WORKLOGS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "EDIT_OWN_WORKLOGS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "VIEW_DEV_TOOLS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "VIEW_READONLY_WORKFLOW"
+     },
+    
+    {
+       "holder": {
+         "type": "group",
+         "parameter": "atlassian.jira.core_team"
+       },
+       "permission": "WORK_ON_ISSUES"
+     },
+     
+    {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "ADMINISTER_PROJECTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "BROWSE_PROJECTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "MANAGE_SPRINTS_PERMISSION"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "VIEW_DEV_TOOLS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "VIEW_READONLY_WORKFLOW"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "ASSIGNABLE_USER"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "ASSIGN_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "CLOSE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "CREATE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "DELETE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "EDIT_ISSUES"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "LINK_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "MODIFY_REPORTER"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "MOVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "RESOLVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "SCHEDULE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "SET_ISSUE_SECURITY"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "TRANSITION_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "MANAGE_WATCHERS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "VIEW_VOTERS_AND_WATCHERS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "ADD_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "DELETE_ALL_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "DELETE_OWN_COMMENTS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "EDIT_ALL_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "EDIT_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "CREATE_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "DELETE_ALL_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "DELETE_OWN_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "DELETE_ALL_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "DELETE_OWN_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "EDIT_ALL_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "EDIT_OWN_WORKLOGS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.lead }}"
+       },
+       "permission": "WORK_ON_ISSUES"
+     },
+    
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "ASSIGNABLE_USER"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "ASSIGN_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "BROWSE_PROJECTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "CLOSE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "CREATE_ISSUES"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "DELETE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "EDIT_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "LINK_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "MOVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "RESOLVE_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "SCHEDULE_ISSUES"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "TRANSITION_ISSUES"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "ADD_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "DELETE_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "EDIT_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "CREATE_ATTACHMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "DELETE_OWN_ATTACHMENTS"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "DELETE_OWN_WORKLOGS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "EDIT_OWN_WORKLOGS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "VIEW_DEV_TOOLS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "VIEW_READONLY_WORKFLOW"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.team_member }}"
+       },
+       "permission": "WORK_ON_ISSUES"
+     },
+         {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "ADD_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "BROWSE_PROJECTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "DELETE_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "EDIT_OWN_COMMENTS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "LINK_ISSUES"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "VIEW_DEV_TOOLS"
+     },
+  
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "VIEW_READONLY_WORKFLOW"
+     },
+
+     {
+       "holder": {
+         "type": "group",
+         "parameter": "{{ atlassian.jira.project.viewer }}"
+       },
+       "permission": "WORK_ON_ISSUES"
+     }
+   ]
+ }
