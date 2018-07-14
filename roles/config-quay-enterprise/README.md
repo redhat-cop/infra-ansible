@@ -20,6 +20,11 @@ This role contains a number of variables to customize the deployment of Quay Ent
 |redis_image|Redis image|`quay.io/quay/redis:latest`|
 |quay_image|Quay Enterprise image|`quay.io/coreos/quay:v2.9.2`|
 |quay_server_hostname|Hostname configured within Quay| `inventory_hostname` Ansible variable|
+|quay_superuser_username|Quay superuser user name|``|
+|quay_superuser_password|Quay superuser user password|``|
+|quay_registry_email|Quay superuser email address|``|
+
+If `quay_superuser_username`, `quay_superuser_password` and `quay_superuser_email` are provided, the initial setup and configuration of Quay will be completed automatically.
 
 ## Dependencies
 

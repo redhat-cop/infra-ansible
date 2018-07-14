@@ -21,8 +21,8 @@ global
     stats socket /var/lib/haproxy/stats
 
     # utilize system-wide crypto-policies
-    ssl-default-bind-ciphers PROFILE=SYSTEM
-    ssl-default-server-ciphers PROFILE=SYSTEM
+    #ssl-default-bind-ciphers PROFILE=SYSTEM
+    #ssl-default-server-ciphers PROFILE=SYSTEM
 
 #---------------------------------------------------------------------
 # common defaults that all the 'listen' and 'backend' sections will
@@ -72,9 +72,11 @@ backend quay_http_be
 backend quay_https_be
     mode tcp
     balance roundrobin
+    option httpchk GET /health/instance
+    http-check expect status 200
 
     {% for host in groups.quay_enterprise %}
-    server quay_https_{{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:443 check
+    server quay_https_{{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:443 check check-ssl verify none
     {% endfor %}
 
 backend redis_be

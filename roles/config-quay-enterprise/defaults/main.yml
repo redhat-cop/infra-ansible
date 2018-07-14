@@ -2,9 +2,6 @@
 
 # Base Configurations
 quay_name: quay
-#postgresql_name: postgresql
-#mysql_name: mysql
-#redis_name: redis
 quay_service: "{{ quay_name }}.service"
 quay_server_hostname:
 database_type: postgresql
@@ -42,3 +39,8 @@ quay_ssl_generate_country: US
 quay_ssl_generate_organization: Red Hat
 quay_ssl_generate_organizational_unit: CoP
 quay_ssl_generate_days_validity: 365
+
+# Superuser Configuration
+quay_superuser_username: ""
+quay_superuser_password: ""
+quay_superuser_email: ""
