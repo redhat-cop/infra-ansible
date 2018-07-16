@@ -42,7 +42,7 @@ osp_instances:
 - name: "bastion-bob0"
   meta:
     group: bastion
-  image: "Fedora-Cloud-Base-27-1.6.x86_64"
+  image: "Fedora-Cloud-Base-28-1.1.x86_64"
   key_name: "bob-laptop"
   flavor: "m1.medium"
   network: "bob-default"

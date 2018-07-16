@@ -1,14 +1,14 @@
 ---
 
 - name: Provision Instance(s)
-  hosts: localhost
+  hosts: osp-provisioner
   roles:
   - role: osp/admin-volume
   - role: osp/admin-sec-group
   - role: osp/admin-instance
 
 - name: Refresh Server inventory
-  hosts: localhost
+  hosts: osp-provisioner
   gather_facts: False
   tasks:
   - meta: refresh_inventory

@@ -1,4 +1,6 @@
 
+[osp-provisioner]
+localhost
 
 [dns-server:children]
 osp_instances
