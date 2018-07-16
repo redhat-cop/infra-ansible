@@ -1,12 +1,18 @@
 ---
 
+- name: 'Determine required python firewall package'
+  set_fact:
+    python_firewall_package="python3-firewall"
+  when:
+  - ansible_python_version is match("3.*")
+
 - name: 'Install required packages'
   package:
     name: '{{ item }}'
     state: installed
   with_items:
   - firewalld
-  - python-firewall
+  - "{{ python_firewall_package | default('python-firewall') }}"
 
 - name: 'Ensure firewalld is running'
   service:
