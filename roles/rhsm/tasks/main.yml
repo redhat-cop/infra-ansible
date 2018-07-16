@@ -1,7 +1,9 @@
 ---
 
 - name: "Install Satellite certificate (if applicable)"
-  command: "rpm -Uh --force http://{{ rhsm_server_hostname }}/pub/katello-ca-consumer-latest.noarch.rpm"
+  yum:
+    name: http://{{ rhsm_server_hostname }}/pub/katello-ca-consumer-latest.noarch.rpm
+    state: present
   when:
   - rhsm_server_hostname is defined
   - rhsm_server_hostname|trim != ''
