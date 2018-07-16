@@ -2,24 +2,29 @@
 
 - name: 'Generate the HAproxy configuration'
   hosts: lb_mgmt
-  vars: 
-    haproxy_temp_file: '/tmp/haproxy.cfg'
+  pre_tasks:
+  - tempfile:
+      state: file
+      suffix: haproxy
+    register: tempfile
+  - set_fact:
+      haproxy_temp_file: "{{ tempfile.path }}"
   roles:
-  - role: haproxy-config
+  - role: load-balancers/generate-haproxy-config
 
 - name: 'Configure the LB hosts'
   hosts: lb_vms
   become: True
   vars: 
-    haproxy_temp_file: '/tmp/haproxy.cfg'
+    haproxy_temp_file: "{{ hostvars[groups['lb_mgmt']|first].haproxy_temp_file }}"
   roles:
   - role: keepalived
-  - role: haproxy
+  - role: load-balancers/configure-haproxy
   
 - name: 'Clean-Up'
   hosts: lb_mgmt
   tasks: 
   - name: 'Remove tmp file' 
     file:
-      path: '/tmp/haproxy.cfg'
+      path: "{{haproxy_temp_file }}"
       state: absent  

@@ -1,0 +1,43 @@
+---
+
+# Base Configurations
+quay_name: quay
+postgresql_name: postgresql
+redis_name: redis
+quay_service: "{{ quay_name }}.service"
+postgresql_service: "{{ postgresql_name }}.service"
+redis_service: "{{ redis_name }}.service"
+quay_server_hostname: ""
+
+#Systemd
+systemd_service_dir: /usr/lib/systemd/system
+systemd_environmenfile_dir: /etc/sysconfig
+
+# Quay
+quay_image: quay.io/coreos/quay:v2.9.1
+quay_config_dir: /opt/quay/config
+quay_container_config_dir: /conf/stack
+quay_storage_dir: /opt/quay/storage
+quay_container_storage_dir: /datastorage
+
+# Postgresql
+postgresql_image: registry.access.redhat.com/rhscl/postgresql-96-rhel7:latest
+postgresql_storage_dir: /opt/postgresql/data
+postgresql_container_storage_dir: /var/lib/pgsql/data
+postgresql_database: quay
+postgresql_admin_user: postgres
+postgresql_username: quay
+postgresql_password: quay
+postgresql_admin_password: quay
+
+# Redis
+redis_image: quay.io/quay/redis:latest
+redis_storage_dir: /opt/redis/data
+redis_container_storage_dir: /var/lib/redis
+
+# Container Credentials
+container_credentials_file: /root/.docker/config.json
+container_credentials_file_content: {}
+quay_registry_server: quay.io
+quay_registry_auth:
+quay_registry_email:

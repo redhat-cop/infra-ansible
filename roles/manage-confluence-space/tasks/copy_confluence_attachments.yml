@@ -16,8 +16,7 @@
     state: directory
   register: attachment_tempdir
 
-- include: download_attachment.yml
+- include_tasks: download_attachment.yml
   with_items: '{{ attachments_json.json.results }}'
   loop_control:
     loop_var: attachment_data
-
