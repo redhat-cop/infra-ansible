@@ -2,7 +2,7 @@
 
 - name: 'Determine required python firewall package'
   set_fact:
-    python_firewall_package="python3-firewall"
+    python_firewall_package: "python3-firewall"
   when:
   - ansible_python_version is match("3.*")
 
