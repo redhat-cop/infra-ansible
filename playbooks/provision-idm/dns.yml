@@ -1,14 +1,14 @@
 ---
-- name: 'Copying state from idm hosts'
+- name: 'Copying dns_records from idm hosts'
   hosts: dns-server
   tasks:
    - set_fact: 
        dns_records: "{{ hostvars[groups['idm'][0]]['dns_records'] }}" 
        
-- name: 'Add DNS records for IdM'
-  hosts: dns-server
-  roles:
-  - role: dns
+
+- name: Add DNS records for IdM'
+  import_playbook: ../update-dns-records.yml
+  vars:
     dns_records_add:
     - view: "{{ dns_records.view }}"
       zone: "{{ dns_records.reverse.zone }}"

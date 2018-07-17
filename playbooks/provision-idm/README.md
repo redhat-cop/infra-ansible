@@ -5,7 +5,7 @@ Currently it is configured to provision OpenStack resources, but other providers
 
 
 ## Prerequisites
-You must have a working DNS server which will be able to access your IdM VM in order to setup forward and reverse DNS records. You will need the DNS zone key names, key secrets, and key algorithms. If you used the provision-dns-server playbook in [infra-ansible](https://github.com/redhat-cop/infra-ansible/tree/master/playbooks/provision-dns-server), there is a print_dns_key flag you can pass to have it print out these values.
+You must have a working DNS server which accepts "nsupdate" connections for the IdM VMs forward and reverse DNS records to be added/updated to the existing DNS zones. You will need the DNS zone key names, key secrets, and key algorithms.
 
 ## Example run
 You will need to modify the example inventory provided in `inventory/idm` to fit your desired configuration, including information from your DNS server such as the key names, secrets, and more. 

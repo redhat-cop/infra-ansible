@@ -11,7 +11,6 @@ rhsm_password: my_rhsm_password
 rhsm_pool: my_pool_id
 rhsm_repos:
  - rhel-7-server-rpms
- - rhel-7-server-extras-rpms
 
 dns_records:
   server: "dns_server_ip"

@@ -1,7 +1,7 @@
 [idm]
 
 [dns-server]
-localhost ansible_connection=local
+localhost
 
 [osp_instances:children]
 idm

@@ -12,6 +12,3 @@
         }, recursive=True) }}"
       when: 
       - hosting_infrastructure == 'openstack'
-
-    - debug:
-        msg: "{{ dns_records }}"
