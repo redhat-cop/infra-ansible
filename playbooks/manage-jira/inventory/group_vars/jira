@@ -15,8 +15,6 @@ atlassian:
       lead: "Example Lead"
       team_member: "Example Team Member"
       viewer: "Example Viewer"
-      type_key: "software" 
-      template_key: "com.pyxis.greenhopper.jira:gh-simplified-scrum"
       category_name: "Example Project Category"
       category_description: "Exampe Project Category"
     
