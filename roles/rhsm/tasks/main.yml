@@ -1,7 +1,19 @@
 ---
 
+# Need to use the 'command' module for this task since the "redhat_subscription" module
+# won't do a full "clean" when using the "state: absent" option
+- name: 'Unregister the system if already registered - if this is a force re-registration'
+  command: 'subscription-manager clean'
+  when:
+  - (rhsm_force_register|default('no'))|lower == 'yes'
+
+# Need to use the 'command' module for this task since the "yum" module
+# won't honor an "upgrade" of the RPM in case where the source server changed. 
+# - note the 'warn: False' set because of this situation
 - name: "Install Satellite certificate (if applicable)"
   command: "rpm -Uh --force http://{{ rhsm_server_hostname }}/pub/katello-ca-consumer-latest.noarch.rpm"
+  args:
+    warn: False
   when:
   - rhsm_server_hostname is defined
   - rhsm_server_hostname|trim != ''
@@ -15,6 +27,7 @@
     server_hostname: "{{ rhsm_server_hostname | default(omit) }}"
     activationkey: "{{ rhsm_activationkey | default(omit) }}"
     org_id: "{{ rhsm_org_id | default(omit) }}"
+    force_register: "{{ rhsm_force_register | default(omit) }}"
 
 - name: "Obtain currently enabled repos"
   shell: 'subscription-manager repos --list-enabled | sed -ne "s/^Repo ID:[^a-zA-Z0-9]*\(.*\)/\1/p"'
