@@ -1,3 +1,7 @@
+
+[osp-provisioner]
+localhost
+
 [idm]
 
 [dns-server]
