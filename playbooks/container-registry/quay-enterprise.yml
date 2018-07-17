@@ -1,7 +1,16 @@
 ---
 
-- name: Install Quay Enterprise
-  hosts: quay_enterprise
+- name: Preflight Checks
+  hosts: localhost
+  tasks:
+    - name: Validate Required Group Configuration
+      fail:
+        msg: "'database', 'redis' and 'quay_enterprise' groups must be specified"
+      when:
+        - "'redis' not in groups or groups['redis']| length == 0 or 'database' not in groups or groups['database']| length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise']| length == 0"
+
+- name: Install Docker
+  hosts: docker_hosts
   tasks:
     - name: Configure Docker
       include_role:
@@ -13,7 +22,124 @@
         name: config-docker
       when: docker_install|default(false)
 
-    - name: Include Quay Role
+- name: Install HAProxy
+  hosts: lb
+  tasks:
+    - name: Setup
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: true
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+    - name: Set Configuration File Facts
+      set_fact:
+        haproxy_cfg_tmp_file: "/tmp/haproxy-{{ inventory_hostname }}.cfg"
+    - name: Open Allow Redis Port
+      seport:
+        ports: 6379
+        proto: tcp
+        setype: http_port_t
+        state: present
+    - name: Create HAProxy Template
+      template:
+        src: "haproxy.cfg.j2"
+        dest: "{{ haproxy_cfg_tmp_file }}"
+    - name: Fetch HAProxy file
+      fetch:
+        src: "{{ haproxy_cfg_tmp_file }}"
+        dest: "{{ haproxy_cfg_tmp_file }}"
+        flat: yes
+      delegate_to: "{{ groups['lb'][0] }}"
+    - name: Delete HAProxy Configuration File from Remote
+      file:
+        state: absent
+        path: "{{ haproxy_cfg_tmp_file }}"
+    - name: Install HAProxy
+      include_role:
+        name: haproxy
+      vars:
+        haproxy_temp_file: "{{ haproxy_cfg_tmp_file }}"
+    - name: Delete Local HAProxy Configuration File
+      file:
+        state: absent
+        path: "{{ haproxy_cfg_tmp_file }}"
+      delegate_to: "localhost"
+    - name: 'Open Additional HAProxy Ports'
+      firewalld: 
+        port: "{{item}}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+      with_items:
+        - 8080/tcp
+        - 6379/tcp
+
+- name: Install Database
+  hosts: database
+  tasks:
+    - name: Install MySQL
+      include_role:
+        name: config-mysql
+      vars:
+        mode: containerized
+        mysql_username: "{{ database_username }}"
+        mysql_password: "{{ database_password }}"
+        mysql_root_username: "{{ database_admin_username }}"
+        mysql_root_password: "{{ database_admin_password }}"
+        mysql_database: "{{ database_name }}"
+      when: database_type == "mysql"
+
+    - name: Install and Configure PostgreSQL
+      block:
+        - name: Install PostgreSQL
+          include_role:
+            name: config-postgresql
+          vars:
+            mode: containerized
+            postgresql_username: "{{ database_username }}"
+            postgresql_password: "{{ database_password }}"
+            postgresql_admin_password: "{{ database_admin_password }}"
+            postgresql_database: "{{ database_name }}"
+        
+        - name: Flush Handlers
+          meta: flush_handlers
+
+        - name: Sleep to give PostgreSQL a chance to finish starting up
+          pause:
+            seconds: 10
+
+        - name: Locate PostgreSQL Container
+          command: docker ps --filter=name=postgresql.service -q
+          register: postgresql_container
+
+        - name: Configure PostgreSQL
+          shell: docker exec -i {{ postgresql_container.stdout }} /bin/bash -c 'PGPASSWORD={{ database_admin_password }} psql {{ database_name }} -c "CREATE EXTENSION pg_trgm;"'
+          register: shell_result
+          failed_when:
+            - shell_result.rc != 0
+            - "'already exists' not in shell_result.stderr"
+      when: database_type == "postgresql"
+
+- name: Install Redis
+  hosts: redis
+  tasks:
+    - name: Install Redis
+      include_role:
+        name: config-redis
+      vars:
+        mode: containerized
+
+- name: Install Quay Enterprise
+  hosts: quay_enterprise
+  tasks:
+    - name: Set Quay Hostname
+      set_fact:
+        quay_hostname: "{{ hostvars[groups['lb'][0]]['inventory_hostname'] }}"
+      when: quay_hostname is undefined and groups['lb'] | length > 0
+    - name: Install Quay
       include_role:
         name: config-quay-enterprise
-
+      vars:
+        database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        redis_host: "{{ quay_hostname | default(hostvars[groups['lb'][0]]['inventory_hostname']) if groups['lb'] | length > 0 else hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        quay_server_hostname: "{{ quay_hostname | default(inventory_hostname) }}"
