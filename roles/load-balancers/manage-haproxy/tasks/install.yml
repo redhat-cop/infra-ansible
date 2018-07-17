@@ -13,13 +13,13 @@
   notify: 'enable and start service(s)'
 
 - name: 'Start firewalld'
-  service: 
+  service:
     name: firewalld
     state: started
     enabled: yes
 
 - name: 'Open Firewall for HAproxy use'
-  firewalld: 
+  firewalld:
     port: "{{item}}"
     permanent: yes
     state: enabled
@@ -29,9 +29,8 @@
   - 443/tcp
   - 8443/tcp
 
-- name: 'Enable syslog logging' 
+- name: 'Enable syslog logging'
   copy:
     src: rsyslog_haproxy.conf
     dest: /etc/rsyslog.d/haproxy.conf
   notify: 'restart rsyslog'
-

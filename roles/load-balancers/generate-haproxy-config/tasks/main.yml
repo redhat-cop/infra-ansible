@@ -1,4 +1,0 @@
----
-
-- import_tasks: prereq.yml
-- import_tasks: haproxy-config.yml

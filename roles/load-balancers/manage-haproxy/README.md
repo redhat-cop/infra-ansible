@@ -1,8 +1,15 @@
-# HAproxy
+# manage-haproxy
 
-This role generates a `haproxy.cfg` file (the haproxy role can be used to copy it to the target HAproxy servers).
+This role has 3 features:
+
+ 1) installs HAproxy and configures the host to run it ( *install.yml* )
+ 2) generates a `haproxy.cfg` file ( *generate-config.yml* )
+ 3) activates the haproxy.cfg file on the host ( *activate-config.yml* )
+
+**Note:** As this role doesn't have a `main.yml`, each of the above will need to be called with `include_role` or `import_role` with the `tasks_from` argument.
 
 ## Example
+
 The following is an example of an inventory definition and the resulting haproxy.cfg file
 
 ### Inventory
@@ -23,6 +30,10 @@ lb_config:
     lb_host_vip: '192.168.1.10'
     lb_host_port: 443
     lb_ssl_enabled: True [optional for port 443]
+  - lb_name: my-secure-web-server-8443
+    lb_host_vip: '192.168.1.10'
+    lb_host_port: 8443
+    lb_ssl_enabled: True
   lb_entries:
   - lb_match_fqdn: master.env1.example.com
     lb_match_port: 8443
@@ -94,8 +105,8 @@ defaults
 
 
 
-frontend ocp_masters
-    bind 10.9.55.80:8443
+frontend my-secure-web-server-8443
+    bind 192.168.1.10:8443
     mode tcp
 
     tcp-request inspect-delay 5s
@@ -107,8 +118,8 @@ frontend ocp_masters
 
 
 
-frontend ocp_routers_https
-    bind 10.9.55.80:443
+frontend my-secure-web-server
+    bind 192.168.1.10:443
     mode tcp
 
     tcp-request inspect-delay 5s
@@ -132,8 +143,8 @@ backend https_8443-master1.env1.example.com
 
     server master1.env1.example.com master1.env1.example.com:8443 check
 
-frontend ocp_routers_http
-    bind 10.9.55.80:80
+frontend my-web-server
+    bind 192.168.1.10:80
 
     acl router.env1.example.com hdr_sub(host) -i apps.env1.example.com
 
@@ -150,7 +161,6 @@ backend http_80-router.env1.example.com
     server router1.env1.example.com router1.env1.example.com:80 cookie A check
     server router2.env1.example.com router2.env1.example.com:80 cookie A check
 
-# Default backend - used for the 'stats' page
 backend lb_http_default
     mode http
     stats enable

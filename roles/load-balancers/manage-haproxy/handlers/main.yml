@@ -14,14 +14,20 @@
     state: restarted
 
 - name: 'reload haproxy'
-  service: 
+  service:
     name: haproxy
-    state: reloaded 
+    state: reloaded
 
 - name: 'remove tmp new file'
   file:
     path: '{{ temp_new_file }}'
     state: absent
+  delegate_to: localhost
+  run_once: True
 
-    
-
+- name: 'cleanup temp dir'
+  file:
+    path: '{{ haproxy_temp_dir }}'
+    state: absent
+  delegate_to: localhost
+  run_once: True
