@@ -16,14 +16,13 @@
       dest: '/etc/haproxy/haproxy.cfg'
       backup: 'yes'
     notify: 'reload haproxy'
-
-  - name: 'Clean-up the temp file'
-    file:
-      path: "{{ haproxy_temp_file }}"
-      state: absent
-    when:
-    - (clean_up_temp|default('yes'))|lower == 'yes'
-    delegate_to: localhost
-    run_once: True
-
   become: True
+
+- name: 'Clean-up the temp file'
+  file:
+    path: "{{ haproxy_temp_file }}"
+    state: absent
+  when:
+  - (clean_up_temp|default('yes'))|lower == 'yes'
+  delegate_to: localhost
+  run_once: True

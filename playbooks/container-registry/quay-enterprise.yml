@@ -54,18 +54,18 @@
       file:
         state: absent
         path: "{{ haproxy_cfg_tmp_file }}"
-    - name: Install HAProxy
-      include_role:
-        name: haproxy
-      vars:
-        haproxy_temp_file: "{{ haproxy_cfg_tmp_file }}"
-    - name: Delete Local HAProxy Configuration File
-      file:
-        state: absent
-        path: "{{ haproxy_cfg_tmp_file }}"
-      delegate_to: "localhost"
+    - name: Install HAProxy and Activate configuration
+      block:
+      - include_role:
+          name: load-balancers/manage-haproxy
+          tasks_from: install
+      - include_role:
+          name: load-balancers/manage-haproxy
+          tasks_from: activate-config
+        vars:
+          haproxy_temp_file: "{{ haproxy_cfg_tmp_file }}"
     - name: 'Open Additional HAProxy Ports'
-      firewalld: 
+      firewalld:
         port: "{{item}}"
         permanent: yes
         state: enabled
@@ -100,7 +100,7 @@
             postgresql_password: "{{ database_password }}"
             postgresql_admin_password: "{{ database_admin_password }}"
             postgresql_database: "{{ database_name }}"
-        
+
         - name: Flush Handlers
           meta: flush_handlers
 
