@@ -7,7 +7,7 @@
 {% endif %}
 
 frontend {{ fe.lb_name }}
-    bind {{ fe.lb_host_vip }}:{{ fe.lb_host_port }}
+    bind {{ fe.lb_host_vip | default('*') }}:{{ fe.lb_host_port }}
 {% if lb_ssl_enabled %}
     mode tcp
 
@@ -15,6 +15,7 @@ frontend {{ fe.lb_name }}
     tcp-request content accept if { req_ssl_hello_type 1 }
 {% endif %}
 
+{% if lb_config.lb_entries is defined %}
 {% for entry in lb_config.lb_entries %}
 {% if entry.lb_match_port|string == fe.lb_host_port|string %}
 {% set lb_match_fqdn = (entry.name | default(entry.lb_match_fqdn)) | regex_replace('^\.', '') %}
@@ -32,3 +33,6 @@ frontend {{ fe.lb_name }}
     use_backend {{ lb_match_fqdn }}-{{ entry.lb_match_port }} if {{ lb_match_fqdn }}
 {% endif %}
 {% endfor %}
+{% else %}
+    default_backend {{ fe.lb_name }}
+{% endif %}

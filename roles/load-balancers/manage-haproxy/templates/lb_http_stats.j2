@@ -1,6 +1,6 @@
 
 frontend lb_stats_fe
-    bind {{ page_config.host_vip }}:{{ page_config.host_port }}
+    bind {{ page_config.host_vip | default('*') }}:{{ page_config.host_port }}
 
     default_backend lb_stats_be
 

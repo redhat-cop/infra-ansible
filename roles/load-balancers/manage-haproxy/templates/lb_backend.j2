@@ -11,11 +11,10 @@
 {% set lb_match_fqdn = (entry.name | default(entry.lb_match_fqdn)) | regex_replace('^\.', '') %}
 
 backend {{ lb_match_fqdn }}-{{ entry.lb_match_port }}
+    balance roundrobin
 {% if lb_ssl_enabled %}
     mode tcp
-    balance roundrobin
 {% else %}
-    balance roundrobin
     option httpclose
     option forwardfor
     cookie JSESSIONID prefix

@@ -24,55 +24,34 @@
 
 - name: Install HAProxy
   hosts: lb
-  tasks:
+  pre_tasks:
     - name: Setup
       setup:
       delegate_to: "{{ item }}"
       delegate_facts: true
       with_items:
         - "{{ groups['quay_enterprise'] }}"
-    - name: Set Configuration File Facts
-      set_fact:
-        haproxy_cfg_tmp_file: "/tmp/haproxy-{{ inventory_hostname }}.cfg"
-    - name: Open Allow Redis Port
-      seport:
-        ports: 6379
-        proto: tcp
-        setype: http_port_t
-        state: present
-    - name: Create HAProxy Template
-      template:
-        src: "haproxy.cfg.j2"
-        dest: "{{ haproxy_cfg_tmp_file }}"
-    - name: Fetch HAProxy file
-      fetch:
-        src: "{{ haproxy_cfg_tmp_file }}"
-        dest: "{{ haproxy_cfg_tmp_file }}"
-        flat: yes
-      delegate_to: "{{ groups['lb'][0] }}"
-    - name: Delete HAProxy Configuration File from Remote
-      file:
-        state: absent
-        path: "{{ haproxy_cfg_tmp_file }}"
-    - name: Install HAProxy and Activate configuration
-      block:
-      - include_role:
-          name: load-balancers/manage-haproxy
-          tasks_from: install
-      - include_role:
-          name: load-balancers/manage-haproxy
-          tasks_from: activate-config
-        vars:
-          haproxy_temp_file: "{{ haproxy_cfg_tmp_file }}"
-    - name: 'Open Additional HAProxy Ports'
-      firewalld:
-        port: "{{item}}"
-        permanent: yes
-        state: enabled
-        immediate: yes
-      with_items:
-        - 8080/tcp
-        - 6379/tcp
+  roles:
+    - role: load-balancers/manage-haproxy
+      lb_config:
+        stats_page:
+          enabled: True
+          host_vip: "{{ haproxy_host_vip | default('*') }}"
+          host_port: 8080
+          username: "{{ haproxy_stats_username | default('admin') }}"
+          password: "{{ haproxy_stats_password | default('admin') }}"
+        frontends:
+        - lb_name: quay_http
+          lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+          lb_host_port: 80
+        - lb_name: quay_https
+          lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+          lb_host_port: 443
+        - lb_name: redis
+          lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+          lb_host_port: 6379
+          lb_ssl_enabled: True
+      lb_backend_template: "{{ playbook_dir }}/templates/haproxy_backend.cfg.j2"
 
 - name: Install Database
   hosts: database

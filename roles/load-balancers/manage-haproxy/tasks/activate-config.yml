@@ -16,6 +16,27 @@
       dest: '/etc/haproxy/haproxy.cfg'
       backup: 'yes'
     notify: 'reload haproxy'
+
+  - name: 'Open Firewall for LB use (TCP only)'
+    firewalld:
+      port: "{{ fe.lb_host_port }}/tcp"
+      permanent: yes
+      state: enabled
+      immediate: yes
+    loop_control:
+      loop_var: fe
+    loop: "{{ lb_config.frontends|flatten(levels=1) }}"
+
+  - name: 'Tweak SELinux for LB use (TCP only)'
+    seport:
+      ports: "{{ fe.lb_host_port }}"
+      proto: tcp
+      setype: http_port_t
+      state: present
+    loop_control:
+      loop_var: fe
+    loop: "{{ lb_config.frontends|flatten(levels=1) }}"
+
   become: True
 
 - name: 'Clean-up the temp file'
