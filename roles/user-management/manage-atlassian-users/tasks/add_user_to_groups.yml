@@ -1,7 +1,7 @@
 ---
 - name: Add user to groups
   uri:
-    url: "{{ atlassian_url }}/rest/api/2/group/user?groupname={{ item|replace(' ', '%20') }}"
+    url: "{{ atlassian_url }}/rest/api/2/group/user?groupname={{ urlencode(item) }}"
     method: POST
     user: '{{ atlassian_username }}'
     password: '{{ atlassian_password }}'
