@@ -12,6 +12,7 @@
     - firewalld
     - python-firewall
     - libsemanage-python
+    - policycoreutils-python
     notify: 'enable and start service(s)'
 
   - name: 'Start firewalld'
