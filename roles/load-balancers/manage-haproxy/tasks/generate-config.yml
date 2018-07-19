@@ -24,12 +24,12 @@
 
   - name: 'Populate the common config portion for HAproxy'
     template:
-      src: lb_common.j2
+      src: "{{ lb_common_template | default('lb_common.j2') }}"
       dest: '{{ haproxy_temp_dir }}/0001_lb.cfg'
 
   - name: 'Configure and Populate LB Frontends'
     template:
-      src: lb_frontend.j2
+      src: "{{ lb_frontend_template | default('lb_frontend.j2') }}"
       dest: '{{ haproxy_temp_dir }}/0002_lb_{{ fe.lb_name }}_{{ fe.lb_host_vip }}_{{ fe.lb_host_port }}.cfg'
     loop_control:
       loop_var: fe
@@ -37,7 +37,7 @@
 
   - name: 'Configure and Populate LB Backends'
     template:
-      src: lb_backend.j2
+      src: "{{ lb_backend_template | default('lb_backend.j2') }}"
       dest: '{{ haproxy_temp_dir }}/0003_lb.cfg'
 
   - name: 'Populate the stats page config'

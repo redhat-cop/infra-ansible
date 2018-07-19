@@ -20,17 +20,6 @@
       state: started
       enabled: yes
 
-  - name: 'Open Firewall for HAproxy use'
-    firewalld:
-      port: "{{item}}"
-      permanent: yes
-      state: enabled
-      immediate: yes
-    with_items:
-    - 80/tcp
-    - 443/tcp
-    - 8443/tcp
-
   - name: 'Enable syslog logging'
     copy:
       src: rsyslog_haproxy.conf

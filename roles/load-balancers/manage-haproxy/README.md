@@ -6,8 +6,6 @@ This role has 3 features:
  2) generates a `haproxy.cfg` file ( *generate-config.yml* )
  3) activates the haproxy.cfg file on the host ( *activate-config.yml* )
 
-**Note:** As this role doesn't have a `main.yml`, each of the above will need to be called with `include_role` or `import_role` with the `tasks_from` argument. See the [manage-lb playbooks](../../../playbooks/manage-lb/) for examples.
-
 ## Example
 
 The following is an example of an inventory definition and the resulting haproxy.cfg file
