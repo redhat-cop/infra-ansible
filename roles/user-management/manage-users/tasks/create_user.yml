@@ -10,7 +10,7 @@
       name: "{{ item.user_name | trim }}"
       mail: "{{ item.email | default('') }}"
 # The addition of expiration date is a request that will be submitted upstream
-#      expiration_date: "{{ item.expiration_date | default('') }}"
+#      krbprincipalexpiration: "{{ item.expiration_date | default('') }}"
     with_items: "{{ users }}"
     register: idm_user_list
 
