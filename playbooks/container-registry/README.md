@@ -30,7 +30,7 @@ Four host groups are available and configured in the [hosts](../../inventory/qua
 The following is a list of the most commonly utilized inventory variables used to drive the execution (not comprehensive):
 
 | variable | info |
-|---|---|---|
+|---|---|
 |quay_registry_auth|Base64 encoded value to access a secured registry for Quay|
 |database_type|Database type (`postgresql` or `mysql`)|
 |docker_install|Boolean whether to install and configure docker|
