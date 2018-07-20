@@ -47,9 +47,9 @@ curl --user email@example.com:<api_token> \
 |**project.name**| project name | yes | N/A
 |**project.key**| Project keys must be unique and start with an uppercase letter followed by one or more uppercase alphanumeric characters. Required when creating a project | yes | N/A
 |**project.description**| A brief description of the project| yes | N/A
-|**group.lead**| Name of the `project.lead` group to be added to the permissions scheme | yes | N/A
-|**group.team_member**| Name of the `project.team_member` group to be added to the permission scheme  | yes | N/A
-|**group.viewer**| Name of the `project.viewer` group to be added to the permission scheme | yes | N/A
+|**group.lead**| Name of the `lead` group to be added to the permissions scheme | yes | N/A
+|**group.team_member**| Name of the `team_member` group to be added to the permission scheme  | yes | N/A
+|**group.viewer**| Name of the `viewer` group to be added to the permission scheme | yes | N/A
 |**project.category_name**| name of the category to be created | yes | N/A
 |**project.type_key**| The [project type](https://confluence.atlassian.com/x/GwiiLQ?_ga=2.202449363.314925215.1531670255-653786702.1531337567#Jiraapplicationsoverview-Productfeaturesandprojecttypes), which dictates the application-specific feature set | No | `software`
 |**project.template_key**| A prebuilt configuration for a project. The type of the `projectTemplateKey` must match with the type of the `projectTypeKey`| No | `com.pyxis.greenhopper.jira:gh-simplified-scrum`
