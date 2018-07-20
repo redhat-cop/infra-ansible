@@ -78,9 +78,6 @@ atlassian:
       name: "example"
       key: "EX"
       description: "Example Jira Project"
-      lead: "Example Lead"
-      team_member: "Example Team Member"
-      viewer: "Example Viewer"
       category_name: "Example Project Category"
       category_description: "Exampe Project Category"
 
