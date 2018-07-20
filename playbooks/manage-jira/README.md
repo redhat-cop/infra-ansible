@@ -8,10 +8,11 @@ in the `project` section of the inventory.
 eg.
 ```yaml
 atlassian:
-  ....
-  project:
-    template_key: '<value>'
-    type_key: '<value>'
+  jira
+    ....
+    project:
+      template_key: '<value>'
+      type_key: '<value>'
 ```    
 
 You can also use your own `Permission-Scheme` by updating
@@ -20,10 +21,10 @@ You can also use your own `Permission-Scheme` by updating
 eg.
 ```yaml
 atlassian:
-  ....
-  ....
-  permission_scheme:
-    id: '<value>'
+  jira
+    ....
+    permission_scheme:
+      id: '<value>'
 ```    
 
 Use `API` to get the `id` of all the [permission schemes](https://developer.atlassian.com/cloud/jira/platform/rest/#api-api-2-permissionscheme-get) available to you in Jira.
