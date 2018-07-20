@@ -4,7 +4,7 @@ This ansible role by default uses `simplified-scrum` template and `software` pro
 The template and project type key can be changed by adding the following variables with their values
 
 `'template_key': '<value>'` and `'type_key': '<value>'` 
-in the `project` section of the inventory.
+in the `atlassian.jira.project` section of the inventory.
 eg.
 ```yaml
 atlassian:
@@ -17,7 +17,7 @@ atlassian:
 
 You can also use your own `Permission-Scheme` by updating
 
-`'permissionScheme': <id>`  in the `permission_scheme` section in the inventory with a valid `id` of an existing permission scheme.
+`'permissionScheme': <id>`  in the `atlassian.jira.permission_scheme` section in the inventory with a valid `id` of an existing permission scheme.
 eg.
 ```yaml
 atlassian:
