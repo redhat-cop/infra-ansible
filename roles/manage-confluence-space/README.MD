@@ -18,6 +18,7 @@ All of the following variables needs to be set.
 - `confluence_space_source_space_key`
 - `confluence_space_name`
 - `confluence_space_description`
+-  `confluence_space_home_page`
 - `source_confluence_site_username`
 - `source_confluence_site_password`
 - `destination_confluence_site_username`
@@ -41,4 +42,4 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: confluence-space-copy }
+         - { role: manage-confluence-space }
