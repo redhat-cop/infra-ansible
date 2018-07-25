@@ -1,6 +1,8 @@
 ---
 
+# Use a 'block' to ensure "become: True" for all tasks requiring elevated privileges
 - block:
+
   - name: 'Copy the HAproxy config file to a temp location for validity checking'
     copy:
       src: '{{ haproxy_temp_file }}'
@@ -37,6 +39,7 @@
       loop_var: fe
     loop: "{{ lb_config.frontends|flatten(levels=1) }}"
 
+  # End of outer block for "become: True"
   become: True
 
 - name: 'Clean-up the temp file'
