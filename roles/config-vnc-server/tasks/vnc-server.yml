@@ -20,8 +20,8 @@
     path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
   register: passwd_info 
 
-- name: "Set a default vnc password (use 'vncpasswd' to change)"
-  shell: "echo vncpasswd01 | vncpasswd -f > {{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
+- name: "Set a vnc password"
+  shell: "echo {{ vnc_password | default('vncpasswd01') }} | vncpasswd -f > {{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
   when: passwd_info.stat.exists == False
 
 - name: "Ensure correct ownership of the vnc password file"
