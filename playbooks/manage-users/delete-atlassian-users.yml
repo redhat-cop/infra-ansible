@@ -1,0 +1,4 @@
+---
+- hosts: jira
+  roles: 
+    - delete-atlassian-users

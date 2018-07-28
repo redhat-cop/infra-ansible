@@ -1,0 +1,6 @@
+---
+- include_tasks: delete_user.yml
+  with_items: "{{ atlassian.delete }}"
+  loop_control: 
+    loop_var: user
+  when: atlassian.delete|length > 0  
