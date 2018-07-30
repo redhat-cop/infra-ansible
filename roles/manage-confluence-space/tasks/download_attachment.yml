@@ -1,6 +1,7 @@
 ---
 - name: Download attachment from source
   get_url:
+<<<<<<< HEAD
     url: '{{ confluence_space_source_url }}/wiki/{{ attachment_data._links.download }}'
     dest: '{{ attachment_tempdir.path }}/{{ attachment_data.title }}'
     force: yes
@@ -11,4 +12,17 @@
 
 - name: Upload attachment to destination
   command: 'curl -u {{ destination_confluence_site_username }}:{{ destination_confluence_site_password }} -X POST -H "X-Atlassian-Token: no-check" -F "file=@{{ attachment_tempdir.path }}/{{ attachment_data.title }}" {{ confluence_space_destination_url }}/wiki/rest/api/content/{{ confluence_content_ids.value.id }}/child/attachment'
+=======
+    url: '{{ confluenc.espace.url }}{{ attachment_data._links.download }}'
+    dest: '{{ attachment_tempdir.path }}/{{ attachment_data.title }}'
+    force: yes
+    force_basic_auth: yes
+    url_username: '{{ confluence.source.username }}'
+    url_password: '{{ confluence.source.password }}'
+  no_log: true
+  delegate_to: 127.0.0.1
+
+- name: Upload attachment to destination
+  command: 'curl -u {{ confluence.destination.username }}:{{ confluence.destination.password }} -X POST -H "X-Atlassian-Token: no-check" -F "file=@{{ attachment_tempdir.path }}/{{ attachment_data.title }}" {{ confluence.destination.url }}/rest/api/content/{{ confluence_content_ids.value.id }}/child/attachment'
+>>>>>>> added inventory file and modified roles to use inventory
   delegate_to: 127.0.0.1
