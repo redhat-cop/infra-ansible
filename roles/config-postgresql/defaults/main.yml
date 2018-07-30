@@ -11,7 +11,7 @@ systemd_environmentfile_dir: /etc/sysconfig
 
 # Postgresql
 postgresql_image: registry.access.redhat.com/rhscl/postgresql-96-rhel7:latest
-postgresql_storage_dir: /var/lib/pgsql
+postgresql_storage_dir: /var/lib/{{ postgresql_name }}
 postgresql_container_storage_dir: /var/lib/pgsql/data
 postgresql_database: sampledb
 postgresql_container_port: 5432

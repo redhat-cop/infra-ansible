@@ -1,4 +1,7 @@
 ---
 
 ## Custom hostname for Load Balancing and SSL Certificates
-#quay_hostname: 
+#quay_hostname:
+
+# Recommended Settings
+quay_ssl_enable: True
