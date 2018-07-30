@@ -1,11 +1,15 @@
 ---
-confluence_space_destination_url: "https://example.atlassian.net"
-confluence_space_source_url: "https://example.atlassian.net"
-confluence_space_source_space_key: "example"
-confluence_space_name: "example"
-confluence_space_key: "example"
-confluence_space_description: "example"
-source_confluence_site_username: "example"
-source_confluence_site_password: "example"
-destination_confluence_site_username: "example"
-destination_confluence_site_password: "example"
+confluence:
+  source:
+    url: "https://example.atlassian.net"
+    space_key: "example"
+    username: "example"
+    password: "example"
+
+  destination:
+    url: "https://example-test.atlassian.net"
+    space_name: "example"
+    space_key: "example"
+    space_description: "example"
+    username: "example"
+    password: "example"
