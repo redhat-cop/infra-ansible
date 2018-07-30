@@ -1,4 +1,3 @@
----
 - name: Create Confluence Space
   uri:
     url: '{{ confluence_space_destination_url }}/wiki/rest/api/space'
@@ -9,3 +8,8 @@
     status_code: 200
     body_format: json
     body: "{{ lookup('template', 'space.j2') }}"
+  register: space_content
+
+- name: set fact
+  set_fact:
+    destination_homepage_id: "{{ space_content.json['homepage']['id']}}"
