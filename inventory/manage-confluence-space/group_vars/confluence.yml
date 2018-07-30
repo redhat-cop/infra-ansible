@@ -1,0 +1,15 @@
+---
+confluence:
+  source:
+    url: "https://example.atlassian.net"
+    space_key: "example"
+    username: "example"
+    password: "example"
+
+  destination:
+    url: "https://example-test.atlassian.net"
+    space_name: "example"
+    space_key: "example"
+    space_description: "example"
+    username: "example"
+    password: "example"

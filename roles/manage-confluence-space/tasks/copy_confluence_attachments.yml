@@ -1,7 +1,7 @@
 ---
 - name: Get attachment data
   uri:
-    url: '{{ confluence_space_source_url }}/rest/api/content/{{ confluence_content_ids.key }}/child/attachment'
+    url: '{{ confluence_space_source_url }}/wiki/rest/api/content/{{ confluence_content_ids.key }}/child/attachment'
     method: GET
     user: '{{ source_confluence_site_username }}'
     password: '{{ source_confluence_site_password }}'
@@ -9,7 +9,6 @@
     status_code: 200
     return_content: yes
   register: attachments_json
-  no_log: true
 
 - name: Create temp directory for downloaded attachments
   tempfile:

@@ -1,7 +1,7 @@
 ---
 - name: Get Content from Source
   uri:
-    url: '{{ confluence_space_source_url }}/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
+    url: '{{ confluence_space_source_url }}/wiki/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
     method: GET
     user: '{{ source_confluence_site_username }}'
     password: '{{ source_confluence_site_password }}'
@@ -9,7 +9,6 @@
     status_code: 200
     return_content: yes
   register: content_json
-  no_log: true
 
 - name: Map ancestor ids if any
   set_fact: 
@@ -20,48 +19,36 @@
     content_ancestors: "{{ [-1] | map('extract', content_ancestors) | list }}"
   when: content_ancestors|length > 0
 
-- name: Create a tempfile for Content JSON
-  command: mktemp
-  register: jsontemp
-  delegate_to: 127.0.0.1
+- name: set payload for create contect
+  set_fact:
+    payload:
+      id: "{{ content_json.json.id }}"
+      title: "{{ content_json.json.title }}"
+      type: "{{ content_json.json.type }}"
+      space:
+        key: "{{ confluence_space_key }}"
+      body:
+        storage:
+          value: "{{ content_json.json.body.storage.value }}"
+          representation: "storage"
 
-- name: Generate Content JSON from Template
-  template:
-    src: content.j2
-    dest: '{{ jsontemp.stdout }}'
-  delegate_to: 127.0.0.1
-
-- name: Escape HTML Double Quotes
-  replace:
-    path: '{{ jsontemp.stdout }}'
-    regexp: '(?<==)(\")|(\")(?=[>\ ])'
-    replace: '\"'
-
-- name: Remove literal newlines
-  replace:
-    path: '{{ jsontemp.stdout }}'
-    regexp: '\n'
-    replace: ''
-
-- name: Unescape Single Quote
-  replace:
-    path: '{{ jsontemp.stdout }}'
-    regexp: "\\'"
-    replace: "'"
+- name: if page is child add ancestors
+  set_fact:
+    payload: "{{ payload | combine( {'ancestors': content_ancestors} )}}"
+  when: content_json.json.ancestors|length > 1
 
 - name: Create Content at Destination Site
   uri:
-    url: '{{ confluence_space_destination_url }}/rest/api/content'
+    url: '{{ confluence_space_destination_url }}/wiki/rest/api/content'
     method: POST
     user: '{{ destination_confluence_site_username }}'
     password: '{{ destination_confluence_site_password }}'
     force_basic_auth: yes
     status_code: 200
     body_format: json
-    body: "{{ lookup('file', '{{ jsontemp.stdout }}') }}"
+    body: "{{  payload |  to_json }}"
     return_content: yes
   register: new_content_json
-  no_log: true
 
 - name: Append New id to old id mapping
   set_fact:
