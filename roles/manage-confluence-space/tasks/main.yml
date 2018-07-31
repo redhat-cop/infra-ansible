@@ -6,7 +6,7 @@
 
 - name: Retrieve all contents from source space
   uri:
-    url: '{{ confluence_space_source_url }}/rest/api/content?spaceKey={{ confluence_space_source_space_key }}&expand=ancestors'
+    url: '{{ confluence_space_source_url }}/wiki/rest/api/space/{{ confluence_space_source_space_key }}/content?expand=body.storage,space,ancestors'
     method: GET
     user: '{{ source_confluence_site_username }}'
     password: '{{ source_confluence_site_password }}'
@@ -14,7 +14,6 @@
     status_code: 200
     return_content: yes
   register: contents_json
-  no_log: true
 
 - name: Create a tempfile for Content JSON
   command: mktemp
@@ -23,7 +22,7 @@
 
 - name: Write content to file
   copy:
-    content: "{{ contents_json.json.results | to_json }}"
+    content: "{{ contents_json.json['page']['results'] }}"
     dest: "{{ uptemp.stdout }}"
 
 - name: Initialise old to new id mapping
