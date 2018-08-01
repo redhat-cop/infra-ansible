@@ -41,7 +41,7 @@
 
 - name: "Mount ISO to serv it up with http"
   mount:
-    src: "{{ virtinstall_iso }}"
+    src: "/{{ virtinstall_iso }}"
     path: "{{ http_mount.path }}"
     opts: loop
     fstype: iso9660
