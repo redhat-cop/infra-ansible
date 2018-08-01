@@ -1,0 +1,11 @@
+---
+- name: Delete User 
+  uri:
+    url: '{{ atlassian.url }}/rest/api/2/user?username={{ atlassian_user }}'
+    method: DELETE
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
+    force_basic_auth: yes
+    status_code: 204
+    body_format: json
+  register: result
