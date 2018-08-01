@@ -6,7 +6,7 @@
 
 - name: Retrieve all contents from source space
   uri:
-    url: '{{ confluence.source.url }}/wiki/rest/api/space/{{ confluence_space_source_space_key }}/content?expand=body.storage,space,ancestors'
+    url: '{{ confluence.source.url }}/wiki/rest/api/space/{{ confluence.source.space_key }}/content?expand=body.storage,space,ancestors&limit=500'
     method: GET
     user: '{{ confluence.source.username }}'
     password: '{{ confluence.source.password }}'
