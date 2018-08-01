@@ -13,4 +13,4 @@
     ipa_host: idm.example.com 
 
   roles:
-    - user-management/manage-users
+    - user-management/manage-idm-users

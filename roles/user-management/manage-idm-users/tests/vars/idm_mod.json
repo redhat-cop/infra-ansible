@@ -13,6 +13,7 @@
             "last_name": "Hawkins",
             "email": "rhawkins@example.com",
             "expiration_date": "2018-11-30T22:38:40.326Z"
+            "state": "absent"
         }
    ],
     "user_groups": [
