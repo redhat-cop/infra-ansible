@@ -19,6 +19,22 @@
     content_ancestors: "{{ [-1] | map('extract', content_ancestors) | list }}"
   when: content_ancestors|length > 0
 
+- name: Get the current page version
+  uri:
+    url: '{{ confluence.destination.url }}/wiki/rest/api/space/{{ confluence.destination.space_key }}/content?expand=homepage,version'
+    method: GET
+    user: '{{ confluence.destination.username }}'
+    password: '{{ confluence.destination.password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: homepage_content
+  no_log: false
+
+- name: set fact for destination homepage version
+  set_fact:
+    new_version: "{{ homepage_content.json['page']['results'][0]['version']['number'] + 1 }}"
+
 - name: set homepage at destination
   block:
     - set_fact:
@@ -27,17 +43,17 @@
             storage:
               value: "{{ content_json.json.body.storage.value }}"
               representation: "storage"
-          title: "{{ content_json.json.title }}"
+          title: "{{ confluence.destination.space_name }}"
           type: "{{ content_json.json.type }}"
           space:
-            key: "{{ confluence_space_destination_space_key }}"
+            key: "{{ confluence.destination.space_key }}"
           version:
-            number: "2"
+            number: "{{ new_version }}"
     - uri:
-        url: '{{ confluence_space_destination_url }}/wiki/rest/api/content/{{ destination_homepage_id }}'
+        url: '{{ confluence.destination.url }}/wiki/rest/api/content/{{ destination_homepage_id }}'
         method: PUT
-        user: '{{ destination_confluence_site_username }}'
-        password: '{{ destination_confluence_site_password }}'
+        user: '{{ confluence.destination.username }}'
+        password: '{{ confluence.destination.password }}'
         force_basic_auth: yes
         status_code: 200
         body_format: json
