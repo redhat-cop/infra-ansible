@@ -68,7 +68,6 @@ This role augments the `users` data structure which is expected to be:
         {
             "add'l info": "Internal user", 
             "added_date": "", 
-            "atlassian": "FALSE", 
             "email": "gdog@example.com", 
             "expiration_date": "", 
             "first_name": "Goofy", 
@@ -82,7 +81,6 @@ This role augments the `users` data structure which is expected to be:
         {
             "add'l info": "Internal user", 
             "added_date": "", 
-            "atlassian": "", 
             "email": "pdog@example.com", 
             "expiration_date": "", 
             "first_name": "Pluto", 
@@ -96,7 +94,6 @@ This role augments the `users` data structure which is expected to be:
         {
             "add'l info": "Test user", 
             "added_date": "", 
-            "atlassian": "", 
             "email": "test1@example.com", 
             "expiration_date": "", 
             "first_name": "fName1", 
