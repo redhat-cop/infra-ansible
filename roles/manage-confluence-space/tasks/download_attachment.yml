@@ -1,7 +1,7 @@
 ---
 - name: Download attachment from source
   get_url:
-    url: '{{ confluence.space.url }}/wiki{{ attachment_data._links.download }}'
+    url: '{{ confluence.space.url }}/wiki/{{ attachment_data._links.download }}'
     dest: '{{ attachment_tempdir.path }}/{{ attachment_data.title }}'
     force: yes
     force_basic_auth: yes
