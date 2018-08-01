@@ -1,7 +1,7 @@
 ---
 - name: Get attachment data
   uri:
-    url: '{{ confluence.source.url }}/rest/api/content/{{ confluence_content_ids.key }}/child/attachment'
+    url: '{{ confluence.source.url }}/wiki/rest/api/content/{{ confluence_content_ids.key }}/child/attachment'
     method: GET
     user: '{{ confluence.source.username }}'
     password: '{{ confluence.source.password }}'

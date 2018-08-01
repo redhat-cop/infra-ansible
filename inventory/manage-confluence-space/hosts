@@ -1,6 +1,2 @@
-<<<<<<< HEAD
 [confluence]
-=======
-[jira]
->>>>>>> added inventory file and modified roles to use inventory
 localhost

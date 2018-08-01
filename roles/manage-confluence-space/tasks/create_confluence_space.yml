@@ -1,7 +1,7 @@
 ---
 - name: Create Confluence Space
   uri:
-    url: '{{ confluence.destination.url }}/rest/api/space'
+    url: '{{ confluence.destination.url }}/wiki/rest/api/space'
     method: POST
     user: '{{ confluence.destination.username }}'
     password: '{{ confluence.destination.password }}'

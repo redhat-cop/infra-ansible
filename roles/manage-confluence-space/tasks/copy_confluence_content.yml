@@ -1,7 +1,7 @@
 ---
 - name: Get Content from Source
   uri:
-    url: '{{ confluence.source.url }}/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
+    url: '{{ confluence.source.url }}/wiki/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
     method: GET
     user: '{{ confluence.source.username }}'
     password: '{{ confluence.source.password }}'
@@ -39,7 +39,7 @@
 
 - name: Create Content at Destination Site
   uri:
-    url: '{{ confluence.destination.url }}/rest/api/content'
+    url: '{{ confluence.destination.url }}/wiki/rest/api/content'
     method: POST
     user: '{{ confluence.destination.username }}'
     password: '{{ confluence.destination.password }}'
