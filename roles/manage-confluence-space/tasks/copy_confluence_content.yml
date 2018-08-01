@@ -31,10 +31,6 @@
   register: homepage_content
   no_log: false
 
-- name: set fact for destination homepage version
-  set_fact:
-    new_version: "{{ homepage_content.json['page']['results'][0]['version']['number'] + 1 }}"
-
 - name: set homepage at destination
   block:
     - set_fact:
@@ -48,7 +44,7 @@
           space:
             key: "{{ confluence.destination.space_key }}"
           version:
-            number: "{{ new_version }}"
+            number: "{{ homepage_content.json['page']['results'][0]['version']['number'] + 1 }}"
     - uri:
         url: '{{ confluence.destination.url }}/wiki/rest/api/content/{{ destination_homepage_id }}'
         method: PUT

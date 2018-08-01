@@ -1,3 +1,4 @@
+---
 - name: Create Confluence Space
   uri:
     url: '{{ confluence_space_destination_url }}/wiki/rest/api/space'
