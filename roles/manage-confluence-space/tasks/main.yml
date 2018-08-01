@@ -2,14 +2,14 @@
 - name: Fail when source username or password is not set
   fail: msg="This role requires source_confluence_site_username and source_confluence_site_password to be set and non empty"
   when:
-    - (source_confluence_site_username == "") or (source_confluence_site_password == "")
+    - (confluence.source.username == "") or (confluence.source.password == "")
 
 - name: Retrieve all contents from source space
   uri:
-    url: '{{ confluence_space_source_url }}/wiki/rest/api/space/{{ confluence_space_source_space_key }}/content?expand=body.storage,space,ancestors'
+    url: '{{ confluence.source.url }}/wiki/rest/api/space/{{ confluence.source.space_key }}/content?expand=body.storage,space,ancestors&limit=500'
     method: GET
-    user: '{{ source_confluence_site_username }}'
-    password: '{{ source_confluence_site_password }}'
+    user: '{{ confluence.source.username }}'
+    password: '{{ confluence.source.password }}'
     force_basic_auth: yes
     status_code: 200
     return_content: yes
@@ -37,9 +37,9 @@
   delegate_to: 127.0.0.1
 
 - name: Fail when destination username or password is not set
-  fail: msg="This role requires destination_confluence_site_username and destination_confluence_site_password to be set and non empty"
+  fail: msg="This role requires confluence.destination.username and confluence.destination.username to be set and non empty"
   when:
-    - (destination_confluence_site_username == "") or (destination_confluence_site_password == "")
+    - (confluence.destination.username == "") or (confluence.destination.password == "")
 
 - import_tasks: create_confluence_space.yml
 
