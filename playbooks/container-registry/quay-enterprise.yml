@@ -53,7 +53,7 @@
           lb_ssl_enabled: True
       lb_backend_template: "{{ playbook_dir }}/templates/haproxy_backend.cfg.j2"
 
-- name: Install Quay Database
+- name: Install and Configure MySQL for Quay
   hosts: database
   tasks:
     - name: Install MySQL
