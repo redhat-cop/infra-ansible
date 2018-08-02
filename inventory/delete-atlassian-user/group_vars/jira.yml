@@ -1,8 +1,0 @@
----
-atlassian:
-  url: https://test.atlassian.net
-  username: example
-  password: example
-
-  delete:
-    - example
