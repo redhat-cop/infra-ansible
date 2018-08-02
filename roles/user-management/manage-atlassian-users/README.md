@@ -11,28 +11,32 @@ This is a sample of a YAML file containing the variables.
 
 ```
 ---
-atlassian_url: https://test.atlassian.net
-atlassian_username: admin
-atlassian_password: admin
-atlassian_users:
-  - firstname: Test
-    lastname: 123
-    password: password123
-    email: test@example.com
+atlassian:
+  url: https://example.atlassian.net
+  username: example
+  password: example
+
+  create:
+    user:
+      - firstname: Test
+        lastname: 123
+	password: example
+        email: test@example.com
     groups:
       - a
       - b
-atlassian_groups:
-  - abc
+
+  add_user_to_groups:
+    - abc
 ```
 
 Here are the description of each variables:
 
-- `atlassian_url`: the url of the site we want to manage users in
-- `atlassian_username`: username of an admin of that site
-- `atlassian_password`: password of the user that has admin priviledge
-- `atlassian_users`: a list of dictionaries with user data
-- `atlassian_groups`: a list of groups to be managed (can be an empty list)
+- `atlassian.url`: the url of the site we want to manage users in
+- `atlassian.username`: username of an admin of that site
+- `atlassian.password`: password of the user that has admin priviledge
+- `atlassian.create.user`: a list of dictionaries with user data
+- `atlassian.create.groups`: a list of groups to be managed (can be an empty list)
 
 Due to the sensitive nature of the variables it's best to use ansible-vault to create the `vars.yml`
 
