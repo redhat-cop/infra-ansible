@@ -22,12 +22,13 @@ atlassian:
         lastname: 123
 	password: example
         email: test@example.com
-    groups:
+
+    add_user_to_groups:
       - a
       - b
 
-  add_user_to_groups:
-    - abc
+    groups:
+      - abc
 ```
 
 Here are the description of each variables:
@@ -36,6 +37,7 @@ Here are the description of each variables:
 - `atlassian.username`: username of an admin of that site
 - `atlassian.password`: password of the user that has admin priviledge
 - `atlassian.create.user`: a list of dictionaries with user data
+- `atlassian.create.user.add_user_to_groups`: a list of groups the user should be added (can be an empty list)
 - `atlassian.create.groups`: a list of groups to be managed (can be an empty list)
 
 Due to the sensitive nature of the variables it's best to use ansible-vault to create the `vars.yml`

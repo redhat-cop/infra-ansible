@@ -1,18 +1,18 @@
 ---
 - include_tasks: create_atlassian_groups.yml
-  with_items: "{{ atlassian_groups }}"
+  with_items: "{{ atlassian.create.groups }}"
   loop_control:
     loop_var: group
   when: atlassian.create.groups|length > 0
 
 - include_tasks: create_atlassian_users.yml
-  with_items: "{{ atlassian_users }}"
+  with_items: "{{ atlassian.create.user }}"
   loop_control:
     loop_var: atlassian_user
   when: atlassian.create.user|length > 0
 
 - include_tasks: add_user_to_groups.yml
-  with_items: "{{ atlassian_users }}"
+  with_items: "{{ atlassian.create.user }}"
   loop_control:
     loop_var: atlassian_user
-  when: atlassian.add_user_to_groups|length > 0
+  when: atlassian.create.user|length > 0
