@@ -18,6 +18,7 @@
     virtinstall_http_host: "{{ hostvars[vm]['libvirt_http_host'] | default(default_http_host) }}"
     virtinstall_network_hostif: "{{ hostvars[vm]['libvirt_network_hostif'] | default(default_network_hostif) }}"
     virtinstall_network_model: "{{ hostvars[vm]['libvirt_network_model'] | default(default_network_model) }}"
+    virtinstall_network_type: "{{ hostvars[vm]['libvirt_network_type'] | default(default_network_type) }}"
 
 - name: "Make KS file available on the target host"
   copy: 
@@ -58,4 +59,4 @@
 
 - name: "Set Fact for VM command"
   set_fact:
-    virt_install_commands: "{{ virt_install_commands | default([]) + [ ('virt-install' + ' --connect ' + virtinstall_connect + ' --virt-type ' + virtinstall_virt_type + ' --name ' + virtinstall_name + ' --metadata \"title=' + virtinstall_title + ',description=' + virtinstall_description + ',name=' + virtinstall_name + '\"' + ' --network \"type=direct,source=' + virtinstall_network_hostif + ',source_mode=bridge,model=' + virtinstall_network_model + '\"' + ' --memory ' + virtinstall_memory + ' --vcpus ' + virtinstall_vcpus + ' --disk pool=' + virtinstall_disk_pool + ',size=' + virtinstall_disk_size + ',bus=virtio' + ' --os-variant ' + virtinstall_os_variant + ' --location http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename + ' --initrd-inject=/tmp/' + virtinstall_ksfile | basename + ' --extra-args \"inst.repo=http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename + ' inst.ks=file:/' + virtinstall_ksfile | basename + '\"' + ' --graphics spice ' + ' --video qxl ' + ' --channel spicevmc ' + ' --autostart ') ] }}"
+    virt_install_commands: "{{ virt_install_commands | default([]) + [ ('virt-install' + ' --connect ' + virtinstall_connect + ' --virt-type ' + virtinstall_virt_type + ' --name ' + virtinstall_name + ' --metadata \"title=' + virtinstall_title + ',description=' + virtinstall_description + ',name=' + virtinstall_name + '\"' + ' --network \"type='+ virtinstall_network_type + ' ,source=' + virtinstall_network_hostif + ',source_mode=bridge,model=' + virtinstall_network_model + '\"' + ' --memory ' + virtinstall_memory + ' --vcpus ' + virtinstall_vcpus + ' --disk pool=' + virtinstall_disk_pool + ',size=' + virtinstall_disk_size + ',bus=virtio' + ' --os-variant ' + virtinstall_os_variant + ' --location http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename + ' --initrd-inject=/tmp/' + virtinstall_ksfile | basename + ' --extra-args \"inst.repo=http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename + ' inst.ks=file:/' + virtinstall_ksfile | basename + '\"' + ' --graphics spice ' + ' --video qxl ' + ' --channel spicevmc ' + ' --autostart ') ] }}"
