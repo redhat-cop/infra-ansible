@@ -1,5 +1,4 @@
 ---
-
 - name: 'Create VMs on infra hosts'
   hosts: infra_hosts
   roles:
