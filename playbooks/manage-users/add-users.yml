@@ -5,7 +5,7 @@
   gather_facts: no
   roles:
     - user-management/populate-users
-    - user-management/manage-users
+    - user-management/manage-idm-users
     - user-management/manage-user-passwd
 
 - name: "Notify users"
