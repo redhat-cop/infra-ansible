@@ -22,13 +22,12 @@ atlassian:
         lastname: 123
 	password: example
         email: test@example.com
+        groups:
+          - a
+          - b
 
-    add_user_to_groups:
-      - a
-      - b
-
-    groups:
-      - abc
+  groups:
+    - abc
 ```
 
 Here are the description of each variables:

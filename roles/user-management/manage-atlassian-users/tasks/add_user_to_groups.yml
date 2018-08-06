@@ -10,5 +10,5 @@
     body_format: json
     body: "{ 'name': '{{ atlassian_user.email.split(\"@\") | first }}' }"
     return_content: yes
-  with_items: '{{ atlassian_user.add_user_to_groups }}'
-  when: atlassian_user.add_user_to_groups|length > 0
+  with_items: '{{ atlassian_user.groups }}'
+  when: atlassian_user.groups|length > 0
