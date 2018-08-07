@@ -16,15 +16,15 @@ atlassian:
   username: example
   password: example
 
-  create:
-    user:
-      - firstname: Test
-        lastname: 123
-	password: example
-        email: test@example.com
-        groups:
-          - a
-          - b
+  user:
+    - firstname: Test
+      lastname: 123
+      password: example
+      email: test@example.com
+      state: present
+      groups:
+        - a
+        - b
 
   groups:
     - abc
@@ -35,9 +35,10 @@ Here are the description of each variables:
 - `atlassian.url`: the url of the site we want to manage users in
 - `atlassian.username`: username of an admin of that site
 - `atlassian.password`: password of the user that has admin priviledge
-- `atlassian.create.user`: a list of dictionaries with user data
-- `atlassian.create.user.add_user_to_groups`: a list of groups the user should be added (can be an empty list)
-- `atlassian.create.groups`: a list of groups to be managed (can be an empty list)
+- `atlassian.user`: a list of dictionaries with user data
+- `atlassian.user.groups`: a list of groups the user should be added (can be an empty list)
+- `atlassian.user.state`: state can be `present` to create user and `absent` to delete user
+- `atlassian.groups`: a list of groups to be managed (can be an empty list)
 
 Due to the sensitive nature of the variables it's best to use ansible-vault to create the `vars.yml`
 
