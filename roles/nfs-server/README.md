@@ -1,8 +1,36 @@
-# nfs-server role
 
 
-## Inventory
-Below is an example inventory for the NFS server:
+
+
+
+Set of Roles
+============
+nfs-server role
+
+
+Requirements
+------------
+
+
+
+Role Variables
+--------------
+
+Dependencies
+------------
+
+*
+
+Example Playbooks
+----------------
+
+```
+```
+
+
+
+Example Inventory
+----------------
 
 ```
 nfs_storage_device=/dev/vdb
@@ -10,14 +38,15 @@ nfs_storage_device=/dev/vdb
 nfs_shares:
 - name: registry
 - name: metrics
-  nfs_owner: nfsnobody       # (optional - default: "nfsnobody") 
-  nfs_group: nfsnobody       # (optional - default: "nfsnobody") 
+  nfs_owner: nfsnobody       # (optional - default: "nfsnobody")
+  nfs_group: nfsnobody       # (optional - default: "nfsnobody")
   nfs_mode: 0777             # (optional - default: "0777")
   nfs_share_options          # (optional - default: "rw,root_squash,no_wdelay")
 - name: logging
 ```
 
-## Optional Server Config Parameters
+Optional Server Config Parameters
+----------------
 
 | variable | purpose | default value |
 |:---------|:--------|:--------------|
@@ -27,6 +56,13 @@ nfs_shares:
 
 
 
+License
+-------
+
+Apache License 2.0
 
 
+Author Information
+------------------
 
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

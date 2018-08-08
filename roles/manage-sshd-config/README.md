@@ -39,7 +39,7 @@ server2.test.lab
 ### Example Execution
 
 ```
-ansible-playbook -i inventory  playbook.yml 
+ansible-playbook -i inventory  playbook.yml
 
 ### Manual tests
 Execute 'Example' inventory above
@@ -47,3 +47,13 @@ Execute 'Example' inventory above
 #### Test password access denied
 `ssh root@server1.test.lab `
 
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.
