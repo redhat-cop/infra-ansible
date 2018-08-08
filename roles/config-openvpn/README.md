@@ -1,7 +1,7 @@
 
 Set of Roles
 ============
-sconfig-openvpn role
+config-openvpn role
 
 ## Notes
 - This role installs the CentOS flavor of the OpenVPN Access Server package. This can be overriden by using the `openvpn_rpm` variable in the inventory.
