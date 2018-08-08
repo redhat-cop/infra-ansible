@@ -1,8 +1,3 @@
-
-
-
-
-
 Set of Roles
 ============
 nfs-server role
