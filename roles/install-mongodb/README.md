@@ -1,12 +1,25 @@
-Mongodb Ansible
 ==========
 
+
+
+
+
+Set of Roles
+============
+Mongodb Ansible
+
 This role installs mongodb on the host machines.
+
+
+
+
 
 Requirements
 ------------
 
 The control machine SSH key must be on the `authorized_keys` of the DB server machine. To install mongodb, sudo access is required hence the `become: true` in `prep-demo.yml`.
+
+
 
 Role Variables
 --------------
@@ -24,3 +37,34 @@ Further Setup
 -------------
 
 To further setup the parameter and create user (including creating a user admin) please see the core module `mongodb_parameter` and `mongodb_user` that is part of the ansible core modules.
+
+
+Dependencies
+------------
+
+*
+
+## Example Playbook
+
+```
+```
+
+
+
+Example Inventory
+----------------
+
+```
+```
+
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

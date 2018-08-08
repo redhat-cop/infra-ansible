@@ -1,10 +1,10 @@
 Role Name
 =========
 
-This deploys IdM servers with optional replicas and no integrated DNS 
+This deploys IdM servers with optional replicas and no integrated DNS
 
 ## Requirements
-The IdM server role requires that external DNS server be fully functional with forward and reverse DNS 
+The IdM server role requires that external DNS server be fully functional with forward and reverse DNS
 
 ## Dependencies
 
@@ -27,7 +27,7 @@ idm_dm_password=test123$
 idm_admin_password=test123$
 
 [idm]
-idm1.test.lab 
+idm1.test.lab
 idm2.test.lab idm_src=idm1.test.lab
 idm3.test.lab idm_src=idm1.test.lab
 ```
@@ -40,3 +40,14 @@ idm3.test.lab idm_src=idm1.test.lab
     - idm
 
 ```
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

@@ -38,7 +38,7 @@ Steps:
 2. Specify the variables in the file and save it
 
 
-**Important note:** 
+**Important note:**
 * You must be running this as an Admin user in the Slack workspace.
 
 
@@ -53,3 +53,11 @@ Example Playbook
     - hosts: servers
       roles:
          - { role: setup-slack }  
+
+License
+-------
+Apache License 2.0
+
+Author Information
+------------------
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.
