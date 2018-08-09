@@ -37,7 +37,7 @@ Here are the description of each variables:
 - `atlassian.password`: password of the user that has admin priviledge
 - `atlassian.user`: a list of dictionaries with user data
 - `atlassian.user.groups`: a list of groups the user should be added (can be an empty list)
-- `atlassian.user.state`: state can be `present` (`default`) to create user and `absent` to delete user
+- `atlassian.user.state`: state can be `present` (default) to create user and `absent` to delete user
 - `atlassian.groups`: a list of groups to be managed (can be an empty list)
 
 Due to the sensitive nature of the variables it's best to use ansible-vault to create the `vars.yml`
