@@ -21,6 +21,3 @@
     status_code: 201, 422
   register: request_output
   changed_when: request_output.status == 201
-
-- debug:
-    msg: "{{ request_output }}"

@@ -1,5 +1,5 @@
-Add Webhooks Github
-===================
+Add Webhooks github.com
+=======================
 
 Add webhooks to an existing repository on Github
 
@@ -7,12 +7,35 @@ Add webhooks to an existing repository on Github
 Role Variables
 --------------
 
-Checkout [this file](tests/inventory/group_vars/all.yml)!
+```
+---
+api_token: 1234567890abcdefghijklmnopqrstuvwxyz9876
+
+owner: aGithubUser
+
+repo: aRepo
+
+webhooks:
+  - url: "https://website1.com/"
+    events: 
+      - push
+    is_active: true
+```
+
+Also checkout [this file](tests/inventory/group_vars/all.yml)!
 
 Example Playbook
 ----------------
 
-Checkout [this other file](tests/test.yml)!
+```
+---
+- hosts: webhooks-server
+  roles:
+    - add-webhooks-github
+
+```
+
+Also checkout [this file](tests/test.yml)!
 
 License
 -------

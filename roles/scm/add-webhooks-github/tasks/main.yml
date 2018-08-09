@@ -2,5 +2,9 @@
 # tasks file for add-webhooks
 
 - name: Add Webhooks
-  include_tasks: add-webhook.yml url={{ item.url }} events={{ item.events }} is_active={{ item.is_active }}
+  include_tasks: add-webhook.yml
+  vars:
+    url: "{{ item.url }}"
+    events: "{{ item.events }}"
+    is_active: "{{ item.is_active }}"
   with_items: "{{ webhooks }}"
