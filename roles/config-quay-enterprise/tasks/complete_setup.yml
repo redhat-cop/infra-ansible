@@ -4,8 +4,12 @@
   set_fact:
     tmp_setup_file_location: /tmp/quay
 
-- name: Flush Handlers
-  meta: flush_handlers
+- name: Start quay on one node
+  systemd:
+    name: "{{ quay_name }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
 
 - name: Hit Quay Setup Endpoint
   uri:
