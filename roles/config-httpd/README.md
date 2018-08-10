@@ -1,7 +1,7 @@
 Set of Roles
 ============
 
-The ansible roles found in this directory are associated with configuring a httpd web server. It is broken into two steps, prep and seeding.
+The ansible roles found in this directory are associated with configuring a httpd web server. It is broken into two steps, prep and seeding. In prep it sets up httpd and firewalld (opening it up on port 80). In seed it fills up the web server with content from a pre-determined location.
 
 Requirements
 ------------
