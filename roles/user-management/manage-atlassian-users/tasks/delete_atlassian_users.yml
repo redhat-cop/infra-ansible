@@ -9,4 +9,6 @@
     status_code: 204
     body_format: json
   register: result
-  when: atlassian_user.state == "absent"
+  when:
+    - atlassian_user.state is defined
+    - atlassian_user.state == "absent"
