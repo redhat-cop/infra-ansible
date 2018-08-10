@@ -14,9 +14,5 @@
             'displayName': '{{ atlassian_user.firstname }} {{ atlassian_user.lastname }}' }"
     return_content: yes
   register: user_data
-<<<<<<< HEAD
   when: 
-    - atlassian_user.state|default('present') == 'present' 
-=======
-  when: atlassian_user.state != "absent"
->>>>>>> removing seperate roled for atlassian user deletion
+    - atlassian_user.state|default('present') == 'present'

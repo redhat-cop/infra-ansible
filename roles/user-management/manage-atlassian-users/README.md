@@ -10,6 +10,7 @@ Role Variables
 This is a sample of a YAML file containing the variables.
 
 ```
+---
 atlassian:
   url: https://example.atlassian.net
   username: example
