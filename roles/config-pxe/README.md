@@ -1,16 +1,13 @@
 Set of Roles
 ============
-The ansible roles found in this directory are associated with configuring a pxe, or pre execution environment.
-Effectively, the `docker.yml` task will install packages for docker and add users to the docker user group.
+The ansible roles found in this directory are associated with configuring a pxe, or pre execution environment. First, it installs sys-linux, tftp-server, and firewall, then it makes sure that firewalld is running with port 69 is open and that the tftp-server is running. After the basic prep work is done, the next step is to ensure that the basic directories are set up and then to populate them, then the necessary system specific defaults are set. Kickstart files are then copied over.
 
 Requirements
 ------------
-1. Docker installed on the host machine.
-2. A username for configuring docker access
+Nothing is required. However, this playbook will work best on a RHEL OS.
 
 Role Variables
 --------------
-docker_install is used to control if Docker should be installed or not. docker_username is used to configure which user should have access to use docker (and hence be part of the 'docker' group).
 
 ```
 docker_username: root
@@ -19,7 +16,7 @@ docker_install: True
 
 Dependencies
 ------------
-There are no strict dependencies for this role beyond ansible and docker.
+There are no strict dependencies for this role beyond ansible.
 
 Example Playbooks
 ----------------
