@@ -1,10 +1,10 @@
 ---
 - name: Add user to groups
   uri:
-    url: "{{ atlassian_url }}/rest/api/2/group/user?groupname={{ urlencode(item) }}"
+    url: "{{ atlassian.url }}/rest/api/2/group/user?groupname={{ item | urlencode }}"
     method: POST
-    user: '{{ atlassian_username }}'
-    password: '{{ atlassian_password }}'
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
     force_basic_auth: yes
     status_code: [201, 400]
     body_format: json
