@@ -39,7 +39,7 @@ lvm_entries:
 - storage_device: "/dev/vdb"
   vg_name: "vg1"
   lv_name: "lv1"
-  mount_path: "/mnt/vg1-lv1" 
+  mount_path: "/mnt/vg1-lv1"
 
 ```
 
@@ -47,7 +47,8 @@ lvm_entries:
 License
 -------
 
-BSD
+Apache License 2.0
+
 
 Author Information
 ------------------

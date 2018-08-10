@@ -29,3 +29,14 @@ These are roles used to administer an OpenStack environment, such as add project
 - admin-user: Manage local users within the OSP environment.
 - admin-volume-type: Manage available volume types within the OSP environment.
 - admin-volume: Manage volumes within a project/tenant.
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

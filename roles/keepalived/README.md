@@ -1,11 +1,35 @@
+Set of Roles
+============
 # keepalived
 
-This roles generates a `keepalived.conf` file and copies it to the target HAproxy servers. 
+This roles generates a `keepalived.conf` file and copies it to the target HAproxy servers.
 
-## Example
 The following is an example of an inventory definition and the resulting keepalived.conf file
 
-### Inventory
+
+Requirements
+------------
+
+
+
+Role Variables
+--------------
+
+Dependencies
+------------
+
+*
+
+Example Playbooks
+----------------
+
+```
+```
+
+
+
+Example Inventory
+----------------
 
 ```
 lb_host_vip: 10.9.55.80
@@ -15,7 +39,6 @@ keepalived_priority: 101
 keepalived_peer: 10.9.55.82
 
 ```
-
 
 ### keepalived.conf file
 
@@ -43,3 +66,15 @@ vrrp_instance VI_1 {
 }
 
 ```
+
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

@@ -1,7 +1,7 @@
 ## The rhc-ose ansible dns role
 
 
-This role allows the caller to populate DNS records (currently only supports A records) based on input data (see example below). The caller may choose to use hostvars to access information from other hosts (e.g.: hostname and ip address) to create records. 
+This role allows the caller to populate DNS records (currently only supports A records) based on input data (see example below). The caller may choose to use hostvars to access information from other hosts (e.g.: hostname and ip address) to create records.
 
 Both additions and removals are supported by this role, by the use of the `dns_records_rm` and `dns_records_add` variables (see example below).
 
@@ -50,3 +50,18 @@ Example Playbook
           hostname: server_x
           ip: 192.168.2.1
 ```
+
+
+Example Inventory
+----------------
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

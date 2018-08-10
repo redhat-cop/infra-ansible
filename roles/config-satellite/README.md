@@ -13,7 +13,7 @@ Role Variables
 
 ```
 manifest_file_path: <path to the downloaded manifest-....zip file>
-satellite_organization: <organization name> 
+satellite_organization: <organization name>
 satellite_location: <location of the Satellite server>
 satellite_username: <admin username to be set>
 satellite_password: <admin password to be set>
@@ -68,3 +68,14 @@ satellite_activation_keys:
     subscription: "RHEL subscription"
 
 ```
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

@@ -3,7 +3,7 @@ This ansible role by default uses `simplified-scrum` template and `software` pro
 
 The template and project type key can be changed by adding the following variables with their values
 
-`'template_key': '<value>'` and `'type_key': '<value>'` 
+`'template_key': '<value>'` and `'type_key': '<value>'`
 in the `atlassian.jira.project` section of the inventory.
 eg.
 ```yaml
@@ -115,3 +115,13 @@ This role  assumes that three groups "project_lead", "project_team_member" and "
 ```bash
 $ ansible-playbook -i inventory/ manage-jira.yml
 
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

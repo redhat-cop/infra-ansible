@@ -1,8 +1,24 @@
+Set of Roles
+============
 # The rhc-ose ansible dns-server role
 
 
-This role installs and configures bind/named for use with multiple views and zones. 
+This role installs and configures bind/named for use with multiple views and zones.
 
+
+
+Requirements
+------------
+
+
+
+Role Variables
+--------------
+
+Dependencies
+------------
+
+*
 
 ## Example Playbook
 
@@ -20,7 +36,7 @@ This role installs and configures bind/named for use with multiple views and zon
       - "192.168.10.12"
       named_config_views:
       - name: "private"
-        acl_entry: 
+        acl_entry:
         - "172.16.0.0/16"
         - "172.17.0.0/16"
         zone:
@@ -39,3 +55,23 @@ This role installs and configures bind/named for use with multiple views and zon
         - 8.8.8.8
         - 8.8.4.4
 ```
+
+
+
+Example Inventory
+----------------
+
+```
+```
+
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.
