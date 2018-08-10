@@ -3,20 +3,22 @@ Set of Roles
 
 The ansible roles found in this directory are associated with configuring a docker set up.
 
-Effectively, the `docker.yml` task will install packages for docker and add users to the docker user group. In the `docker.yml` file, only docker is listed under the with_items for packages to be installed, but any number of packages can be included within the task file or you can modify it to take in a set of packages from the inventory.
+Effectively, the `docker.yml` task will install packages for docker and add users to the docker user group.
 
 Requirements
 ------------
 
 1. Docker installed on the host machine.
-2. A set of users to populate
+2. A username for configuring docker access
 
 
 Role Variables
 --------------
-There are no high priority role variables with a default docker user variables of
+docker_install is used to control if Docker should be installed or not. docker_username is used to configure which user should have access to use docker (and hence be part of the 'docker' group).
+
 ```
 docker_username: root
+docker_install: True
 ```
 
 
@@ -31,7 +33,6 @@ Example Playbooks
 - hosts: bastion
   roles:
     - role: config-docker
-    - role: config-timezone
 ```
 
 Example Inventory
@@ -39,7 +40,6 @@ Example Inventory
 
 ```
 docker_install: True
-docker_compose_install: True
 docker_username: bob
 ```
 
