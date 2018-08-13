@@ -3,7 +3,7 @@
 - name: 'Install required packages'
   package:
     name: '{{ item }}'
-    state: latest
+    state: installed
   with_items:
   - httpd
   - firewalld

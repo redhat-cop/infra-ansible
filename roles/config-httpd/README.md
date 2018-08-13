@@ -10,7 +10,11 @@ No specific system requirements.
 
 Role Variables
 --------------
-httpd_seed_dir sets up the directory for where to retrieve the content, eventually to be used to seed the web server.default_document_root merely sets the default root folder for the where to deposit the web files that have been retrieved.
+
+| Variable | Description | Required | Defaults |
+|:--------:|:-----------:|:--------:|:--------:|
+|**httpd_seed_dir**| sets up the directory for where to retrieve the content, eventually to be used to seed the web server | no | N/A |
+|**default_document_root**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
 
 ```
 html_document_root: "/var/www/html"
@@ -23,7 +27,6 @@ There are no strict dependencies for this role beyond ansible and it is useful t
 
 Example Playbooks
 ----------------
-
 from test.yml
 
 ```
@@ -35,12 +38,27 @@ from test.yml
 Example Inventory
 ----------------
 
+**inventory/hosts:**
 ```
 [web-server]
-192.168.1.10 ansible_user=fedora ansible_become=True
+192.168.1.10
 ```
 
-ansible_user is used to set which user to run ansible under. ansible_become is used for privilege escalation when installing the various packages.
+**inventory/group_vars/web-server.yml:**
+
+| Variable | Description |
+|:--------:|:-----------:|
+|**ansible_user**| used to set which user to run ansible under |
+|**ansible_become**| used for privilege escalation when installing/configuring the various packages |
+
+```
+---
+ansible_user: fedora
+ansible_become: True
+
+httpd_seed_dir: "/my/local/web/server/directory"
+```
+
 
 
 License
