@@ -16,3 +16,10 @@
   loop_control:
     loop_var: atlassian_user
   when: atlassian.user|length > 0
+
+- include_tasks: delete_atlassian_users.yml
+  with_items: "{{ atlassian.user }}"
+  loop_control:
+    loop_var: atlassian_user
+  when: atlassian.user|length > 0
+

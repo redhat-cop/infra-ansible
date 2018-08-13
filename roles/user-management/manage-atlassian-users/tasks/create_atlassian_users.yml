@@ -15,4 +15,4 @@
     return_content: yes
   register: user_data
   when: 
-    - atlassian_user.state|default('present') == 'present' 
+    - atlassian_user.state|default('present') == 'present'
