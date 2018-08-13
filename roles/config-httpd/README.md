@@ -13,7 +13,7 @@ Role Variables
 httpd_seed_dir sets up the directory for where to retrieve the content, eventually to be used to seed the web server.default_document_root merely sets the default root folder for the where to deposit the web files that have been retrieved.
 
 ```
-default_document_root: "/var/www/html"
+html_document_root: "/var/www/html"
 httpd_seed_dir: "/any/file/path"
 ```
 
