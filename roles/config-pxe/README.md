@@ -11,11 +11,24 @@ Nothing is required. However, this playbook will work best on a RHEL OS.
 Role Variables
 --------------
 
+| Variable | Description | Required | Defaults |
+|:--------:|:-----------:|:--------:|:--------:|
+|**ks_files**| kickstart files' source | no | N/A |
+|**ks_files_destination**| kickstart files' source | yes | N/A |
+
 ```
 ks_files: "{{ inventory_dir }}/../files/ks/"
 ks_files_destination: "/var/www/html/ks"
 ```
-Kickstart files source and destination, respectively.
+| Variable | Description | Required | Defaults |
+|:--------:|:-----------:|:--------:|:--------:|
+|**name**| the name that will show up in the PXE config/menu | yes | N/A |
+|**source**| where the source for the PXE boot binaries are stored (BIOS, not UEFI) | yes | N/A |
+|**destination**| where the PXE boot binaries are to be copied to (BIOS, not UEFI) | yes | N/A |
+|**menu_label**| the descriptive string that will show in the PXE menu | no | N/A |
+|**kernel**| the boot kernel path (relative to the TFTP server) for this entry | yes | N/A |
+|**append**| where the source for the PXE boot binaries are stored (BIOS, not UEFI) | yes | N/A |
+|**initrdefi**| The initrd for UEFI PXE boot | yes | N/A |
 
 ```
 pxe_entries:
@@ -27,20 +40,17 @@ pxe_entries:
   append: "initrd=/images/fedora/25/server/x86_64/pxeboot/initrd.img sshd text ip=dhcp inst.repo=http://my-web-server.example.com/fedora/25/server/x86_64"
   initrdefi: "/images/fedora/25/server/x86_64/pxeboot/initrd.img"
 ```
-In Order:
-- name: The Name that will show up in the PXE config/menu
-- source: Where the source for the PXE boot binaries are (BIOS, not UEFI)
-- destination: Where the PXE boot binaries are to be copied to (BIOS, not UEFI)
-- menu_label: The descriptive string that will show in the PXE menu
-- kernel: the boot kernel path (relative to the TFTP server) for this entry
-- append: the append line for this entry (see example below for some options)
-- initrdefi: The initrd for UEFI PXE boot
 
 ```
 [pxe-server]
-192.168.1.10 ansible_user=fedora ansible_become=True
+192.168.1.10
 ```
-A default server to test from, default user, and escalation permission.
+
+```
+---
+ansible_user=fedora
+ansible_become=True
+```
 
 Dependencies
 ------------
