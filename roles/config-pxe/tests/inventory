@@ -7,7 +7,7 @@
 # this is the typical path for a Fedora/CentOS/RHEL based installation
 tftpserver_root_dir: "/var/lib/tftpboot"
 
-# Some PXE customization 
+# Some PXE customization
 pxe_menu_title: "My cool PXE server"
 pxe_timeout: 300
 
@@ -19,10 +19,10 @@ ks_files: "{{ inventory_dir }}/../files/ks/"
 
 # The destination directory for the kickstart files
 # - i.e.: where the web server will host them from
-ks_files_destination: "/var/www/html/ks" 
+ks_files_destination: "/var/www/html/ks"
 
 # A list of PXE entries that gets populated into the PXE server
-# NOTE: It is expected that the reader of this file has PXE knowledge / experience 
+# NOTE: It is expected that the reader of this file has PXE knowledge / experience
 # Detailed explanation of the params below:
 # - name: The Name that will show up in the PXE config/menu
 # - menu_label: The descriptive string that will show in the PXE menu
@@ -44,4 +44,3 @@ pxe_entries:
 
 [pxe-server]
 192.168.1.10 ansible_user=fedora ansible_become=True
-
