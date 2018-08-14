@@ -14,21 +14,21 @@ Role Variables
 --------------
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**idm_fqdn**| sets up the directory for where to retrieve the content, eventually to be used to seed the web server | no | N/A |
-|**idm_user**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**idm_password**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**csr_country**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**csr_state**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**csr_location**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**csr_org_name**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**csr_org_unit**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**csr_email**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**host_name**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**host_realm**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**host_description**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**target_host_cert_file**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**target_host_key_file**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
-|**target_ca_cert_file**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
+|**idm_fqdn**| is the fully qualified domain name for the host | no | N/A |
+|**idm_user**| the idm user name | yes | N/A |
+|**idm_password**| the idm password | yes | N/A |
+|**csr_country**| country in which the certificate is made | yes | N/A |
+|**csr_state**| state for the certificate | yes | N/A |
+|**csr_location**| city of the certificate | yes | N/A |
+|**csr_org_name**| organization for the certificate | yes | N/A |
+|**csr_org_unit**| specific team for hte certificate | yes | N/A |
+|**csr_email**| email with which to register the certificate | yes | N/A |
+|**host_name**| the domain name of the host (this is different than the fully qualified domain name) | yes | N/A |
+|**host_realm**| the base URL of the host to which everything is tied | yes | N/A |
+|**host_description**| description of the host | yes | N/A |
+|**target_host_cert_file**| the hosts certificate | yes | N/A |
+|**target_host_key_file**| the key for the host | yes | N/A |
+|**target_ca_cert_file**| the certificate authority file which is cryptographically linked with the host key | yes | N/A |
 
 ```
 idm_fqdn: "idm.example.com"
