@@ -8,7 +8,7 @@ First, if necessary, it preps the system for the install by installing firewalld
 Requirements
 ------------
 
-1. Python should be installed on the existing machine.
+Python should be installed on the existing machine.
 
 Role Variables
 --------------
@@ -25,7 +25,7 @@ Role Variables
 
 Dependencies
 ------------
-A version of Python should be installed.
+No software dependencies that aren't taken care of by the ```/roles/prereq.yml```
 
 Example Playbooks
 ----------------
@@ -40,6 +40,15 @@ Example Inventory
 ----------------
 
 ```
+[all:vars]
+vnc_home_dir: /.vnc
+main_user: root
+vnc_password: password!
+passwd_info.stat.exists: False
+gnome_install: True
+xfce_install: False
+lxde_install: False
+mate_install: False
 
 ```
 
