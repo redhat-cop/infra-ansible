@@ -128,6 +128,13 @@
 - name: Include firewall tasks
   include_tasks: firewall.yml
 
+- name: Stop quay to complete setup
+  systemd:
+    name: "{{ quay_name }}"
+    state: stopped
+
 - name: Setup Initial User and Configuration
   include_tasks: complete_setup.yml
   when: not quay_config_stat_result.stat.exists and quay_superuser_username is defined and quay_superuser_username|trim != "" and quay_superuser_password is defined and quay_superuser_password|trim != "" and quay_superuser_email is defined and quay_superuser_email|trim != "" 
+  run_once: true
+  notify: Restart quay service
