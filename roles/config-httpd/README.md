@@ -13,13 +13,9 @@ Role Variables
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**httpd_seed_dir**| sets up the directory for where to retrieve the content, eventually to be used to seed the web server | no | N/A |
-|**default_document_root**| sets the default root folder for the where to deposit the web files that have been retrieved. | yes | N/A |
+|**httpd_seed_dir**|  Local directory with webserver content used to seed the web server | no | N/A |
+|**html_document_root**| sets the default root folder for the where to deposit the web files that have been retrieved. | no | /var/www/html/ |
 
-```
-html_document_root: "/var/www/html"
-httpd_seed_dir: "/any/file/path"
-```
 
 Dependencies
 ------------
@@ -45,11 +41,6 @@ Example Inventory
 ```
 
 **inventory/group_vars/web-server.yml:**
-
-| Variable | Description |
-|:--------:|:-----------:|
-|**ansible_user**| used to set which user to run ansible under |
-|**ansible_become**| used for privilege escalation when installing/configuring the various packages |
 
 ```
 ---
