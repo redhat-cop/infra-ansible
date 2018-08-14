@@ -19,7 +19,7 @@ Role Variables
 
 Dependencies
 ------------
-There are no strict dependencies for this role beyond ansible and it is useful to have the content to seed the web server already prepared.
+There are no strict dependencies for this role beyond ansible.
 
 Example Playbooks
 ----------------
