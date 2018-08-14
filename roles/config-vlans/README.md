@@ -3,7 +3,7 @@ Set of Roles
 
 The ansible roles found in this directory are associated with prepping for a vLAN (virtual LAN) install and configuring a vLAN install. VLANs allow for creating virtual area networks to avoid the costly process of buying and configuring new expensive routers for what may be a temporary measure.
 
-The role is relatively straightforward:  it configures the vlans interfaces and brings them online.
+The role is relatively straightforward:  it configures the vLANS interfaces and brings them online.
 
 Requirements
 ------------
