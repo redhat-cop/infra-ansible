@@ -15,13 +15,6 @@ Role Variables
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
 |**ifcfg.device**| the home directory where all the VNC files live | yes | ``` /home/ ``` |
-|**main_user**| the user that the VNC will be run from| yes | root |
-|**vnc_password**| the vnc password | no | vncpasswd01 |
-|**passwd_info.stat.exists**| a boolean variable that indicates whether or not a password exists  | no | False |
-|**gnome_install**| whether or not the system the VNC server is being installed on uses gnome | no | False |
-|**xfce_install**| whether or not the system the VNC server is being installed on uses XFCE | no | False |
-|**lxde_install**| whether or not the system the VNC server is being installed on uses LXDE | no | False |
-|**mate_install**| whether or not the system the VNC server is being installed on uses MATE | no | False |
 
 Dependencies
 ------------
@@ -31,28 +24,63 @@ Example Playbooks
 ----------------
 
 ```
-- hosts: localhost
+---
+
+- name: 'Configure VLANs on the infrastructure hosts'
+  hosts: infra_hosts
   roles:
-  - role: config-vnc-server
+  - role: config_vlans
+  tags:
+  - configure_infra_hosts
 ```
 
 Example Inventory
 ----------------
-
+**hosts:**
 ```
 [all:vars]
-vnc_home_dir: /.vnc
-main_user: root
-vnc_password: password!
-passwd_info.stat.exists: False
-gnome_install: True
-xfce_install: False
-lxde_install: False
-mate_install: False
 
+[infra_hosts]
+infra-1.example.com ansible_user=root ansible_host=192.168.1.11
+infra-2.example.com ansible_user=root ansible_host=192.168.1.12
+```
+**host_vars/infra-1.example.com**
+```
+---
+
+mgmt_net_ip: '192.168.1.11'
+mgmt_net_netmask: '255.255.255.0'
+mgmt_net_gateway: '192.168.1.1'
+mgmt_net_dns1: '8.8.8.8'
+mgmt_net_dns2: '8.8.4.4'
 ```
 
+**host_vars/infra-2.example.com**
+```
+---
 
+mgmt_net_ip: '192.168.1.12'
+mgmt_net_netmask: '255.255.255.0'
+mgmt_net_gateway: '192.168.1.1'
+mgmt_net_dns1: '8.8.8.8'
+mgmt_net_dns2: '8.8.4.4'
+```
+
+**group_vars/infra-hosts.yml**
+```
+---
+
+vlans:
+- device: tenant.vlan11
+  physdev: eth0
+  vlan_id: 11
+- device: tenant.vlan12
+  physdev: eth0
+  vlan_id: 12
+- device: tenant.vlan13
+  physdev: eth0
+  vlan_id: 13
+```
 License
 -------
 
