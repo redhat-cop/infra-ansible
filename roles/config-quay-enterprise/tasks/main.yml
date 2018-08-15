@@ -69,11 +69,6 @@
       command: openssl req -nodes -x509 -newkey rsa:4096 -keyout {{ quay_ssl_remote_tmp_dir }}/ssl.key -out {{ quay_ssl_remote_tmp_dir }}/ssl.cert -subj "/C={{ quay_ssl_generate_country }}/ST={{ quay_ssl_generate_state }}/L={{ quay_ssl_generate_city }}/O={{ quay_ssl_generate_organization }}/OU={{ quay_ssl_generate_organizational_unit }}/CN={{ quay_server_hostname }}" -days {{ quay_ssl_generate_days_validity }}
       delegate_to: "{{ groups['quay_enterprise'][0] }}"
   
-    - name: Set Fact for Custom SSL Certificates
-      set_fact:
-        quay_ssl_cert_file: "{{ quay_ssl_local_tmp_dir }}/ssl.cert"
-        quay_ssl_key_file: "{{ quay_ssl_local_tmp_dir }}/ssl.key"
-
     - name: Fetch SSL Certifictes
       fetch:
         src:  "{{ item.src }}"
@@ -81,15 +76,21 @@
         flat: true
         fail_on_missing: yes
       delegate_to: "{{ groups['quay_enterprise'][0] }}"
+      run_once: true
       with_items:
-        - { src: "{{ quay_ssl_remote_tmp_dir }}/ssl.key", dest: "{{ quay_ssl_key_file }}" }
-        - { src: "{{ quay_ssl_remote_tmp_dir }}/ssl.cert", dest: "{{ quay_ssl_cert_file }}" }
+        - { src: "{{ quay_ssl_remote_tmp_dir }}/ssl.key", dest: "{{ quay_ssl_local_tmp_dir }}/ssl.key" }
+        - { src: "{{ quay_ssl_remote_tmp_dir }}/ssl.cert", dest: "{{ quay_ssl_local_tmp_dir }}/ssl.cert" }
 
     - name: Delete Remote SSL Certificates
       file:
         state: absent
         path: "{{ quay_ssl_remote_tmp_dir }}"
       delegate_to: "{{ groups['quay_enterprise'][0] }}"
+
+    - name: Set Fact for Custom SSL Certificates
+      set_fact:
+        quay_ssl_cert_file: "{{ quay_ssl_local_tmp_dir }}/ssl.cert"
+        quay_ssl_key_file: "{{ quay_ssl_local_tmp_dir }}/ssl.key"
   when: quay_ssl_enable|bool and (quay_ssl_key_file is not defined or quay_ssl_key_file|trim == "" or quay_ssl_cert_file is not defined or quay_ssl_cert_file|trim == "")
 
 - name: Copy SSL Certificates
