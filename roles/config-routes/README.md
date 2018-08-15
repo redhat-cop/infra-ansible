@@ -11,15 +11,12 @@ This requires that the OS is based on Fedora or RHEL.
 Role Variables
 --------------
 
-| Variable | Description | Required | Defaults |
-|:--------:|:-----------:|:--------:|:--------:|
-|**httpd_seed_dir**|  Local directory with webserver content used to seed the web server | no | N/A |
-|**html_document_root**| sets the default root folder for the where to deposit the web files that have been retrieved. | no | /var/www/html/ |
+no custom role variables
 
 
 Dependencies
 ------------
-There are no strict dependencies for this role beyond ansible and it is useful to have the content to seed the web server already prepared.
+There are no strict dependencies for this role beyond ansible and the ```route.j2``` route configuration.
 
 Example Playbooks
 ----------------
@@ -39,18 +36,29 @@ Example Inventory
 
 **inventory/hosts:**
 ```
-[web-server]
-192.168.1.10
+[all:vars]
+ansible_user: fedora
+ansible_become: True
+ansible_host: 192.168.1.10
+
+[infra_hosts]
+infra-1.example.com
 ```
 
-**inventory/group_vars/web-server.yml:**
+**inventory/group_vars/infra-hosts.yml:**
 
 ```
 ---
-ansible_user: fedora
-ansible_become: True
 
-httpd_seed_dir: "/my/local/web/server/directory"
+routes:
+- device: eth0
+  entries:
+  - address: 192.168.10.0
+    netmask: 255.255.255.0
+    gateway: 192.168.1.1
+  - address: 192.168.11.0
+    netmask: 255.255.255.0
+    gateway: 192.168.1.1
 ```
 
 
