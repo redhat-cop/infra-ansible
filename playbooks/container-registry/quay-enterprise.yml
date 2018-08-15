@@ -126,6 +126,10 @@
       include_role:
         name: config-quay-enterprise
       vars:
+        quay_database_username: "{{ hostvars[groups['database'][0]]['quay_database_username'] }}"
+        quay_database_password: "{{ hostvars[groups['database'][0]]['quay_database_password'] }}"
+        quay_database_name: "{{ hostvars[groups['database'][0]]['quay_database_name'] }}"
+        quay_database_port: "{{ hostvars[groups['database'][0]]['quay_database_port'] }}"
         quay_database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
         redis_host: "{{ quay_hostname | default(hostvars[groups['lb'][0]]['inventory_hostname']) if groups['lb'] | length > 0 else hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
         quay_server_hostname: "{{ quay_hostname | default(inventory_hostname) }}"
