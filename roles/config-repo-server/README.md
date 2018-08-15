@@ -19,35 +19,38 @@ Role Variables
 
 Dependencies
 ------------
-There are no strict dependencies for this role beyond ansible and it is useful to have the content to seed the web server already prepared.
+This role uses NFS to mount the repo, so make sure to specify a valid NFS server / path to where the ISOs can be found.
 
 Example Playbooks
 ----------------
-from test.yml
+from ```tests/test.yml```
 
 ```
-- hosts: web-server
+---
+
+- hosts: repo_server
   roles:
-  - config-httpd
+    - config-repo-server
 ```
 
 Example Inventory
 ----------------
 
-**inventory/hosts:**
 ```
-[web-server]
+[all:vars]
+
+iso_repo_nfs: "my-nfs-server:/software"
+iso_repo_dir: "/mnt/software"
+
+hosted_isos:
+- name: "fedora25-server"
+  iso_file_path: "/mnt/software/ISOs/Fedora-Server-dvd-x86_64-25-1.3.iso"
+  iso_file_target: "/var/www/html/fedora/25/server/x86_64"
+
+[repo-server]
 192.168.1.10
-```
-
-**inventory/group_vars/web-server.yml:**
-
-```
----
-ansible_user: fedora
+ansible_user: fedora 
 ansible_become: True
-
-httpd_seed_dir: "/my/local/web/server/directory"
 ```
 
 
