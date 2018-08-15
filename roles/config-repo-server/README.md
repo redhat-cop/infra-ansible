@@ -1,7 +1,7 @@
 Set of Roles
 ============
 
-The ansible roles found in this directory are associated with configuring a httpd web server. It is broken into two steps, prep and seeding. In prep it sets up httpd and firewalld (opening it up on port 80). In seed it fills up the web server with content from a pre-determined location.
+The ansible roles found in this directory are associated with mounting an ISO. It, first, ensures that the ISO mount directory exists and, second, mounts the ISOs.
 
 Requirements
 ------------
@@ -13,13 +13,15 @@ Role Variables
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**httpd_seed_dir**|  Local directory with webserver content used to seed the web server | no | N/A |
-|**html_document_root**| sets the default root folder for the where to deposit the web files that have been retrieved. | no | /var/www/html/ |
+|**iso_repo_nfs**|  The NFS directory for ISOs | yes | N/A |
+|**iso_repo_dir**| Local directory for ISO storage | yes |  |
+|**iso_file_path**|  Local directory where the ISO is stored | yes | N/A |
+|**iso_file_target**| The target directory to mount the ISO on | yes | |
 
 
 Dependencies
 ------------
-This role uses NFS to mount the repo, so make sure to specify a valid NFS server / path to where the ISOs can be found.
+This role uses NFS to mount the repo, so make sure to specify a valid NFS server / path to where the ISOs can be found. This also relies on the role ```config-httpd```.
 
 Example Playbooks
 ----------------
@@ -49,7 +51,7 @@ hosted_isos:
 
 [repo-server]
 192.168.1.10
-ansible_user: fedora 
+ansible_user: fedora
 ansible_become: True
 ```
 
