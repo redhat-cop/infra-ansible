@@ -13,6 +13,8 @@ Role Variables
 
 - target_state: The SELinux state
 - target_policy: The targeted SELinux policy
+- selinux_relabel: Whether to run restorecon
+- selinux_relabel_dir: The directory to recursively relabel with restorecon
 
 
 Dependencies
@@ -26,6 +28,13 @@ Example Playbook
     - hosts: servers
       roles:
          - role: config-selinux
+
+    - hosts: servers
+      roles:
+         - role: config-selinux
+           selinux_relabel: yes
+           selinux_relabel_dir: /etc
+
 
 License
 -------
