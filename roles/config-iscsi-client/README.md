@@ -1,7 +1,7 @@
 Set of Roles
 ============
 
-The ansible roles found in this directory are associated with configuring an iSCSI client. In prep it installs some required packages for the client. Then, it checks that the initiator name and the service are set and running correctly. next, it configures the multipath set up and restarts it. After this is configures the LVM, updates the meta-data, and runs through final checks.
+The ansible roles found in this directory are associated with configuring an iSCSI client. In prep it installs some required packages for the client. Then, it checks that the initiator name and the service are set and running correctly. Next, it configures the multipath set up and restarts it. After this is configures the LVM, updates the meta-data, and runs through final checks.
 
 Requirements
 ------------
@@ -13,14 +13,14 @@ Role Variables
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**iscsi_target**|  the storage resource used in linking data storage | no | N/A |
+|**iscsi_target**|  the storage resource used in linking data storage | yes | N/A |
 |**iscsi_brand**| the type of linked sorage| no | N/A |
-|**iscsi_initiatorname**| used for identifiying a specific element | yes | n/a|
+|**iscsi_initiatorname**| used for identifiying a specific element | yes | N/A |
 
 
 Dependencies
 ------------
-There are no strict dependencies for this role beyond ansible and it is useful to have the content to seed the web server already prepared.
+There are no strict dependencies for this role beyond ansible.
 
 Example Playbooks
 ----------------
