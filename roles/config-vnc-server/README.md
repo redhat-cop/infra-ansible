@@ -38,7 +38,7 @@ Example Inventory
 ```
 [all:vars]
 vnc_home_dir: /.vnc
-main_user: root
+main_user: user1
 vnc_password: password!
 passwd_info.stat.exists: False
 
