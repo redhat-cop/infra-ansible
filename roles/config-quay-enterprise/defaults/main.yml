@@ -51,6 +51,9 @@ quay_ssl_delete_generated_cert: True
 quay_clair_enable: False
 quay_clair_endpoint: ""
 
+# Builder
+quay_builder_enable: False
+
 # Superuser Configuration
 quay_superuser_username: ""
 quay_superuser_password: ""
