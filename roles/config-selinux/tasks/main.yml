@@ -7,5 +7,5 @@
 
 - name: "Relabel SElinux contexts"
   command: "restorecon -r {{ selinux_relabel_dir | default('/') }}"
-  when: selinux_relabel | default('false') | bool
+  when: selinux_relabel | default('no') | bool
 
