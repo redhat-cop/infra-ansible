@@ -38,11 +38,11 @@ curl --user email@example.com:<api_token> \
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**jira.url**| url of atlassian server | yes | N/A |
-|**jira.username**| username of altassion server | yes | N/A |
-|**jira.password**| password of altassion server | yes | N/A |
-|**jira.jira-admin**| jira admin group to add to the permission scheme | yes| N/A |
-|**jira.lead**| The username of the project lead | yes | N/A |
+|**jira.url**| url of Atlassian server | yes | N/A |
+|**jira.username**| username of Atlassian server | yes | N/A |
+|**jira.password**| password of Atlassian server | yes | N/A |
+|**jira.jira-admin**| Jira admin group to add to the permission scheme | yes| N/A |
+|**jira.lead**| The username of the project lead. This is just the username, not the email address of the user | yes | N/A |
 |**jira.core_team**| team to give admin access | yes | N/A |
 |**project.name**| project name | yes | N/A |
 |**project.key**| Project keys must be unique and start with an uppercase letter followed by one or more uppercase alphanumeric characters. Required when creating a project | yes | N/A |
@@ -92,7 +92,7 @@ atlassian:
 ```
 
 *Note:
-This role  assumes that three groups "project_lead", "project_team_member" and "project_viewer" have already been created.*
+This role  assumes that three groups "project_lead", "project_team_member" and "project_viewer" have already been created. This can be done using the [manage-atlassian-users](https://github.com/redhat-cop/infra-ansible/tree/master/roles/user-management/manage-atlassian-users) role *
 
 #### This role does three things
 1.  Creates a Project Category
