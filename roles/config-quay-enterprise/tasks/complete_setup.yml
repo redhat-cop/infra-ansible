@@ -8,7 +8,7 @@
 
     - name: Restart Quay
       systemd:
-        name: "{{ quay_name }}"
+        name: "{{ quay_service }}"
         enabled: yes
         state: restarted
         daemon_reload: yes
@@ -24,8 +24,8 @@
       retries: 30
       delay: 10
     - name: Write file
-      copy: 
-        content: "{{ uri_setup.content }}" 
+      copy:
+        content: "{{ uri_setup.content }}"
         dest: "{{ tmp_setup_file_location }}"
     - name: Extract csrf token
       shell: cat /tmp/quay | grep "__token" | awk -F\' '{print $(NF-1)}'
