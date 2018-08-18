@@ -1,6 +1,6 @@
 # Quay Enterprise
 
-This playbook provides support for deploying [Quay Enterprise](https://coreos.com/quay-enterprise/) and its required dependencies. 
+This playbook provides support for deploying [Quay Enterprise](https://coreos.com/quay-enterprise/) and its required dependencies.
 
 ## Components
 
@@ -14,7 +14,7 @@ The following sets of resources are provisioned by this playbook:
 
 ## Inventory Options
 
-The deployment of Quay Enterprise is driven by the inventory found in the [quay-enterprise](../../inventory/quay-enterprise) folder. 
+The deployment of Quay Enterprise is driven by the inventory found in the [quay-enterprise](../../inventory/quay-enterprise) folder.
 
 Five host groups are available and configured in the [hosts](../../inventory/quay-enterprise/hosts) file:
 
@@ -49,5 +49,5 @@ Additional variables can be utilized by inspecting the variables provided by eac
 Execute the following command to provision the Quay ecosystem:
 
 ```
-$ ansible-playbook -i ../../inventory/container-registry quay-enterprise.yml
+$ ansible-playbook -i ../../inventory/quay-enterprise  quay-enterprise.yml
 ```
