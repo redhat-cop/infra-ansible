@@ -11,7 +11,7 @@ backend quay_http
 # Make sure the name matches the frontend name
 backend quay_https
     mode tcp
-    balance roundrobin
+    balance source
     option httpchk GET /health/instance
     http-check expect status 200
 
