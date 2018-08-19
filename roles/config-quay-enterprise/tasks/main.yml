@@ -68,7 +68,7 @@
     - name: Create SSL Certificate
       command: openssl req -nodes -x509 -newkey rsa:4096 -keyout {{ quay_ssl_remote_tmp_dir }}/ssl.key -out {{ quay_ssl_remote_tmp_dir }}/ssl.cert -subj "/C={{ quay_ssl_generate_country }}/ST={{ quay_ssl_generate_state }}/L={{ quay_ssl_generate_city }}/O={{ quay_ssl_generate_organization }}/OU={{ quay_ssl_generate_organizational_unit }}/CN={{ quay_server_hostname }}" -days {{ quay_ssl_generate_days_validity }}
       delegate_to: "{{ groups['quay_enterprise'][0] }}"
-  
+
     - name: Fetch SSL Certifictes
       fetch:
         src:  "{{ item.src }}"
@@ -106,8 +106,7 @@
     - { src: "{{ quay_ssl_cert_file }}", dest: "{{ quay_config_dir }}/ssl.cert" }
   when: quay_ssl_enable|bool
 
-
-- name: Check if quay configuration exists
+- name: Check if Quay configuration exists
   stat:
     path: "{{ quay_config_dir }}/config.yaml"
   register: quay_config_stat_result
@@ -131,4 +130,4 @@
 
 - name: Setup Initial User and Configuration
   include_tasks: complete_setup.yml
-  when: not quay_config_stat_result.stat.exists and quay_superuser_username is defined and quay_superuser_username|trim != "" and quay_superuser_password is defined and quay_superuser_password|trim != "" and quay_superuser_email is defined and quay_superuser_email|trim != "" 
+  when: not quay_config_stat_result.stat.exists and quay_superuser_username is defined and quay_superuser_username|trim != "" and quay_superuser_password is defined and quay_superuser_password|trim != "" and quay_superuser_email is defined and quay_superuser_email|trim != ""

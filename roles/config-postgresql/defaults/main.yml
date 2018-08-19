@@ -1,5 +1,4 @@
 ---
-
 mode: containerized
 
 postgresql_name: postgresql
@@ -18,9 +17,9 @@ postgresql_container_port: 5432
 postgresql_host_port: 5432
 
 # These Values will be randomaly generated if not defined
-#postgresql_admin_user: postgresqladmin
 #postgresql_username: postgresql
 #postgresql_password: postgresql
+#postgresql_admin_user: postgresqladmin
 #postgresql_admin_password: postgresqladmin
 
 postgresql_db_uri: "postgresql://{{ postgresql_admin_user }}:{{ postgresql_admin_password }}@{{ database_service }}/{{ postgresql_database }}"
