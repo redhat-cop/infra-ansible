@@ -1,0 +1,7 @@
+---
+
+#postgresql_username: clair
+#postgresql_password: clair
+#postgresql_host: ""
+#postgresql_port: "5433"
+#postgresql_database: clair

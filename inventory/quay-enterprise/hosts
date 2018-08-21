@@ -8,6 +8,8 @@
 
 [lb]
 
+[quay_builder]
+
 [docker_hosts]
 
 [docker_hosts:children]
@@ -15,3 +17,4 @@ quay_enterprise
 redis
 database
 clair
+quay_builder
