@@ -155,7 +155,7 @@
         postgresql_password: "{{ clair_database_password }}"
         postgresql_admin_user: "{{ clair_database_admin_username }}"
         postgresql_admin_password: "{{ clair_database_admin_password }}"
-        postgresql_port: "{{ clair_database_port | default('5433') }}"
+        postgresql_host_port: "{{ clair_database_port | default('5433') }}"
         postgresql_database: "{{ clair_database_name }}"
       when: groups['clair']| length > 0
 
