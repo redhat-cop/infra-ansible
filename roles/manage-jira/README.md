@@ -92,7 +92,7 @@ atlassian:
 ```
 
 *Note:
-This role  assumes that three groups "project_lead", "project_team_member" and "project_viewer" have already been created. This can be done using the [manage-atlassian-users](https://github.com/redhat-cop/infra-ansible/tree/master/roles/user-management/manage-atlassian-users) role *
+This role  assumes that three groups "project_lead", "project_team_member" and "project_viewer" have already been created. This can be done using the [manage-atlassian-users](../user-management/manage-atlassian-users) role *
 
 #### This role does three things
 1.  Creates a Project Category
