@@ -13,7 +13,7 @@ Role Variables
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-| hostname | The (short) hostname to use for the host | yes |  |
+| hostname | The (short) hostname to use for the host | no | the 'inventory_hostname_short' fact |
 | dns_domain | DNS domain to append to the hostname to make a FQDN | no | |
 
 

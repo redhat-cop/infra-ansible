@@ -1,5 +1,9 @@
 ---
 
+- name: Setting Default Hostname if new one is not supplied
+  set_fact:
+    hostname: "{{ hostname | default(inventory_hostname_short) }}"
+
 - name: Setting Hostname Related Facts
   set_fact:
     hostname: "{{ hostname }}.{{ dns_domain }}"
