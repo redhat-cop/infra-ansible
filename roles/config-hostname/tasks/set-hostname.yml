@@ -1,0 +1,33 @@
+---
+
+- name: Setting Default Hostname if new one is not supplied
+  set_fact:
+    hostname: "{{ hostname | default(inventory_hostname_short) }}"
+
+- name: Setting Hostname Related Facts
+  set_fact:
+    hostname: "{{ hostname }}.{{ dns_domain }}"
+  when:
+  - dns_domain is defined
+  - dns_domain|trim != ''
+
+- name: Setting hostname (FQDN)
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Check for cloud.cfg
+  stat:
+    path: "/etc/cloud/cloud.cfg"
+  register: cloud_cfg
+
+- name: Prevent cloud-init updates of hostname/fqdn (if applicable)
+  lineinfile:
+    dest: /etc/cloud/cloud.cfg
+    state: present
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+  - { regexp: '^ - set_hostname', line: '# - set_hostname' }
+  - { regexp: '^ - update_hostname', line: '# - update_hostname' }
+  when:
+  - cloud_cfg.stat.exists
