@@ -44,7 +44,6 @@ Example Inventory
 
 ```
 ---
-ansible_become: True
 
 hostname: "my-cool-host"
 dns_domain: "my-cool-domain.com"

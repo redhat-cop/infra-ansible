@@ -1,7 +1,5 @@
 ---
 
-ansible_become: True
-
 hostname: "cool"
 dns_domain: "hostname.com"
 
