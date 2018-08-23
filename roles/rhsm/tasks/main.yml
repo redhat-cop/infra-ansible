@@ -1,13 +1,20 @@
 ---
 
-# Use a 'block' to ensure "become: True" for all tasks since all of these tasks
+# Use a 'block' to ensure "become: True" for all tasks since
 # all of these tasks require elevated privileges
 - block:
 
   # Need to use the 'command' module for this task since the "redhat_subscription" module
   # won't do a full "clean" when using the "state: absent" option
+  # - note the 'warn: False' set because of this situation
   - name: 'Unregister the system if already registered - if this is a force re-registration'
-    command: 'subscription-manager clean'
+    command: "{{ item }}"
+    args:
+      warn: False
+    with_items:
+    - 'subscription-manager clean'
+    - 'subscription-manager remove --all'
+    - 'yum remove -y "katello-ca-consumer-*"'
     when:
     - (rhsm_force_register|default('no'))|lower == 'yes'
 
@@ -27,7 +34,9 @@
       state: present
       username: "{{ rhsm_username | default(omit) }}"
       password: "{{ rhsm_password | default(omit) }}"
+      pool_ids: "{{ rhsm_pool_ids | default(omit) }}"
       pool: "{{ rhsm_pool | default(omit) }}"
+      autosubscribe: "{{ ((rhsm_pool is defined or rhsm_pool_ids is defined or rhsm_activationkey is defined) | ternary(omit, true)) }}"
       server_hostname: "{{ rhsm_server_hostname | default(omit) }}"
       activationkey: "{{ rhsm_activationkey | default(omit) }}"
       org_id: "{{ rhsm_org_id | default(omit) }}"
