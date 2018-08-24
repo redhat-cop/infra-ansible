@@ -1,45 +1,71 @@
 ---
 
-# Need to use the 'command' module for this task since the "redhat_subscription" module
-# won't do a full "clean" when using the "state: absent" option
-- name: 'Unregister the system if already registered - if this is a force re-registration'
-  command: 'subscription-manager clean'
-  when:
-  - (rhsm_force_register|default('no'))|lower == 'yes'
+# Use a 'block' to ensure "become: True" for all tasks since
+# all of these tasks require elevated privileges
+- block:
 
-# Need to use the 'command' module for this task since the "yum" module
-# won't honor an "upgrade" of the RPM in case where the source server changed. 
-# - note the 'warn: False' set because of this situation
-- name: "Install Satellite certificate (if applicable)"
-  command: "rpm -Uh --force http://{{ rhsm_server_hostname }}/pub/katello-ca-consumer-latest.noarch.rpm"
-  args:
-    warn: False
-  when:
-  - rhsm_server_hostname is defined
-  - rhsm_server_hostname|trim != ''
+  # Need to use the 'command' module for this task since the "redhat_subscription" module
+  # won't do a full "clean" when using the "state: absent" option
+  # - note the 'warn: False' set because of this situation
+  - name: 'Unregister the system if already registered - if this is a force re-registration'
+    command: "{{ item }}"
+    args:
+      warn: False
+    with_items:
+    - 'subscription-manager clean'
+    - 'subscription-manager remove --all'
+    - 'yum remove -y "katello-ca-consumer-*"'
+    when:
+    - (rhsm_force_register|default('no'))|lower == 'yes'
 
-- name: 'Register system using Red Hat Subscription Manager'
-  redhat_subscription:
-    state: present
-    username: "{{ rhsm_username | default(omit) }}"
-    password: "{{ rhsm_password | default(omit) }}"
-    pool: "{{ rhsm_pool | default(omit) }}"
-    server_hostname: "{{ rhsm_server_hostname | default(omit) }}"
-    activationkey: "{{ rhsm_activationkey | default(omit) }}"
-    org_id: "{{ rhsm_org_id | default(omit) }}"
-    force_register: "{{ rhsm_force_register | default(omit) }}"
+  # Need to use the 'command' module for this task since the "yum" module
+  # won't honor an "upgrade" of the RPM in case where the source server changed. 
+  # - note the 'warn: False' set because of this situation
+  - name: "Install Satellite certificate (if applicable)"
+    command: "rpm -Uh --force http://{{ rhsm_server_hostname }}/pub/katello-ca-consumer-latest.noarch.rpm"
+    args:
+      warn: False
+    when:
+    - rhsm_server_hostname is defined
+    - rhsm_server_hostname|trim != ''
 
-- name: "Obtain currently enabled repos"
-  shell: 'subscription-manager repos --list-enabled | sed -ne "s/^Repo ID:[^a-zA-Z0-9]*\(.*\)/\1/p"'
-  register: enabled_repos
+  - name: 'Register system using Red Hat Subscription Manager'
+    redhat_subscription:
+      state: present
+      username: "{{ rhsm_username | default(omit) }}"
+      password: "{{ rhsm_password | default(omit) }}"
+      pool_ids: "{{ rhsm_pool_ids | default(omit) }}"
+      pool: "{{ rhsm_pool | default(omit) }}"
+      autosubscribe: "{{ ((rhsm_pool is defined or rhsm_pool_ids is defined or rhsm_activationkey is defined) | ternary(omit, true)) }}"
+      server_hostname: "{{ rhsm_server_hostname | default(omit) }}"
+      activationkey: "{{ rhsm_activationkey | default(omit) }}"
+      org_id: "{{ rhsm_org_id | default(omit) }}"
+      force_register: "{{ rhsm_force_register | default(omit) }}"
 
-- name: "Disable repositories that should not be enabled"
-  shell: "subscription-manager repos --disable={{ item }}"
-  with_items: 
-  - "{{ enabled_repos.stdout_lines | difference(rhsm_repos) }}"
+  - name: "Obtain currently enabled repos"
+    shell: 'subscription-manager repos --list-enabled | sed -ne "s/^Repo ID:[^a-zA-Z0-9]*\(.*\)/\1/p"'
+    register: enabled_repos
 
-- name: "Enable specified repositories not already enabled"
-  command: "subscription-manager repos --enable={{ item }}"
-  with_items:
-  - "{{ rhsm_repos | difference(enabled_repos.stdout_lines) }}"
+  # Build the list of repos to disable/enable before calling 'subscription-manager' as it's a very 
+  # expensive command to run and hence better to call just once (especially with a long list of repos)
+  - name: "Build command line for repos to disable"
+    set_fact:
+      repos_params: "{{ repos_params|default('') }} --disable={{ item }}"
+    with_items: 
+    - "{{ enabled_repos.stdout_lines | difference(rhsm_repos) }}"
+
+  - name: "Build command line for repos to enable"
+    set_fact:
+      repos_params: "{{ repos_params|default('') }} --enable={{ item }}"
+    with_items:
+    - "{{ rhsm_repos | difference(enabled_repos.stdout_lines) }}"
+
+  - name: "Run 'subscription-manager to disable/enable repos"
+    command: "subscription-manager repos {{ repos_params }}"
+    when:
+    - repos_params is defined 
+    - repos_params|trim != ''
+
+  # End of outer block for "become: True"
+  become: True
 
