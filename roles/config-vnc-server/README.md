@@ -1,33 +1,38 @@
-Set of Roles
-============
+config-vnc-server
+=================
 
-The ansible roles found in this directory are associated with prepping for a VNC (virtual network computing) server install and configuring a VNC server install.
-
-First, if necessary, it preps the system for the install by installing firewalld and enabling it. Then it opens up firewall so that a network file system can be used. NOTE: this step can be skipped if a network file system is already in place. Afterwards, it installs additional packages, ensures the appropriate directories are in place, and sets up the VNC password. The final steps are modifying the start up scripts, user configs, and SELinux configs so that it can be used.
+This role installs, configures and enables a VNC server on the target host(s).
 
 Requirements
 ------------
 
-Python should be installed on the existing machine.
+None. However, if installed on a system requiring entitlements, make sure the correct channels are enabled for package installations.
 
 Role Variables
 --------------
 | Variable | Description | Required | Defaults |
-|:--------:|:-----------:|:--------:|:--------:|
-|**vnc_home_dir**| the home directory where all the VNC files live | no | ``` /home ``` |
-|**main_user**| the user that the VNC will be run from| yes | N/A |
-|**vnc_password**| the vnc password | no | vncpasswd01 |
-|**passwd_info.stat.exists**| a boolean variable that indicates whether or not a password exists  | no | False |
+|:---------|:------------|:---------|:---------|
+|**vnc_home_dir**| The home directory path for the user | no | `/home` |
+|**main_user**| The user that the VNC will be run from | yes | |
+|**vnc_password**| The vnc password to be used for the above user | no | vncpasswd01 |
+|**gome_install**| True/False if `gnome` will be used with this VNC server | no | False |
+|**xfce_install**| True/False if `XFCE` will be used with this VNC server | no | False |
+|**lxde_install**| True/False if `LXDE` will be used with this VNC server | no | False |
+|**mate_install**| True/False if `MATE` will be used with this VNC server | no | False |
+
+_**Note:**_ The various graphical options above are only needed to get the correct xstartup file installed for the VNC server. To actually install the graphical system, make sure to use the other `config_[gnome|xfce|lxde|mate]` roles for the target setup. Also note that these are mutual exlusive in that only one of these can be started by the VNC server as-is (since only one server is supported by this role at the moment).
+
 
 Dependencies
 ------------
-No software dependencies that aren't taken care of by the ```/roles/prereq.yml```
+
+N/A
 
 Example Playbooks
 ----------------
 
 ```
-- hosts: localhost
+- hosts: vnc-server
   roles:
   - role: config-vnc-server
 ```
@@ -35,12 +40,22 @@ Example Playbooks
 Example Inventory
 ----------------
 
+
+**inventory/hosts**
 ```
-[all:vars]
-vnc_home_dir: /.vnc
+
+[vnc-server]
+192.168.10.43
+```
+
+**inventory/group_vars/vnc-server.yml**
+```
+---
+
+vnc_home_dir: /lclhome
 main_user: user1
-vnc_password: password!
-passwd_info.stat.exists: False
+vnc_password: password
+lxde_install: True
 
 ```
 

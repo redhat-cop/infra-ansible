@@ -1,58 +1,57 @@
-Set of Roles
-============
+config-repo-server
+==================
 
-The ansible roles found in this directory are associated with mounting an ISO. It, first, ensures that the ISO mount directory exists and, second, mounts the ISOs.
+This role takes a list of (local) ISO images paired with target directories and mounts the ISO at the directory location - with the purpose of host the ISOs as web content (e.g.: for PXE/ks installs, etc.)
+
 
 Requirements
 ------------
 
-No specific system requirements.
+- The [config-httpd](../config-httpd) role is used to ensure a valid web server is running before the ISOs are mounted and served.
+- The ISO image(s) to be mounted needs to exist on the target host(s) (either locally or through another mounted file system).
 
 Role Variables
 --------------
 
 | Variable | Description | Required | Defaults |
-|:--------:|:-----------:|:--------:|:--------:|
-|**iso_repo_nfs**|  The NFS directory for ISOs | yes | N/A |
-|**iso_repo_dir**| Local directory for ISO storage | yes |  |
-|**iso_file_path**|  Local directory where the ISO is stored | yes | N/A |
+|:---------|:------------|:---------|:---------|
+|**iso_file_path**| Path to the local ISO to be mounted | yes | |
 |**iso_file_target**| The target directory to mount the ISO on | yes | |
 
 
 Dependencies
 ------------
-This role uses NFS to mount the repo, so make sure to specify a valid NFS server / path to where the ISOs can be found. This also relies on the role ```config-httpd```.
+
+
 
 Example Playbooks
 ----------------
-from ```tests/test.yml```
-
 ```
 ---
 
 - hosts: repo_server
   roles:
-    - config-repo-server
+  - config-repo-server
 ```
 
 Example Inventory
 ----------------
 
+**inventory/hosts**
 ```
-[all:vars]
-
-iso_repo_nfs: "my-nfs-server:/software"
-iso_repo_dir: "/mnt/software"
-
-hosted_isos:
-- name: "fedora25-server"
-  iso_file_path: "/mnt/software/ISOs/Fedora-Server-dvd-x86_64-25-1.3.iso"
-  iso_file_target: "/var/www/html/fedora/25/server/x86_64"
-
 [repo-server]
 192.168.1.10
-ansible_user: fedora
-ansible_become: True
+```
+
+**inventory/hosts**
+```
+hosted_isos:
+- name: "fedora27-server"
+  iso_file_path: "/mnt/software/ISOs/Fedora-Server-dvd-x86_64-27-1.3.iso"
+  iso_file_target: "/var/www/html/fedora/27/server/x86_64"
+- name: "fedora28-server"
+  iso_file_path: "/mnt/software/ISOs/Fedora-Server-dvd-x86_64-28-1.1.iso"
+  iso_file_target: "/var/www/html/fedora/28/server/x86_64"
 ```
 
 

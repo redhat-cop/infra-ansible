@@ -1,45 +1,54 @@
-Set of Roles
-============
+config-software-src
+===================
 
-The ansible roles found in this directory are associated with configuring a software source to be shared across a network. First the role will prep the system by ensuring that a NFS package is installed, used for sharing file systems across a network. Then it simply mounts the software to the disk to create the connection. NOTE: it is not unmounted because it is supposed to be used as a form of persistent storage across the network.
+This role mounts a NFS mount (`server:/directory`) to be used locally on the target host(s).
 
 Requirements
 ------------
 
-No specific system requirements.
+A valid NFS server with a directory already shared out.
+
 
 Role Variables
 --------------
 
 | Variable | Description | Required | Defaults |
-|:--------:|:-----------:|:--------:|:--------:|
-|**iso_repo_dir**| Local ISO storage repository | no | N/A |
-|**iso_repo_nfs**| N/A |
+|:---------|:------------|:---------|:---------|
+|**iso_repo_nfs**| The NFS server path/directory to be mounted | yes | |
+|**iso_repo_dir**| Path to where the NFS target is to be mounted on the target host(s) | yes | |
 
 
 Dependencies
 ------------
-There are no strict dependencies for this role beyond ansible.
+
+A valid NFS server with a directory already shared out.
+
 
 Example Playbooks
 ----------------
-from ```/tests/test.yml```
 
 ```
-- hosts: all
+- hosts: repo_servers
   roles:
-    - config-software-src
+  - config-software-src
 ```
 
 Example Inventory
 ----------------
 
+**inventory/hosts**
+```
+[repo_servers]
+192.168.10.12
+```
+
+
+**inventory/group_vars/repo_servers**
 
 ```
-[all:vars]
+iso_repo_nfs: "nfs.server.example.com:/software"
+iso_repo_dir: "/mnt/software"
 
-iso_repo_dir: /dev/ISO/path
-iso_repo_nfs: /dev/ISO/new/path
 ```
 
 
