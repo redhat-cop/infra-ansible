@@ -1,10 +1,10 @@
 ---
 - name: Get Content from Source
   uri:
-    url: '{{ confluence.source.url }}/wiki/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
+    url: '{{ confluence_source_url }}/wiki/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
     method: GET
-    user: '{{ confluence.source.username }}'
-    password: '{{ confluence.source.password }}'
+    user: '{{ confluence_source_username }}'
+    password: '{{ confluence_source_password }}'
     force_basic_auth: yes
     status_code: 200
     return_content: yes
@@ -21,10 +21,10 @@
 
 - name: Get the current page version
   uri:
-    url: '{{ confluence.destination.url }}/wiki/rest/api/space/{{ confluence.destination.space_key }}/content?expand=homepage,version'
+    url: '{{ confluence_destination_url }}/wiki/rest/api/space/{{ atlassian.confluence.destination.key }}/content?expand=homepage,version'
     method: GET
-    user: '{{ confluence.destination.username }}'
-    password: '{{ confluence.destination.password }}'
+    user: '{{ confluence_destination_username }}'
+    password: '{{ confluence_destination_password }}'
     force_basic_auth: yes
     status_code: 200
     return_content: yes
@@ -39,17 +39,17 @@
             storage:
               value: "{{ content_json.json.body.storage.value }}"
               representation: "storage"
-          title: "{{ confluence.destination.space_name }}"
+          title: "{{ atlassian.confluence.destination.name }}"
           type: "{{ content_json.json.type }}"
           space:
-            key: "{{ confluence.destination.space_key }}"
+            key: "{{ atlassian.confluence.destination.key }}"
           version:
             number: "{{ homepage_content.json['page']['results'][0]['version']['number'] + 1 }}"
     - uri:
-        url: '{{ confluence.destination.url }}/wiki/rest/api/content/{{ destination_homepage_id }}'
+        url: '{{ confluence_destination_url }}/wiki/rest/api/content/{{ destination_homepage_id }}'
         method: PUT
-        user: '{{ confluence.destination.username }}'
-        password: '{{ confluence.destination.password }}'
+        user: '{{ confluence_destination_username }}'
+        password: '{{ confluence_destination_password }}'
         force_basic_auth: yes
         status_code: 200
         body_format: json
@@ -68,7 +68,7 @@
       title: "{{ content_json.json.title }}"
       type: "{{ content_json.json.type }}"
       space:
-        key: "{{ confluence_space_key }}"
+        key: "{{ atlassian.confluence.destination.key }}"
       body:
         storage:
           value: "{{ content_json.json.body.storage.value }}"
@@ -81,10 +81,10 @@
 
 - name: Create Content at Destination Site
   uri:
-    url: '{{ confluence.destination.url }}/wiki/rest/api/content'
+    url: '{{ confluence_destination_url }}/wiki/rest/api/content'
     method: POST
-    user: '{{ confluence.destination.username }}'
-    password: '{{ confluence.destination.password }}'
+    user: '{{ confluence_destination_username }}'
+    password: '{{ confluence_destination_password }}'
     force_basic_auth: yes
     status_code: 200
     body_format: json

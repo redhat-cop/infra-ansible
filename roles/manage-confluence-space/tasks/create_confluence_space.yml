@@ -1,10 +1,10 @@
 ---
 - name: Create Confluence Space
   uri:
-    url: '{{ confluence.destination.url }}/wiki/rest/api/space'
+    url: '{{ confluence_destination_url }}/wiki/rest/api/space'
     method: POST
-    user: '{{ confluence.destination.username }}'
-    password: '{{ confluence.destination.password }}'
+    user: '{{ confluence_destination_username }}'
+    password: '{{ confluence_destination_password }}'
     force_basic_auth: yes
     status_code: 200
     body_format: json

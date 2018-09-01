@@ -1,0 +1,48 @@
+---
+- name: Retrieve all contents from source space
+  uri:
+    url: '{{ confluence_source_url }}/wiki/rest/api/space/{{ atlassian.confluence.source.key }}/content?expand=body.storage,space,ancestors&limit=500'
+    method: GET
+    user: '{{ confluence_source_username }}'
+    password: '{{ confluence_source_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: contents_json
+
+- name: Get Confluence Homepage ID
+  uri:
+    url: '{{ confluence_source_url}}/wiki/rest/api/space/{{ atlassian.confluence.source.key }}'
+    method: GET
+    user: '{{ confluence_source_username }}'
+    password: '{{ confluence_source_password }}'
+    return_content: yes
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+  register: source_space
+
+- name: Set Source Homepage ID
+  set_fact:
+    source_homepage_id: "{{ source_space.json._expandable.homepage.split('/')|last }}"
+
+- name: Create a tempfile for Content JSON
+  command: mktemp
+  register: uptemp
+  delegate_to: 127.0.0.1
+
+- name: Write content to file
+  copy:
+    content: "{{ contents_json.json['page']['results'] }}"
+    dest: "{{ uptemp.stdout }}"
+
+- name: Initialise old to new id mapping
+  set_fact:
+    id_mapping: {}
+
+- name: Sort contents based on its dependencies
+  command: "./contents_order_parser.py '{{ uptemp.stdout }}'"
+  args:
+    chdir: "{{ role_path }}/files"
+  register: processed_contents
+  delegate_to: 127.0.0.1
