@@ -3,17 +3,21 @@
 - name: 'Configure RHSM usernames/passwords'
   hosts: localhost
   tasks: 
-  - pause:
-      prompt: 'Please enter your Red Hat Subscription username'
-    register: username
-  - set_fact:
-      rhsm_username: "{{ username.user_input }}"
-  - pause:
-      prompt: 'Please enter your Red Hat Subscription password'
-    no_log: True
-    register: password
-  - set_fact:
-      rhsm_password: "{{ password.user_input }}"
-    no_log: True
-  tags:
-  - configure_rhsm
+  - block:  
+    - pause:
+        prompt: 'Please enter your Red Hat Subscription username'
+      register: username
+    - set_fact:
+        rhsm_username: "{{ username.user_input }}"
+    - pause:
+        prompt: 'Please enter your Red Hat Subscription password'
+      no_log: True
+      register: password
+    - set_fact:
+        rhsm_password: "{{ password.user_input }}"
+      no_log: True
+    tags:
+    - configure_rhsm
+    when:
+    - rhsm_activationkey is undefined 
+    - rhsm_org_id is undefined 
