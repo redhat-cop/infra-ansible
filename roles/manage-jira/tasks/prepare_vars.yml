@@ -1,0 +1,6 @@
+---
+- name: Configure Jira Variables
+  set_fact:
+    jira_url: "{{ atlassian.jira.url | default(atlassian.url) }}"
+    jira_username: "{{ atlassian.jira.username | default(atlassian.username) }}"
+    jira_password: "{{ atlassian.jira.password | default(atlassian.password) }}"
