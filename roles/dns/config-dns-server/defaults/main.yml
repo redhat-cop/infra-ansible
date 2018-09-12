@@ -1,5 +1,7 @@
 ---
 
+package_state: present
+
 dns_server_type: 'master'
 
 named_config_recursion: yes
