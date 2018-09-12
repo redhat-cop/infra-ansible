@@ -3,7 +3,7 @@
 - name: Ensure required packages are installed
   package:
     name: "{{ item }}"
-    state: latest
+    state: "{{ package_state }}"
   with_items:
     - bind
     - bind-utils

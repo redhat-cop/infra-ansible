@@ -32,22 +32,22 @@ Example Playbooks
 ```
 - hosts: new-dns-servers
   roles:
-    - role: cofig-dns-server
-    - role: manage-dns-zones
-    - role: manage-dns-records
+  - role: cofig-dns-server
+  - role: manage-dns-zones
+  - role: manage-dns-records
 ```
 
 ```
 - hosts: existing-nsupdate-servers
   roles:
-    - role: manage-dns-records
+  - role: manage-dns-records
 ```
 
 ```
 - hosts: route53-servers
   roles:
-    - role: manage-dns-zones
-    - role: manage-dns-records
+  - role: manage-dns-zones
+  - role: manage-dns-records
 ```
 
 
@@ -65,80 +65,79 @@ dns_data:
     dnssec_validation: 'yes'
     dnssec_lookaside: 'no'
   views:
-    - name: private
-      named:
-        recursion: 'yes'
-        acl_entry:
-          - 192.168.10.0/24
-      default_forwarders:
-      - 8.8.8.8
-      zones:
-        - dns_domain: first.example.com
-          state: present
-          named: True
-          route53:
-            aws_access_key: "ADFGIASDF343FMSDFF5431A"
-            aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
-            vpc_id: vpc-9dcde6f8
-            vpc_region: eu-west-1
-          nsupdate:
-            - server: "192.168.48.26"
-              key_name: "private-first.example.com"
-              key_secret: "EhZfRtlHgy7xTIi2LeVSGsBj99Sb8IGB6K30ovg13dE="
-              key_algorithm: "hmac-sha256"
-          entries:
-            - type: A
-              record: master
-              value: 172.16.10.20
-              ttl: 60
-              state: present
-            - type: A
-              record: node1
-              value: 172.16.10.21
-              ttl: 60
-              state: present
-        - dns_domain: second.example.com
-          state: present
-          nsupdate:
-            - server: "192.168.48.26"
-              key_name: "private-second.example.com"
-              key_secret: "+UYdpSzdQyZ20V9/2Ud9RjHFz9Pouqn4aXP3V9X/gq4="
-              key_algorithm: "hmac-sha256"
-          entries:
-            - type: A
-              record: master
-              value: 172.17.9.20
-              state: absent
-            - type: A
-              record: master
-              value: 172.17.10.20
-              state: present
-            - type: A
-              record: node1
-              value: 172.17.10.20
-              state: present
-        - dns_domain: third.example.com
-          state: present
-          named: True
-          type: forward
-          forwarders:
-            - 192.168.48.27
-    - name: public
-      zones:
-        - dns_domain: first.example.com
-          route53:
-            aws_access_key: "ADFGIASDF343FMSDFF5431A"
-            aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
-          entries:
-            - type: A
-              record: master
-              value: 10.9.10.20
-              state: present
-            - type: A
-              record: node1
-              value: 10.9.10.21
-              state: present
-
+  - name: private
+    named:
+      recursion: 'yes'
+      acl_entry:
+      - 192.168.10.0/24
+    default_forwarders:
+    - 8.8.8.8
+    zones:
+    - dns_domain: first.example.com
+      state: present
+      named: True
+      route53:
+        aws_access_key: "ADFGIASDF343FMSDFF5431A"
+        aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
+        vpc_id: vpc-9dcde6f8
+        vpc_region: eu-west-1
+      nsupdate:
+      - server: "192.168.48.26"
+        key_name: "private-first.example.com"
+        key_secret: "EhZfRtlHgy7xTIi2LeVSGsBj99Sb8IGB6K30ovg13dE="
+        key_algorithm: "hmac-sha256"
+      entries:
+      - type: A
+        record: master
+        value: 172.16.10.20
+        ttl: 60
+        state: present
+      - type: A
+        record: node1
+        value: 172.16.10.21
+        ttl: 60
+        state: present
+    - dns_domain: second.example.com
+      state: present
+      nsupdate:
+      - server: "192.168.48.26"
+        key_name: "private-second.example.com"
+        key_secret: "+UYdpSzdQyZ20V9/2Ud9RjHFz9Pouqn4aXP3V9X/gq4="
+        key_algorithm: "hmac-sha256"
+      entries:
+      - type: A
+        record: master
+        value: 172.17.9.20
+        state: absent
+      - type: A
+        record: master
+        value: 172.17.10.20
+        state: present
+      - type: A
+        record: node1
+        value: 172.17.10.20
+        state: present
+    - dns_domain: third.example.com
+      state: present
+      named: True
+      type: forward
+      forwarders:
+      - 192.168.48.27
+  - name: public
+    zones:
+    - dns_domain: first.example.com
+      route53:
+        aws_access_key: "ADFGIASDF343FMSDFF5431A"
+        aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
+      entries:
+      - type: A
+        record: master
+        value: 10.9.10.20
+        state: present
+      - type: A
+        record: node1
+        value: 10.9.10.21
+        state: present
 ```
 
 
