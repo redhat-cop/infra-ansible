@@ -24,8 +24,8 @@
 - name: 'Subscribe the VMs to RHSM'
   hosts: infra_vms
   vars:
-    rhsm_username: "{{ hostvars['localhost'].rhsm_username }}"
-    rhsm_password: "{{ hostvars['localhost'].rhsm_password }}"
+    rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
+    rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
   roles:
   - role: rhsm
   tags:
