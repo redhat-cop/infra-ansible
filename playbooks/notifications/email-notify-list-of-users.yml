@@ -1,6 +1,6 @@
 ---
 
-- name: "Send HTML e-mail message (base on MD) to a list of users"
+- name: "Send HTML e-mail message (based on MD) to a list of users"
   hosts: mail-host
   gather_facts: no
   tasks:
