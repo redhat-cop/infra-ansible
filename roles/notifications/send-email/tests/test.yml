@@ -3,6 +3,5 @@
 
 - name: Test email/send role
   hosts: localhost
-
   roles:
-    - email/send
+  - notifications/send-email
