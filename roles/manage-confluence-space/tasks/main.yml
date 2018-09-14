@@ -1,45 +1,7 @@
 ---
-- name: Fail when source username or password is not set
-  fail: msg="This role requires source_confluence_site_username and source_confluence_site_password to be set and non empty"
-  when:
-    - (confluence.source.username == "") or (confluence.source.password == "")
+- import_tasks: prepare_confluence_vars.yml
 
-- name: Retrieve all contents from source space
-  uri:
-    url: '{{ confluence.source.url }}/wiki/rest/api/space/{{ confluence.source.space_key }}/content?expand=body.storage,space,ancestors&limit=500'
-    method: GET
-    user: '{{ confluence.source.username }}'
-    password: '{{ confluence.source.password }}'
-    force_basic_auth: yes
-    status_code: 200
-    return_content: yes
-  register: contents_json
-
-- name: Create a tempfile for Content JSON
-  command: mktemp
-  register: uptemp
-  delegate_to: 127.0.0.1
-
-- name: Write content to file
-  copy:
-    content: "{{ contents_json.json['page']['results'] }}"
-    dest: "{{ uptemp.stdout }}"
-
-- name: Initialise old to new id mapping
-  set_fact:
-    id_mapping: {}
-
-- name: Sort contents based on its dependencies
-  command: "./contents_order_parser.py '{{ uptemp.stdout }}'"
-  args:
-    chdir: "{{ role_path }}/files"
-  register: processed_contents
-  delegate_to: 127.0.0.1
-
-- name: Fail when destination username or password is not set
-  fail: msg="This role requires confluence.destination.username and confluence.destination.username to be set and non empty"
-  when:
-    - (confluence.destination.username == "") or (confluence.destination.password == "")
+- import_tasks: prepare_confluence_source.yml
 
 - import_tasks: create_confluence_space.yml
 

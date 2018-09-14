@@ -1,10 +1,10 @@
 ---
 - name: Get attachment data
   uri:
-    url: '{{ confluence.source.url }}/wiki/rest/api/content/{{ confluence_content_ids.key }}/child/attachment'
+    url: '{{ confluence_source_url }}/wiki/rest/api/content/{{ confluence_content_ids.key }}/child/attachment'
     method: GET
-    user: '{{ confluence.source.username }}'
-    password: '{{ confluence.source.password }}'
+    user: '{{ confluence_source_username }}'
+    password: '{{ confluence_source_password }}'
     force_basic_auth: yes
     status_code: 200
     return_content: yes

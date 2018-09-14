@@ -1,0 +1,17 @@
+---
+atlassian:
+  username: user@example.com
+  password: YourPassword123
+  url: https://example-test.atlassian.net
+
+  confluence:
+    source:
+      key: TEMP
+
+    destination:
+      username: user@example.com
+      password: YourPassword123
+      url: https://example-test.atlassian.net
+      key: TEMP2
+      name: Example Test Wiki 2
+      description: Followup Confluence Testing
