@@ -1,7 +1,7 @@
 ---
 
 - name: 'Update DNS records'
-  hosts: localhost
+  hosts: dns-records-manage-host
   roles:
   - role: dns/manage-dns-records
   tags:
