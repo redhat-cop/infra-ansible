@@ -37,7 +37,7 @@
     view_name: "{{ view.name }}"
   template:
     src: named/zone-config.j2
-    dest: "{{ temp_dir }}/{{ view.name }}/0002-{{ zone.dns_domain }}.cfg"
+    dest: "{{ dns_zone_temp_config_dir }}/{{ view.name }}/0002-{{ zone.dns_domain }}.cfg"
     owner: named
     group: named
     mode: 0660

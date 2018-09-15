@@ -12,5 +12,5 @@
 
 - name: cleanup temp
   file:
-    path: "{{ temp_dir }}"
+    path: "{{ dns_zone_temp_config_dir }}"
     state: absent

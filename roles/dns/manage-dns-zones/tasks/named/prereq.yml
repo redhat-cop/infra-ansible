@@ -1,10 +1,13 @@
 ---
 
 - name: 'Use a unique temporary directory to store the config files pre-assemble'
-  command: mktemp -d
-  register: tempdir
+  tempfile:
+    state: directory
+    prefix: dns-zone
+  register: dns_zone_tempdir
+  notify:
+  - 'cleanup temp'
 
-- name: 'Store away the temp names'
+- name: 'Store away the temporary configuration files directory name'
   set_fact:
-    temp_dir: '{{ tempdir.stdout }}'
-  notify: 'cleanup temp'
+    dns_zone_temp_config_dir: '{{ dns_zone_tempdir.path }}'
