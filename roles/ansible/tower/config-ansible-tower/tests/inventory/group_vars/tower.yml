@@ -1,0 +1,18 @@
+---
+
+ansible_connection: local
+
+# NOTE: below is an example on how these params and files can be specified
+#       - please replace with valid values and files
+
+ansible_tower:
+  admin_password: "admin01"
+  install:
+    license_file: "{{ inventory_dir }}/../files/tower-license.json"
+    ssl_certificate:
+      cert: "{{ inventory_dir }}/../certs/tower.cert"
+      key: "{{ inventory_dir }}/../certs/tower.key"
+    pg:
+      password: "pg_password01"
+    rabbitmq:
+      password: "rabbitmq_password01"

@@ -1,8 +1,0 @@
----
-
-- import_tasks: install.yml
-
-- import_tasks: ldap.yml
-  when:
-  - ldap_config|default(False) 
-
