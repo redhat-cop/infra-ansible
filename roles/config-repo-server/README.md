@@ -15,8 +15,8 @@ Role Variables
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|**iso_file_path**| Path to the local ISO to be mounted | yes | |
-|**iso_file_target**| The target directory to mount the ISO on | yes | |
+|iso_file_path| Path to the local ISO to be mounted | yes | |
+|iso_file_target| The target directory to mount the ISO on | yes | |
 
 
 Dependencies
@@ -26,10 +26,11 @@ Dependencies
 
 Example Playbooks
 ----------------
+
 ```
 ---
 
-- hosts: repo_server
+- hosts: repo-server
   roles:
   - config-repo-server
 ```
@@ -43,7 +44,7 @@ Example Inventory
 192.168.1.10
 ```
 
-**inventory/hosts**
+**inventory/repo-server**
 ```
 hosted_isos:
 - name: "fedora27-server"
@@ -53,7 +54,6 @@ hosted_isos:
   iso_file_path: "/mnt/software/ISOs/Fedora-Server-dvd-x86_64-28-1.1.iso"
   iso_file_target: "/var/www/html/fedora/28/server/x86_64"
 ```
-
 
 
 License
