@@ -1,0 +1,34 @@
+---
+
+- name: "Generate the private Key and a CSR"
+  generate_csr:
+    country: "{{ csr_country }}"
+    state: "{{ csr_state }}"
+    location: "{{ csr_location }}"
+    org_name: "{{ csr_org_name }}"
+    org_unit: "{{ csr_org_unit }}"
+    common_name: "{{ csr_host_name }}"
+    email: "{{ csr_email }}"
+    subject_alt_names: "{{ csr_subject_alt_names | default(omit) }}"
+  register: csr_content
+
+- name: "Print CRS - if requested (verbosity >= 2)"
+  debug:
+    msg: "{{ csr_content.csr }}"
+    verbosity: 2
+
+- name: "Write the CSR to a file"
+  copy:
+    content: "{{ csr_content.csr }}"
+    dest: "{{ target_csr_file }}"
+  when:
+  - target_csr_file is defined
+  - target_csr_file|trim != ''
+
+- name: "Write the Certificate/CSR Private key to a file"
+  copy:
+    content: "{{ csr_content.key }}"
+    dest: "{{ target_host_key_file }}"
+  when:
+  - target_host_key_file is defined
+  - target_host_key_file|trim != ''

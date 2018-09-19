@@ -4,8 +4,6 @@
 
 - import_tasks: "register-host.yml"
 
-- import_tasks: "generate-csr.yml"
-
 - import_tasks: "create-host-cert.yml"
 
 - import_tasks: "retrieve-ca-cert.yml"

@@ -12,14 +12,6 @@
   - target_host_cert_file is defined
   - target_host_cert_file|trim != ''
 
-- name: "Write the Certificate key to a file"
-  copy:
-    content: "{{ csr_content.key }}"
-    dest: "{{ target_host_key_file }}"
-  when:
-  - target_host_key_file is defined
-  - target_host_key_file|trim != ''
-
 - name: "Set certificate fact"
   set_fact:
     certificate: "{{ ca_cert.json.result.result.certificate }}"
@@ -31,4 +23,3 @@
   when:
   - target_ca_cert_file is defined
   - target_ca_cert_file|trim != ''
-
