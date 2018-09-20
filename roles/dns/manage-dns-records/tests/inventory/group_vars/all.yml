@@ -1,0 +1,84 @@
+---
+
+dns_records_rm:
+- view: private
+  zone: first.example.com
+  server: "192.168.48.26"
+  key_name: "private-first.example.com"
+  key_secret: "EhZfRtlHgy7xTIi2LeVSGsBj99Sb8IGB6K30ovg13dE="
+  key_algorithm: "hmac-sha256"
+  entries:
+  - type: A
+    record: master
+    value: 172.16.10.19
+dns_records_add:
+- view: private
+  zone: first.example.com
+  server: "192.168.48.26"
+  key_name: "private-first.example.com"
+  key_secret: "EhZfRtlHgy7xTIi2LeVSGsBj99Sb8IGB6K30ovg13dE="
+  key_algorithm: "hmac-sha256"
+  entries:
+  - type: A
+    record: master
+    value: 172.16.10.20
+  - type: A
+    record: node1
+    value: 172.16.10.20
+  - type: A
+    record: node2
+    value: 172.16.10.21
+  - type: A
+    record: node3
+    value: 172.16.10.22
+- view: private
+  zone: second.example.com
+  server: "192.168.48.26"
+  key_name: "private-second.example.com"
+  key_secret: "+UYdpSzdQyZ20V9/2Ud9RjHFz9Pouqn4aXP3V9X/gq4="
+  key_algorithm: "hmac-sha256"
+  entries:
+  - type: A
+    record: master
+    value: 172.17.10.20
+  - type: A
+    record: node1
+    value: 172.17.10.20
+  - type: A
+    record: node2
+    value: 172.17.10.21
+- view: public
+  zone: first.example.com
+  server: "192.168.48.26"
+  key_name: "public-first.example.com"
+  key_secret: "5RZv5wMtKS/fZtjtc2bXS2s6L5+cXN2x53jSkEtwNjk="
+  key_algorithm: "hmac-sha256"
+  entries:
+  - type: A
+    record: master
+    value: 10.9.77.20
+  - type: A
+    record: node1
+    value: 10.9.77.20
+  - type: A
+    record: node2
+    value: 10.9.77.21
+  - type: A
+    record: node3
+    value: 10.9.77.22
+- view: public
+  zone: second.example.com
+  server: "192.168.48.26"
+  key_name: "public-second.example.com"
+  key_secret: "7VKvn5iZ64l+s42XT/hllJSxS6CjE3369tOy85vkBk4="
+  key_algorithm: "hmac-sha256"
+  entries:
+  - type: A
+    record: master
+    value: 10.8.88.20
+  - type: A
+    record: node1
+    value: 10.8.88.20
+  - type: A
+    record: node2
+    value: 10.8.88.21

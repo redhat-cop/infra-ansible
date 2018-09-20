@@ -1,0 +1,8 @@
+---
+
+- include_tasks: nsupdate-server.yml
+  with_subelements:
+    - "{{ dns_data.views }}"
+    - zones
+  loop_control:
+    loop_var: dns

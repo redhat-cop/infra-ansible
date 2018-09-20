@@ -1,0 +1,19 @@
+---
+
+###############################################################################
+# common defaults
+ttl: 300
+
+
+###############################################################################
+# defaults for named
+named_processing: False
+default_dnssec_keygen_size: 256
+default_dnssec_keygen_algorithm: HMAC-SHA256
+
+
+###############################################################################
+# defaults for Route53
+route53_processing: False
+aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"

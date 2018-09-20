@@ -1,0 +1,4 @@
+---
+
+- include_tasks: nsupdate/main.yml
+- include_tasks: route53/main.yml

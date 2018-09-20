@@ -1,0 +1,16 @@
+---
+
+- name: restart named
+  service:
+    name: named
+    state: restarted
+
+- name: reload named
+  service:
+    name: named
+    state: reloaded
+
+- name: cleanup temp
+  file:
+    path: "{{ dns_zone_temp_config_dir }}"
+    state: absent

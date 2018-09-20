@@ -1,0 +1,9 @@
+---
+
+- include_tasks: process-records.yml
+  with_items:
+    - "{{ dns.1.nsupdate }}"
+  when:
+    - dns.1.nsupdate is defined
+  loop_control:
+    loop_var: nsupdate

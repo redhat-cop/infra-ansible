@@ -1,0 +1,5 @@
+---
+
+- hosts: localhost
+  roles:
+  - role: dns/manage-dns-records

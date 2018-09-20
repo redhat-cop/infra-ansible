@@ -1,0 +1,10 @@
+---
+
+named_config:
+  recursion: 'no'
+  dnssec_enable: 'yes'
+  dnssec_validation: 'yes'
+  dnssec_lookaside: 'no'
+  allow_transfer:
+    - 192.168.48.21
+    - 192.168.48.22

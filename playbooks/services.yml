@@ -4,20 +4,22 @@
   hosts: dhcp_servers
   roles:
   - role: dhcp
-  tags: 
+  tags:
   - configure_dhcp
 
 - name: 'Configure DNS (internal)'
   hosts: dns_servers_internal
   roles:
-  - role: config-dns-server
+  - role: dns/config-dns-server
+  - role: dns/manage-dns-zones
   tags:
   - configure_dns_internal
 
 - name: 'Configure DNS (external)'
   hosts: dns_servers_external
   roles:
-  - role: config-dns-server
+  - role: dns/config-dns-server
+  - role: dns/manage-dns-zones
   tags:
   - configure_dns_external
 

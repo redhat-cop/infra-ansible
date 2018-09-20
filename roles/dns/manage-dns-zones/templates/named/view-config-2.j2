@@ -1,0 +1,14 @@
+
+	include "/etc/named.rfc1912.zones";
+
+	zone "." {
+		type forward;
+		forwarders {
+	{% for forwarder in view_forwarders %}
+		{{ forwarder }};
+	{% endfor %}
+		};
+	};
+
+
+};
