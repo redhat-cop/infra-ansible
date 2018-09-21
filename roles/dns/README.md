@@ -8,7 +8,7 @@ Requirements
 
 1. For named/bind install/configuration:  
   1. Root level access to a running Linux flavor (Fedora, CentOS, Red Hat Enterprise Linux)
-1. For DNS zones and records:
+1. For DNS zones and records, one or more of the following:
   1. Access to nsupdate enabled infrastructure (i.e.: above mentioned bind).
   1. Access to AWS Route53 with DNS admin access enabled.
 
@@ -21,10 +21,6 @@ See `Example Inventory` below for more specific details. The following variable 
 - `dns_data`: A dictionary with DNS data (views, zones, records)
 
 
-Dependencies
-------------
-
-*
 
 Example Playbooks
 ----------------
@@ -55,15 +51,23 @@ Example Playbooks
 Example Inventory
 ----------------
 
+**_Note:_** The values below that have a "Default: " notation are optional config values
+
 ```
 print_dns_keys: True
 
 dns_data:
   named_global_config:
-    recursion: 'no'
-    dnssec_enable: 'yes'
-    dnssec_validation: 'yes'
-    dnssec_lookaside: 'no'
+    recursion: 'no'               # Default: 'yes'
+    dnssec_enable: 'yes'          # Default: 'no'
+    dnssec_validation: 'yes'      # Default: 'no'
+    dnssec_lookaside: 'no'        # Default: 'auto'
+    allow_query:                  # Default: 'any'
+    - 192.168.20.0/32
+    - 192.168.30.0/24
+    allow_transfer:               # Default: 'any'
+    - 192.168.10.11/32
+    - 192.168.10.12/32
   views:
   - name: private
     named:

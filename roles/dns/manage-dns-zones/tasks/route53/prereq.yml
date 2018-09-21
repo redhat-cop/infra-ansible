@@ -1,7 +1,0 @@
----
-
-- name: Fail when AWS KEY environment variables are not defined
-  debug:
-    msg: "Both 'AWS_ACCESS_KEY_ID' and 'AWS_SECRET_ACCESS_KEY' environment variables must be defined"
-  failed_when: (lookup('env','AWS_ACCESS_KEY_ID')|trim == "") or
-               (lookup('env','AWS_SECRET_ACCESS_KEY')|trim == "")

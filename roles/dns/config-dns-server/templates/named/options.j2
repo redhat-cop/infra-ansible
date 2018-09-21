@@ -16,7 +16,7 @@ options {
 	allow-query { any; };              // This is the default
 {% endif %}
 
-{% if dns_server_type|default(dns_server_type) == "master" %}
+{% if dns_server_type == "master" %}
 	also-notify     {
 	{% for server in ansible_play_batch %}
 	{% if hostvars[server].dns_server_type|default(dns_server_type) == "slave" %}

@@ -12,21 +12,23 @@ ansible_user: centos
 #- "rhel-7-server-rpms"
 
 dns_data:
-- name: mydnsview
-  recursion: 'yes'
-  zones:
-  - dns_domain: "first.example.com"
-    named: True
-  - dns_domain: "10.168.192.in-addr.arpa"
-    named: True
-  - dns_domain: "forward.example.com"
-    named: True
-    type: forward
-    forwarders:
-    - 192.168.10.17
-  default_forwarders:
-  - 8.8.8.8
-  - 8.8.4.4
+  views:
+  - name: mydnsview
+    named:
+      recursion: 'yes'
+    zones:
+    - dns_domain: "first.example.com"
+      named: True
+    - dns_domain: "10.168.192.in-addr.arpa"
+      named: True
+    - dns_domain: "forward.example.com"
+      named: True
+      type: forward
+      forwarders:
+      - 192.168.10.17
+    default_forwarders:
+    - 8.8.8.8
+    - 8.8.4.4
 
 osp_networks:
 - name: "dns-network"

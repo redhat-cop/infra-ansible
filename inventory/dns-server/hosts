@@ -6,3 +6,6 @@ localhost
 
 [osp_instances:children]
 dns-server
+
+[rhsm_hosts:children]
+dns-server

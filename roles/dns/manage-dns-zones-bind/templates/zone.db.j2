@@ -1,0 +1,12 @@
+$ORIGIN .
+$TTL 3600
+{{ zone_dns_domain }}     IN SOA  ns1.{{ zone_dns_domain }}. hostmaster.{{ zone_dns_domain }}. (
+                                {{ zone_serial_number }}   ; serial
+                                60         ; refresh (1 minute)
+                                15         ; retry (15 seconds)
+                                1800       ; expire (30 minutes)
+                                10         ; minimum (10 seconds)
+                                )
+                        NS      ns1.{{ zone_dns_domain }}.
+$ORIGIN {{ zone_dns_domain }}.
+ns1          3600  IN   A       {{ ansible_default_ipv4.address }}
