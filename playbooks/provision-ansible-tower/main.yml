@@ -1,0 +1,29 @@
+---
+
+# Please see `inventory/ansible-tower` for an example inventory to be used with 
+# this playbook to provision an Ansible Tower Server  
+
+
+- import_playbook: ../osp/manage-user-network.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+
+- import_playbook: ../osp/provision-osp-instance.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+
+- import_playbook: ../prep.yml
+  when:
+  - hostvars[groups['ansible-tower'] | first].ansible_distribution == 'Red Hat Enterprise Linux'
+
+- hosts: ansible-tower
+  vars:
+    rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
+    rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
+  roles: 
+  - role: rhsm
+    when: 
+    - ansible_distribution == 'Red Hat Enterprise Linux'
+  - role: update-host
+ 
+- import_playbook: ../ansible/tower/configure-ansible-tower.yml
