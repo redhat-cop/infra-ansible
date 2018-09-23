@@ -2,7 +2,7 @@
 
 - name: Setup DNS Logging configuration
   template:
-    src: named/logging.j2
+    src: logging.j2
     dest: /etc/named/named.conf.logging
     owner: named
     group: named
@@ -11,7 +11,7 @@
 
 - name: Setup Controls configuration
   template:
-    src: named/controls.j2
+    src: controls.j2
     dest: /etc/named/named.conf.controls
     owner: named
     group: named
@@ -22,7 +22,7 @@
   vars:
     named_config: "{{ dns_data.named_global_config }}"
   template:
-    src: named/options.j2
+    src: options.j2
     dest: /etc/named/named.conf.options
     owner: named
     group: named

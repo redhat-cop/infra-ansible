@@ -37,7 +37,7 @@
   - item not in existing_key_files
 
 - name: Gather keys for nsupdate
-  shell: grep Key: /var/named/K{{ item.name }}*.private | cut -d ' ' -f 2
+  shell: "grep Key: /var/named/K{{ item.name }}*.private | cut -d ' ' -f 2"
   register: nsupdate_keys_captured
   with_items:
   - "{{ dns_views }}"

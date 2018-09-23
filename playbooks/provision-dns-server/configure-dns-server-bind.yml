@@ -7,7 +7,11 @@
   - 'never'
   - 'install'
 
+<<<<<<< HEAD
  - hosts: dns-servers
+=======
+- hosts: dns-servers
+>>>>>>> Additional role and docs clean-up
   roles:
   - role: dns/manage-dns-zones-bind
   tags:
