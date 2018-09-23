@@ -2,3 +2,33 @@
 
 ansible_tower_download_url: "https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-3.3.0-1.tar.gz"
 
+# Uncomment in the following section if RHEL is used and rhsm registration is needed
+#rhsm_register: true
+
+#####
+# Red Hat Repos to enable
+#
+#rhsm_repos:
+#- "rhel-7-server-rpms"
+
+#####  
+# Uncomment this and fill in the proper values to use Red Hat Satellite
+#
+#rhsm_server_hostname: 'sat-6.example.com'
+#rhsm_org_id: 'CASL_ORG'
+#rhsm_activationkey: 'casl-latest'
+
+#####
+# Uncomment the following to use RHSM username, password and optionally pool:
+# - make sure to set the RHSM_* environment variables 
+# - or, just supply these while running the playbook with Ansible "extra-vars"
+#
+#rhsm_username: "{{ lookup('env', 'RHSM_USER' )}}"
+#rhsm_password: "{{ lookup('env', 'RHSM_PASSWD' )}}"
+# leave commented out if you want to `--auto-attach` a pool
+#rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"
+
+
+
+
+
