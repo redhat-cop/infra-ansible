@@ -7,7 +7,7 @@
 
 - name: Set server config facts
   set_fact:
-    view_recursion: "{{ view.named.recursion | default(dns_data.named_global_config.recursion) | default(default_recursion) }}"
+    view_recursion: "{{ view.named.recursion | default(common_recursion) }}"
 
 - name: Prepare the view pre-zones content
   vars:
@@ -37,7 +37,7 @@
     vars:
       view_forwarders: "{{ view.default_forwarders | default(['127.0.0.1']) }}"
     template:
-      src: named/view-config-2.j2
+      src: view-config-2.j2
       dest: "{{ dns_zone_temp_config_dir }}/{{ view.name }}/0003-{{ view.name }}.cfg"
       owner: "{{ bind_user }}"
       group: "{{ bind_group }}"

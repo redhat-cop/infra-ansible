@@ -4,7 +4,7 @@
   vars:
     named_views: "{{ dns_data.views }}"
   template:
-    src: named/domain-keys.j2
+    src: domain-keys.j2
     dest: /etc/named/named.conf.domain-keys
     owner: "{{ bind_user }}"
     group: "{{ bind_group }}"
@@ -17,8 +17,8 @@
 
 - name: Setup key files for nsupdate
   template:
-    src: named/domain-key.j2
-    dest: /var/named/{{ item.item }}.key
+    src: domain-key.j2
+    dest: /var/named/{{ item.item.name }}.key
     owner: "{{ bind_user }}"
     group: "{{ bind_group }}"
     mode: 0660

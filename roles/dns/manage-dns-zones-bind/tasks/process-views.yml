@@ -8,6 +8,7 @@
 - name: Generate a consistent serial number to be used across all zones
   set_fact:
     zone_serial_number: "{{ ansible_date_time.epoch }}"
+    common_recursion: dns_data.named_global_config.recursion | default(default_recursion) 
   run_once: true
   delegate_to: "{{ ansible_play_hosts | first }}"
 
@@ -21,13 +22,16 @@
   assemble:
     src: "{{ dns_zone_temp_config_dir }}/view"
     dest: "/etc/named/named.conf.view"
+    owner: "{{ bind_user }}"
+    group: "{{ bind_group }}"
+    mode: 0660
   notify: restart named
 
 - name: Setup ACLs
   vars:
     named_views: "{{ dns_data.views }}"
   template:
-    src: named/acl.j2
+    src: acl.j2
     dest: /etc/named/named.conf.acl
     owner: "{{ bind_user }}"
     group: "{{ bind_group }}"

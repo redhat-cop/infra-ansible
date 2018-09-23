@@ -20,7 +20,7 @@
 
 - name: Configure named options
   vars:
-    named_config: "{{ dns_data.named_global_config }}"
+    named_config: "{{ dns_data.named_global_config | default({}) }}"
   template:
     src: options.j2
     dest: /etc/named/named.conf.options

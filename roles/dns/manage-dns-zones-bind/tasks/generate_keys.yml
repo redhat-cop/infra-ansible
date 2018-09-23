@@ -2,8 +2,7 @@
 
 - name: Build a list of view/zone items
   set_fact:
-    dns_views:
-      name: "{{ dns_views | default([]) + [ item.0.name + '-' + item.1.dns_domain ] }}"
+    dns_views: "{{ dns_views | default([]) + [ { 'name': item.0.name + '-' + item.1.dns_domain } ] }}"
   with_subelements:
   - "{{ dns_data.views }}"
   - zones
@@ -42,6 +41,15 @@
   with_items:
   - "{{ dns_views }}"
 
+- name: Move .private and .key files to the 'archive' 
+  block:
+  - file:
+      path: "/var/named/key-archive"
+      state: directory
+  - shell: "mv /var/named/K{{ item.name }}*.{private,key} /var/named/key-archive/"
+    with_items:
+    - "{{ dns_views }}"
+
 # Build the dict with the proper keys, i.e.:
 #    private-view.example.com:
 #      algorithm: HMAC-MD5
@@ -51,5 +59,5 @@
 #      secret: kVE2bVTgZjrdJipxPhID8BEZmbHD8cExlVPR+zbFpW6la8kL5wpXiwOh8q5AAosXQI5t95UXwq3Inx8QT58duw==
 - name: Set nsupdate_keys fact
   set_fact:
-    nsupdate_keys: "{{ nsupdate_keys | default({}) | combine({ item.item : { 'key_algorithm': ( dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) ), 'key_secret': item.stdout } }) }}"
+    nsupdate_keys: "{{ nsupdate_keys | default({}) | combine({ item.item.name : { 'key_algorithm': ( dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) ), 'key_secret': item.stdout } }) }}"
   with_items: "{{ nsupdate_keys_captured.results }}"

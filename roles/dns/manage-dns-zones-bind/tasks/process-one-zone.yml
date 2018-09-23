@@ -19,7 +19,7 @@
     vars:
       zone_dns_domain: "{{ zone.dns_domain }}"
     template:
-      src: named/zone.db.j2
+      src: zone.db.j2
       dest: "/var/named/static/{{ view.name + '-' + zone.dns_domain }}.db"
       owner: "{{ bind_user }}"
       group: "{{ bind_group }}"
@@ -33,7 +33,7 @@
       zone_forwarders: "{{ zone.forwarders | default([]) }}"
       view_name: "{{ view.name }}"
     template:
-      src: named/zone-config.j2
+      src: zone-config.j2
       dest: "{{ dns_zone_temp_config_dir }}/{{ view.name }}/0002-{{ zone.dns_domain }}.cfg"
       owner: "{{ bind_user }}"
       group: "{{ bind_group }}"
