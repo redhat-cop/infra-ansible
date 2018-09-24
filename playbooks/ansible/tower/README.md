@@ -17,13 +17,13 @@ Please see the inventory in the respective role for more details:
 
 ### Playbook execution
 
-Initial run needs the `tags='install'` set to ensure all necessary software is installed:
+Initial run needs the `tags='install,all'` set to ensure all necessary software is installed:
 
 ```bash
-> ansible-playbook -i inventory configure-ansible-tower.yml --tags='install'
+> ansible-playbook -i inventory configure-ansible-tower.yml --tags='install,all'
 ```
 
-Any consecutive runs can be done without the 'install' tag to speed up execution:
+Any consecutive runs can be done without the tags to speed up execution:
 ```bash
 > ansible-playbook -i inventory configure-ansible-tower.yml
 ```
