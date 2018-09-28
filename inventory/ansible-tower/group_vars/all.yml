@@ -1,0 +1,119 @@
+---
+
+pkg_update: true
+hosting_infrastructure: openstack
+ansible_user: centos
+
+# Uncomment in the following section if RHEL is used and rhsm registration is needed
+#rhsm_register: true
+
+#####
+# Red Hat Repos to enable
+#
+#rhsm_repos:
+#- "rhel-7-server-rpms"
+
+#####  
+# Uncomment this and fill in the proper values to use Red Hat Satellite
+#
+#rhsm_server_hostname: 'sat-6.example.com'
+#rhsm_org_id: 'CASL_ORG'
+#rhsm_activationkey: 'casl-latest'
+
+#####
+# Uncomment the following to use RHSM username, password and optionally pool:
+# - make sure to set the RHSM_* environment variables 
+# - or, just supply these while running the playbook with Ansible "extra-vars"
+#
+#rhsm_username: "{{ lookup('env', 'RHSM_USER' )}}"
+#rhsm_password: "{{ lookup('env', 'RHSM_PASSWD' )}}"
+# leave commented out if you want to `--auto-attach` a pool
+#rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"
+
+
+osp_networks:
+- name: "ansible-tower-network"
+  description: "Ansible Tower Network"
+
+osp_subnets:
+- name: "ansible-tower-subnet"
+  network_name: "ansible-tower-network"
+  cidr: "192.168.16.0/24"
+  gateway_ip: "192.168.16.1"
+  allocation_pool_start: "192.168.16.2"
+  allocation_pool_end: "192.168.16.254"
+  dns_nameservers:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+osp_routers:
+- name: "ansible-tower-router"
+  external_gateway: "external"
+  subnet: "ansible-tower-subnet"
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+- name: "www-sec-group"
+  description: "My WWW Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+  - protocol: tcp
+    port_range_min: 443
+    port_range_max: 443
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0 
+
+osp_instances:
+- name: "ansible-tower"
+  meta:
+    group: ansible-tower
+  image: "CentOS-7-x86_64"
+  key_name: "my-keypair"
+  flavor: "m1.large"
+  network: "ansible-tower-network"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - www-sec-group
+
+ansible_tower:
+  url: "https://{{ hostvars[groups['ansible-tower'] | first].ansible_host }}"
+  admin_password: "admin01"
+  install:
+    license_file: "{{ inventory_dir }}/../files/tower-license.json"
+    pg:
+      password: "pgpassword01"
+    rabbitmq:
+      password: "rabbitmqpassword01"
+  projects:
+  - name: "infra-ansible"
+    description: "Infra Ansible Test"
+    scm_type: "git"
+    scm_url: "https://github.com/redhat-cop/infra-ansible.git"
+    scm_branch: "master"
+    organization: "Default"
+  job_templates:
+  - name: "IdM Integration"
+    description: "Job Template for IdM integrations"
+    inventory: "Default"
+    project: "infra-ansible"
+    playbook: "playbooks/identity.yml"
+    credential: "Default"
+

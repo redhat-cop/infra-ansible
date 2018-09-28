@@ -1,0 +1,8 @@
+---
+
+- block: # when ansible_tower.ldap is defined
+
+  - include_tasks: ldap.yml
+
+  when:
+  - ansible_tower.ldap is defined

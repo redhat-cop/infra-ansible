@@ -27,3 +27,15 @@ Any consecutive runs can be done without the 'install' tag to speed up execution
 ```bash
 > ansible-playbook -i inventory lb-vms.yml
 ```
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.
+

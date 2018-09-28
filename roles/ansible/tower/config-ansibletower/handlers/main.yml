@@ -1,7 +1,0 @@
----
-
-- name: restart-tower
-  service:
-    name:  supervisord
-    state: restarted
-
