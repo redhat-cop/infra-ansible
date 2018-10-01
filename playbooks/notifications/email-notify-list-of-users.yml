@@ -11,7 +11,7 @@
     vars:
       markdown_content: "{{ body }}"
   - set_fact:
-      mail: "{{ mail | combine({ 'subject': subject, 'body': md_to_html.html_body_message }) }}"
+      mail: "{{ mail | combine({ 'subject': title, 'body': md_to_html.html_body_message }) }}"
   - set_fact:
       list_of_mail_to: "{{ list_of_mail_to | default([]) }} + [ '{{ item.email }}' ]"
     with_items:
