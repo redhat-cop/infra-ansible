@@ -1,0 +1,77 @@
+---
+
+- name: "Find id of current job"
+  set_fact:
+    job_template_id: "{{ job_template.id }}"
+  when:
+    - job_template.name == workflow_node.job_name
+  with_items:
+    - "{{ existing_job_templates_output.rest_output }}"
+  loop_control:
+    loop_var: job_template
+
+- block:
+  - name: "Load up the workflow nodes template if start"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/{{ workflow_template_id }}/workflow_nodes/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: POST
+      body: "{{ lookup('template', 'workflow-node-template.j2') }}"
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+      status_code: 200,201,400
+    register: workflow_node_start_output
+
+  - name: "Add id to dictionary"
+    set_fact:
+      job_node_uids: "{{ job_node_uids|default({}) | combine({ workflow_node.index : workflow_node_start_output.json.id }) }}"
+  when: workflow_node.type == 'start'
+
+- block:
+  - name: "Load up the workflow nodes template if success"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_template_nodes/{{ job_node_uids[workflow_node.parent_index] }}/success_nodes/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: POST
+      body: "{{ lookup('template', 'workflow-node-template.j2') }}"
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+      status_code: 200,201,400
+    register: workflow_node_success_output
+
+  - name: "Add id to dictionary"
+    set_fact:
+      job_node_uids: "{{ job_node_uids|default({}) | combine({ workflow_node.index : workflow_node_success_output.json.id }) }}"
+  when: workflow_node.type == 'success'
+
+- block:
+  - name: "Load up the workflow nodes template if failure"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_template_nodes/{{ job_node_uids[workflow_node.parent_index] }}/failure_nodes/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: POST
+      body: "{{ lookup('template', 'workflow-node-template.j2') }}"
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+      status_code: 200,201,400
+    register: workflow_node_failure_output
+
+  - name: "Add id to dictionary"
+    set_fact:
+      job_node_uids: "{{ job_node_uids|default({}) | combine({ workflow_node.index : workflow_node_failure_output.json.id }) }}"
+  when: workflow_node.type == 'failure'

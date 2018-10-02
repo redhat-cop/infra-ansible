@@ -15,5 +15,6 @@
   - role: ansible/tower/manage-credentials
   - role: ansible/tower/manage-inventories
   - role: ansible/tower/manage-job-templates
+  - role: ansible/tower/manage-workflow-templates
   tags:
   - 'always'
