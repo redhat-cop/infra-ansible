@@ -35,4 +35,17 @@
     notify:
     - restart-tower
 
+  - name: "Force LDAP Sync"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/"
+      user: "{{ ansible_tower.ldap.bind_dn.split(',') | first | regex_replace('uid=') }}"
+      password: "{{ ansible_tower.ldap.bind_password }}"
+      force_basic_auth: yes
+      method: GET
+      validate_certs: no
+    register: status_output
+    until: status_output.status == 200
+    retries: 6
+    delay: 5
+
   become: True
