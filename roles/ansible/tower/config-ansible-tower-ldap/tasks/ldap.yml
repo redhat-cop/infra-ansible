@@ -37,7 +37,7 @@
 
   - name: "Force LDAP Sync"
     uri:
-      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/"
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/"
       user: "{{ ansible_tower.ldap.bind_dn.split(',') | first | regex_replace('uid=') }}"
       password: "{{ ansible_tower.ldap.bind_password }}"
       force_basic_auth: yes
