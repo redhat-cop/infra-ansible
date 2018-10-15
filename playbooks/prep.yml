@@ -2,8 +2,8 @@
 
 - name: 'Configure RHSM usernames/passwords'
   hosts: localhost
-  tasks: 
-  - block:  
+  tasks:
+  - block:
     - pause:
         prompt: 'Please enter your Red Hat Subscription username'
       register: username
@@ -19,5 +19,6 @@
     tags:
     - configure_rhsm
     when:
-    - rhsm_activationkey is undefined 
-    - rhsm_org_id is undefined 
+    - rhsm_register|default(False)
+    - rhsm_activationkey is undefined
+    - rhsm_org_id is undefined

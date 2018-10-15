@@ -2,10 +2,7 @@
 [osp-provisioner]
 localhost
 
-[idm]
-
-[dns-server]
-localhost
+[satellite-server]
 
 [osp_instances:children]
-idm
+satellite-server

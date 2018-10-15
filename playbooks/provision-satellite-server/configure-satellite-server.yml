@@ -1,10 +1,8 @@
 ---
 
-#
-# Make sure to check out the `config-satellite` README for details on how to create the inventory
-# https://github.com/redhat-cop/infra-ansible/blob/master/roles/config-satellite/README.md
-#
-
-- hosts: satellite_servers
+- hosts: satellite-server
+  pre_tasks:
+  - import_tasks: generate-lvm-list.yml
   roles:
+  - role: config-lvm
   - role: config-satellite

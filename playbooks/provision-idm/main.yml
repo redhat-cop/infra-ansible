@@ -1,6 +1,8 @@
 ---
 
 - import_playbook: ../prep.yml
+  when:
+  - rhsm_register|default(False)
   tags:
   - 'never'
   - 'install'
@@ -24,13 +26,18 @@
   - 'never'
   - 'install'
 
-- hosts: satellite-server
+- import_playbook: setup-idm-dns.yml
+  tags:
+  - 'never'
+  - 'install'
+
+- hosts: idm-server
   roles:
   - role: update-host
   tags:
   - 'never'
   - 'install'
 
-- import_playbook: configure-satellite-server.yml
+- import_playbook: configure-idm-server.yml
   tags:
   - 'always'

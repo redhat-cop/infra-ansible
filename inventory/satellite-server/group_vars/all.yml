@@ -32,13 +32,13 @@ osp_security_groups:
     port_range_min: 22
     port_range_max: 22
     direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+    remote_ip_prefix: 0.0.0.0/0
 - name: "icmp-sec-group"
   description: "ICMP Security Group"
   rules:
   - protocol: icmp
     direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+    remote_ip_prefix: 0.0.0.0/0
 - name: "www-sec-group"
   description: "My WWW Sec Group"
   rules:
@@ -46,12 +46,12 @@ osp_security_groups:
     port_range_min: 80
     port_range_max: 80
     direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+    remote_ip_prefix: 0.0.0.0/0
   - protocol: tcp
     port_range_min: 443
     port_range_max: 443
     direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+    remote_ip_prefix: 0.0.0.0/0
 
 osp_volumes:
 - name: "mongodb-vol"
@@ -78,7 +78,7 @@ lvm_entries:
 osp_instances:
 - name: "my-satellite-server"
   meta:
-    group: osp_instances
+    group: satellite-server
   image: "rhel-server-7.4-x86_64"
   key_name: "my-keypair"
   flavor: "m1.large"
@@ -87,7 +87,6 @@ osp_instances:
   - ssh-sec-group
   - icmp-sec-group
   - www-sec-group
-  volumes: 
+  volumes:
   - mongodb-vol
   - pulp-vol
-
