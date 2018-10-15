@@ -17,6 +17,7 @@ Please see the **sample** inventory in the inventory area:
 
 - [dns-server](../../inventory/dns-server/README.md)
 
+You will need to modify this sample inventory to fit your desired configuration.
 
 ### Playbook execution
 
