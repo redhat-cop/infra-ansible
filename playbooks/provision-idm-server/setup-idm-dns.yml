@@ -1,10 +1,24 @@
 ---
-- name: 'Copying dns_records from idm hosts'
+
+- hosts: idm-server
+  tasks:
+  - name: Set required ip address for forward dns
+    set_fact:
+      dns_records: "{{ dns_records|combine({
+        'view': inventory_hostname.split('.')[1:-1],
+        'forward': { 'ip': openstack.private_v4,
+                      'hostname': inventory_hostname.split('.')[0]  },
+        'reverse': { 'hostname': openstack.private_v4.split('.')[-1],
+                      'target': inventory_hostname + '.'  }
+      }, recursive=True) }}"
+    when:
+    - hosting_infrastructure == 'openstack'
+
+- name: 'Copying dns_records from idm-server hosts'
   hosts: dns-server
   tasks:
-   - set_fact: 
-       dns_records: "{{ hostvars[groups['idm'][0]]['dns_records'] }}" 
-       
+   - set_fact:
+       dns_records: "{{ hostvars[groups['idm-server'][0]]['dns_records'] }}"
 
 - name: Add DNS records for IdM'
   import_playbook: ../update-dns-records.yml

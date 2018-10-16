@@ -1,10 +1,8 @@
-# Ansible Tower Provisioning playbook
+# Satellite Server Playbook
 
-This playbooks runs through the steps to provision a VM, set it up (subscriptions, updates, etc.), and install Ansible Tower.
-Currently it is configured to provision OpenStack resources, but other providers can easily be added.
+This playbook directory has the playbook(s) necessary to manage your Satellite server(s).
 
 ## Prerequisites
-Access to an Ansible Tower software and license.
 
 One of the two:
 - a set of running instance(s)
@@ -17,7 +15,7 @@ One of the two:
 
 Please see the **sample** inventory in the inventory area:
 
-- [ansible-tower](../../inventory/ansible-tower/README.md)
+- [satellite-server](../../inventory/satellite-server/README.md)
 
 You will need to modify this sample inventory to fit your desired configuration.
 

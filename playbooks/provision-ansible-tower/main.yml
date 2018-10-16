@@ -1,28 +1,36 @@
 ---
 
-# Please see `inventory/ansible-tower` for an example inventory to be used with 
-# this playbook to provision an Ansible Tower Server  
-
 - import_playbook: ../prep.yml
-  when:
-  - rhsm_register|default(False)
+  tags:
+  - 'never'
+  - 'install'
 
 - import_playbook: ../osp/manage-user-network.yml
   when:
   - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
 
 - import_playbook: ../osp/provision-osp-instance.yml
   when:
   - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../rhsm.yml
+  tags:
+  - 'never'
+  - 'install'
 
 - hosts: ansible-tower
-  vars:
-    rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
-    rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
-  roles: 
-  - role: rhsm
-    when: 
-    - rhsm_register|default(False)
+  roles:
   - role: update-host
- 
+  tags:
+  - 'never'
+  - 'install'
+
 - import_playbook: ../ansible/tower/configure-ansible-tower.yml
+  tags:
+  - 'always'

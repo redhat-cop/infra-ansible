@@ -2,7 +2,10 @@
 [osp-provisioner]
 localhost
 
+[idm-server]
+
 [dns-server]
+localhost
 
 [osp_instances:children]
-dns-server
+idm-server

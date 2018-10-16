@@ -1,15 +1,16 @@
-# Ansible Tower Provisioning playbook
+# IdM Server playbook
 
-This playbooks runs through the steps to provision a VM, set it up (subscriptions, updates, etc.), and install Ansible Tower.
+This playbooks runs through the steps to provision a VM, set it up, configure DNS records, and install IdM.
 Currently it is configured to provision OpenStack resources, but other providers can easily be added.
 
-## Prerequisites
-Access to an Ansible Tower software and license.
 
-One of the two:
+## Prerequisites
+
+For hosting infrastructure, you will need one of the two:
 - a set of running instance(s)
 - a IaaS that allow for provisioning through these playbooks
 
+You must have a working DNS server which accepts "nsupdate" connections for the IdM VMs forward and reverse DNS records to be added/updated to the existing DNS zones. For this, you will need the DNS zone key names, key secrets, and key algorithms.
 
 ## Example
 
@@ -17,9 +18,11 @@ One of the two:
 
 Please see the **sample** inventory in the inventory area:
 
-- [ansible-tower](../../inventory/ansible-tower/README.md)
+- [IdM-server](../../inventory/idm-server/README.md)
 
-You will need to modify this sample inventory to fit your desired configuration.
+
+You will need to modify this sample inventory to fit your desired configuration, including information from your DNS server such as the key names, secrets, and more.
+
 
 ### Playbook execution
 

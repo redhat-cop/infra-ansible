@@ -1,0 +1,6 @@
+---
+
+- hosts: idm-server
+  become: yes
+  roles:
+  - config-idm-server

@@ -1,4 +1,5 @@
 ---
+
 pkg_update: true
 hosting_infrastructure: openstack
 ansible_user: cloud-user
@@ -99,7 +100,7 @@ osp_security_groups:
 osp_instances:
 - name: "idm.example.com"
   meta:
-    group: idm
+    group: idm-server
   image: "rhel-server-7.5-x86_64"
   key_name: "mykeyname"
   flavor: "m1.medium"
@@ -108,4 +109,3 @@ osp_instances:
   - ssh-sec-group
   - icmp-sec-group
   - idm-sec-group
-
