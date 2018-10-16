@@ -1,0 +1,6 @@
+---
+
+- import_tasks: configure_user.yml
+
+- import_tasks: configure_group.yml
+

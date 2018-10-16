@@ -12,14 +12,17 @@
 - debug: var=user_check
 - name: Create User with password
   uri:
-    url: '{{ atlassian_url }}/rest/api/2/user'
+    url: '{{ atlassian.url }}/rest/api/2/user'
     method: POST
-    user: '{{ atlassian_username }}'
-    password: '{{ atlassian_password }}'
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
     force_basic_auth: yes
     status_code: 201
     body_format: json
-    body: "{'name': '{{ atlassian_user.email.split(\"@\") | first }}', 'password': '{{ atlassian_user.password }}', 'emailAddress': '{{ atlassian_user.email }}', 'displayName': '{{ atlassian_user.firstname }} {{ atlassian_user.lastname }}' }"
+    body: "{'name': '{{ atlassian_user.email.split(\"@\") | first }}', 
+            'password': '{{ atlassian_user.password }}', 
+            'emailAddress': '{{ atlassian_user.email }}', 
+            'displayName': '{{ atlassian_user.firstname }} {{ atlassian_user.lastname }}' }"
     return_content: yes
   when:
   - user_check.status == 404
@@ -38,3 +41,5 @@
   when:
   - user_check.status == 404
   - atlassian_user.password is not defined
+  - atlassian_user.state|default('present') == 'present'
+  register: user_data

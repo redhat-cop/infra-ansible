@@ -1,0 +1,4 @@
+--- 
+- hosts: confluence
+  roles: 
+    - manage-confluence-space

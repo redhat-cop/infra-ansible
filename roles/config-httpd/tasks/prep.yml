@@ -12,21 +12,20 @@
 - name: 'Ensure firewalld is running'
   service:
     name: firewalld
-    state: started 
+    state: started
     enabled: yes
 
 - name: 'Ensure httpd is running'
   service:
     name: httpd
-    state: started 
+    state: started
     enabled: yes
 
 - name: 'Open Firewall for httpd use'
-  firewalld: 
+  firewalld:
     port: "{{ item }}"
     permanent: yes
     state: enabled
     immediate: yes
   with_items:
   - 80/tcp
-

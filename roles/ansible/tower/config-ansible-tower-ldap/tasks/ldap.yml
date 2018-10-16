@@ -1,0 +1,51 @@
+---
+
+- block: # become: True
+
+  - name: "Upload Cert CA to Ansible Tower (if applicable)"
+    copy:
+      src: "{{ ansible_tower.ldap.ca_cert }}"
+      dest: "/etc/pki/ca-trust/source/anchors/{{ ansible_tower.ldap.ca_cert | basename }}"
+    when:
+    - ansible_tower.ldap.ca_cert is defined
+    - ansible_tower.ldap.ca_cert|trim != ''
+    notify:
+    - restart-tower
+    register: ca_uploaded
+
+  - name: "Update CA trust if a new CA was added"
+    command: update-ca-trust
+    when:
+    - ca_uploaded is defined
+    - ca_uploaded.changed
+
+  - name: "Update Ansible Tower LDAP config"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v1/settings/ldap/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: PUT
+      body: "{{ lookup('template', 'ldap.j2') }}"
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+    notify:
+    - restart-tower
+
+  - name: "Force LDAP Sync"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/"
+      user: "{{ ansible_tower.ldap.bind_dn.split(',') | first | regex_replace('uid=') }}"
+      password: "{{ ansible_tower.ldap.bind_password }}"
+      force_basic_auth: yes
+      method: GET
+      validate_certs: no
+    register: status_output
+    until: status_output.status == 200
+    retries: 6
+    delay: 5
+
+  become: True

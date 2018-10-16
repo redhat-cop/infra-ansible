@@ -1,0 +1,11 @@
+
+[osp-provisioner]
+localhost
+
+[idm]
+
+[dns-server]
+localhost
+
+[osp_instances:children]
+idm

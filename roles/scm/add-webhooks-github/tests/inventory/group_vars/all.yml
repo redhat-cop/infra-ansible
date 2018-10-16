@@ -1,0 +1,19 @@
+---
+api_token: 1234567890abcdefghijklmnopqrstuvwxyz9876
+
+owner: aGithubUser
+
+repo: aRepo
+
+# To see all possible events https://developer.github.com/v3/activity/events/types/
+webhooks:
+  - url: "https://website1.com/"
+    events: 
+      - push
+    is_active: true
+  - url: "https://website2.com/"
+    events:
+      - push
+      - delete
+    is_active: true
+

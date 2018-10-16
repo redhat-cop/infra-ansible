@@ -1,0 +1,18 @@
+---
+- name: Create channel
+  uri:
+    url: "https://slack.com/api/channels.create?token={{ slack_token }}&name={{ channel.name }}"
+    method: GET
+    status: [200]
+    return_content: yes
+  register: channel_data
+  when: channel.private == False
+
+- name: Create group
+  uri:
+    url: "https://slack.com/api/groups.create?token={{ slack_token }}&name={{ channel.name }}"
+    method: GET
+    status: [200]
+    return_content: yes
+  register: channel_data
+  when: channel.private == True

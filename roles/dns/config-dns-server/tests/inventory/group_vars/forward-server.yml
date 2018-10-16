@@ -1,0 +1,7 @@
+---
+
+named_config:
+  recursion: 'yes'
+  dnssec_enable: 'yes'
+  dnssec_validation: 'yes'
+  dnssec_lookaside: 'no'

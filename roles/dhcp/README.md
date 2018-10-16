@@ -36,7 +36,7 @@ dhcp_subnet_entries:
   router: 192.168.11.1
   broadcast: 192.168.11.255
   dns: 8.8.8.8, 8.8.4.4
-  domain_search: example.com 
+  domain_search: example.com
   domain_name: example.com
   next_server: 192.168.11.33
 
@@ -47,7 +47,7 @@ dhcp_subnet_entries:
   router: 192.168.12.1
   broadcast: 192.168.12.255
   dns: 8.8.8.8, 8.8.4.4
-  domain_search: example.com 
+  domain_search: example.com
   domain_name: example.com
   next_server: 192.168.12.33
 
@@ -67,7 +67,7 @@ dhcp_group_entries:
     ip_addr: 192.168.11.122
     fqdn: node4.example.com
 
-- group: 
+- group:
   title: '#Test group 2 '
   hosts:
   - desc: '# Blade #3 - interface "ens1f0"'
@@ -217,7 +217,7 @@ group {
 
   }
 
-#Test group 2 
+#Test group 2
 group {
 
       # Blade #3 - interface "ens1f0"
@@ -265,3 +265,15 @@ Example Playbook
 ### NOTE
 It does not start the service because without a proper /etc/dhcp/dhcp.conf with correctly defined subnets it will fail.   
 
+```
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

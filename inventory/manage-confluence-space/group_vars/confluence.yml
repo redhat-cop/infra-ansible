@@ -1,0 +1,16 @@
+---
+atlassian:
+  confluence:
+    source:
+      username: "user@example.com"
+      password: "MyPassword123"
+      key: "TEMP"
+      url: "https://example.atlassian.net"
+
+    destination:
+      username: "otheruser@example.com"
+      password: "MyOtherPassword123"
+      url: "https://example-test.atlassian.net"
+      name: "My Test Wiki"
+      description: "Confluence Testing"
+      key: "EXAMPLE"

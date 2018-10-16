@@ -1,0 +1,4 @@
+---
+- hosts: jira
+  roles:
+    - manage-jira

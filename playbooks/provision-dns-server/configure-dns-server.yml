@@ -8,4 +8,5 @@
 
 - hosts: dns-server
   roles:
-  - role: config-dns-server
+  - role: dns/config-dns-server
+  - role: dns/manage-dns-zones

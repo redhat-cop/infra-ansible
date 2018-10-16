@@ -6,8 +6,8 @@
 
 - hosts: rhsm_hosts
   vars:
-    rhsm_username: "{{ hostvars['localhost'].rhsm_username | default(omit) }}"
-    rhsm_password: "{{ hostvars['localhost'].rhsm_password | default(omit) }}"
+    rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
+    rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
   roles: 
   - role: rhsm
     no_log: True

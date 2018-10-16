@@ -3,11 +3,11 @@
 - name: "Install additional packages for VNC server"
   package:
     name: "{{ item }}"
-    state: latest
+    state: installed
   with_items:
   - tigervnc-server
   - policycoreutils-python-utils
-  - checkpolicy 
+  - checkpolicy
 
 - name: "Ensure .vnc dir exists"
   file:
@@ -16,12 +16,12 @@
     owner: "{{ main_user }}"
 
 - name: "Check to see if a VNC password already exists"
-  stat: 
+  stat:
     path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
-  register: passwd_info 
+  register: passwd_info
 
-- name: "Set a default vnc password (use 'vncpasswd' to change)"
-  shell: "echo vncpasswd01 | vncpasswd -f > {{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
+- name: "Set a vnc password"
+  shell: "echo {{ vnc_password | default('vncpasswd01') }} | vncpasswd -f > {{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
   when: passwd_info.stat.exists == False
 
 - name: "Ensure correct ownership of the vnc password file"
@@ -70,14 +70,14 @@
   when:
   - mate_install|default(False)
 
-- name: "Copy VNC service file into place" 
+- name: "Copy VNC service file into place"
   copy:
     src: /usr/lib/systemd/system/vncserver@.service
     dest: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
     remote_src: True
 
 - name: "Ensure the user config is set for the vnc service"
-  replace: 
+  replace:
     path: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
     regexp: "{{ item.0 }}"
     replace: "{{ item.1 }}"
@@ -92,10 +92,10 @@
   copy:
     src: SELinuxVNC.te
     dest: /tmp/SELinuxVNC.te
-  
+
 - name: "Build SELinux module (.mod) to allow VNC"
-  command: checkmodule -M -m -o SELinuxVNC.mod /tmp/SELinuxVNC.te  
-    
+  command: checkmodule -M -m -o SELinuxVNC.mod /tmp/SELinuxVNC.te
+
 - name: "Build SELinux module (.pp) to allow VNC"
   command: semodule_package -m SELinuxVNC.mod -o SELinuxVNC.pp
 
@@ -107,4 +107,3 @@
     name: "vncserver-{{ main_user }}@:1"
     enabled: yes
     state: started
-

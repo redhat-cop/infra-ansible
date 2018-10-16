@@ -1,0 +1,39 @@
+---
+
+ansible_connection: local
+
+# NOTE: below is an example on how these params and files can be specified
+#       - please replace with valid values and files
+
+ansible_tower:
+  admin_password: "admin01"
+  ldap:
+    ca_cert: "{{ inventory_dir }}/../files/ca.crt"
+    uri: "ldaps://idm.test.example.com:636"
+    bind_dn: "uid=bind-user,cn=users,cn=accounts,dc=test,dc=example,dc=com"
+    bind_password: "my-bind-secret"
+    user_search_dn: "cn=users,cn=accounts,dc=test,dc=example,dc=com"
+    user_dn_template: "uid=%(user)s,cn=users,cn=accounts,dc=test,dc=example,dc=com"
+    group_search_dn: "cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+    require_group: "cn=tower-users,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+    admin_group: "cn=tower-admins,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+    organization_map:
+    - name: "My Admin Org"
+      admin_group: "cn=tower-admins,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+      user_groups:
+      - "cn=tower-users,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+    - name: "My Support Org"
+      admin_group: "cn=tower-admins,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+      user_groups:
+      - "cn=tower-users,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+      - "cn=tower-support,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+    team_map:
+    - name: "My First Team"
+      organization: "First Org"
+      user_groups:
+      - "cn=users1,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+      - "cn=users2,cn=groups,cn=accounts,dc=test,dc=example,dc=com"
+    - name: "My Second Team"
+      organization: "Second Org"
+      user_groups:
+      - "cn=users1,cn=groups,cn=accounts,dc=test,dc=example,dc=com"

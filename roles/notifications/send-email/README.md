@@ -13,7 +13,7 @@ None
 
 ## Role Variables
 
-**_Note:_** These variables are listed as part of the `mail` dict
+**_Note:_** These variables are listed as part of the `mail` dictionary
 
 | Variable | Description | Required | Other Info |
 |:--------:|:-----------:|:--------:|:----------:|
@@ -21,11 +21,11 @@ None
 |**mail.port**| SMTP server Port|no|Per Ansible module, defaults to `25`|
 |**mail.username**|SMTP Server login if required|no||
 |**mail.password**|SMTP Server password if required|no||
-|**mail.to**| To Address|No|**_Tip:_** Can be a comma separated list of e-mail addresses|
-|**mail.cc**| CC Address|No|**_Tip:_** Can be a comma separated list of e-mail addresses| 
-|**mail.bcc**| BCC Address|No |**_Tip:_** Can be a comma separated list of e-mail addresses|
+|**mail.to**| To Address|No|**_Tip:_** Can be a list of e-mail addresses|
+|**mail.cc**| CC Address|No|**_Tip:_** Can be a list of e-mail addresses| 
+|**mail.bcc**| BCC Address|No |**_Tip:_** Can be a list of e-mail addresses|
 |**mail.from**|From address|No||
-|**mail.header**|Additional Headers|No|**_Tip:_** Use `Reply-To=<e-mail address>` to set a reply to address|
+|**mail.headers**|Additional Headers|No|**_Tip:_** Use `Reply-To=<e-mail address>` to set a reply to address|
 |**mail.subject**| subject line|yes||
 |**mail.body**| Message Body|No|Per Ansible module, defaults to the mail subject|
 |**mail.secure**|Security Value|No||
@@ -42,8 +42,11 @@ mail:
   secure: "always"
   username: "user1@example.com"
   password: "pa55word"
-  header: 'Reply-To=user2@example.com'
-  to: "person1@example.com, person2@example.com"
+  headers:
+  - 'Reply-To=user2@example.com'
+  to:
+  - "person1@example.com"
+  - "person2@example.com"
   subject: "Test Message 1"
   body: "<html><body><h1>This is a H1 header</h1></body></html>"
   subtype: "html"
@@ -55,17 +58,17 @@ Example inventory to combine a *fixed* list of users + a passed in list of users
 
 ```
 list_of_mail_to:
-  - to_user1@example.com
-  - to_user2@example.com
-  - to_user3@example.com
+- to_user1@example.com
+- to_user2@example.com
+- to_user3@example.com
 
 list_of_mail_cc:
-  - cc_user1@example.com 
-  - cc_user2@example.com
+- cc_user1@example.com 
+- cc_user2@example.com
 
 list_of_mail_bcc:
-  - bcc_user1@example.com
-  - bcc_user2@example.com
+- bcc_user1@example.com
+- bcc_user2@example.com
 
 
 mail:
@@ -74,8 +77,11 @@ mail:
   secure: "always"
   username: "user1@example.com"
   password: "pa55word"
-  header: 'Reply-To=user2@example.com'
-  to: "person1@example.com, person2@example.com"
+  headers: 
+  - 'Reply-To=user2@example.com'
+  to:
+  - "person1@example.com"
+  - "person2@example.com"
   subject: "Subject of the message"
   body: "Body of the Notification Message"
 

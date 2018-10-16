@@ -1,0 +1,18 @@
+---
+
+# Quay Database Configuration
+quay_database_type: postgresql
+quay_database_name: quay
+quay_database_username: quay
+quay_database_password: quay
+quay_database_admin_username: root
+quay_database_admin_password: quayadmin
+quay_database_port: "5432"
+
+# Clair Database Configuration
+clair_database_name: clair
+clair_database_username: clair
+clair_database_password: clair
+clair_database_admin_username: root
+clair_database_admin_password: clairadmin
+clair_database_port: "5433"

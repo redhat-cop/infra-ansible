@@ -1,7 +1,7 @@
 ---
 
 - name: Delete Instance(s)
-  hosts: localhost
+  hosts: osp-provisioner
   vars:
     osp_resource_state: absent 
   roles:

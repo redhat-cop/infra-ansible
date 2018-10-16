@@ -1,8 +1,0 @@
----
-
-- name: 'cleanup temp'
-  file:
-    path: '{{ haproxy_temp_dir }}'
-    state: absent
-
-

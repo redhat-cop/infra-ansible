@@ -1,0 +1,35 @@
+---
+
+- name: 'enable and start service(s)'
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+  - haproxy
+  become: True
+
+- name: 'restart rsyslog'
+  service:
+    name: rsyslog
+    state: restarted
+  become: True
+
+- name: 'reload haproxy'
+  service:
+    name: haproxy
+    state: reloaded
+  become: True
+
+- name: 'remove tmp new file'
+  file:
+    path: '{{ temp_new_file }}'
+    state: absent
+  become: True
+
+- name: 'cleanup temp dir'
+  file:
+    path: '{{ haproxy_temp_dir }}'
+    state: absent
+  delegate_to: localhost
+  run_once: True

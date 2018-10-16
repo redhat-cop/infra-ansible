@@ -1,4 +1,6 @@
 
+[osp-provisioner]
+localhost
 
 [satellite_servers:children]
 osp_instances

@@ -1,0 +1,85 @@
+---
+
+- block: # become: True
+
+  - name: "install epel-release"
+    package:
+      name: "{{ ansible_tower_epel_download_url }}"
+      state: present
+
+  - name: "Set installation dir fact"
+    set_fact:
+      ansible_tower_dir: "{{ ansible_tower_download_url | basename | regex_replace('.tar.gz','') }}"
+
+  - name: "Check if installer dir exists"
+    stat:
+      path: "{{ ansible_tower_dir }}"
+    register: installer_dir
+
+  - name: "Download & Unpack Ansible Tower installer"
+    shell: curl {{ ansible_tower_download_url }} | tar xzf -
+    args:
+      warn: False
+    when: not installer_dir.stat.exists
+
+  - name: "Set up the Ansible Tower inventory"
+    template:
+      src: inventory.j2
+      dest: "{{ ansible_tower_dir }}/inventory"
+    register: inventory
+
+  - name: "run tower installer"
+    shell: ./setup.sh
+    args:
+      chdir: "{{ ansible_tower_dir }}"
+
+  - name: "Wait for Tower to become available before proceeding (30 sec max)"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v1/config/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: GET
+      validate_certs: no
+    register: status_output
+    until: status_output.status == 200
+    retries: 6
+    delay: 5
+
+  - name: "Add Tower license"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v1/config/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: POST
+      body: '{{ lookup("file", ansible_tower.install.license_file) | from_json | combine({"eula_accepted":"true"}) | to_json }}'
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+
+  - name: "Download and Install the 'oc' client for OpenShift interactions"
+    shell: curl {{ ansible_tower_oc_download_url }} | tar -C /bin/ -xzf -
+    args:
+      warn: False
+    when:
+    - ansible_tower_oc_download_url|trim != ''
+
+  - name: "Copy custom Tower SSL certificate and Key"
+    block:
+      - copy:
+          src: "{{ ansible_tower.install.ssl_certificate.cert }}"
+          dest: /etc/tower/tower.cert
+        notify:
+        - restart-tower
+      - copy:
+          src: "{{ ansible_tower.install.ssl_certificate.key }}"
+          dest: /etc/tower/tower.key
+        notify:
+        - restart-tower
+    when:
+    - ansible_tower.install.ssl_certificate is defined
+
+  become: True

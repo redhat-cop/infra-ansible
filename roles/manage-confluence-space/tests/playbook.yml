@@ -1,0 +1,7 @@
+---
+- name: Test Confluence Role
+  hosts: confluence
+  vars_files:
+  - vars/vars_atlassian
+  roles:
+  - manage-confluence-space

@@ -1,0 +1,11 @@
+---
+
+package_state: present
+
+dns_server_type: 'master'
+
+named_config_recursion: yes
+
+named_config_views: []
+named_config_allow_query: []
+named_config_allow_transfer: []

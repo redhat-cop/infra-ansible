@@ -1,0 +1,61 @@
+---
+
+# Use a 'block' to ensure it all runs on 'localhost'
+- block:
+
+  - name: 'Create a temporary HAproxy config file'
+    tempfile:
+      state: file
+      suffix: haproxy
+    register: tempfile
+
+  - name: 'Store away the HAproxy temp config file name'
+    set_fact:
+      haproxy_temp_file: "{{ tempfile.path }}"
+
+  - name: 'Use a unique temporary directory to store the config files pre-assemble'
+    command: mktemp -d
+    register: tempdir
+    notify: 'cleanup temp dir'
+
+  - name: 'Store away the temp names'
+    set_fact:
+      haproxy_temp_dir: '{{ tempdir.stdout }}'
+
+  - name: 'Populate the common config portion for HAproxy'
+    template:
+      src: "{{ lb_common_template | default('lb_common.j2') }}"
+      dest: '{{ haproxy_temp_dir }}/0001_lb.cfg'
+
+  - name: 'Configure and Populate LB Frontends'
+    template:
+      src: "{{ lb_frontend_template | default('lb_frontend.j2') }}"
+      dest: '{{ haproxy_temp_dir }}/0002_lb_{{ fe.lb_name }}_{{ fe.lb_host_vip }}_{{ fe.lb_host_port }}.cfg'
+    loop_control:
+      loop_var: fe
+    loop: "{{ lb_config.frontends|flatten(levels=1) }}"
+
+  - name: 'Configure and Populate LB Backends'
+    template:
+      src: "{{ lb_backend_template | default('lb_backend.j2') }}"
+      dest: '{{ haproxy_temp_dir }}/0003_lb.cfg'
+
+  - name: 'Populate the stats page config'
+    vars:
+      page_config: "{{ lb_config.stats_page }}"
+    template:
+      src: lb_http_stats.j2
+      dest: '{{ haproxy_temp_dir }}/0004_lb.cfg'
+    when:
+    - lb_config.stats_page is defined
+    - lb_config.stats_page.enabled is defined
+    - lb_config.stats_page.enabled
+
+  - name: 'Assemble the final HAproxy config file'
+    assemble:
+      src: '{{ haproxy_temp_dir }}'
+      dest: '{{ haproxy_temp_file }}'
+
+  # Delegate the entire block to "localhost"
+  delegate_to: localhost
+  run_once: True

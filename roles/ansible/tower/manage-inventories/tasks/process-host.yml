@@ -2,14 +2,15 @@
 
 - name: "Load up the inventory (host)"
   uri:
-    url: https://localhost/api/v2/hosts/
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/hosts/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
     method: POST
     body: "{{ lookup('template', 'host.j2') }}"
     body_format: 'json'
     headers:
       Content-Type: "application/json"
       Accept: "application/json"
-    user: admin
-    password: "{{ tower_admin_password }}"
     validate_certs: no
     status_code: 200,201,400

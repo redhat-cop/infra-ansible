@@ -1,0 +1,23 @@
+---
+# Helper for main.yml
+
+- set_fact:
+    payload:
+      name: "web"
+      active: "{{ is_active }}"
+      events: "{{ events }}"
+      config:
+        url: "{{ url }}"
+        content_type: "json"
+        insecure_ssl: "1"
+
+- uri:
+    url: https://api.github.com/repos/{{ owner }}/{{ repo }}/hooks
+    method: POST
+    headers:
+      Authorization: token {{ api_token }}
+    body_format: json
+    body: "{{ payload | to_json }}"
+    status_code: 201, 422
+  register: request_output
+  changed_when: request_output.status == 201

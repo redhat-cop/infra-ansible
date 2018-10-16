@@ -11,17 +11,21 @@ Confluence server must already be installed on the destination machine.
 Role Variables
 --------------
 
-All of the following variables needs to be set.
+## Role Variables
 
-- `confluence_space_destination_url`
-- `confluence_space_source_url`
-- `confluence_space_source_space_key`
-- `confluence_space_name`
-- `confluence_space_description`
-- `source_confluence_site_username`
-- `source_confluence_site_password`
-- `destination_confluence_site_username`
-- `destination_confluence_site_password`
+| Variable | Description | Required | Defaults |
+|:--------:|:-----------:|:--------:|:--------:|
+|**atlassian.confluence.source.username**| Username of source confluence space. Defaults to `atlassian.username` if not provided | no | N/A |
+|**atlassian.confluence.source.password**| Password for source confluence space. Defaults to `atlassian.password` if not provided | no | N/A |
+|**atlassian.confluence.source.key**| Key of source confluence space | yes | N/A |
+|**atlassian.confluence.source.url**| Url for source confluence site. Defaults to `atlassian.url` if not provided | no | N/A |
+|**atlassian.confluence.destination.username**| Username of destination confluence space. Defaults to `atlassian.username` if not provided | no | N/A |
+|**atlassian.confluence.destination.password**| Password for destination confluence space. Defaults to `atlassian.password` if not provided | no | N/A |
+|**atlassian.confluence.destination.key**| Key that will be created for destination confluence space | yes | N/A |
+|**atlassian.confluence.destination.url**| Url for destination confluence site. Defaults to `atlassian.url` if not provided | no | N/A |
+|**atlassian.confluence.destination.name**| Name of confluence space that will be shown in the UI | yes | N/A |
+|**atlassian.confluence.destination.description**| Brief description of the confluence space that will be shown in the UI | yes | N/A |
+
 
 Due to the sensitive nature of the variables it's best to use ansible-vault to create the `vars.yml`
 
@@ -38,7 +42,20 @@ Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
+```
     - hosts: servers
       roles:
-         - { role: confluence-space-copy }
+         - { role: manage-confluence-space }
+
+```
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

@@ -31,6 +31,14 @@ osp_security_groups:
     port_range_max: 22
     direction: ingress
     remote_ip_prefix: 0.0.0.0/0
+- name: "vnc-sec-group"
+  description: "My VNC Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 5901
+    port_range_max: 5901
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
 - name: "icmp-sec-group"
   description: "ICMP Security Group"
   rules:
@@ -42,10 +50,11 @@ osp_instances:
 - name: "bastion-bob0"
   meta:
     group: bastion
-  image: "Fedora-Cloud-Base-27-1.6.x86_64"
+  image: "Fedora-Cloud-Base-28-1.1.x86_64"
   key_name: "bob-laptop"
   flavor: "m1.medium"
   network: "bob-default"
   security_groups:
   - ssh-sec-group
   - icmp-sec-group
+  - vnc-sec-group

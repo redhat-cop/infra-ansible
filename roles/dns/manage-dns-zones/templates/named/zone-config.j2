@@ -1,0 +1,23 @@
+	zone "{{ zone_dns_domain }}" IN {
+		type {{ zone_type | default(dns_server_type) }};
+{% if zone_type == "forward" %}
+                forward only;
+		forwarders {
+	{% for forwarder in zone_forwarders %}
+		{{ forwarder }};
+	{% endfor %}
+		};
+{% else %}
+		file "static/{{ view_name }}-{{ zone_dns_domain }}.db";
+		allow-update { key {{ view_name }}-{{ zone_dns_domain }}; };
+{% if dns_server_type|default("master") == "slave" %}
+		masters {
+	{% for server in ansible_play_batch %}
+	{% if hostvars[server].dns_server_type|default("master") == "master" %}
+			{{ hostvars[server].ansible_default_ipv4.address }} key {{ view_name }}-{{ zone_dns_domain }};
+	{% endif %}
+	{% endfor %}
+		};
+{% endif %}
+{% endif %}
+	};
