@@ -11,6 +11,7 @@
         rhsm_username: "{{ username.user_input }}"
     - pause:
         prompt: 'Please enter your Red Hat Subscription password'
+        echo: no
       no_log: True
       register: password
     - set_fact:

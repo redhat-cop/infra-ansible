@@ -10,8 +10,7 @@
     rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
   roles:
   - role: rhsm
-    no_log: True
-  when:
-  - rhsm_register|default(False)
+    when:
+    - rhsm_register|default(False)
   tags:
   - configure_rhsm
