@@ -14,11 +14,11 @@
     when:
     - hosting_infrastructure == 'openstack'
 
-- name: 'Copying dns_records from idm hosts'
+- name: 'Copying dns_records from idm-server hosts'
   hosts: dns-server
   tasks:
    - set_fact:
-       dns_records: "{{ hostvars[groups['idm'][0]]['dns_records'] }}"
+       dns_records: "{{ hostvars[groups['idm-server'][0]]['dns_records'] }}"
 
 - name: Add DNS records for IdM'
   import_playbook: ../update-dns-records.yml
