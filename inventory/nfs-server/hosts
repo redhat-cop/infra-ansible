@@ -1,0 +1,8 @@
+
+[osp-provisioner]
+localhost
+
+[nfs-server]
+
+[osp_instances:children]
+nfs-server
