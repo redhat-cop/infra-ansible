@@ -34,81 +34,81 @@ ansible_user: centos
 
 dns_data:
   views:
-  - name: mydnsview
-    named:
-      recursion: 'yes'
-    zones:
-    - dns_domain: "first.example.com"
-      named: True
-    - dns_domain: "10.168.192.in-addr.arpa"
-      named: True
-    - dns_domain: "forward.example.com"
-      named: True
-      type: forward
-      forwarders:
-      - 192.168.10.17
-    default_forwarders:
-    - 8.8.8.8
-    - 8.8.4.4
+    - name: mydnsview
+      named:
+        recursion: 'yes'
+      zones:
+        - dns_domain: "first.example.com"
+          named: True
+        - dns_domain: "10.168.192.in-addr.arpa"
+          named: True
+        - dns_domain: "forward.example.com"
+          named: True
+          type: forward
+          forwarders:
+            - 192.168.10.17
+      default_forwarders:
+        - 8.8.8.8
+        - 8.8.4.4
 
 osp_networks:
-- name: "dns-network"
-  description: "DNS Network"
+  - name: "dns-network"
+    description: "DNS Network"
 
 osp_subnets:
-- name: "dns-subnet"
-  network_name: "dns-network"
-  cidr: "192.168.16.0/24"
-  gateway_ip: "192.168.16.1"
-  allocation_pool_start: "192.168.16.2"
-  allocation_pool_end: "192.168.16.254"
-  dns_nameservers:
-  - "8.8.8.8"
-  - "8.8.4.4"
+  - name: "dns-subnet"
+    network_name: "dns-network"
+    cidr: "192.168.16.0/24"
+    gateway_ip: "192.168.16.1"
+    allocation_pool_start: "192.168.16.2"
+    allocation_pool_end: "192.168.16.254"
+    dns_nameservers:
+      - "8.8.8.8"
+      - "8.8.4.4"
 
 osp_routers:
-- name: "dns-router"
-  external_gateway: "external"
-  subnet: "dns-subnet"
+  - name: "dns-router"
+    external_gateway: "external"
+    subnet: "dns-subnet"
 
 osp_security_groups:
-- name: "ssh-sec-group"
-  description: "My SSH Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 22
-    port_range_max: 22
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-- name: "icmp-sec-group"
-  description: "ICMP Security Group"
-  rules:
-  - protocol: icmp
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-- name: "dns-sec-group"
-  description: "My DNS Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 53
-    port_range_max: 53
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-  - protocol: udp
-    port_range_min: 53
-    port_range_max: 53
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
+  - name: "ssh-sec-group"
+    description: "My SSH Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "icmp-sec-group"
+    description: "ICMP Security Group"
+    rules:
+      - protocol: icmp
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "dns-sec-group"
+    description: "My DNS Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 53
+        port_range_max: 53
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: udp
+        port_range_min: 53
+        port_range_max: 53
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
 
 osp_instances:
-- name: "my-dns-server"
-  meta:
-    group: dns-server
-  image: "CentOS-7-x86_64"
-  key_name: "my-keypair"
-  flavor: "m1.medium"
-  network: "dns-network"
-  security_groups:
-  - ssh-sec-group
-  - icmp-sec-group
-  - dns-sec-group
+  - name: "my-dns-server"
+    meta:
+      group: dns-server
+    image: "CentOS-7-x86_64"
+    key_name: "my-keypair"
+    flavor: "m1.medium"
+    network: "dns-network"
+    security_groups:
+      - ssh-sec-group
+      - icmp-sec-group
+      - dns-sec-group

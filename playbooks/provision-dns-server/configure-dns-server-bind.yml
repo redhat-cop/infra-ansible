@@ -2,13 +2,13 @@
 
 - hosts: dns-server
   roles:
-  - role: dns/config-dns-server-bind
+    - role: dns/config-dns-server-bind
   tags:
-  - 'never'
-  - 'install'
+    - 'never'
+    - 'install'
 
 - hosts: dns-server
   roles:
-  - role: dns/manage-dns-zones-bind
+    - role: dns/manage-dns-zones-bind
   tags:
-  - 'always'
+    - 'always'
