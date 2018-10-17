@@ -4,8 +4,8 @@
   set_fact:
     dns_views: "{{ dns_views | default([]) + [ { 'name': item.0.name + '-' + item.1.dns_domain } ] }}"
   with_subelements:
-  - "{{ dns_data.views }}"
-  - zones
+    - "{{ dns_data.views }}"
+    - zones
 
 - name: Get existing key files
   shell: 'ls -1 K{{ item.name }}*.key | sed -ne "s/K\({{ item.name }}\).*.key/\1/p"'
@@ -14,13 +14,13 @@
   register: key_files
   ignore_errors: yes
   with_items:
-  - "{{ dns_views }}"
+    - "{{ dns_views }}"
 
 - name: Build list of existing key files
   set_fact:
     existing_key_files: "{{ existing_key_files | default([]) + [ item.stdout ] }}"
   with_items:
-  - "{{ key_files.results }}"
+    - "{{ key_files.results }}"
 
 - name: Generate keys for nsupdate
   command: >
@@ -31,15 +31,15 @@
       -r /dev/urandom
       -K /var/named {{ item.name }}
   with_items:
-  - "{{ dns_views }}"
+    - "{{ dns_views }}"
   when:
-  - item not in existing_key_files
+    - item not in existing_key_files
 
 - name: Gather keys for nsupdate
   shell: "grep Key: /var/named/K{{ item.name }}*.private | cut -d ' ' -f 2"
   register: nsupdate_keys_captured
   with_items:
-  - "{{ dns_views }}"
+    - "{{ dns_views }}"
 
 - name: Move .private and .key files to the 'archive' 
   block:
@@ -48,7 +48,7 @@
       state: directory
   - shell: "mv /var/named/K{{ item.name }}*.{private,key} /var/named/key-archive/"
     with_items:
-    - "{{ dns_views }}"
+      - "{{ dns_views }}"
 
 # Build the dict with the proper keys, i.e.:
 #    private-view.example.com:

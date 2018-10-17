@@ -20,7 +20,7 @@
     group: "{{ bind_group }}"
     mode: 0660
   when:
-  - view.state|default('present') == 'present'
+    - view.state|default('present') == 'present'
 
 - name: Initialize flags
   set_fact:
@@ -28,7 +28,7 @@
 
 - include_tasks: process-one-zone.yml
   with_items:
-  - "{{ view.zones }}"
+    - "{{ view.zones }}"
   loop_control:
     loop_var: "zone"
 
@@ -48,12 +48,12 @@
       src: "{{ dns_zone_temp_config_dir }}/{{ view.name }}"
       dest: "{{ dns_zone_temp_config_dir }}/view/{{ view.name }}.cfg"
   when:
-  - processed_zones|bool == True
-  - view.state|default('present') == 'present'
+    - processed_zones|bool == True
+    - view.state|default('present') == 'present'
 
 - name: Remove temporary view if no zones were processed
   file:
     path: "{{ dns_zone_temp_config_dir }}/{{ view.name }}"
     state: absent
   when:
-  - processed_zones|bool == False
+    - processed_zones|bool == False

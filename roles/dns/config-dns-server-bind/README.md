@@ -26,7 +26,7 @@ Example Playbook
 ```
 - hosts: dns-servers
   roles:
-  - dns/config-dns-server
+  - role: dns/config-dns-server
 ```
 
 Example Inventory

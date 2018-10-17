@@ -14,7 +14,7 @@
     query: record_sets
     hosted_zone_id: "{{ item.Id | replace('/hostedzone/', '')}}"
   with_items:
-  - "{{ hosted_zones.HostedZones | default({}) }}"
+    - "{{ hosted_zones.HostedZones | default({}) }}"
   register: zones_records
   when:
-  - hosted_zones|length > 0
+    - hosted_zones|length > 0

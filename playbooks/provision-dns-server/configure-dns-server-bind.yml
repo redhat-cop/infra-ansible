@@ -1,17 +1,13 @@
 ---
 
-- hosts: dns-servers
+- hosts: dns-server
   roles:
   - role: dns/config-dns-server-bind
   tags:
   - 'never'
   - 'install'
 
-<<<<<<< HEAD
- - hosts: dns-servers
-=======
-- hosts: dns-servers
->>>>>>> Additional role and docs clean-up
+- hosts: dns-server
   roles:
   - role: dns/manage-dns-zones-bind
   tags:

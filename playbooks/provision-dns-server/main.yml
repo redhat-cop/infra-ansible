@@ -22,7 +22,6 @@
   - 'never'
   - 'install'
 
-<<<<<<< HEAD:playbooks/provision-dns-server/main-bind.yml
 - import_playbook: ../rhsm.yml
   tags:
   - 'never'
@@ -30,16 +29,6 @@
 
 - hosts: dns-server
   roles:
-=======
-- hosts: dns-servers
-  vars:
-    rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
-    rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
-  roles:
-  - role: rhsm
-    when:
-    - rhsm_register|default(False)
->>>>>>> Additional role and docs clean-up:playbooks/provision-dns-server/main.yml
   - role: update-host
   tags:
   - 'never'

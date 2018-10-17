@@ -23,5 +23,5 @@
     group: "{{ bind_group }}"
     mode: 0660
   with_items:
-  - "{{ hostvars[ansible_play_hosts | first].nsupdate_keys_captured.results }}"
+    - "{{ hostvars[ansible_play_hosts | first].nsupdate_keys_captured.results }}"
   notify: restart named

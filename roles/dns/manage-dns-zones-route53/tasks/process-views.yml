@@ -2,6 +2,6 @@
 
 - include_tasks: process-zones.yml
   with_items:
-  - "{{ dns_data.views }}"
+    - "{{ dns_data.views }}"
   loop_control:
     loop_var: "view"

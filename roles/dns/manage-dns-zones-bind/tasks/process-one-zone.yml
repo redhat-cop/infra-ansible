@@ -10,9 +10,9 @@
     state: absent
   ignore_errors: True
   with_items:
-  - "/var/named/static/{{ view.name + '-' + zone.dns_domain }}.db"
+    - "/var/named/static/{{ view.name + '-' + zone.dns_domain }}.db"
   when:
-  - zone_state == 'absent'
+    - zone_state == 'absent'
 
 - block:
   - name: Prepare Zone Files
@@ -43,6 +43,6 @@
     set_fact:
       processed_zones: True
   when:
-  - zone.named is defined
-  - zone.named|bool != False
-  - zone_state == 'present'
+    - zone.named is defined
+    - zone.named|bool != False
+    - zone_state == 'present'

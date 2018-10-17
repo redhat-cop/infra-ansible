@@ -3,7 +3,7 @@
 - name: Remove Zone entries prior to remove the Zone
   include_tasks: loop-zones.yml
   when:
-  - zone.state == "absent"
+    - zone.state == "absent"
 
 - name: Ensure the private zone is on the desired state
   route53_zone:
@@ -14,7 +14,7 @@
     vpc_region: "{{ zone.route53.vpc_region }}"
     state: "{{ zone.state | default('present') }}"
   when:
-  - view.name == "private"
+    - view.name == "private"
 
 - name: Ensure the public zone is on the desired state
   route53_zone:
@@ -23,4 +23,4 @@
     zone: "{{ zone.dns_domain }}"
     state: "{{ zone.state | default('present') }}"
   when:
-  - view.name == "public"
+    - view.name == "public"

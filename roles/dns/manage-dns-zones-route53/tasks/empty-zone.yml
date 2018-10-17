@@ -13,11 +13,11 @@
     ttl: "{{ r53_record.0.TTL }}"
     type: "{{ r53_record.0.Type }}"
   when:
-  - zone.dns_domain + "." == r53_zone.item.Name
-  - view.name == "private"
-  - r53_record.0.Name != r53_zone.item.Name
-  - r53_record.0.Type != "SOA"
-  - r53_record.0.Type != "NS"
+    - zone.dns_domain + "." == r53_zone.item.Name
+    - view.name == "private"
+    - r53_record.0.Name != r53_zone.item.Name
+    - r53_record.0.Type != "SOA"
+    - r53_record.0.Type != "NS"
 
 - name: Remove records in Public zone
   route53:
@@ -30,8 +30,8 @@
     value: "{{ r53_record.1.Value }}"
     type: "{{ r53_record.0.Type }}"
   when:
-  - zone.dns_domain + "." == r53_zone.item.Name
-  - view.name == "public"
-  - r53_record.0.Name != r53_zone.item.Name
-  - r53_record.0.Type != "SOA"
-  - r53_record.0.Type != "NS"
+    - zone.dns_domain + "." == r53_zone.item.Name
+    - view.name == "public"
+    - r53_record.0.Name != r53_zone.item.Name
+    - r53_record.0.Type != "SOA"
+    - r53_record.0.Type != "NS"
