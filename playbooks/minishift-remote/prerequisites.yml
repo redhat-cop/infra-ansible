@@ -1,0 +1,20 @@
+---
+
+- name: Install firewalld
+  package:
+    name: firewalld
+    state: latest
+
+- name: Enable and Start firewalld
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: Configure Docker
+  include_role:
+    name: "{{ item }}"
+  loop:
+    - config-container-storage-setup
+    - config-docker
+  when: (docker_install | bool) | default(false)

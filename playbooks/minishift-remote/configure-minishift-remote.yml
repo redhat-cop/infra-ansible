@@ -1,0 +1,13 @@
+---
+
+
+- name: Configure Minishift Remote Machine
+  hosts: minishift_remote
+  tasks:
+    - name: Configure prerequisites
+      import_tasks: prerequisites.yml
+      when: (install_prerequisites | bool) | default(False)
+
+    - name: Setup Remote Machine to Host Minishift
+      import_role:
+        name: config-minishift-remote
