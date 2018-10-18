@@ -73,7 +73,7 @@ osp_volumes:
 - name: "nfs-vol"
   display_description: "NFS Volume"
   display_name: "nfs-vol"
-  size: 250
+  size: 10
 
 osp_instances:
 - name: "my-nfs-server"

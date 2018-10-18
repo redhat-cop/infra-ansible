@@ -5,7 +5,7 @@ This playbook is for provisioning a server to host NFS shares.
 ## Example run
 
 ```
-> ansible-playbook -i inventory/provision-nfs-server/ playbooks/provision-nfs-server/main.yml
+> ansible-playbook -i inventory/provision-nfs-server/ playbooks/provision-nfs-server/main.yml --tags='install'
 ```
 
 ## Inventory Options
