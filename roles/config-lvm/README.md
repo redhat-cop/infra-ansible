@@ -39,10 +39,12 @@ lvm_entries:
 - storage_device: "/dev/vdb"
   vg_name: "vg1"
   lv_name: "lv1"
+  lv_size: "50G"
   mount_path: "/mnt/vg1-lv1"
 
 ```
 
+* By default the lv_size will be `100%VG` (configurable through `default_lv_size`)
 
 License
 -------

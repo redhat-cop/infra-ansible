@@ -9,7 +9,7 @@
   lvol: 
     vg: "{{ item.vg_name }}"
     lv: "{{ item.lv_name }}"
-    size: "100%VG"
+    size: "{{ item.lv_size | default(default_lv_size) }}"
 
 - name: "Create file system on share"
   filesystem:
