@@ -43,7 +43,13 @@ ansible_tower:
           name: "Foo"
         success_nodes:
           - unified_job_template:
-              name: "Phone Home Success"
+              name: "Bar"
+              success_nodes:
+                - unified_job_template:
+                    name: "Phone Home Success"
+              failure_nodes:
+                - unified_job_template:
+                    name: "Phone Home Error"
         failure_nodes:
           - unified_job_template:
               name: "Phone Home Error"
