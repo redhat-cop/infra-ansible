@@ -1,39 +1,63 @@
 ---
 
 - name: "Remove the workflow template if currently defined"
-  uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/{{ existing_workflow_template.id }}/"
-    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-    password: "{{ ansible_tower.admin_password }}"
-    force_basic_auth: yes
-    method: DELETE
-    validate_certs: no
-    status_code: 200,204
+  set_fact:
+    workflow_template_id: "{{ existing_workflow_template.id }}"
   when: existing_workflow_template.name == workflow_template.name
   with_items:
   - "{{ existing_workflow_templates_output.rest_output }}"
   loop_control:
     loop_var: existing_workflow_template
 
-- name: "Load up the workflow template"
+- block:
+  - name: "Load up the workflow template"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: POST
+      body: "{{ lookup('template', 'workflow-template.j2') }}"
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+      status_code: 200,201,400
+    register: workflow_template_rest_output
+
+  - name: "Save new workflow template id"
+    set_fact:
+      workflow_template_id: "{{ workflow_template_rest_output.json.id }}"
+  when: workflow_template_id is not defined
+
+- name: "Get current workflow nodes"
   uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/"
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/{{ workflow_template_id }}/workflow_nodes/"
     user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: yes
-    method: POST
-    body: "{{ lookup('template', 'workflow-template.j2') }}"
-    body_format: 'json'
+    method: GET
     headers:
-      Content-Type: "application/json"
       Accept: "application/json"
     validate_certs: no
     status_code: 200,201,400
-  register: workflow_template_rest_output
+  register: current_workflow_nodes
 
-- name: "Save new workflow template id"
-  set_fact:
-    workflow_template_id: "{{ workflow_template_rest_output.json.id }}"
+- name: "Delete current workflow nodes"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_template_nodes/{{ workflow_node.id }}/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: DELETE
+    headers:
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 204
+  with_items: "{{ current_workflow_nodes.json.results }}"
+  loop_control:
+    loop_var: workflow_node
 
 - name: "Process the inventory starting nodes"
   vars:

@@ -31,8 +31,8 @@
       Accept: "application/json"
     validate_certs: no
     status_code: 200,201,400
-  register: workflow_node_start_output
+  register: workflow_node_output
 
 - name: "Add id to dictionary"
   set_fact:
-    job_node_uids: "{{ job_node_uids|default({}) | combine({ workflow_node.index : workflow_node_start_output.json.id }) }}"
+    job_node_uids: "{{ job_node_uids|default({}) | combine({ workflow_node.index : workflow_node_output.json.id }) }}"
