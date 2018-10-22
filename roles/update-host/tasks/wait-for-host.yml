@@ -1,4 +1,8 @@
 ---
+- name: "Ensure the ansible_ssh_host is defined"
+  set_fact:
+    ansible_ssh_host: "{{ hostvars[inventory_hostname] }}"
+  when: ansible_ssh_host is undefined
 
 - name: "Set the host to wait for"
   set_fact:
