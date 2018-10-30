@@ -61,8 +61,6 @@ curl --user email@example.com:<api_token> \
 ## Example Inventory
 This role uses `inventory` to read the values of the variables defined in the playbook.
 
-
-Sample `inventory`
 ```yaml
 ---
 atlassian:
