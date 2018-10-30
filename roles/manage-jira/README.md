@@ -38,31 +38,29 @@ curl --user email@example.com:<api_token> \
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**jira.url**| url of Atlassian server | yes | N/A |
-|**jira.username**| username of Atlassian server | yes | N/A |
-|**jira.password**| password of Atlassian server | yes | N/A |
-|**jira.jira-admin**| Jira admin group to add to the permission scheme | yes| N/A |
-|**jira.lead**| The username of the project lead. This is just the username, not the email address of the user | yes | N/A |
-|**jira.core_team**| team to give admin access | yes | N/A |
-|**project.name**| project name | yes | N/A |
-|**project.key**| Project keys must be unique and start with an uppercase letter followed by one or more uppercase alphanumeric characters. Required when creating a project | yes | N/A |
-|**project.description**| A brief description of the project| yes | N/A |
-|**group.lead**| Name of the `lead` group to be added to the permissions scheme | yes | N/A |
-|**group.team_member**| Name of the `team_member` group to be added to the permission scheme  | yes | N/A |
-|**group.viewer**| Name of the `viewer` group to be added to the permission scheme | yes | N/A |
-|**project.category_name**| name of the category to be created | yes | N/A |
-|**project.type_key**| The [project type](https://confluence.atlassian.com/x/GwiiLQ?_ga=2.202449363.314925215.1531670255-653786702.1531337567#Jiraapplicationsoverview-Productfeaturesandprojecttypes), which dictates the application-specific feature set | No | `software` |
-|**project.template_key**| A prebuilt configuration for a project. The type of the `projectTemplateKey` must match with the type of the `projectTypeKey`| No | `com.pyxis.greenhopper.jira:gh-simplified-scrum` |
-|**permission_scheme.name**| The name of the permission scheme to be created | yes | N/A |
-|**permission_scheme.description**| A description for the permission scheme to be created | yes | N/A |
-|**permission_scheme.id**| The ID of the permission scheme to be associated with the project | No | `Permission Scheme Created by the role` |
+|**atlassian.jira.url**| Url of Atlassian server. Defaults to atlassian.url if not provided | no | N/A |
+|**atlassian.jira.username**| Username of Atlassian server. Defaults to atlassian.username if not provided | no | N/A |
+|**atlassian.jira.password**| Password of Atlassian server. Defaults to atlassian.password | no | N/A |
+|**atlassian.jira.jira-admin**| Jira admin group to add to the permission scheme | yes| N/A |
+|**atlassian.jira.lead**| The username of the project lead. This is just the username, not the email address of the user | yes | N/A |
+|**atlassian.jira.core_team**| team to give admin access | yes | N/A |
+|**atlassian.jira.project.name**| project name | yes | N/A |
+|**atlassian.jira.project.key**| Project keys must be unique and start with an uppercase letter followed by one or more uppercase alphanumeric characters. Required when creating a project | yes | N/A |
+|**atlassian.jira.project.description**| A brief description of the project| yes | N/A |
+|**atlassian.jira.group.lead**| Name of the `lead` group to be added to the permissions scheme | yes | N/A |
+|**atlassian.jira.group.team_member**| Name of the `team_member` group to be added to the permission scheme  | yes | N/A |
+|**atlassian.jira.group.viewer**| Name of the `viewer` group to be added to the permission scheme | yes | N/A |
+|**atlassian.jira.project.category_name**| name of the category to be created | yes | N/A |
+|**atlassian.jira.project.type_key**| The [project type](https://confluence.atlassian.com/x/GwiiLQ?_ga=2.202449363.314925215.1531670255-653786702.1531337567#Jiraapplicationsoverview-Productfeaturesandprojecttypes), which dictates the application-specific feature set | No | `software` |
+|**atlassian.jira.project.template_key**| A prebuilt configuration for a project. The type of the `projectTemplateKey` must match with the type of the `projectTypeKey`| No | `com.pyxis.greenhopper.jira:gh-simplified-scrum` |
+|**atlassian.jira.permission_scheme.name**| The name of the permission scheme to be created | yes | N/A |
+|**atlassian.jira.permission_scheme.description**| A description for the permission scheme to be created | yes | N/A |
+|**atlassian.jira.permission_scheme.id**| The ID of the permission scheme to be associated with the project | No | `Permission Scheme Created by the role` |
 
 
 ## Example Inventory
 This role uses `inventory` to read the values of the variables defined in the playbook.
 
-
-Sample `inventory`
 ```yaml
 ---
 atlassian:

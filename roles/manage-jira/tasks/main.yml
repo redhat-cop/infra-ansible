@@ -1,4 +1,6 @@
 ---
+- include_tasks: prepare_vars.yml 
+
 - include_tasks: create_project_category.yml
  
 - include_tasks: create_permission_scheme.yml

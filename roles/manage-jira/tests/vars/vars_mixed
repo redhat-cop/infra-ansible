@@ -1,9 +1,10 @@
 ---
 atlassian:
+  url: https://example-test.atlassian.net
+
   jira:
-    url: "https://example.atlassian.net"
-    username: "example"
-    password: "example"
+    username: user@example.com
+    password: YourPassword123
     jira_admin: "jira-administrators"
     lead: "example"
     core_team: "example"
@@ -23,3 +24,4 @@ atlassian:
     permission_scheme:
       name: "example"
       description: "Example Permission Scheme"
+      

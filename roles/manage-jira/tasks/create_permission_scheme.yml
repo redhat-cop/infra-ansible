@@ -1,10 +1,10 @@
 ---
 - name: Create Jira Permission Scheme
   uri:
-    url: "{{ atlassian.jira.url }}/rest/api/2/permissionscheme"
+    url: "{{ jira_url }}/rest/api/2/permissionscheme"
     method: POST
-    user: "{{ atlassian.jira.username }}"
-    password: "{{ atlassian.jira.password }}"
+    user: "{{ jira_username }}"
+    password: "{{ jira_password }}"
     return_content: yes
     force_basic_auth: yes
     body_format: json
