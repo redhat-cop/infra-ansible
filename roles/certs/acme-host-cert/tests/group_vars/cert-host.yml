@@ -1,0 +1,10 @@
+---
+
+idm_fqdn: "idm.example.com"
+idm_user: "admin"
+idm_password: "admin!"
+host_name: "host-1.example.com"
+host_realm: "EXAMPLE.COM"
+host_description: "Testing My Host Cert"
+target_host_cert_file: "/tmp/{{ host_name }}.pem"
+target_ca_cert_file: "/tmp/ca.pem"
