@@ -1,6 +1,6 @@
 ---
 
-- name: "Remove the workflow template if currently defined"
+- name: "Check if workflow template is currently defined"
   set_fact:
     workflow_template_id: "{{ existing_workflow_template.id }}"
   when: existing_workflow_template.name == workflow_template.name
@@ -59,7 +59,7 @@
   loop_control:
     loop_var: workflow_node
 
-- name: "Process the inventory starting nodes"
+- name: "Process the inventory nodes"
   vars:
     node_type: 'start'
   include_tasks: process-workflow-node.yml
