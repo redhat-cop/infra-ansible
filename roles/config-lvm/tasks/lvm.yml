@@ -9,11 +9,11 @@
   lvol: 
     vg: "{{ item.vg_name }}"
     lv: "{{ item.lv_name }}"
-    size: "100%VG"
+    size: "{{ item.lv_size | default(default_lv_size) }}"
 
 - name: "Create file system on share"
   filesystem:
-    fstype: "{{ lvm_fstype }}"
+    fstype: "{{ item.lv_fstype | default(lvm_fstype) }}"
     dev: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}"
 
 - name: "Ensure the mount dir exists" 
@@ -23,7 +23,7 @@
 
 - name: "Mount LVM to directory"
   mount:
-    src: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}" 
+    src: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}"
     path: "{{ item.mount_path }}"
-    fstype: "{{ lvm_fstype }}" 
+    fstype: "{{ item.lv_fstype | default(lvm_fstype) }}"
     state: mounted
