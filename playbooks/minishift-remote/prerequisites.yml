@@ -13,8 +13,10 @@
 
 - name: Configure Docker
   include_role:
-    name: "{{ item }}"
+    name: "{{ docker_item }}"
   loop:
     - config-container-storage-setup
     - config-docker
+  loop_control:
+    loop_var: docker_item
   when: (docker_install | bool) | default(false)

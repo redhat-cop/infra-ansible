@@ -6,12 +6,12 @@
 
 - import_playbook: ../osp/manage-user-network.yml
   when:
-    - provision_infrastructure | default(False)
+    - (provision_infrastructure | default(False)) | bool
     - hosting_infrastructure == 'openstack'
 
 - import_playbook: ../osp/provision-osp-instance.yml
   when:
-    - provision_infrastructure | default(False)
+    - (provision_infrastructure | default(False)) | bool
     - hosting_infrastructure == 'openstack'
 
 - hosts: minishift_remote
@@ -20,7 +20,7 @@
       set_fact:
         minishift_host_ip: "{{ openstack.public_v4 }}"
       when:
-        - provision_infrastructure | default(False)
+        - (provision_infrastructure | default(False)) | bool
         - hosting_infrastructure == 'openstack'
 
 - hosts: minishift_remote

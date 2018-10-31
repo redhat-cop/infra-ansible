@@ -17,6 +17,14 @@
       loop: "{{ dependencies_installed.results }}"
   when: ansible_os_family == 'RedHat'
 
+# CentOS Fix for Red Hat Registry
+- name: Support Red Hat Registry on CentOS
+  become: yes
+  file:
+    path: /etc/rhsm/ca/redhat-uep.pem
+    state: touch
+  when: ansible_distribution == 'CentOS'
+
 - name: Create docker group
   become: true
   group:
