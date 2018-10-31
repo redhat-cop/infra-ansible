@@ -1,6 +1,10 @@
 ---
 
-- name: "Check if workflow template is currently defined"
+- name: "Initilize workflow_template_id to None"
+  set_fact:
+    workflow_template_id: -1
+
+- name: "Grab workflow_template_id if already defined"
   set_fact:
     workflow_template_id: "{{ existing_workflow_template.id }}"
   when: existing_workflow_template.name == workflow_template.name
@@ -10,7 +14,7 @@
     loop_var: existing_workflow_template
 
 - block:
-  - name: "Load up the workflow template"
+  - name: "Load up the workflow template if not already defined"
     uri:
       url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/"
       user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
@@ -29,7 +33,7 @@
   - name: "Save new workflow template id"
     set_fact:
       workflow_template_id: "{{ workflow_template_rest_output.json.id }}"
-  when: workflow_template_id is not defined
+  when: workflow_template_id == -1
 
 - name: "Get current workflow nodes"
   uri:
