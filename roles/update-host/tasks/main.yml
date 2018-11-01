@@ -1,5 +1,11 @@
 ---
+- include_tasks: update-host.yml
+  
+- include_tasks: "{{ item }}"
+  with_items:
+     - roles/update-host/tasks/2.6_reboot.yml
+     - roles/update-host/tasks/wait-for-host.yml
+  when: ansible_version.full is version_compare('2.7', '<') 
 
-- import_tasks: update-host.yml
-- import_tasks: reboot-host.yml
-- import_tasks: wait-for-host.yml 
+- include_tasks: roles/update-host/tasks/2.7_reboot.yml
+  when: ansible_version.full is version_compare('2.7', '>=')

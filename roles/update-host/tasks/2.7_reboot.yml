@@ -1,0 +1,6 @@
+---
+- name: "Reboot a server"
+  reboot:
+     connect_timeout: 30
+  become: True
+  when: host_updated.changed or force_host_reboot
