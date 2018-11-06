@@ -64,8 +64,6 @@
     loop_var: workflow_node
 
 - name: "Process the inventory nodes"
-  vars:
-    node_type: 'start'
   include_tasks: process-workflow-node.yml
   with_items:
   - "{{ workflow_template.nodes | flatten_workflow_nodes }}"
