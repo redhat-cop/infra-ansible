@@ -1,0 +1,27 @@
+---
+
+- name: Setup Domain Keys configuration
+  vars:
+    named_views: "{{ dns_data.views }}"
+  template:
+    src: domain-keys.j2
+    dest: /etc/named/named.conf.domain-keys
+    owner: "{{ bind_user }}"
+    group: "{{ bind_group }}"
+    mode: 0660
+  notify: restart named
+
+- import_tasks: generate_keys.yml
+  run_once: true
+  delegate_to: "{{ ansible_play_hosts | first }}"
+
+- name: Setup key files for nsupdate
+  template:
+    src: domain-key.j2
+    dest: /var/named/{{ item.item.name }}.key
+    owner: "{{ bind_user }}"
+    group: "{{ bind_group }}"
+    mode: 0660
+  with_items:
+    - "{{ hostvars[ansible_play_hosts | first].nsupdate_keys_captured.results }}"
+  notify: restart named

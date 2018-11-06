@@ -1,0 +1,16 @@
+---
+
+- name: "Fail when required items are not defined"
+  fail:
+    msg: "view name and zones must be defined for each dictionary record"
+  when:
+    - (item.name is not defined) or
+      (item.zones is not defined)
+  with_items:
+    - "{{ dns_data.views | default({}) }}"
+
+- name: Fail when AWS KEY environment variables are not defined
+  debug:
+    msg: "Both 'AWS_ACCESS_KEY_ID' and 'AWS_SECRET_ACCESS_KEY' environment variables must be defined"
+  failed_when: (lookup('env','AWS_ACCESS_KEY_ID')|trim == "") or
+               (lookup('env','AWS_SECRET_ACCESS_KEY')|trim == "")

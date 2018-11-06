@@ -1,6 +1,0 @@
----
-- include_tasks: process-one-zone.yml
-  with_items:
-    - "{{ view.zones }}"
-  loop_control:
-    loop_var: "zone"

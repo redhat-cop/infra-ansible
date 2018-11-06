@@ -1,0 +1,39 @@
+---
+
+- name: Ensure the final view directory exists
+  file:
+    path: "{{ dns_zone_temp_config_dir }}/view"
+    state: directory
+
+- name: Generate a consistent serial number to be used across all zones
+  set_fact:
+    zone_serial_number: "{{ ansible_date_time.epoch }}"
+    common_recursion: dns_data.named_global_config.recursion | default(default_recursion) 
+  run_once: true
+  delegate_to: "{{ ansible_play_hosts | first }}"
+
+- include_tasks: process-zones.yml
+  with_items:
+    - "{{ dns_data.views }}"
+  loop_control:
+    loop_var: "view"
+
+- name: Assemble the final view configuration
+  assemble:
+    src: "{{ dns_zone_temp_config_dir }}/view"
+    dest: "/etc/named/named.conf.view"
+    owner: "{{ bind_user }}"
+    group: "{{ bind_group }}"
+    mode: 0660
+  notify: restart named
+
+- name: Setup ACLs
+  vars:
+    named_views: "{{ dns_data.views }}"
+  template:
+    src: acl.j2
+    dest: /etc/named/named.conf.acl
+    owner: "{{ bind_user }}"
+    group: "{{ bind_group }}"
+    mode: 0660
+  notify: restart named

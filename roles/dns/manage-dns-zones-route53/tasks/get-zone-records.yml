@@ -1,0 +1,20 @@
+---
+
+- name: Get all hosted zones
+  route53_facts:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    query: hosted_zone
+  register: hosted_zones
+
+- name: Get all records from zones
+  route53_facts:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    query: record_sets
+    hosted_zone_id: "{{ item.Id | replace('/hostedzone/', '')}}"
+  with_items:
+    - "{{ hosted_zones.HostedZones | default({}) }}"
+  register: zones_records
+  when:
+    - hosted_zones|length > 0

@@ -1,0 +1,63 @@
+options {
+	listen-on port 53 { any; };
+	listen-on-v6 port 53 { ::1; };
+	directory 	"/var/named";
+	dump-file 	"/var/named/data/cache_dump.db";
+	statistics-file "/var/named/data/named_stats.txt";
+	memstatistics-file "/var/named/data/named_mem_stats.txt";
+
+{% if named_config.allow_query is defined %}
+	allow-query {
+	{% for queries in named_config.allow_query %}
+		{{ queries }};
+	{% endfor %}
+	};
+{% else %}
+	allow-query { any; };              // This is the default
+{% endif %}
+
+{% if dns_server_type == "master" %}
+	also-notify     {
+	{% for server in ansible_play_batch %}
+	{% if hostvars[server].dns_server_type|default(dns_server_type) == "slave" %}
+		{{ hostvars[server].ansible_default_ipv4.address }};
+	{% endif %}
+	{% endfor %}
+	};
+{% endif %}
+
+
+{% if named_config.allow_transfer is defined %}
+        allow-transfer {
+{% for allow_transfer in named_config.allow_transfer %}
+                {{ allow_transfer }};
+{% endfor %}
+        };
+{% else %}
+        allow-transfer { any; };          // This is the default
+{% endif %}
+
+	/*
+	 - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+	 - If you are building a RECURSIVE (caching) DNS server, you need to enable
+	   recursion.
+	 - If your recursive DNS server has a public IP address, you MUST enable access
+	   control to limit queries to your legitimate users. Failing to do so will
+	   cause your server to become part of large scale DNS amplification
+	   attacks. Implementing BCP38 within your network would greatly
+	   reduce such attack surface
+	*/
+	recursion {{ named_config.recursion | default('yes') }};
+
+	dnssec-enable {{ named_config.dnssec_enable | default('no') }};
+	dnssec-validation {{ named_config.dnssec_validation | default('no') }};
+	dnssec-lookaside {{ named_config.dnssec_lookaside | default('auto') }};
+
+	/* Path to ISC DLV key */
+	bindkeys-file "/etc/named.iscdlv.key";
+
+	managed-keys-directory "/var/named/dynamic";
+
+	pid-file "/run/named/named.pid";
+	session-keyfile "/run/named/session.key";
+};

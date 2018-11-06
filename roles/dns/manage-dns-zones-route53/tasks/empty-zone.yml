@@ -1,0 +1,37 @@
+---
+
+- name: Remove records in Private zone
+  route53:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    state: absent
+    zone: "{{ zone.dns_domain }}"
+    private_zone: "true"
+    vpc_id: "{{ zone.route53.vpc_id }}"
+    value: "{{ r53_record.1.Value }}"
+    record: "{{ r53_record.0.Name }}"
+    ttl: "{{ r53_record.0.TTL }}"
+    type: "{{ r53_record.0.Type }}"
+  when:
+    - zone.dns_domain + "." == r53_zone.item.Name
+    - view.name == "private"
+    - r53_record.0.Name != r53_zone.item.Name
+    - r53_record.0.Type != "SOA"
+    - r53_record.0.Type != "NS"
+
+- name: Remove records in Public zone
+  route53:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    state: absent
+    zone: "{{ zone.dns_domain }}"
+    record: "{{ r53_record.0.Name }}"
+    ttl: "{{ r53_record.0.TTL }}"
+    value: "{{ r53_record.1.Value }}"
+    type: "{{ r53_record.0.Type }}"
+  when:
+    - zone.dns_domain + "." == r53_zone.item.Name
+    - view.name == "public"
+    - r53_record.0.Name != r53_zone.item.Name
+    - r53_record.0.Type != "SOA"
+    - r53_record.0.Type != "NS"

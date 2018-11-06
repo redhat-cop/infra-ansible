@@ -1,0 +1,69 @@
+---
+
+- name: Ensure required packages are installed
+  package:
+    name: "{{ item }}"
+    state: "{{ package_state }}"
+  with_items:
+    - bind
+    - bind-utils
+    - firewalld
+    - python-firewall
+    - libsemanage-python
+    - python-dns
+    - libselinux-python
+
+- name: Enable named
+  service:
+    name: named
+    enabled: yes
+
+- name: Enable firewalld
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: Open Firewall for DNS
+  firewalld:
+    port: "{{item}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+    - 53/tcp
+    - 53/udp
+
+- name: Configure named
+  copy:
+    src: named.conf
+    dest: /etc/named.conf
+    owner: named
+    group: named
+    mode: 0660
+
+- name: Setup Zone Directory
+  file:
+    path: /var/named/static
+    state: directory
+    owner: named
+    group: named
+    mode: 0770
+
+- name: Setup key for service named status to communicate with BIND
+  command: /sbin/rndc-confgen -a -r /dev/urandom
+
+- name: Ensure various files/directories exists with the proper permissions
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: named
+    mode: 0640
+  with_items:
+    - "/etc/rndc.key"
+
+- name: Configure SELinux
+  seboolean:
+    name: named_write_master_zones
+    state: yes
+    persistent: yes

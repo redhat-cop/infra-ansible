@@ -1,0 +1,22 @@
+---
+
+- name: Fail when required items are not defined
+  fail:
+    msg: "view name and zones must be defined for each dictionary record"
+  when:
+    - (item.name is not defined) or
+      (item.zones is not defined)
+  with_items:
+    - "{{ dns_data.views | default({}) }}"
+
+- name: Use a unique temporary directory to store the config files pre-assemble
+  tempfile:
+    state: directory
+    prefix: dns-zone
+  register: dns_zone_tempdir
+  notify:
+    - 'cleanup temp'
+
+- name: Store away the temporary configuration files directory name
+  set_fact:
+    dns_zone_temp_config_dir: "{{ dns_zone_tempdir.path }}"

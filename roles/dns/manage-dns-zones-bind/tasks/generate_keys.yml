@@ -1,0 +1,63 @@
+---
+
+- name: Build a list of view/zone items
+  set_fact:
+    dns_views: "{{ dns_views | default([]) + [ { 'name': item.0.name + '-' + item.1.dns_domain } ] }}"
+  with_subelements:
+    - "{{ dns_data.views }}"
+    - zones
+
+- name: Get existing key files
+  shell: 'ls -1 K{{ item.name }}*.key | sed -ne "s/K\({{ item.name }}\).*.key/\1/p"'
+  args:
+    chdir: /var/named/
+  register: key_files
+  ignore_errors: yes
+  with_items:
+    - "{{ dns_views }}"
+
+- name: Build list of existing key files
+  set_fact:
+    existing_key_files: "{{ existing_key_files | default([]) + [ item.stdout ] }}"
+  with_items:
+    - "{{ key_files.results }}"
+
+- name: Generate keys for nsupdate
+  command: >
+    /sbin/dnssec-keygen
+      -a {{ default_dnssec_keygen_algorithm }}
+      -b {{ default_dnssec_keygen_size }}
+      -n USER
+      -r /dev/urandom
+      -K /var/named {{ item.name }}
+  with_items:
+    - "{{ dns_views }}"
+  when:
+    - item not in existing_key_files
+
+- name: Gather keys for nsupdate
+  shell: "grep Key: /var/named/K{{ item.name }}*.private | cut -d ' ' -f 2"
+  register: nsupdate_keys_captured
+  with_items:
+    - "{{ dns_views }}"
+
+- name: Move .private and .key files to the 'archive' 
+  block:
+  - file:
+      path: "/var/named/key-archive"
+      state: directory
+  - shell: "mv /var/named/K{{ item.name }}*.{private,key} /var/named/key-archive/"
+    with_items:
+      - "{{ dns_views }}"
+
+# Build the dict with the proper keys, i.e.:
+#    private-view.example.com:
+#      algorithm: HMAC-MD5
+#      secret: SKqKNdpfk7llKxZ57bbxUnUDobaaJp9t8CjXLJPl+fRI5mPcSBuxTAyvJPa6Y9R7vUg9DwCy/6WTpgLNqnV4Hg==
+#    public-view.example.com:
+#      algorithm: HMAC-MD5
+#      secret: kVE2bVTgZjrdJipxPhID8BEZmbHD8cExlVPR+zbFpW6la8kL5wpXiwOh8q5AAosXQI5t95UXwq3Inx8QT58duw==
+- name: Set nsupdate_keys fact
+  set_fact:
+    nsupdate_keys: "{{ nsupdate_keys | default({}) | combine({ item.item.name : { 'key_algorithm': ( dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) ), 'key_secret': item.stdout } }) }}"
+  with_items: "{{ nsupdate_keys_captured.results }}"

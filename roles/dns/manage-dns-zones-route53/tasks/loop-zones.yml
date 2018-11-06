@@ -1,0 +1,8 @@
+---
+
+- name: Loop over all zones
+  include_tasks: loop-records.yml
+  with_items:
+    - "{{ zones_records.results }}"
+  loop_control:
+    loop_var: r53_zone

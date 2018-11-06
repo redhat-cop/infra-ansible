@@ -1,36 +1,39 @@
 ---
 
+# Please see `inventory/dns-server` for an example inventory to be used with
+# this playbook to provision a dns-server
+
 - import_playbook: ../prep.yml
   tags:
-  - 'never'
-  - 'install'
+    - 'never'
+    - 'install'
 
 - import_playbook: ../osp/manage-user-network.yml
   when:
-  - hosting_infrastructure == 'openstack'
+    - hosting_infrastructure == 'openstack'
   tags:
-  - 'never'
-  - 'install'
+    - 'never'
+    - 'install'
 
 - import_playbook: ../osp/provision-osp-instance.yml
   when:
-  - hosting_infrastructure == 'openstack'
+    - hosting_infrastructure == 'openstack'
   tags:
-  - 'never'
-  - 'install'
+    - 'never'
+    - 'install'
 
 - import_playbook: ../rhsm.yml
   tags:
-  - 'never'
-  - 'install'
+    - 'never'
+    - 'install'
 
 - hosts: dns-server
   roles:
-  - role: update-host
+    - role: update-host
   tags:
-  - 'never'
-  - 'install'
+    - 'never'
+    - 'install'
 
-- import_playbook: configure-dns-server.yml
+- import_playbook: configure-dns-server-bind.yml
   tags:
-  - 'always'
+    - 'always'

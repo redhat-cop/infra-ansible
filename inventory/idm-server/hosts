@@ -9,3 +9,6 @@ localhost
 
 [osp_instances:children]
 idm-server
+
+[rhsm_hosts:children]
+idm-server

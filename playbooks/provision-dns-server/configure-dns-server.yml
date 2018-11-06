@@ -1,6 +1,0 @@
----
-
-- hosts: dns-server
-  roles:
-  - role: dns/config-dns-server
-  - role: dns/manage-dns-zones

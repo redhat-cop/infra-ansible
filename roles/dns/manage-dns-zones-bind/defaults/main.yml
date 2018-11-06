@@ -1,0 +1,12 @@
+---
+
+named_processing: false
+
+default_ttl: 300
+
+bind_user: named
+bind_group: named
+
+default_recursion: false
+default_dnssec_keygen_size: 256
+default_dnssec_keygen_algorithm: HMAC-SHA256
