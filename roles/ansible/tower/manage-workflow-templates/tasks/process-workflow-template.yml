@@ -1,0 +1,110 @@
+---
+
+- name: "Initilize workflow_template_id to None"
+  set_fact:
+    workflow_template_id: -1
+
+- name: "Grab workflow_template_id if already defined"
+  set_fact:
+    workflow_template_id: "{{ existing_workflow_template.id }}"
+  when: existing_workflow_template.name == workflow_template.name
+  with_items:
+  - "{{ existing_workflow_templates_output.rest_output }}"
+  loop_control:
+    loop_var: existing_workflow_template
+
+- block:
+  - name: "Load up the workflow template if not already defined"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: POST
+      body: "{{ lookup('template', 'workflow-template.j2') }}"
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+      status_code: 200,201,400
+    register: workflow_template_rest_output
+
+  - name: "Save new workflow template id"
+    set_fact:
+      workflow_template_id: "{{ workflow_template_rest_output.json.id }}"
+  when: workflow_template_id == -1
+
+- name: "Get current workflow nodes"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/{{ workflow_template_id }}/workflow_nodes/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: GET
+    headers:
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 200,201,400
+  register: current_workflow_nodes
+
+- name: "Delete current workflow nodes"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_template_nodes/{{ workflow_node.id }}/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: DELETE
+    headers:
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 204
+  with_items: "{{ current_workflow_nodes.json.results }}"
+  loop_control:
+    loop_var: workflow_node
+
+- name: "Process the inventory nodes"
+  include_tasks: process-workflow-node.yml
+  with_items:
+  - "{{ workflow_template.nodes | flatten_workflow_nodes }}"
+  loop_control:
+    loop_var: workflow_node
+
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
+- name: "Obtain the current roles"
+  rest_get:
+    host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+    rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    rest_password: "{{ ansible_tower.admin_password }}"
+    api_uri: "/api/v2/roles/"
+  register: existing_roles_output
+
+- name: "Assign the Team(s) Permission(s)"
+  vars:
+    permissions_object: "teams"
+    permissions_value: "{{ team }}"
+  include_tasks: set-permissions.yml
+  when:
+  - workflow_template.permissions is defined
+  - workflow_template.permissions.teams is defined
+  with_items:
+  - "{{ workflow_template.permissions.teams }}"
+  loop_control:
+    loop_var: team
+
+- name: "Assign the User(s) Permission(s)"
+  vars:
+    permissions_object: "users"
+    permissions_value: "{{ user }}"
+  include_tasks: set-permissions.yml
+  when:
+  - workflow_template.permissions is defined
+  - workflow_template.permissions.users is defined
+  with_items:
+  - "{{ workflow_template.permissions.users }}"
+  loop_control:
+    loop_var: user
+
+- name: "Clear/Update facts"
+  set_fact:
+    processed_workflow_templates: "{{ processed_workflow_templates + [ {'name': workflow_template.name } ] }}"

@@ -1,0 +1,68 @@
+---
+
+- block:
+  - name: "Initialize facts"
+    set_fact:
+      existing_workflow_templates_output: []
+      existing_job_templates_output: []
+      existing_users_output: []
+      existing_teams_output: []
+      processed_workflow_templates: []
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing workflow templates"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/workflow_job_templates/"
+    register: existing_workflow_templates_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing job templates"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/job_templates/"
+    register: existing_job_templates_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing users"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/users/"
+    register: existing_users_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing teams"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/teams/"
+    register: existing_teams_output
+
+  - name: "Process the inventory workflow template"
+    include_tasks: process-workflow-template.yml
+    with_items:
+    - "{{ ansible_tower.workflow_templates }}"
+    loop_control:
+      loop_var: workflow_template
+
+  - name: "Elminate the workflow templates that should not be present"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/{{ item.id }}/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: DELETE
+      validate_certs: no
+      status_code: 200,204
+    with_items:
+    - "{{ existing_workflow_templates_output.rest_output | get_remaining_items(processed_workflow_templates, 'name', 'name')}}"
+
+  when:
+  - ansible_tower.workflow_templates is defined

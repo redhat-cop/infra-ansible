@@ -1,0 +1,50 @@
+---
+
+- name: "Obtain team id based on the team name"
+  set_fact:
+    object_id: "{{ item.id }}"
+  when:
+  - permissions_object == "teams"
+  - item.name|trim == permissions_value.name|trim
+  with_items:
+  - "{{ existing_teams_output.rest_output }}"
+
+- name: "Obtain user id based on the username"
+  set_fact:
+    object_id: "{{ item.id }}"
+  when:
+  - permissions_object == "users"
+  - item.username|trim == permissions_value.name|trim
+  with_items:
+  - "{{ existing_users_output.rest_output }}"
+
+- name: "Obtain role id based on the workflow_template name + role name"
+  set_fact:
+    role_id: "{{ item.id }}"
+  when:
+  - item.summary_fields is defined
+  - item.summary_fields.resource_name is defined
+  - item.summary_fields.resource_name|trim == workflow_template.name|trim
+  - item.name|trim == permissions_value.role|trim
+  with_items:
+  - "{{ existing_roles_output.rest_output }}"
+
+- name: "Set Permission"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/{{ permissions_object }}/{{ object_id }}/roles/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ { 'id': role_id|int } }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 200,204
+  when:
+  - object_id is defined
+  - object_id|trim != ''
+  - role_id is defined
+  - role_id|trim != ''

@@ -1,0 +1,8 @@
+{
+    "name": "{{ workflow_template.name }}",
+    "description": "{{ workflow_template.description | default('') }}",
+    "extra_vars": "{{ workflow_template.extra_vars | default('') }}",
+    "organization": null,
+    "allow_simultaneous": "{{ workflow_template.allow_simultaneous | default(true) }}",
+    "ask_variables_on_launch": {{workflow_template.ask_variables_on_launch | default(false) }}
+}
