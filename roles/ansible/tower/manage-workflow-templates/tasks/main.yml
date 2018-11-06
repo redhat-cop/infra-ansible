@@ -1,7 +1,7 @@
 ---
 
 - block:
-  - name: "Initilize facts"
+  - name: "Initialize facts"
     set_fact:
       existing_workflow_templates_output: []
       existing_job_templates_output: []
