@@ -18,6 +18,7 @@ configure_start_minishift: True
 minishift_install_dir: /usr/local/bin
 minishift_tmp_dir: /tmp
 minishift_host_ip: "{{ ansible_eth0.ipv4.address }}"
+minishift_binary_location_escalation: False
 
 
 # Location of the Minishift binary if not retrieving from GitHub

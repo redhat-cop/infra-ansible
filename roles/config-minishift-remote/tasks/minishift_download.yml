@@ -29,7 +29,7 @@
   delegate_to: localhost
 
 - name: Extract Minishift
-  become: True
+  become: "{{ minishift_binary_location_escalation | bool }}"
   command: >
     tar --strip-components=1 -xzf {{ minishift_tmp_dir }}/minishift.tar.gz -C {{ minishift_install_dir }}
   args:
