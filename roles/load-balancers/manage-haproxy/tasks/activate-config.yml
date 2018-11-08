@@ -3,21 +3,41 @@
 # Use a 'block' to ensure "become: True" for all tasks requiring elevated privileges
 - block:
 
-  - name: 'Copy the HAproxy config file to a temp location for validity checking'
+  - name: 'Copy the HAproxy config files to a temp location for validity checking'
     copy:
-      src: '{{ haproxy_temp_file }}'
-      dest: '{{ temp_new_file }}'
+      src: "{{ haproxy_temp_dir }}"
+      dest: /etc/haproxy/
+    #notify: 'rename configuration dir'
 
-  - name: 'Check the validity'
-    command: 'haproxy -c -f {{ temp_new_file }}'
-    notify: 'remove tmp new file'
+  - name: 'Ensure conf.d directory exists'
+    file:
+      path: /etc/haproxy/conf.d
+      state: directory
 
-  - name: 'Copy and activate the HAproxy config file'
-    copy:
-      src: '{{ haproxy_temp_file }}'
-      dest: '/etc/haproxy/haproxy.cfg'
-      backup: 'yes'
-    notify: 'reload haproxy'
+  #
+  # - name: 'Copy the HAproxy config file to a temp location for validity checking'
+  #   copy:
+  #     src: '{{ haproxy_temp_file }}'
+  #     dest: '{{ temp_new_file }}'
+
+  # - name: 'Check the validity'
+  #   command: 'haproxy -c -f {{ temp_new_file }}'
+  #   notify: 'remove tmp new file'
+
+  # - name: 'Copy and activate the HAproxy config file'
+  #   copy:
+  #     src: '{{ haproxy_temp_file }}'
+  #     dest: '/etc/haproxy/haproxy.cfg'
+  #     backup: 'yes'
+  #   notify: 'reload haproxy'
+
+  # - name: Ansible check file exists example.
+  #   stat:
+  #     path: "{{ haproxy_temp_dir }}"
+  #   register: file_details
+  #
+  # - debug:
+  #     msg: "{{ file_details }}"
 
   - name: 'Open Firewall for LB use (TCP only)'
     firewalld:

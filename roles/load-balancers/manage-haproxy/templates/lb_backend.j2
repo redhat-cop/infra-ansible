@@ -1,16 +1,14 @@
 
-{% for entry in lb_config.lb_entries %}
-
-{% if ((entry.lb_ssl_enabled is defined and entry.lb_ssl_enabled) or
-       (entry.lb_ssl_enabled is undefined and entry.lb_match_port|string == '443')) %}
+{% if ((backend_entry.lb_ssl_enabled is defined and backend_entry.lb_ssl_enabled) or
+       (backend_entry.lb_ssl_enabled is undefined and backend_entry.lb_match_port|string == '443')) %}
 {% set lb_ssl_enabled = True %}
 {% else %}
 {% set lb_ssl_enabled = False %}
 {% endif %}
 
-{% set lb_match_fqdn = (entry.name | default(entry.lb_match_fqdn)) | regex_replace('^\.', '') %}
+{% set lb_match_fqdn = (backend_entry.name | default(backend_entry.lb_match_fqdn)) | regex_replace('^\.', '') %}
 
-backend {{ lb_match_fqdn }}-{{ entry.lb_match_port }}
+backend {{ lb_match_fqdn }}-{{ backend_entry.lb_match_port }}
     balance roundrobin
 {% if lb_ssl_enabled %}
     mode tcp
@@ -20,15 +18,13 @@ backend {{ lb_match_fqdn }}-{{ entry.lb_match_port }}
     cookie JSESSIONID prefix
 {% endif %}
 
-{% for backend in entry.backends %}
+{% for backend in backend_entry.backends %}
 {% set lb_backend_host = backend.name | default(backend.host) %}
-{% set lb_backend_port = backend.port | default(entry.lb_match_port) %}
+{% set lb_backend_port = backend.port | default(backend_entry.lb_match_port) %}
 
 {% if lb_ssl_enabled %}
     server {{ lb_backend_host }} {{ backend.host }}:{{ lb_backend_port }} check
 {% else %}
     server {{ lb_backend_host }} {{ backend.host }}:{{ lb_backend_port }} cookie A check
 {% endif %}
-{% endfor %}
-
 {% endfor %}
