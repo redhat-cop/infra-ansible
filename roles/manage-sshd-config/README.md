@@ -40,6 +40,7 @@ server2.test.lab
 
 ```
 ansible-playbook -i inventory  playbook.yml
+```
 
 ### Manual tests
 Execute 'Example' inventory above
