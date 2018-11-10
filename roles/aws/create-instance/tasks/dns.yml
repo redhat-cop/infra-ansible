@@ -1,0 +1,43 @@
+---
+- name: Create Public DNS Entry
+  route53:
+    command: create
+    overwrite: yes
+    private_zone: no
+    record: "{{ instance.hostname_prefix }}.{{ vpc_name }}.{{ dns_domain }}"
+    type: CNAME
+    ttl: 300
+    value: "{{ ec2instance.tagged_instances[0].dns_name }}"
+    zone: "{{ dns_domain }}."
+
+- name: Create Private DNS Entry
+  route53:
+    command: create
+    overwrite: yes
+    private_zone: yes
+    record: "{{ instance.hostname_prefix }}.{{ vpc_name }}.{{ dns_domain }}"
+    type: A
+    ttl: 300
+    value: "{{ ec2instance.tagged_instances[0].private_ip }}"
+    zone: "{{ vpc_name + '.' + dns_domain }}."
+
+- name: Create Reverse Lookup Zone
+  route53_zone:
+    comment: "reverse lookup zone {{ instance.reverse_zone }}"
+    state: present
+    vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+    vpc_region: "{{ aws_region }}"
+    zone: "{{ instance.reverse_zone }}"
+  when: instance.reverse_lookup
+
+- name: Create Reverse Lookup Entry
+  route53:
+    command: create
+    overwrite: yes
+    private_zone: yes
+    record: "{{  ec2instance.tagged_instances[0].private_ip.split('.')[-1] + '.' + instance.reverse_zone }}"
+    type: PTR
+    ttl: 300
+    value: "{{ instance.hostname_prefix }}.{{ vpc_name }}.{{ dns_domain }}"
+    zone: "{{ instance.reverse_zone }}"
+  when: instance.reverse_lookup

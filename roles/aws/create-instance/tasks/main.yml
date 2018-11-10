@@ -1,0 +1,18 @@
+---
+
+- debug:
+    msg: "{{ instance }}"
+
+- import_tasks: getcreds.yml
+- import_tasks: getvpc.yml
+- import_tasks: securitygroup.yml
+- import_tasks: instance.yml
+- import_tasks: dns.yml
+
+- name: Wait for instance to be ready
+  wait_for:
+    port: 22
+    host: "{{ ec2instance.tagged_instances[0].public_ip }}"
+    delay: 10
+    timeout: 300
+  connection: local

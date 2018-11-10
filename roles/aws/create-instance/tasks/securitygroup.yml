@@ -1,0 +1,11 @@
+---
+- name: Create Security Group
+  ec2_group:
+    name: "{{ instance.security_group.name }}"
+    description: "{{ instance.security_group.description }}"
+    purge_rules: false
+    purge_rules_egress: false
+    region: "{{ aws_region }}"
+    state: present
+    vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+    rules: "{{ instance.security_group.rules }}"  

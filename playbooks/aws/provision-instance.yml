@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  become: False
+  roles:
+  - role: aws/create-instance

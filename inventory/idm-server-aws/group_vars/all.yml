@@ -1,0 +1,24 @@
+---
+pkg_update: true
+hosting_infrastructure: aws
+ansible_user: ec2-user
+
+# Name tag for the existing VPC
+vpc_name: labs
+aws_region: us-east-1
+# This should be a Gold AMI for Red Hat Linux
+ami_id: ami-0d70a070
+dns_domain: nextcle.com
+
+instance:
+  flavor: t2.medium
+  zone: us-east-1a
+  public_ip: yes
+  reverse_lookup: yes
+  reverse_zone: 1.20.10.in-addr.arpa.
+  hostname_prefix: idm2
+  root_volume_size: 25
+  security_group:
+    name: idm
+    description: "IdM ingress"
+    rules: "[{ 'proto': 'tcp', 'from_port': '389', 'to_port': '389', 'cidr_ip': '10.20.1.0/24'}, { 'proto': 'tcp', 'from_port': '22', 'to_port': '22', 'cidr_ip': '0.0.0.0/0'}, { 'proto': 'tcp', 'from_port': '80', 'to_port': '80', 'cidr_ip': '0.0.0.0/0'}, { 'proto': 'tcp', 'from_port': '443', 'to_port': '443', 'cidr_ip': '0.0.0.0/0'}]"
