@@ -1,0 +1,123 @@
+---
+
+ansible_user: cloud-user
+ansible_become: True
+
+osp_networks:
+- name: "my-network"
+  description: "My Network"
+
+osp_subnets:
+- name: "my-subnet"
+  network_name: "my-network"
+  cidr: "192.168.16.0/24"
+  gateway_ip: "192.168.16.1"
+  allocation_pool_start: "192.168.16.2"
+  allocation_pool_end: "192.168.16.254"
+  dns_nameservers:
+  - "192.168.16.4"
+
+osp_routers:
+- name: "my-router"
+  external_gateway: "external"
+  subnet: "my-subnet"
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "idm-sec-group"
+  description: "My idm Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 443
+    port_range_max: 443
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 389
+    port_range_max: 389
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 636
+    port_range_max: 636
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 88
+    port_range_max: 88
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: udp
+    port_range_min: 88
+    port_range_max: 88
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 464
+    port_range_max: 464
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: udp
+    port_range_min: 464
+    port_range_max: 464
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 53
+    port_range_max: 53
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: udp
+    port_range_min: 53
+    port_range_max: 53
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: udp
+    port_range_min: 123
+    port_range_max: 123
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+
+osp_instances:
+- name: "idm.example.com"
+  meta:
+    group: idm-server
+  image: "rhel-server-7.5-x86_64"
+  key_name: "mykeyname"
+  flavor: "m1.medium"
+  network: "my-network"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - idm-sec-group
+
+dns_records:
+  server: "dns_server_ip"
+  reverse:
+    zone: "my_reverse_zone"
+    key_name: 'reverse_key_name'
+    key_secret: 'key_secret'
+    key_algorithm: 'hmac-sha256'
+  forward:
+    zone: "my_forward_zone"
+    key_name: 'forward_key_name'
+    key_secret: 'my_key_secret'
+    key_algorithm: 'hmac-sha256'

@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Provision AWS instance
+  hosts: aws-provisioner
   become: False
   roles:
   - role: aws/create-instance

@@ -1,0 +1,6 @@
+---
+- name: Delete AWS Instance
+  hosts: aws-provisioner
+  become: False
+  roles:
+  - role: aws/delete-instance
