@@ -1,4 +1,6 @@
 ---
 
-# Authentication to access Quay Registry
-#quay_registry_auth:
+# Superuser Configuration
+quay_superuser_username: ""
+quay_superuser_password: ""
+quay_superuser_email: ""
