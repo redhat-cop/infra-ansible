@@ -15,12 +15,12 @@
     - name: Configure Docker
       include_role:
         name: config-container-storage-setup
-      when: docker_install|default(false)
+      when: (docker_install|default(false))|bool
 
     - name: Install Docker
       include_role:
         name: config-docker
-      when: docker_install|default(false)
+      when: (docker_install|default(false))|bool
 
 - name: Install HAProxy
   hosts: lb
@@ -140,6 +140,9 @@
         quay_clair_enable: "{{ (groups['clair']| length > 0) | ternary('True','False') }}"
         quay_clair_endpoint: "http://{{ hostvars[groups['clair'][0]]['ansible_eth0']['ipv4']['address'] if (groups['clair']| length > 0) else '' }}:{{ clair_endpoint_port | default('6060') }}"
         quay_builder_enable: "{{ (groups['quay_builder']| length > 0) | ternary('True','False') }}"
+        quay_superuser_username: "{{ hostvars[groups['quay_enterprise'][0]]['quay_superuser_username'] }}"
+        quay_superuser_password: "{{ hostvars[groups['quay_enterprise'][0]]['quay_superuser_password'] }}"
+        quay_superuser_email: "{{ hostvars[groups['quay_enterprise'][0]]['quay_superuser_email'] }}"
 
 - name: Install Clair Database
   hosts: database
@@ -183,7 +186,7 @@
         database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
         quay_enterprise_address: "{{ hostvars[groups['quay_enterprise'][0]]['quay_http_protocol'] }}://{{ quay_hostname }}"
         clair_ssl_trust_configure: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool }}"
-        clair_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"
+        clair_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file_to_use'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"
         postgresql_port: "{{ clair_database_port | default('5433') }}"
         clair_host_proxy_port: "{{ clair_endpoint_port | default('6060') }}"
 
@@ -200,4 +203,4 @@
       vars:
         quay_enterprise_hostname: "{{ quay_hostname }}"
         quay_builder_ssl_trust_configure: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool }}"
-        quay_builder_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"
+        quay_builder_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file_to_use'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"

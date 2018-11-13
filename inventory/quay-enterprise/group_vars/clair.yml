@@ -1,7 +1,8 @@
 ---
 
-#postgresql_username: clair
-#postgresql_password: clair
-#postgresql_host: ""
-#postgresql_port: "5433"
-#postgresql_database: clair
+#clair_database_username: clair
+#clair_database_password: clair
+#clair_database_admin_username: ""
+#clair_database_admin_password: ""
+#clair_database_name: clair
+#clair_database_port: 5433

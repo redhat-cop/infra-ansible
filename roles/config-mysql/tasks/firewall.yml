@@ -21,13 +21,13 @@
   notify:
   - restart firewalld
 
-- name: Ensure iptables is correctly configured 
+- name: Ensure iptables is correctly configured
   lineinfile:
-    insertafter: "^-A INPUT .* --dport {{ mysql_host_port }} .* ACCEPT"
+    insertafter: ".*INPUT -p tcp.*"
     state: present
     dest: /etc/sysconfig/iptables
     regexp: "^-A INPUT .* --dport {{ mysql_host_port }} .* ACCEPT"
-    line: "-A INPUT -p TCP -m state --state NEW -m TCP --dport {{ mysql_host_port }} -j ACCEPT"
-  when: iptables_status.rc == 0 and firewalld_status.rc != 0 
+    line: "-A INPUT -p tcp -m state --state NEW -m tcp --dport {{ mysql_host_port }} -j ACCEPT"
+  when: iptables_status.rc == 0 and firewalld_status.rc != 0
   notify:
   - restart iptables

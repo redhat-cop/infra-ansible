@@ -1,5 +1,8 @@
 ---
 
+# Authentication to access Quay Registry
+quay_registry_auth: ""
+
 ## Custom hostname for Load Balancing and SSL Certificates
 #quay_hostname:
 
