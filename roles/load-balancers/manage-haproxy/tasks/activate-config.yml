@@ -3,41 +3,40 @@
 # Use a 'block' to ensure "become: True" for all tasks requiring elevated privileges
 - block:
 
-  - name: 'Copy the HAproxy config files to a temp location for validity checking'
-    copy:
-      src: "{{ haproxy_temp_dir }}"
-      dest: /etc/haproxy/
-    #notify: 'rename configuration dir'
-
-  - name: 'Ensure conf.d directory exists'
+  - name: 'Create remote diriectory for validity checking'
     file:
-      path: /etc/haproxy/conf.d
+      path: "{{ temp_new_dir }}"
       state: directory
 
-  #
-  # - name: 'Copy the HAproxy config file to a temp location for validity checking'
-  #   copy:
-  #     src: '{{ haproxy_temp_file }}'
-  #     dest: '{{ temp_new_file }}'
+  - name: 'Copy the HAproxy config files to a temp location for validity checking'
+    copy:
+      src: "{{ item }}"
+      dest: "{{ temp_new_dir }}"
+    with_fileglob:
+      - "{{ haproxy_temp_dir }}/*"
+    notify: 'cleanup temp dir'
 
-  # - name: 'Check the validity'
-  #   command: 'haproxy -c -f {{ temp_new_file }}'
-  #   notify: 'remove tmp new file'
+  - name: 'Get a list of config files'
+    find:
+      paths: "{{ temp_new_dir }}"
+    register: config_files
 
-  # - name: 'Copy and activate the HAproxy config file'
-  #   copy:
-  #     src: '{{ haproxy_temp_file }}'
-  #     dest: '/etc/haproxy/haproxy.cfg'
-  #     backup: 'yes'
-  #   notify: 'reload haproxy'
+  - name: 'Build validity command'
+    set_fact:
+      validity_list: "{{ validity_list | default('')  + ' -f ' + item.path }}"
+    with_items: "{{ config_files.files }}"
 
-  # - name: Ansible check file exists example.
-  #   stat:
-  #     path: "{{ haproxy_temp_dir }}"
-  #   register: file_details
-  #
-  # - debug:
-  #     msg: "{{ file_details }}"
+  - name: 'Check the validity'
+    command: 'haproxy -c {{ validity_list }}'
+    notify: 'remove tmp new directory'
+
+  - name: 'Copy and activate the HAproxy config files'
+    synchronize:
+      src: '{{ temp_new_dir }}/'
+      dest: '{{ conf_dir }}'
+      delete: true
+    delegate_to: "{{ inventory_hostname }}"
+    #notify: 'reload haproxy'
 
   - name: 'Open Firewall for LB use (TCP only)'
     firewalld:
@@ -61,12 +60,3 @@
 
   # End of outer block for "become: True"
   become: True
-
-- name: 'Clean-up the temp file'
-  file:
-    path: "{{ haproxy_temp_file }}"
-    state: absent
-  when:
-  - (clean_up_temp|default('yes'))|lower == 'yes'
-  delegate_to: localhost
-  run_once: True

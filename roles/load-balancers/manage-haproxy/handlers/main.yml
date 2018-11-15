@@ -21,9 +21,9 @@
     state: reloaded
   become: True
 
-- name: 'remove tmp new file'
+- name: 'remove tmp new directory'
   file:
-    path: '{{ temp_new_file }}'
+    path: '{{ temp_new_dir }}'
     state: absent
   become: True
 
