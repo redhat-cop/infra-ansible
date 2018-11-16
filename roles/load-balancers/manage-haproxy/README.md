@@ -103,6 +103,24 @@ defaults
 
 ```
 
+## stats.cfg file
+
+```
+frontend lb_stats_fe
+    bind 192.168.1.10:8080
+
+    default_backend lb_stats_be
+
+
+backend lb_stats_be
+    mode http
+    stats enable
+    stats uri /stats
+    stats realm Haproxy\ Statistics
+    stats auth admin:admin
+
+```
+
 ### frontend.cfg file
 
 ```
