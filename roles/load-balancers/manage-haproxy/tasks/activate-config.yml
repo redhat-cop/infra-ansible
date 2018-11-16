@@ -16,9 +16,9 @@
       - "{{ haproxy_temp_dir }}/*"
     notify: 'cleanup temp dir'
 
-  - name: 'Add LB Global file valid file options'
+  - name: 'Add LB haproxy file valid file options'
     set_fact:
-        valid_file_opts: "{{ valid_file_opts | default('') + ' -f {{ temp_new_dir }}global.cfg' }}"
+        valid_file_opts: "{{ valid_file_opts | default('') + ' -f {{ temp_new_dir }}haproxy.cfg' }}"
 
   - name: 'Add LB Frontends file valid file options'
     set_fact:

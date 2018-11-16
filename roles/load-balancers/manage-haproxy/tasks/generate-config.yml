@@ -14,7 +14,7 @@
   - name: 'Populate the common config portion for HAproxy'
     template:
       src: "{{ lb_common_template | default('lb_common.j2') }}"
-      dest: '{{ haproxy_temp_dir }}/global.cfg'
+      dest: '{{ haproxy_temp_dir }}/haproxy.cfg'
 
   - name: 'Configure and Populate LB Frontends'
     template:
