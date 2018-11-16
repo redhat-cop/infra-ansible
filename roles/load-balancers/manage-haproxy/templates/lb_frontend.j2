@@ -1,3 +1,4 @@
+{% for fe in lb_config.frontends|flatten(levels=1) %}
 
 {% if ((fe.lb_ssl_enabled is defined and fe.lb_ssl_enabled) or
        (fe.lb_ssl_enabled is undefined and fe.lb_host_port|string == '443')) %}
@@ -36,3 +37,5 @@ frontend {{ fe.lb_name }}
 {% else %}
     default_backend {{ fe.lb_name }}
 {% endif %}
+
+{% endfor %}

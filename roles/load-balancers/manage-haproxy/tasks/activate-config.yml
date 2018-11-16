@@ -16,18 +16,19 @@
       - "{{ haproxy_temp_dir }}/*"
     notify: 'cleanup temp dir'
 
-  - name: 'Get a list of config files'
-    find:
-      paths: "{{ temp_new_dir }}"
-    register: config_files
-
-  - name: 'Build validity command'
+  - name: 'Initilize config_file_opts with LB Global and LB Frontend files'
     set_fact:
-      validity_list: "{{ validity_list | default('')  + ' -f ' + item.path }}"
-    with_items: "{{ config_files.files }}"
+        config_file_opts: '-f {{ conf_dir }}global.cfg -f {{ conf_dir }}frontends.cfg'
+
+  - name: 'Add LB Backends to config_file_opts'
+    set_fact:
+        config_file_opts: "{{ config_file_opts + ' -f ' + conf_dir + 'backend-' + backend_entry.lb_match_fqdn + '.cfg' }}"
+    loop_control:
+      loop_var: backend_entry
+    loop: "{{ lb_config.lb_entries }}"
 
   - name: 'Check the validity'
-    command: 'haproxy -c {{ validity_list }}'
+    command: 'haproxy -c {{ config_file_opts }}'
     notify: 'remove tmp new directory'
 
   - name: 'Copy and activate the HAproxy config files'
@@ -36,7 +37,12 @@
       dest: '{{ conf_dir }}'
       delete: true
     delegate_to: "{{ inventory_hostname }}"
-    #notify: 'reload haproxy'
+
+  - name: 'Edit the HAproxy service file'
+    template:
+      src: "{{ service_template | default('haproxy.service.j2') }}"
+      dest:  "{{ service_file }}"
+    notify: 'reload haproxy'
 
   - name: 'Open Firewall for LB use (TCP only)'
     firewalld:
