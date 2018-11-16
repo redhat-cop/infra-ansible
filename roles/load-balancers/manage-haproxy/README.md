@@ -3,8 +3,8 @@
 This role has 3 features:
 
  1) installs HAproxy and configures the host to run it ( *install.yml* )
- 2) generates a `haproxy.cfg` file ( *generate-config.yml* )
- 3) activates the haproxy.cfg file on the host ( *activate-config.yml* )
+ 2) generates multiple configuration files ( *generate-config.yml* )
+ 3) activates the configuration files on the host ( *activate-config.yml* )
 
 ## Example
 
@@ -56,7 +56,7 @@ lb_config:
 ```
 
 
-### haproxy.cfg file
+### global.cfg file
 
 ```
 #---------------------------------------------------------------------
@@ -101,8 +101,11 @@ defaults
     timeout check           10s
     maxconn                 3000
 
+```
 
+### frontend.cfg file
 
+```
 frontend my-secure-web-server-8443
     bind 192.168.1.10:8443
     mode tcp
@@ -127,19 +130,6 @@ frontend my-secure-web-server
 
     use_backend https_443-router.env1.example.com if router.env1.example.com
 
-backend https_443-router.env1.example.com
-    mode tcp
-    balance roundrobin
-
-    server router1.env1.example.com router1.env1.example.com:443 check
-    server router2.env1.example.com router2.env1.example.com:443 check
-
-
-backend https_8443-master1.env1.example.com
-    mode tcp
-    balance roundrobin
-
-    server master1.env1.example.com master1.env1.example.com:8443 check
 
 frontend my-web-server
     bind 192.168.1.10:80
@@ -149,7 +139,27 @@ frontend my-web-server
     use_backend http_80-router.env1.example.com if router.env1.example.com
 
     default_backend lb_http_default
+```
 
+### backend files
+```
+backend https_443-router.env1.example.com
+    mode tcp
+    balance roundrobin
+
+    server router1.env1.example.com router1.env1.example.com:443 check
+    server router2.env1.example.com router2.env1.example.com:443 check
+```
+
+```
+backend https_8443-master1.env1.example.com
+    mode tcp
+    balance roundrobin
+
+    server master1.env1.example.com master1.env1.example.com:8443 check
+```
+
+```
 backend http_80-router.env1.example.com
     balance roundrobin
     option httpclose
@@ -158,7 +168,9 @@ backend http_80-router.env1.example.com
 
     server router1.env1.example.com router1.env1.example.com:80 cookie A check
     server router2.env1.example.com router2.env1.example.com:80 cookie A check
+```
 
+```
 backend lb_http_default
     mode http
     stats enable
