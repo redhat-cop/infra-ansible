@@ -16,16 +16,27 @@
       - "{{ haproxy_temp_dir }}/*"
     notify: 'cleanup temp dir'
 
-  - name: 'Initilize valid_file_opts with LB Global and LB Frontend files'
+  - name: 'Add LB Global file valid file options'
     set_fact:
-        valid_file_opts: '-f {{ temp_new_dir }}global.cfg -f {{ temp_new_dir }}frontends.cfg'
+        valid_file_opts: "{{ valid_file_opts | default('') + ' -f {{ temp_new_dir }}global.cfg' }}"
 
-  - name: 'Add LB Backends to config_file_opts'
+  - name: 'Add LB Frontends file valid file options'
+    set_fact:
+        valid_file_opts: "{{ valid_file_opts | default('') + ' -f {{ temp_new_dir }}frontends.cfg' }}"
+    when: lb_config.frontends is defined
+
+  - name: 'Add LB Stats file valid file options'
+    set_fact:
+        valid_file_opts: "{{ valid_file_opts | default('') + ' -f {{ temp_new_dir }}stats.cfg' }}"
+    when: lb_config.stats_page is defined
+
+  - name: 'Add LB Backends to valid file options'
     set_fact:
         valid_file_opts: "{{ valid_file_opts + ' -f ' + temp_new_dir + 'backend-' + backend_entry.lb_match_fqdn + '.cfg' }}"
     loop_control:
       loop_var: backend_entry
     loop: "{{ lb_config.lb_entries }}"
+    when: lb_config.lb_entries is defined
 
   - name: 'Check the validity'
     command: 'haproxy -c {{ valid_file_opts }}'
@@ -38,16 +49,12 @@
       delete: true
     delegate_to: "{{ inventory_hostname }}"
 
-  - name: 'Initilize config_file_opts with LB Global and LB Frontend files'
+  - name: 'Convert valid file options into configuration file options'
     set_fact:
-        config_file_opts: '-f {{ conf_dir }}global.cfg -f {{ conf_dir }}frontends.cfg'
+      config_file_opts: "{{ valid_file_opts | regex_replace(temp_new_dir, conf_dir)}}"
 
-  - name: 'Add LB Backends to config_file_opts'
-    set_fact:
-        config_file_opts: "{{ config_file_opts + ' -f ' + conf_dir + 'backend-' + backend_entry.lb_match_fqdn + '.cfg' }}"
-    loop_control:
-      loop_var: backend_entry
-    loop: "{{ lb_config.lb_entries }}"
+  - debug:
+      msg: "{{ config_file_opts }}"
 
   - name: 'Edit the HAproxy service file and activate service'
     template:
