@@ -53,9 +53,6 @@
     set_fact:
       config_file_opts: "{{ valid_file_opts | regex_replace(temp_new_dir, conf_dir)}}"
 
-  - debug:
-      msg: "{{ config_file_opts }}"
-
   - name: 'Edit the HAproxy service file and activate service'
     template:
       src: "{{ service_template | default('haproxy.service.j2') }}"
