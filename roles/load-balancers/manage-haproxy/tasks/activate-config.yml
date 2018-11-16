@@ -16,6 +16,28 @@
       - "{{ haproxy_temp_dir }}/*"
     notify: 'cleanup temp dir'
 
+  - name: 'Initilize valid_file_opts with LB Global and LB Frontend files'
+    set_fact:
+        valid_file_opts: '-f {{ temp_new_dir }}global.cfg -f {{ temp_new_dir }}frontends.cfg'
+
+  - name: 'Add LB Backends to config_file_opts'
+    set_fact:
+        valid_file_opts: "{{ valid_file_opts + ' -f ' + temp_new_dir + 'backend-' + backend_entry.lb_match_fqdn + '.cfg' }}"
+    loop_control:
+      loop_var: backend_entry
+    loop: "{{ lb_config.lb_entries }}"
+
+  - name: 'Check the validity'
+    command: 'haproxy -c {{ valid_file_opts }}'
+    notify: 'remove tmp new directory'
+
+  - name: 'Copy the HAproxy config files'
+    synchronize:
+      src: '{{ temp_new_dir }}/'
+      dest: '{{ conf_dir }}'
+      delete: true
+    delegate_to: "{{ inventory_hostname }}"
+
   - name: 'Initilize config_file_opts with LB Global and LB Frontend files'
     set_fact:
         config_file_opts: '-f {{ conf_dir }}global.cfg -f {{ conf_dir }}frontends.cfg'
@@ -27,18 +49,7 @@
       loop_var: backend_entry
     loop: "{{ lb_config.lb_entries }}"
 
-  - name: 'Check the validity'
-    command: 'haproxy -c {{ config_file_opts }}'
-    notify: 'remove tmp new directory'
-
-  - name: 'Copy and activate the HAproxy config files'
-    synchronize:
-      src: '{{ temp_new_dir }}/'
-      dest: '{{ conf_dir }}'
-      delete: true
-    delegate_to: "{{ inventory_hostname }}"
-
-  - name: 'Edit the HAproxy service file'
+  - name: 'Edit the HAproxy service file and activate service'
     template:
       src: "{{ service_template | default('haproxy.service.j2') }}"
       dest:  "{{ service_file }}"

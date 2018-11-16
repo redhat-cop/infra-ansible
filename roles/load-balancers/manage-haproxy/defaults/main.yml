@@ -2,7 +2,7 @@
 
 conf_dir: '/etc/haproxy/conf.d/'
 
-temp_new_dir: '/etc/haproxy/conf.d.new'
+temp_new_dir: '/etc/haproxy/conf.d.new/'
 
 service_file: '/usr/lib/systemd/system/haproxy.service'
 
