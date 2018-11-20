@@ -1,0 +1,37 @@
+---
+
+- import_playbook: ../prep.yml
+  when:
+  - rhsm_register|default(False)
+
+- import_playbook: ../osp/manage-user-network.yml
+  when:
+    - (provision_infrastructure | default(False)) | bool
+    - hosting_infrastructure == 'openstack'
+
+- import_playbook: ../osp/provision-osp-instance.yml
+  when:
+    - (provision_infrastructure | default(False)) | bool
+    - hosting_infrastructure == 'openstack'
+
+- hosts: minishift_remote
+  tasks:
+    - name: Set IP address of OpenStack instance
+      set_fact:
+        minishift_host_ip: "{{ openstack.public_v4 }}"
+      when:
+        - (provision_infrastructure | default(False)) | bool
+        - hosting_infrastructure == 'openstack'
+
+- hosts: minishift_remote
+  tasks:
+    - name: "Subscribe RHEL based instances"
+      include_role: 
+        name: rhsm
+      vars:
+        rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
+        rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
+      when:
+        - rhsm_register|default(False)
+
+- import_playbook: configure-minishift-remote.yml

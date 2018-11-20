@@ -1,0 +1,22 @@
+---
+
+# Download Binary
+- include_tasks: minishift_download.yml
+  when: download_minishift|bool
+
+- name: Build Minishift Start command
+  set_fact:
+    minishift_start_cmd: "start --vm-driver generic --remote-ipaddress {{ minishift_host_ip }} --remote-ssh-user={{ ansible_user }} --remote-ssh-key={{ ansible_ssh_private_key_file | default('~/.ssh/id_rsa') | expanduser }} {{ minishift_extra_start_args }}"
+  delegate_to: localhost
+
+- name: Get Name of Current User
+  set_fact:
+    minishift_local_user: "{{ lookup('pipe','id -u -n') }}"
+  delegate_to: localhost
+
+- name: Start Minishift
+  shell: >
+    "{{ minishift_binary }}" {{ minishift_start_cmd }}
+  environment:
+    USER: "{{ minishift_local_user }}"
+  delegate_to: localhost

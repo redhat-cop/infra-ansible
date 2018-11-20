@@ -1,0 +1,73 @@
+---
+
+- name: Dependency Check
+  block:
+    - name: Check if Dependencies are installed
+      command: >
+        rpm -q {{ item }}
+      register: dependencies_installed
+      ignore_errors: yes
+      changed_when: false
+      loop: "{{ minishift_dependencies }}"
+  
+    - name: Fail if dependencies not installed
+      fail:
+        msg: "{{ item.item }} is not installed"
+      when: item.rc != 0
+      loop: "{{ dependencies_installed.results }}"
+  when: ansible_os_family == 'RedHat'
+
+# CentOS Fix for Red Hat Registry
+- name: Support Red Hat Registry on CentOS
+  become: yes
+  file:
+    path: /etc/rhsm/ca/redhat-uep.pem
+    state: touch
+  when: ansible_distribution == 'CentOS'
+
+- name: Create docker group
+  become: true
+  group:
+    name: "{{ docker_group }}"
+    state: present
+
+- name: Add user to Docker group
+  become: true
+  user:
+   name: "{{ minishift_remote_user }}"
+   groups: "{{ docker_group }}"
+   append: true
+  notify: Restart Docker
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Check is public key exists
+  stat:
+    path: "{{ minishift_user_ssh_public_key_file }}"
+  delegate_to: localhost
+  register: ssh_public_key_result
+
+- name: Fail if public key does not exist
+  fail:
+    msg: Public Key for Minishift user does not exist
+  when: not ssh_public_key_result.stat.exists
+
+- name: Add public SSH key to authorized keys file
+  authorized_key:
+    user: "{{ minishift_remote_user }}"
+    state: present
+    key: "{{ lookup('file', minishift_user_ssh_public_key_file) }}"
+
+- name: Open Firewall Ports
+  become: true
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  loop: "{{ minishift_firewalld_ports }}"
+
+# Start Minishift
+- include_tasks: minishift_configure_start.yml
+  when: configure_start_minishift|bool

@@ -1,0 +1,7 @@
+[osp-provisioner]
+localhost
+
+[osp_instances:children]
+minishift_remote
+
+[minishift_remote]
