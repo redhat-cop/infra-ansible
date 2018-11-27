@@ -1,6 +1,10 @@
 ---
 - name: Create Atlassian Users
   hosts: localhost
-  roles:
-    - user-management/manage-atlassian-users
+  tasks:    
+    - import_role:
+        name: user-management/manage-atlassian-users
+    when:
+     - atlassian is defined
+     - atlassian.user is defined
   no_log: true
