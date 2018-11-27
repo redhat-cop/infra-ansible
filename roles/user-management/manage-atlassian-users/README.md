@@ -19,7 +19,6 @@ atlassian:
   user:
     - firstname: Test
       lastname: 123
-      password: example
       email: test@example.com
       state: present
       groups:
