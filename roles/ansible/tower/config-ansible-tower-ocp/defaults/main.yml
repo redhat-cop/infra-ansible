@@ -34,9 +34,6 @@ openshift_pg_pvc_name: postgresql-data
 
 kubernetes_deployment_replica_size: 1
 
-#openshift_oc_config_file: "{{ kubernetes_base_path }}/.kube/config"
-#openshift_oc_bin: "oc --config={{ openshift_oc_config_file }}"
-
 openshift_host: "{{ ansible_tower.openshift_host | default('') }}"
 openshift_project: "{{ ansible_tower.openshift_project | default('ansible-tower') }}"
 openshift_user: "{{ ansible_tower.openshift_user | default('') }}"

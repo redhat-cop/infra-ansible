@@ -67,10 +67,8 @@
           -e POSTGRESQL_VERSION=9.5 \
           -n {{ kubernetes_namespace }}
       register: openshift_pg_activate
-      #no_log: yes
+      no_log: yes
   when:
-    #- pg_hostname is not defined or pg_hostname == ''
-    #- postgres_svc_details is defined and postgres_svc_details.rc != 0
     - openshift_host is defined
 
 - name: Wait for Postgres to activate
@@ -85,7 +83,7 @@
     - 'configmap'
     - 'deployment'
     - 'secret'
-  #no_log: yes
+  no_log: yes
 
 - name: Apply Deployment
   shell: |
@@ -94,7 +92,7 @@
     - "{{ configmap }}"
     - "{{ deployment }}"
     - "{{ secret }}"
-  #no_log: yes
+  no_log: yes
 
 - name: Delete any existing management pod
   shell: |
@@ -135,14 +133,14 @@
   shell: |
       oc -n {{ kubernetes_namespace }} exec ansible-tower-management -- \
       bash -c "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('{{ admin_user }}', '{{ admin_email }}', '{{ admin_password }}')\" | awx-manage shell"
-  #no_log: yes
+  no_log: yes
   when: super_check.rc > 0
 
 - name: update django super user password
   shell: |
       oc -n {{ kubernetes_namespace }} exec ansible-tower-management -- \
       bash -c "awx-manage update_password --username='{{ admin_user }}' --password='{{ admin_password }}'"
-  #no_log: yes
+  no_log: yes
   register: result
   changed_when: "'Password updated' in result.stdout"
 

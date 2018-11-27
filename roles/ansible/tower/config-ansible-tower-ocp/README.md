@@ -5,7 +5,9 @@ This role is used to deploy and configure an Ansible Tower running as containers
 
 ## Requirements
 
-A running OpenShift Cluster and installed 'oc' client in the Ansible host
+  - A running OpenShift Cluster and installed 'oc' client in the Ansible host
+  - An existing project where to deploy Ansible Tower (must match the `ansible_tower.openshift_project` variable)
+  - An existing PVC for Postgresql named `postgresql-data`
 
 
 ## Role Variables
@@ -14,16 +16,16 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.openshift_host|Admin password for the Ansible Tower install|yes||
-|ansible_tower.openshift_project|PostgreSQL hostname to listen on|no|nothing ('')|
-|ansible_tower.openshift_user|PostgreSQL port to listen on|no|nothing ('')|
-|ansible_tower.openshift_password|DB to use|no|'awx'|
-|ansible_tower.admin_password|DB username to use|no|'awx'|
-|ansible_tower.secret_key|DB password to use|no|Above mentioned admin password|
-|ansible_tower.pg_username|RabbitMQ port to use|no|5672|
-|ansible_tower.pg_password|RabbitMQ Virtal Host|no|'tower'|
-|ansible_tower.rabbitmq_password|RabbitMQ username to use|no|'tower''|
-|ansible_tower.rabbitmq_erlang_cookie|RabbitMQ password to use|no|Above mentioned admin password|
+|ansible_tower.openshift_host|OpenShift API url|yes||
+|ansible_tower.openshift_project|Project where to deploy Tower|yes|'ansible-tower'|
+|ansible_tower.openshift_user|User to login into openshift|yes||
+|ansible_tower.openshift_password|Openshift user password|yes||
+|ansible_tower.admin_password|Tower admin user password|yes||
+|ansible_tower.secret_key|Openshift token information|yes||
+|ansible_tower.pg_username|Postgresql User|yes||
+|ansible_tower.pg_password|Postgresql Password|yes||
+|ansible_tower.rabbitmq_password|RabbitMQ password to use|yes||
+|ansible_tower.rabbitmq_erlang_cookie|RabbitMQ cookie|yes||
 
 
 ## Example Inventory
@@ -31,19 +33,18 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 ```yaml
 ---
 
+ansible_connection: local
+
 ansible_tower:
-  admin_password: 'admin'
-  install:
-    pg:
-      database: 'tower'
-      username: 'tower'
-      password: 'tower01'
-    rabbitmq:
-      port: 5672
-      use_long_name: false
-    ssl_certificate:
-      cert: /the/path/to/my/cert.crt
-      key: /the/path/to/my/cert.key
+  openshift_host: https://console.openshift.local
+  openshift_user: "admin"
+  openshift_password: "secret"
+  admin_password: "secret"
+  pg_username: "awx"
+  pg_password: "redhat"
+  rabbitmq_password: "secret"
+  secret_key: "mysecrettoken"
+  rabbitmq_erlang_cookie: "secret"
 ```
 
 ## Example Playbook
@@ -53,7 +54,7 @@ ansible_tower:
 
 - hosts: tower
   roles:
-  - role: config-ansibletower
+  - role: config-ansible-tower-ocp
 ```
 
 
