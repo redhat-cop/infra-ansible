@@ -21,31 +21,6 @@
   loop_control:
     loop_var: tasks
 
-# - name: Record deployment size
-#   shell: |
-#       oc get {{ deployment_object }} \
-#       {{ kubernetes_deployment_name }} \
-#       -n {{ kubernetes_namespace }} -o=jsonpath='{.status.replicas}'
-#   register: deployment_details
-#   ignore_errors: yes
-
-# - name: Set expected post-deployment Replicas value
-#   set_fact:
-#     kubernetes_deployment_replica_size: "{{ deployment_details.stdout | int }}"
-#   when: deployment_details.rc == 0
-
-# - name: Delete existing Deployment
-#   shell: |
-#       oc delete {{ deployment_object }} \
-#       {{ kubernetes_deployment_name }} -n {{ kubernetes_namespace }}
-#   when: deployment_details.rc == 0
-
-# - name: Get Postgres Service Detail
-#   shell: "oc describe svc {{ postgresql_service_name }} -n {{ kubernetes_namespace }}"
-#   register: postgres_svc_details
-#   ignore_errors: yes
-#   when: "pg_hostname is not defined or pg_hostname == ''"
-
 - name: Deploy PostgreSQL
   block:
     - name: Template PostgreSQL Deployment
