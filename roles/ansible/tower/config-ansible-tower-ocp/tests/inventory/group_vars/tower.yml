@@ -1,0 +1,19 @@
+---
+
+ansible_connection: local
+
+# NOTE: below is an example on how these params and files can be specified
+#       - please replace with valid values and files
+
+ansible_tower:
+  openshift_host: https://console.kube.maklog.xyz
+  openshift_user: "mak"
+  openshift_password: "redhat"
+  admin_password: "redhat"
+  pg_username: "awx"
+  pg_password: "redhat"
+  rabbitmq_password: "redhat"
+  secret_key: "XecxhKZkKpRj2uTKzG7KRk8vlvau7_Jujfau3kkvK40"
+  rabbitmq_erlang_cookie: "redhat"
+
+
