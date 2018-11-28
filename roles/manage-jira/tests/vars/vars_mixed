@@ -5,7 +5,7 @@ atlassian:
   jira:
     username: user@example.com
     password: YourPassword123
-    jira_admin: "jira-administrators"
+    admin_group: "jira-administrators"
     lead: "example"
     core_team: "example"
     

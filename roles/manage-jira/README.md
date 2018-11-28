@@ -68,7 +68,7 @@ atlassian:
     url: "https://example.atlassian.net"
     username: "example"
     password: "example"
-    jira_admin: "jira-administrators"
+    admin_group: "jira-administrators"
     lead: "example"
     core_team: "example"
 

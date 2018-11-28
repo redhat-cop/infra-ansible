@@ -5,7 +5,7 @@ atlassian:
     username: user@example.com
     password: YourPassword123
     url: https://example-test.atlassian.net
-    jira_admin: "jira-administrators"
+    admin_group: "jira-administrators"
     lead: "example"
     core_team: "example"
     

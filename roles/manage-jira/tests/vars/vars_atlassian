@@ -5,7 +5,7 @@ atlassian:
   url: https://example-test.atlassian.net
 
   jira:
-    jira_admin: "jira-administrators"
+    admin_group: "jira-administrators"
     lead: "example"
     core_team: "example"
     
