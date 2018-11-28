@@ -16,7 +16,7 @@ atlassian:
   username: example
   password: example
 
-  user:
+  users:
     - firstname: Test
       lastname: 123
       email: test@example.com
@@ -34,7 +34,7 @@ Here are the description of each variables:
 - `atlassian.url`: the url of the site we want to manage users in
 - `atlassian.username`: username of an admin of that site
 - `atlassian.password`: password of the user that has admin priviledge
-- `atlassian.user`: a list of dictionaries with user data
+- `atlassian.users`: a list of dictionaries with user data
 - `atlassian.user.groups`: a list of groups the user should be added (can be an empty list)
 - `atlassian.user.state`: state can be `present` (default) to create user and `absent` to delete user
 - `atlassian.groups`: a list of groups to be managed (can be an empty list)
