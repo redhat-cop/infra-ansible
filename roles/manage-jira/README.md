@@ -41,15 +41,11 @@ curl --user email@example.com:<api_token> \
 |**atlassian.jira.url**| Url of Atlassian server. Defaults to atlassian.url if not provided | no | N/A |
 |**atlassian.jira.username**| Username of Atlassian server. Defaults to atlassian.username if not provided | no | N/A |
 |**atlassian.jira.password**| Password of Atlassian server. Defaults to atlassian.password | no | N/A |
-|**atlassian.jira.jira-admin**| Jira admin group to add to the permission scheme | yes| N/A |
 |**atlassian.jira.lead**| The username of the project lead. This is just the username, not the email address of the user | yes | N/A |
-|**atlassian.jira.core_team**| team to give admin access | yes | N/A |
 |**atlassian.jira.project.name**| project name | yes | N/A |
 |**atlassian.jira.project.key**| Project keys must be unique and start with an uppercase letter followed by one or more uppercase alphanumeric characters. Required when creating a project | yes | N/A |
 |**atlassian.jira.project.description**| A brief description of the project| yes | N/A |
-|**atlassian.jira.group.lead**| Name of the `lead` group to be added to the permissions scheme | yes | N/A |
-|**atlassian.jira.group.team_member**| Name of the `team_member` group to be added to the permission scheme  | yes | N/A |
-|**atlassian.jira.group.viewer**| Name of the `viewer` group to be added to the permission scheme | yes | N/A |
+|**atlassian.jira.groups**| List of groups to be added to the permissions scheme | yes | N/A |
 |**atlassian.jira.project.category_name**| name of the category to be created | yes | N/A |
 |**atlassian.jira.project.type_key**| The [project type](https://confluence.atlassian.com/x/GwiiLQ?_ga=2.202449363.314925215.1531670255-653786702.1531337567#Jiraapplicationsoverview-Productfeaturesandprojecttypes), which dictates the application-specific feature set | No | `software` |
 |**atlassian.jira.project.template_key**| A prebuilt configuration for a project. The type of the `projectTemplateKey` must match with the type of the `projectTypeKey`| No | `com.pyxis.greenhopper.jira:gh-simplified-scrum` |
@@ -68,9 +64,7 @@ atlassian:
     url: "https://example.atlassian.net"
     username: "example"
     password: "example"
-    admin_group: "jira-administrators"
     lead: "example"
-    core_team: "example"
 
     project:
       name: "example"
@@ -79,10 +73,13 @@ atlassian:
       category_name: "Example Project Category"
       category_description: "Exampe Project Category"
 
-    group:
-      lead: "Example Lead"
-      team_member: "Example Team Member"
-      viewer: "Example Viewer"
+    groups:
+      - name: lead
+        role: "admin"
+      - name: team_member
+        role: "member"
+      - name: viewer
+        role: "read"
 
     permission_scheme:
       name: "example"
