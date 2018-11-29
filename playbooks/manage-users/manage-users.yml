@@ -1,0 +1,9 @@
+---
+- name: "Manage local users"
+  import_playbook: manage-local-user-access.yml
+
+- name: "Manage IDM users"
+  import_playbook: manage-idm-users.yml
+
+- name: "Manage Atlassian users"
+  import_playbook: manage-atlassian-users.yml
