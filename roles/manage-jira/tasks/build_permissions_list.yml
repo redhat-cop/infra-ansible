@@ -4,26 +4,11 @@
   set_fact:
     old_permission_list: "{{ permission_list | default([]) }}"
 
-- name: Set admin Permissions
+- name: Set Permissions based on role
   set_fact:
-    permissions: "{{ default_admin_permissions }}"
+    permissions: "{{ default_permissions[group.role] }}"
   when:
     - group.role is defined
-    - group.role == "admin"
-
-- name: Set member Permissions
-  set_fact:
-    permissions: "{{ default_member_permissions }}"
-  when:
-    - group.role is defined
-    - group.role == "member"
-
-- name: Set read Permissions
-  set_fact:
-    permissions: "{{ default_read_permissions }}"
-  when:
-    - group.role is defined
-    - group.role == "read"
 
 - name: Set Passed in Permissions
   set_fact:
