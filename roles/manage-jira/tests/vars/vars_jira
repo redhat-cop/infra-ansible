@@ -5,10 +5,8 @@ atlassian:
     username: user@example.com
     password: YourPassword123
     url: https://example-test.atlassian.net
-    admin_group: "jira-administrators"
     lead: "example"
-    core_team: "example"
-    
+
     project:
       name: "example"
       key: "EX"
@@ -16,12 +14,16 @@ atlassian:
       category_name: "Example Project Category"
       category_description: "Exampe Project Category"
     
-    group:
-      lead: "Example Lead"
-      team_member: "Example Team Member"
-      viewer: "Example Viewer"
- 
+    groups:
+      - name: jira-administrators
+        role: "admin"
+      - name: leads
+        role: "admin"
+      - name: team
+        role: "member"
+      - name: viewer
+        role: "read"
+
     permission_scheme:
       name: "example"
       description: "Example Permission Scheme"
-      
