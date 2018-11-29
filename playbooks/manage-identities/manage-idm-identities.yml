@@ -1,11 +1,11 @@
 ---
 
-- name: "Import user data from {{ csv_doc_file_name }} and create IDM users"
+- name: "Import data from {{ csv_doc_file_name }} and create IPA/IdM identities"
   hosts: identity-hosts
   gather_facts: no
   roles:
     - identity-management/populate-users
-    - identity-management/manage-idm-users
+    - identity-management/manage-idm-identities
     - identity-management/manage-user-passwd
 
 - name: "Notify users"
