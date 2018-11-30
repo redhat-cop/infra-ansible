@@ -11,3 +11,5 @@
 
 - name: "Notify users"
   import_playbook: ../notifications/email-notify-users.yml
+  vars:
+    users: "{{ identities.users }}"
