@@ -1,15 +1,18 @@
-# Identity (users/groups) Management
+Identity (users/groups) Management
+==================================
 
 The roles in this area are meant to handle identity (users/groups/etc) management on a variety of identity management systems. Most systems have a common set of input parameters (first name, last name, e-mail address, etc.), below is a sample inventory for such a common inventory used with multiple target systems.
 
 
-## Sample Inventory
+Sample Inventory
+----------------
 
 ```
 identities:
   targets:
     - idm
     - atlassian
+
   users:
     - user_name: gdownie
       first_name: Gord

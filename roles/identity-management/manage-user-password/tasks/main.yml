@@ -13,6 +13,7 @@
     - name: "Make sure the list_of_users is empty to start with"
       set_fact:
         list_of_users: []
+        users_with_passwords: []
 
     - name: "Remove users from the list in preparation to update the list of users"
       set_fact:

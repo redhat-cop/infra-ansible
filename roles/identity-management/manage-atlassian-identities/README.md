@@ -1,13 +1,11 @@
-Manage Atlassian Identities (users/groups) Role
-===============================================
+Manage Atlassian Identities (users/groups)
+==========================================
 
-An ansible role that manages atlassian users.
+An ansible role that manages Atlassian identities - users and groups.
 
 
 Role Variables
 --------------
-
-This is a sample of a YAML file containing the variables.
 
 ```
 ---
@@ -21,26 +19,21 @@ atlassian:
 
 ```
 
-Here are the description of each variables:
+| Variable | Description | Required | Defaults |
+|:--------:|:-----------:|:--------:|:--------:|
+|**atlassian.url**|The url of the site we want to manage users in|yes|N/A|
+|**atlassian.username**|Username of an admin of the above mentioned site|yes|N/A|
+|**atlassian.password**|The password of the above mentioned admin user|yes|N/A|
 
-- `atlassian.url`: the url of the site we want to manage users in
-- `atlassian.username`: username of an admin of that site
-- `atlassian.password`: password of the user that has admin priviledge
 
-Due to the sensitive nature of the variables it's best to use ansible-vault to create the `vars.yml`
 
-Steps:
-1. `$ ansible-vault create vars.yml` it will ask for a password and it will be needed when we're running the playbook later
-2. Specify the variables in the file and save it
+License
+-------
 
-Running the Playbook
---------------------
+Apache License 2.0
 
-`$ ansible-playbook -e "@path/to/vars.yml" playbooks/manage-identities/manage-atlassian-identities.yml --ask-vault-pass` and enter the password you previously set for vars.yml
 
-Example Playbook
-----------------
+Author Information
+------------------
 
-    - hosts: servers
-      roles:
-         - { role: manage-atlassian-identities }
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

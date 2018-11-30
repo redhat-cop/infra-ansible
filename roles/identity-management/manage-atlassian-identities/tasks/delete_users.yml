@@ -7,7 +7,8 @@
     user: '{{ atlassian.username }}'
     password: '{{ atlassian.password }}'
     force_basic_auth: yes
-    status_code: 200
+    status_code:
+      - 200
     body_format: json
   with_items:
     - "{{ identities.users }}"

@@ -1,43 +1,29 @@
-# Create identities (users/groups) in an IPA/IdM server
+Manage IPA/IdM identities (users/groups)
+========================================
+
+An ansible role that manages IPA/IdM identities - users and groups.
 
 
+Role Variables
+--------------
 
-## Output
-This role creates an `idm_users` data structure with the users processed, and the output should be something like the following:
+| Variable | Description | Required | Defaults |
+|:--------:|:-----------:|:--------:|:--------:|
+|**ipa_host**|The hostname/ip used to conmect to for IPA/IdM management|yes|N/A|
+|**ipa_admin_user**|The IPA/IdM admin user with proper permissions to administer identities|yes|N/A|
+|**ipa_admin_password**|The IPA/IdM admin password for the above mentioned admin user|yes|N/A|
+|**ipa_validate_certs**|Whether to validate the IPA/IdM certificate|no|True|
 
-```
-idm_users:
-  - add'l info: "Internal user"
-    added_date: ""
-    email: "gdog@example.com"
-    expiration_date: ""
-    first_name: Goofy
-    generate_password: false
-    group: group2
-    labs_sponsor: "core team"
-    last_name: Dog
-    password: ""
-    user_name: goofy
-  - add'l info: "Internal user"
-    added_date: ""
-    email: "pdog@example.com"
-    expiration_date: ""
-    first_name: Pluto
-    generate_password: true
-    group: group2
-    labs_sponsor: "core team"
-    last_name: Dog
-    password: nXeqH14OZQmx2D9y
-    user_name: pluto
-  - add'l info: "Test user"
-    added_date: ""
-    email: "test1@example.com"
-    expiration_date: ""
-    first_name: fName1
-    generate_password: false
-    group: users
-    labs_sponsor: "Micky Mouse"
-    last_name: Lname1
-    password: ""
-    user_name: test1
-```
+In addition to the above mentioned variables, the role also requires an `identity` dictionary with a list of users and groups as documented in the [identity-management README](../README.md).
+
+
+License
+-------
+
+Apache License 2.0
+
+
+Author Information
+------------------
+
+Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

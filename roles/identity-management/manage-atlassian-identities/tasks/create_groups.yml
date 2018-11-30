@@ -5,9 +5,9 @@
   with_items:
     - "{{ identities.groups }}"
   loop_control:
-    loop_var: group
+    loop_var: group_data
   when:
     - identities.groups|length > 0
-    - group.targets is undefined or
-      'atlassian' in group.targets
-    - group.state|default('present') == 'present'
+    - group_data.targets is undefined or
+      'atlassian' in group_data.targets
+    - group_data.state|default('present') == 'present'
