@@ -1,4 +1,4 @@
----#
+---
 - name: Create Jira Permission Scheme
   uri:
     url: "{{ jira_url }}/rest/api/2/permissionscheme"

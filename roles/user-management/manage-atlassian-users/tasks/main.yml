@@ -6,20 +6,20 @@
   when: atlassian.groups|length > 0
 
 - include_tasks: create_atlassian_users.yml
-  with_items: "{{ atlassian.users }}"
+  with_items: "{{ atlassian.user }}"
   loop_control:
     loop_var: atlassian_user
-  when: atlassian.users|length > 0
+  when: atlassian.user|length > 0
 
 - include_tasks: add_user_to_groups.yml
-  with_items: "{{ atlassian.users }}"
+  with_items: "{{ atlassian.user }}"
   loop_control:
     loop_var: atlassian_user
-  when: atlassian.users|length > 0
+  when: atlassian.user|length > 0
 
 - include_tasks: delete_atlassian_users.yml
-  with_items: "{{ atlassian.users }}"
+  with_items: "{{ atlassian.user }}"
   loop_control:
     loop_var: atlassian_user
-  when: atlassian.users|length > 0
+  when: atlassian.user|length > 0
 
