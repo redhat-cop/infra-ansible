@@ -1,12 +1,10 @@
 ---
 
-- name: "Import data from {{ csv_doc_file_name }} and create IPA/IdM identities"
+- name: Create IPA/IdM identities
   hosts: identity-hosts
   gather_facts: no
   roles:
-    - identity-management/populate-users
-    - identity-management/manage-idm-identities
-    - identity-management/manage-user-passwd
+    - role: identity-management/manage-idm-identities
+    - role: identity-management/manage-user-password
+    - role: identity-management/manage-idm-user-password
 
-- name: "Notify users"
-  import_playbook: ../notifications/email-notify-users.yml
