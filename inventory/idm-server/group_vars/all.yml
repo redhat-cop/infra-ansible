@@ -4,6 +4,13 @@ pkg_update: true
 hosting_infrastructure: openstack
 ansible_user: cloud-user
 
+rhsm_register: True
+rhsm_username: my_rhsm_username
+rhsm_password: my_rhsm_password
+rhsm_pool: my_pool_id
+rhsm_repos:
+- rhel-7-server-rpms
+
 osp_networks:
 - name: "my-network"
   description: "My Network"
