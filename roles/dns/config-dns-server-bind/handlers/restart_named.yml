@@ -1,6 +1,6 @@
 ---
 
-- named: Check current state of 'named'
+- name: Check current state of 'named'
   shell: systemctl status named
   register: current_service_state
   ignore_errors: true
