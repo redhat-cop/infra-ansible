@@ -4,5 +4,6 @@
   hosts: dns-zones-manage-host
   roles:
   - role: dns/manage-dns-zones-bind
+  - role: dns/manage-dns-zones-route53
   tags:
   - update_dns_zones
