@@ -5,22 +5,33 @@ atlassian:
   url: https://example-test.atlassian.net
 
   jira:
-    jira_admin: "jira-administrators"
     lead: "example"
-    core_team: "example"
-    
+
     project:
       name: "example"
       key: "EX"
       description: "Example Jira Project"
       category_name: "Example Project Category"
       category_description: "Exampe Project Category"
-    
-    group:
-      lead: "Example Lead"
-      team_member: "Example Team Member"
-      viewer: "Example Viewer"
- 
+
+    groups:
+      - name: jira-administrators
+        role: "admin"
+      - name: leads
+        role: "admin"
+      - name: team
+        role: "member"
+      - name: viewer
+        role: "read"
+      - name: example-of-explicit-permissions
+        permissions:
+          - BROWSE_PROJECTS
+          - MANAGE_SPRINTS_PERMISSION
+          - VIEW_DEV_TOOLS
+          - MOVE_ISSUES
+          - RESOLVE_ISSUES
+          - SCHEDULE_ISSUES
+
     permission_scheme:
       name: "example"
       description: "Example Permission Scheme"
