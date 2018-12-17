@@ -15,7 +15,7 @@
         mail: "{{ user_data.email | default(omit) }}"
         state: "{{ user_data.state | default(omit) }}"
         # The addition of expiration date is a request that will be submitted upstream
-        #krbprincipalexpiration: "{{ user.expiration_date | default(omit) }}"
+        #krbprincipalexpiration: "{{ user_data.expiration_date | default(omit) }}"
       register: idm_user_list
       with_items:
         - "{{ identities.users }}"
