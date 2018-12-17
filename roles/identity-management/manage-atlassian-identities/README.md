@@ -1,5 +1,5 @@
-Create Atlassian Users Role
-=========
+Manage Atlassian Identities (users/groups) Role
+===============================================
 
 An ansible role that manages atlassian users.
 
@@ -16,17 +16,9 @@ atlassian:
   username: example
   password: example
 
-  user:
-    - firstname: Test
-      lastname: 123
-      email: test@example.com
-      state: present
-      groups:
-        - a
-        - b
+  identities:
+     ## See README one level up for sample 'identities' dictionary
 
-  groups:
-    - abc
 ```
 
 Here are the description of each variables:
@@ -34,10 +26,6 @@ Here are the description of each variables:
 - `atlassian.url`: the url of the site we want to manage users in
 - `atlassian.username`: username of an admin of that site
 - `atlassian.password`: password of the user that has admin priviledge
-- `atlassian.user`: a list of dictionaries with user data
-- `atlassian.user.groups`: a list of groups the user should be added (can be an empty list)
-- `atlassian.user.state`: state can be `present` (default) to create user and `absent` to delete user
-- `atlassian.groups`: a list of groups to be managed (can be an empty list)
 
 Due to the sensitive nature of the variables it's best to use ansible-vault to create the `vars.yml`
 
@@ -48,11 +36,11 @@ Steps:
 Running the Playbook
 --------------------
 
-`$ ansible-playbook -e "@path/to/vars.yml" playbooks/manage-users/manage-atlassian-users.yml --ask-vault-pass` and enter the password you've previously set for vars.yml
+`$ ansible-playbook -e "@path/to/vars.yml" playbooks/manage-identities/manage-atlassian-identities.yml --ask-vault-pass` and enter the password you previously set for vars.yml
 
 Example Playbook
 ----------------
 
     - hosts: servers
       roles:
-         - { role: manage-atlassian-users }
+         - { role: manage-atlassian-identities }

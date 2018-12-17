@@ -21,7 +21,6 @@ Role Variables
 |**users**|a list of users to fetch data from|yes||
 |**user_groups**|a list of groups to fetch data from|yes||
 
-See the [manage-users](https://github.com/redhat-cop/infra-ansible/blob/master/roles/user-management/manage-users/README.md) for more details and examples.
 
 
 ## Output

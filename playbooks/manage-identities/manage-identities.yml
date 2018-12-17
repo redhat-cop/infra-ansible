@@ -1,0 +1,7 @@
+---
+
+- name: "Manage IPA/IdM Identities"
+  import_playbook: manage-idm-identities.yml
+
+- name: "Manage Atlassian Identities"
+  import_playbook: manage-atlassian-identities.yml

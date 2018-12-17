@@ -1,0 +1,42 @@
+---
+
+- name: Process IPA/IdM User(s)
+  block:
+
+    - name: Create IPA/IdM user
+      ipa_user:
+        ipa_host: "{{ ipa_host | default(ansible_host)}}"
+        ipa_user: "{{ ipa_admin_user }}"
+        ipa_pass: "{{ ipa_admin_password }}"
+        validate_certs: "{{ ipa_validate_certs | default(omit) }}"
+        givenname: "{{ user.first_name | trim }}"
+        sn: "{{ user.last_name | trim }}"
+        name: "{{ user.user_name | trim }}"
+        mail: "{{ user.email | default(omit) }}"
+        state: "{{ user.state | default(omit) }}"
+        # The addition of expiration date is a request that will be submitted upstream
+        #krbprincipalexpiration: "{{ user.expiration_date | default(omit) }}"
+      with_items:
+        - "{{ identities.users }}"
+      loop_control:
+        loop_var: user
+      when:
+        - user.targets is undefined or
+          'idm' in user.targets
+      register: idm_user_list
+
+    - name: "Create password generation dataset"
+      set_fact:
+         idm_users: "{{ idm_users|default([]) + [ idm_data.item | combine(idm_data|set_user_flags) ] }}"
+      with_items:
+        - "{{ idm_user_list.results }}"
+      loop_control:
+        loop_var: idm_data
+      when:
+        - idm_user_list is defined
+        - idm_user_list.results is defined
+
+  when:
+    - identities.targets is undefined or
+      'idm' in identities.targets
+    - identities.users|length > 0

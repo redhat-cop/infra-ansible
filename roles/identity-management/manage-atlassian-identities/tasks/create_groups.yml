@@ -1,0 +1,20 @@
+---
+
+- name: Process Atlassian Group(s)
+  block:
+
+    - name: Processes groups and their members
+      include_tasks: process_one_group.yml
+      with_items:
+        - "{{ identities.groups }}"
+      loop_control:
+        loop_var: group
+      when:
+        - group.targets is undefined or
+          'atlassian' in group.targets
+        - group.state|default('present') == 'present'
+
+  when:
+    - identities.targets is undefined or
+      'atlassian' in identities.targets
+    - identities.groups|length > 0

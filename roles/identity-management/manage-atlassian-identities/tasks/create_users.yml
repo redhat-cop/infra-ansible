@@ -1,0 +1,33 @@
+---
+
+- name: Process Atlassian User(s)
+  block:
+
+    - name: Create User(s)
+      uri:
+        url: '{{ atlassian.url }}/rest/api/2/user'
+        method: POST
+        user: '{{ atlassian.username }}'
+        password: '{{ atlassian.password }}'
+        force_basic_auth: yes
+        status_code: 201
+        body_format: json
+        body:
+          name: "{{ user.user_name }}"
+          emailAddress: "{{ user.email }}"
+          displayName: "{{ user.first_name }} {{ user.last_name }}"
+          notification: true
+        return_content: yes
+      with_items:
+        - "{{ identities.users }}"
+      loop_control:
+        loop_var: user
+      when:
+        - user.targets is undefined or
+          'atlassian' in user.targets
+        - user.state|default('present') == 'present'
+
+  when:
+    - identities.targets is undefined or
+      'atlassian' in identities.targets
+    - identities.users|length > 0

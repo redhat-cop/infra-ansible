@@ -1,0 +1,26 @@
+---
+
+- name: Process IPA/IdM Group(s)
+  block:
+
+  - name: Create IPA/IdM group
+    ipa_group:
+      ipa_host: "{{ ipa_host | default(ansible_host)}}"
+      ipa_user: "{{ ipa_admin_user }}"
+      ipa_pass: "{{ ipa_admin_password }}"
+      validate_certs: "{{ ipa_validate_certs | default(omit) }}"
+      name: "{{ group.name | trim }}"
+      state: "{{ group.state | default(omit) }}"
+      user: "{{ group.members | default(omit) }}"
+    with_items:
+      - "{{ identities.groups }}"
+    loop_control:
+      loop_var: group
+    when:
+      - group.targets is undefined or
+        'idm' in group.targets
+
+  when:
+    - identities.targets is undefined or
+      'idm' in identities.targets
+    - identities.groups|length > 0

@@ -4,9 +4,9 @@
   hosts: identity-hosts
   gather_facts: no
   roles:
-    - user-management/populate-users
-    - user-management/manage-idm-users
-    - user-management/manage-user-passwd
+    - identity-management/populate-users
+    - identity-management/manage-idm-users
+    - identity-management/manage-user-passwd
 
 - name: "Notify users"
   import_playbook: ../notifications/email-notify-users.yml
