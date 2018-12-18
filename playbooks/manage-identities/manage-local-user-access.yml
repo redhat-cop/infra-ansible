@@ -1,0 +1,11 @@
+---
+
+- name: 'Update local access for account:{{ user_name }}'
+  hosts: all
+  roles:
+    - role: identity-management/manage-local-user-password
+    - role: identity-management/manage-local-user-ssh-authkeys
+    - role: manage-sshd-config
+  tags:
+    - manage-local-user-access
+

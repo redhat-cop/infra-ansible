@@ -1,0 +1,38 @@
+---
+
+- name: "Process users that need a password generated"
+  block:
+
+    - include_tasks: generate-password.yml
+      with_items:
+        - "{{ identities.users }}"
+      when:
+        - item.generate_password is defined
+        - item.generate_password == True
+
+    - name: "Make sure the list_of_users is empty to start with"
+      set_fact:
+        list_of_users: []
+        users_with_passwords: []
+
+    - name: "Remove users from the list in preparation to update the list of users"
+      set_fact:
+        list_of_users: "{{ list_of_users + [ item ] }}"
+      with_items:
+        - "{{ identities.users }}"
+      when:
+        - item.generate_password is undefined or
+          item.generate_password != True
+
+    - name: "Add processed users (with passwords) back to the 'identities' list"
+      set_fact:
+        identities: "{{ identities|combine({'users': list_of_users + users_with_passwords}) }}"
+
+    - name: "Display password list (if verbosity >=2)"
+      debug:
+        var: user_passwords
+        verbosity: 2
+
+  when:
+    - identities.users is defined
+    - identities.users|length > 0

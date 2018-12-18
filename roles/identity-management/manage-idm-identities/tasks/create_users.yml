@@ -1,0 +1,49 @@
+---
+
+- name: "Process users for IPA/IdM"
+  block:
+
+    - name: Create IPA/IdM user
+      ipa_user:
+        ipa_host: "{{ ipa_host | default(ansible_host)}}"
+        ipa_user: "{{ ipa_admin_user }}"
+        ipa_pass: "{{ ipa_admin_password }}"
+        validate_certs: "{{ ipa_validate_certs | default(omit) }}"
+        givenname: "{{ user_data.first_name | trim }}"
+        sn: "{{ user_data.last_name | trim }}"
+        name: "{{ user_data.user_name | trim }}"
+        mail: "{{ user_data.email | default(omit) }}"
+        state: "{{ user_data.state | default(omit) }}"
+        # The addition of expiration date is a request that will be submitted upstream
+        #krbprincipalexpiration: "{{ user_data.expiration_date | default(omit) }}"
+      register: idm_user_list
+      with_items:
+        - "{{ identities.users }}"
+      loop_control:
+        loop_var: user_data
+      when:
+        - user_data.targets is undefined or
+          'idm' in user_data.targets
+
+    - name: "Make sure the list_of_users is empty to start with"
+      set_fact:
+        list_of_users: []
+
+    - name: "Create password generation dataset"
+      set_fact:
+         list_of_users: "{{ list_of_users + [ idm_data.user_data|combine(idm_data|set_user_flags) ] }}"
+      with_items:
+        - "{{ idm_user_list.results }}"
+      loop_control:
+        loop_var: idm_data
+      when:
+        - idm_user_list is defined
+        - idm_user_list.results is defined
+
+    - name: "Add processed users back to the 'identities' list"
+      set_fact:
+        identities: "{{ identities|combine({'users': list_of_users}) }}"
+
+  when:
+    - identities.users is defined
+    - identities.users|length > 0

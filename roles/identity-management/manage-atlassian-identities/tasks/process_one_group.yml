@@ -1,0 +1,32 @@
+---
+
+- name: Create Group
+  uri:
+    url: '{{ atlassian.url }}/rest/api/2/group'
+    method: POST
+    status_code:
+      - 201
+      - 400
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
+    force_basic_auth: yes
+    body_format: json
+    body: "{'name': '{{ group_data.name }}' }"
+
+- name: Add user(s) to group
+  uri:
+    url: "{{ atlassian.url }}/rest/api/2/group/user?groupname={{ group_data.name | urlencode }}"
+    method: POST
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
+    force_basic_auth: yes
+    status_code:
+      - 201
+      - 400
+    body_format: json
+    body: "{ 'name': '{{ item }}' }"
+    return_content: yes
+  with_items:
+    - "{{ group_data.members }}"
+  when:
+    - group_data.members|length > 0

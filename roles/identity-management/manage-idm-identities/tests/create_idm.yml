@@ -1,0 +1,16 @@
+---
+# This test covers the full feature set provided by the role
+
+- name: Create Test Identities
+  hosts: ipa
+
+  vars_files:
+    - vars/idm.json
+
+  vars:
+    ipa_admin_user: admin
+    ipa_admin_password: test123
+    ipa_host: idm.example.com 
+
+  roles:
+    - manage-idm-identities

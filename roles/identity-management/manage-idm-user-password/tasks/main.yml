@@ -1,0 +1,28 @@
+---
+
+- name: "Process password for IPA/IdM user(s)"
+  block:
+
+    - name: "Change IPA/IdM password for user: {{ user_data.user_name }}"
+      ipa_user:
+        ipa_host: "{{ ipa_host }}"
+        ipa_user: "{{ ipa_admin_user }}"
+        ipa_pass: "{{ ipa_admin_password }}"
+        validate_certs: "{{ ipa_validate_certs | default(omit) }}"
+        name: "{{ user_data.user_name | trim }}"
+        password: "{{ user_data.password }}"
+      with_items:
+        - "{{ identities.users }}"
+      loop_control:
+        loop_var: user_data
+      when:
+        - identities.users is defined
+        - identities.users|length > 0
+        - user_data.targets is undefined or
+          'idm' in user_data.targets
+        - user_data.password is defined
+        - user_data.password|trim != ''
+
+  when:
+    - identities.targets is undefined or
+      'idm' in identities.targets

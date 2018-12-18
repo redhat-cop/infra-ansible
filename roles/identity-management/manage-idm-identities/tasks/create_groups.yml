@@ -1,0 +1,20 @@
+---
+
+- name: Create IPA/IdM group
+  ipa_group:
+    ipa_host: "{{ ipa_host | default(ansible_host)}}"
+    ipa_user: "{{ ipa_admin_user }}"
+    ipa_pass: "{{ ipa_admin_password }}"
+    validate_certs: "{{ ipa_validate_certs | default(omit) }}"
+    state: "{{ group.state | default(omit) }}"
+    name: "{{ group.name | trim }}"
+    user: "{{ group.members | default(omit) }}"
+  with_items:
+    - "{{ identities.groups }}"
+  loop_control:
+    loop_var: group
+  when:
+    - identities.groups is defined
+    - identities.groups|length > 0
+    - group.targets is undefined or
+      'idm' in group.targets

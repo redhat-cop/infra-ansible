@@ -1,0 +1,27 @@
+---
+- name: Create User(s)
+  uri:
+    url: '{{ atlassian.url }}/rest/api/2/user'
+    method: POST
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
+    force_basic_auth: yes
+    status_code:
+      - 201
+      - 500     # Due to an "issue" with the Atlassian API, need to "accept" 500
+    body_format: json
+    body:
+      name: "{{ user_data.user_name }}"
+      emailAddress: "{{ user_data.email }}"
+      displayName: "{{ user_data.first_name }} {{ user_data.last_name }}"
+      notification: true
+    return_content: yes
+  with_items:
+    - "{{ identities.users }}"
+  loop_control:
+    loop_var: user_data
+  when:
+    - identities.users|length > 0
+    - user_data.targets is undefined or
+      'atlassian' in user_data.targets
+    - user_data.state|default('present') == 'present'

@@ -87,7 +87,7 @@ atlassian:
 ```
 
 *Note:
-This role  assumes that three groups "project_lead", "project_team_member" and "project_viewer" have already been created. This can be done using the [manage-atlassian-users](../user-management/manage-atlassian-users) role *
+This role  assumes that three groups "project_lead", "project_team_member" and "project_viewer" have already been created. This can be done using the [manage-atlassian-identities](../identity-management/manage-atlassian-identities) role *
 
 #### This role does three things
 1.  Creates a Project Category

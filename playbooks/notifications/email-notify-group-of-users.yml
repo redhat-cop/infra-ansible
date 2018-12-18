@@ -5,6 +5,6 @@
   gather_facts: no
   tasks:
   - include_role:
-      name: roles/user-management/list-users-by-group
+      name: roles/identity-management/list-users-by-group
 
 - import_playbook: email-notify-list-of-users.yml

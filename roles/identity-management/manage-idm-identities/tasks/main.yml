@@ -1,0 +1,11 @@
+---
+
+- name: Process IPA/IdM Identities when targeted
+  block:
+
+    - import_tasks: create_users.yml
+    - import_tasks: create_groups.yml
+
+  when:
+    - identities.targets is undefined or
+      'idm' in identities.targets

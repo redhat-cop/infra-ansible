@@ -1,0 +1,15 @@
+---
+
+- name: "Import data from {{ csv_doc_file_name }}"
+  hosts: identity-hosts
+  gather_facts: no
+  roles:
+    - identity-management/populate-users
+
+- name: "Manage the identities in IPA/IdM"
+  import_playbook: manage-idm-identities.yml
+
+- name: "Notify users"
+  import_playbook: ../notifications/email-notify-users.yml
+  vars:
+    users: "{{ identities.users }}"
