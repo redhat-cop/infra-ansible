@@ -2,7 +2,7 @@
 
 - name: "Look up Nexus URL"
   command: >
-    oc get route {{ nexus_name | default('nexus') }} -n {{ content.namespace }} -o custom-columns=ROUTE:.spec.host --no-headers
+    oc get route {{ nexus_name | default('nexus') }} -n {{ nexus_namespace }} -o custom-columns=ROUTE:.spec.host --no-headers
   register: nexus_url_result
   when:
   - nexus_url is not defined or nexus_url|trim == ''
@@ -20,3 +20,4 @@
   include_tasks: configure-repos.yml
   with_items:
   - "{{ nexus_repos | default([]) }}"
+
