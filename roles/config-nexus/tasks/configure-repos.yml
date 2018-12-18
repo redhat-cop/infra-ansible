@@ -1,6 +1,6 @@
 ---
 
-- name: "Check For Existing Script"
+- name: "Check For Existing Script: {{ item.script_name }}"
   uri:
     url: "https://{{ nexus_url }}/service/siesta/rest/v1/script/{{ item.script_name }}"
     method: GET
@@ -11,7 +11,7 @@
     validate_certs: false
   register: get_script_result
 
-- name: "Delete Script if it Exists"
+- name: "Delete Script if it Exists: {{ item.script_name }}"
   uri:
     url: "https://{{ nexus_url }}/service/siesta/rest/v1/script/{{ item.script_name }}"
     method: DELETE
@@ -22,7 +22,7 @@
     validate_certs: false
   when: get_script_result.status == 200
 
-- name: "Create New Script"
+- name: "Create New Script: {{ item.script_name }}"
   uri:
     url: "https://{{ nexus_url }}/service/siesta/rest/v1/script/"
     method: POST
@@ -34,7 +34,7 @@
     validate_certs: false
     status_code: 204
 
-- name: "Execute New Script"
+- name: "Execute New Script: {{ item.script_name }}"
   uri:
     url: "https://{{ nexus_url }}/service/siesta/rest/v1/script/{{ item.script_name }}/run"
     method: POST
