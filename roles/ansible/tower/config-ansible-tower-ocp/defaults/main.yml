@@ -1,0 +1,54 @@
+---
+tower_package_name: 'ansible-tower'
+tower_package_version: '3.3.1'
+tower_package_release: '1'
+
+kubernetes_deployment_name: ansible-tower
+
+kubernetes_web_image: registry.access.redhat.com/ansible-tower-33/ansible-tower
+kubernetes_task_image: registry.access.redhat.com/ansible-tower-33/ansible-tower
+kubernetes_rabbitmq_image: registry.access.redhat.com/ansible-tower-33/ansible-tower-messaging
+kubernetes_memcached_image: registry.access.redhat.com/ansible-tower-33/ansible-tower-memcached
+
+admin_user: 'admin'
+admin_email: 'root@localhost'
+
+rabbitmq_user: 'awx'
+
+kubernetes_base_path: "{{ local_base_config_path|default('/tmp') }}/{{ kubernetes_deployment_name }}-config"
+
+web_mem_request: 1
+web_cpu_request: 500
+
+task_mem_request: 2
+task_cpu_request: 1500
+
+rabbitmq_mem_request: 2
+rabbitmq_cpu_request: 500
+
+memcached_mem_request: 1
+memcached_cpu_request: 500
+
+openshift_pg_emptydir: no
+openshift_pg_pvc_name: postgresql-data
+
+kubernetes_deployment_replica_size: 1
+
+openshift_host: "{{ ansible_tower.openshift_host | default('') }}"
+openshift_project: "{{ ansible_tower.openshift_project | default('ansible-tower') }}"
+openshift_user: "{{ ansible_tower.openshift_user | default('') }}"
+openshift_password: "{{ ansible_tower.openshift_password | default('') }}"
+admin_password: "{{ ansible_tower.admin_password | default('') }}"
+secret_key: "{{ ansible_tower.secret_key | default('') }}"
+pg_database: "{{ ansible_tower.pg_database | default('awx') }}"
+pg_username: "{{ ansible_tower.pg_username | default('') }}"
+pg_password: "{{ ansible_tower.pg_password | default('') }}"
+rabbitmq_password: "{{ ansible_tower.rabbitmq_password | default('') }}"
+rabbitmq_erlang_cookie: "{{ ansible_tower.rabbitmq_erlang_cookie | default('') }}"
+
+deployment_object: "sts"
+
+kubernetes_task_version: "latest"
+kubernetes_web_version: "latest"
+kubernetes_rabbitmq_version: "latest"
+kubernetes_memcached_version: "latest"

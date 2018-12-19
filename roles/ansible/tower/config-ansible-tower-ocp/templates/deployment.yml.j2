@@ -1,0 +1,329 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awx
+  namespace: {{ kubernetes_namespace }}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: {{ kubernetes_namespace }}
+  name: rabbitmq
+  labels:
+    app: {{ kubernetes_deployment_name }}
+    type: LoadBalancer
+spec:
+  type: NodePort
+  ports:
+   - name: http
+     protocol: TCP
+     port: 15672
+     targetPort: 15672
+   - name: amqp
+     protocol: TCP
+     port: 5672
+     targetPort: 5672
+  selector:
+    app: {{ kubernetes_deployment_name }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: {{ kubernetes_namespace }}
+data:
+  enabled_plugins: |
+      [rabbitmq_management,rabbitmq_peer_discovery_k8s].
+  rabbitmq.conf: |
+      default_user = {{ rabbitmq_user }}
+      default_pass = {{ rabbitmq_password }}
+      default_vhost = awx
+
+      ## Clustering
+      cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
+      cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+      cluster_formation.k8s.address_type = ip
+      cluster_formation.node_cleanup.interval = 10
+      cluster_formation.node_cleanup.only_log_warning = false
+      cluster_partition_handling = autoheal
+      ## queue master locator
+      queue_master_locator=min-masters
+      ## enable guest user
+      loopback_users.guest = false
+
+{% if kubernetes_context is defined %}
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: endpoint-reader
+  namespace: {{ kubernetes_namespace }}
+rules:
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["get"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: endpoint-reader
+  namespace: {{ kubernetes_namespace }}
+subjects:
+- kind: ServiceAccount
+  name: awx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: endpoint-reader
+{% endif %}
+
+{% if openshift_host is defined %}
+---
+kind: Role
+apiVersion: v1
+metadata:
+  name: endpoint-reader
+  namespace: {{ kubernetes_namespace }}
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get"]
+---
+kind: RoleBinding
+apiVersion: v1
+metadata:
+  name: endpoint-reader
+  namespace: {{ kubernetes_namespace }}
+roleRef:
+  name: endpoint-reader
+  namespace: {{ kubernetes_namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: awx
+    namespace: {{ kubernetes_namespace }}
+userNames:
+  - system:serviceaccount:{{ kubernetes_namespace }}:awx
+{% endif %}
+
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: {{ kubernetes_deployment_name }}
+  namespace: {{ kubernetes_namespace }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: {{ kubernetes_deployment_name }}-web-deploy
+        service: django
+        app: {{ kubernetes_deployment_name }}
+    spec:
+      serviceAccountName: awx
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: {{ kubernetes_deployment_name }}-web
+          image: "{{ kubernetes_web_image }}:{{ kubernetes_web_version }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8052
+          volumeMounts:
+            - name: {{ kubernetes_deployment_name }}-application-config
+              mountPath: "/etc/tower"
+              readOnly: true
+
+            - name: "{{ kubernetes_deployment_name }}-confd"
+              mountPath: "/etc/tower/conf.d/"
+              readOnly: true
+          resources:
+            requests:
+              memory: "{{ web_mem_request }}Gi"
+              cpu: "{{ web_cpu_request }}m"
+        - name: {{ kubernetes_deployment_name }}-celery
+          securityContext:
+            privileged: true
+          image: "{{ kubernetes_task_image }}:{{ kubernetes_task_version }}"
+          command:
+            - /usr/bin/launch_awx_task.sh
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: {{ kubernetes_deployment_name }}-application-config
+              mountPath: "/etc/tower"
+              readOnly: true
+
+            - name: "{{ kubernetes_deployment_name }}-confd"
+              mountPath: "/etc/tower/conf.d/"
+              readOnly: true
+          env:
+            - name: AWX_SKIP_MIGRATIONS
+              value: "1"
+            - name: DATABASE_USER
+              value: {{ pg_username }}
+            - name: DATABASE_NAME
+              value: {{ pg_database }}
+            - name: DATABASE_HOST
+              value: {{ pg_hostname|default('postgresql') }}
+            - name: DATABASE_PORT
+              value: "{{ pg_port|default('5432') }}"
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ kubernetes_deployment_name }}-secrets"
+                  key: pg_password
+            - name: MEMCACHED_HOST
+              value: {{ memcached_hostname|default('localhost') }}
+            - name: RABBITMQ_HOST
+              value: {{ rabbitmq_hostname|default('localhost') }}
+            - name: AWX_ADMIN_USER
+              value: {{ admin_user }}
+            - name: AWX_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ kubernetes_deployment_name }}-secrets"
+                  key: admin_password
+          resources:
+            requests:
+              memory: "{{ task_mem_request }}Gi"
+              cpu: "{{ task_cpu_request }}m"
+        - name: {{ kubernetes_deployment_name }}-rabbit
+          image: "{{ kubernetes_rabbitmq_image }}:{{ kubernetes_rabbitmq_version }}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 15672
+            - name: amqp
+              protocol: TCP
+              containerPort: 5672
+          livenessProbe:
+            exec:
+              command: ["rabbitmqctl", "status"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["rabbitmqctl", "status"]
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: RABBITMQ_USE_LONGNAME
+              value: "true"
+            - name: RABBITMQ_NODENAME
+              value: "rabbit@$(MY_POD_IP)"
+            - name: RABBITMQ_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ kubernetes_deployment_name }}-secrets"
+                  key: rabbitmq_erlang_cookie
+            - name: K8S_SERVICE_NAME
+              value: "rabbitmq"
+          volumeMounts:
+            - name: rabbitmq-config
+              mountPath: /etc/rabbitmq
+          resources:
+            requests:
+              memory: "{{ rabbitmq_mem_request }}Gi"
+              cpu: "{{ rabbitmq_cpu_request }}m"
+        - name: {{ kubernetes_deployment_name }}-memcached
+          image: "{{ kubernetes_memcached_image }}:{{ kubernetes_memcached_version }}"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "{{ memcached_mem_request }}Gi"
+              cpu: "{{ memcached_cpu_request }}m"
+      volumes:
+        - name: {{ kubernetes_deployment_name }}-application-config
+          configMap:
+            name: {{ kubernetes_deployment_name }}-config
+            items:
+              - key: {{ kubernetes_deployment_name }}_settings
+                path: settings.py
+              - key: secret_key
+                path: SECRET_KEY
+
+        - name: "{{ kubernetes_deployment_name }}-confd"
+          secret:
+            secretName: "{{ kubernetes_deployment_name }}-secrets"
+            items:
+              - key: confd_contents
+                path: 'secrets.py'
+
+        - name: rabbitmq-config
+          configMap:
+            name: rabbitmq-config
+            items:
+            - key: rabbitmq.conf
+              path: rabbitmq.conf
+            - key: enabled_plugins
+              path: enabled_plugins
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ kubernetes_deployment_name }}-web-svc
+  namespace: {{ kubernetes_namespace }}
+  labels:
+    name: {{ kubernetes_deployment_name }}-web-svc
+spec:
+  type: "NodePort"
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8052
+  selector:
+    name: {{ kubernetes_deployment_name }}-web-deploy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ kubernetes_deployment_name }}-rmq-mgmt
+  namespace: {{ kubernetes_namespace }}
+  labels:
+    name: {{ kubernetes_deployment_name }}-rmq-mgmt
+spec:
+  type: ClusterIP
+  ports:
+    - name: rmqmgmt
+      port: 15672
+      targetPort: 15672
+  selector:
+    name: {{ kubernetes_deployment_name }}-web-deploy
+{% if kubernetes_context is defined %}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ kubernetes_deployment_name }}-web-svc
+  namespace: {{ kubernetes_namespace }}
+spec:
+  backend:
+    serviceName: {{ kubernetes_deployment_name }}-web-svc
+    servicePort: 80
+{% endif %}
+{% if openshift_host is defined %}
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: {{ kubernetes_deployment_name }}-web-svc
+  namespace: {{ kubernetes_namespace }}
+spec:
+  port:
+    targetPort: http
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: {{ kubernetes_deployment_name }}-web-svc
+    weight: 100
+  wildcardPolicy: None
+{% endif %}
