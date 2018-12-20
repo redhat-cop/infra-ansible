@@ -1,0 +1,13 @@
+---
+bitbucket_api_url: "https://api.bitbucket.org"
+bitbucket_url: "https://bitbucket.org"
+default_branch_restrictions:
+  - { kind: "require_approvals_to_merge", users: [], groups: [], pattern: "master", value: 1 }
+  - { kind: "require_tasks_to_be_completed", users: [], groups: [], pattern: "master" }
+  - { kind: "reset_pullrequest_approvals_on_change", users: [], groups: [], pattern: "master" }
+  - { kind: "force", users: [], groups: [], pattern: "master" }
+  - { kind: "delete", users: [], groups: [], pattern: "master" }
+  - { kind: "push", users: [], groups: [], pattern: "master" }
+
+build_branch_restriction:
+  - { kind: "require_passing_builds_to_merge", users: [], groups: [], pattern: "master", value: 1 }

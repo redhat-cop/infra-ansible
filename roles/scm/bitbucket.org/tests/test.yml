@@ -1,0 +1,31 @@
+---
+
+- name: "Configure BitBucket"
+  hosts: bitbucket
+  vars:
+    bitbucket_repos:
+      - repo_name: "test-repo"
+        team_name: "testteam"
+        project_name: "TEST"
+      - repo_name: "test-repo"
+        team_name: "testteam"
+        project_name: "TEST"
+        is_private: false
+      - repo_name: "test-repo"
+        team_name: "testteam"
+        project_name: "TEST"
+        has_build_branch_restriction: true
+      - repo_name: "test-repo"
+        team_name: "testteam"
+        project_name: "TEST"
+        branch_restrictions:
+          - { kind: "force", users: [], groups: [], pattern: "master" }
+          - { kind: "delete", users: [], groups: [], pattern: "master" }
+          - { kind: "push", users: [], groups: [], pattern: "master" }
+    bitbucket_users:
+      - testUsername
+    bitbucket_username: "bitbucketAuthUser"
+    bitbucket_admin_username: "bitbucketAuthPassword"
+  tasks:
+    - include_role:
+        name: roles/configure-bitbucket

@@ -1,0 +1,14 @@
+---
+
+- name: "Check for bitbucket usernames and passwords Result"
+  fail:
+    msg: "BitBucket Username and Password variables MUST be set"
+  when:
+  - bitbucket_username is not defined or bitbucket_username|trim == ''
+  - bitbucket_admin_password is not defined or bitbucket_admin_password|trim == ''
+
+- name: "Configure Repos"
+  include_tasks: configure-repos.yml
+  loop: "{{ bitbucket_repos | default([]) }}"
+  loop_control:
+    loop_var: repo
