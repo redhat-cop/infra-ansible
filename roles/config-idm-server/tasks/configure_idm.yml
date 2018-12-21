@@ -29,10 +29,5 @@
       --admin-password="{{ idm_admin_password }}"
   ignore_errors: true
   when:
-  - idm_src is defined 
-
-- name: 'Ensure IdM is running at boot'
-  service:
-    name: ipa
-    enabled: yes
-
+  - idm_src is defined
+  notify: Ensure IdM is running at boot
