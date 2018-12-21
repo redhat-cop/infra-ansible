@@ -2,18 +2,9 @@
 
 - name: 'Install required packages'
   package:
-    name: '{{ item }}'
+    name: "{{ idm_rpms }}"
     state: installed
-  with_items:
-  - ipa-server
-  - firewalld
-  - python-firewall
-
-- name: 'Ensure firewalld is running'
-  service:
-    name: firewalld
-    state: started
-    enabled: yes
+  notify: Ensure firewalld is running
 
 - name: 'Open Firewall for IdM use'
   firewalld:
