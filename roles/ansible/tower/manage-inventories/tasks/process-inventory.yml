@@ -44,14 +44,14 @@
 - name: "Process the inventory host entries"
   include_tasks: process-host.yml
   with_items:
-  - "{{ inventory.hosts }}"
+  - "{{ inventory.hosts | default([])}}"
   loop_control:
     loop_var: host
 
 - name: "Process the inventory group entries"
   include_tasks: process-group.yml
   with_items:
-  - "{{ inventory.groups }}"
+  - "{{ inventory.groups | default([])}}"
   loop_control:
     loop_var: group
 
