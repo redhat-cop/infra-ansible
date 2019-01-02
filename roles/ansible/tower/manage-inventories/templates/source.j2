@@ -1,0 +1,21 @@
+{
+    "name": "{{ source.name }}",
+    "description": "{{ source.description | default('') }}",
+    "source": "{{ source.source | default('scm') }}",
+    "source_path": "{{ source.source_path }}",
+    "source_script": null,
+    "source_vars": "{{ source.source_vars }}",
+    "credential": {{ credential_id }},
+    "source_regions": "",
+    "instance_filters": "",
+    "group_by": "",
+    "overwrite": false,
+    "overwrite_vars": false,
+    "timeout": 0,
+    "verbosity": 1,
+    "inventory": {{ inv_id }},
+    "update_on_launch": false,
+    "update_cache_timeout": 0,
+    "source_project": {{ source_project_id }},
+    "update_on_project_update": false
+}

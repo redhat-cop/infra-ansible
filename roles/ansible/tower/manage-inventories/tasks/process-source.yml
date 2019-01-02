@@ -1,0 +1,32 @@
+---
+
+- name: "Get the project id based on the source project name"
+  set_fact:
+    source_project_id: "{{ item.id }}"
+  when:
+  - item.name|trim == source.source_project|trim
+  with_items:
+  - "{{ existing_projects_output.rest_output }}"
+
+- name: "Get the credential id based on the credential name"
+  set_fact:
+    credential_id: "{{ item.id }}"
+  when:
+  - item.name|trim == source.credential|trim
+  with_items:
+  - "{{ existing_credentials_output.rest_output }}"
+
+- name: "Load up the inventory (source)"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventory_sources/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'source.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 200,201,400
