@@ -21,6 +21,7 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.inventories.variables|"all" variables for inventory|no||
 |ansible_tower.inventories.hosts|List of host vars (see below)|no||
 |ansible_tower.inventories.groups|List of group vars (see below)|no||
+|ansible_tower.inventories.sourcess|List of sources (see below)|no||
 
 **_Note:_** Inventories configuration will **only** happen if the `ansible_tower.inventories` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
@@ -77,6 +78,41 @@ ansible_tower:
       - name: "host3"
 ```
 
+### Sources
+The list of sources as mentioned above is used to import inventory variables from a variety of locations. More info about this can be found [here](https://docs.ansible.com/ansible-tower/latest/html/administration/scm-inv-source.html). For example this can be used to source dynamic inventories from remote locations. Currently, only scm as a source is supported. The list is defined as:
+
+```yaml
+ansible_tower:
+  inventories:
+    - name: test1
+      variables: ""
+      hosts:
+      - name: "localhost"
+        variables: "---\\nansible_connection: local"
+      organization: "Default"
+      groups:
+      - name: "my-test1-group1"
+        variables: ""
+        hosts:
+        - name: "localhost"
+      sources:
+      - name: "test-source1"
+        description: "Test Source 1"
+        credential: "Test Credential"
+        source: "scm"
+        source_project: "test-project1"
+        source_path: "scripts/test-script1.py"
+        source_vars: "---\nFOO: foo\nBAR: bar\nBAZ: baz"
+      - name: "test-source2"
+        description: "Test Source 2"
+        credential: "Test Credential"
+        source: "scm"
+        source_project: "test-project2"
+        source_path: "scripts/test-script2.py"
+        source_vars: ""
+```
+
+
 ## Example Inventory
 
 ```yaml
@@ -98,6 +134,14 @@ ansible_tower:
       variables: "---\\nfoo: bar\\n"
       hosts:
       - name: "localhost"
+    sources:
+    - name: "source1"
+      description: "Source 1"
+      credential: "Credential"
+      source: "scm"
+      source_project: "project1"
+      source_path: "scripts/script1.py"
+      source_vars: "---\nFIRST: John\nLAST: Doe"
 ```
 
 
