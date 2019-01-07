@@ -11,6 +11,11 @@
   set_fact:
     pxe_entries: "{{ target_entry.pxe_entries }}"
 
+- name: "Populate the host specific pxelinux.cfg (BIOS) file"
+  template:
+    src: pxelinux_cfg.j2
+    dest: "{{ tftpserver_root_dir }}/pxelinux.cfg/01-{{ target_entry.mac|regex_replace(':', '-')|lower }}"
+
 - name: "Generate the mac-address specific grub.cfg"
   set_fact:
     target_file: "{{ tftpserver_root_dir }}/pxelinux/grub.cfg-01-{{ target_entry.mac|regex_replace(':', '-')|lower }}"

@@ -10,16 +10,16 @@
 - name: 'Configure DNS (internal)'
   hosts: dns_servers_internal
   roles:
-  - role: dns/config-dns-server
-  - role: dns/manage-dns-zones
+  - role: dns/config-dns-server-bind
+  - role: dns/manage-dns-zones-bind
   tags:
   - configure_dns_internal
 
 - name: 'Configure DNS (external)'
   hosts: dns_servers_external
   roles:
-  - role: dns/config-dns-server
-  - role: dns/manage-dns-zones
+  - role: dns/config-dns-server-bind
+  - role: dns/manage-dns-zones-bind
   tags:
   - configure_dns_external
 
@@ -33,7 +33,7 @@
 - name: 'Configure IdM'
   hosts: idm_servers
   roles:
-  - role: idm
+  - role: config-idm-server
   tags:
   - configure_idm
 

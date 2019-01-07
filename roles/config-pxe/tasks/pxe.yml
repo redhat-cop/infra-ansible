@@ -52,7 +52,7 @@
     src: pxelinux_uefi.j2
     dest: "{{ tftpserver_root_dir }}/pxelinux/grub.cfg"
 
-- name: "Generate target specific UEFI grub.cfg file"
+- name: "Generate target specific files"
   include_tasks: pxe-target.yml
   loop_control:
     loop_var: target_entry
