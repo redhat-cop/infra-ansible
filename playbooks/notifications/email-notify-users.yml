@@ -6,12 +6,12 @@
   tasks:
   - include_tasks: email-notify-single-user.yml
     vars:
-      first_name: "{{ item.first_name }}"
-      user_name: "{{ item.user_name }}"
-      password: "{{ item.password }}"
-      email_to: "{{ item.email }}"
+      first_name: "{{ user_to_notify.first_name }}"
+      user_name: "{{ user_to_notify.user_name }}"
+      email_to: "{{ user_to_notify.email }}"
     when:
-    - item.notify_user == True
+    - user_to_notify.notify_user == True
     with_items:
     - "{{ users }}"
-
+    loop_control:
+      loop_var: user_to_notify

@@ -1,7 +1,5 @@
 ---
 
-- include_vars:
-    file: "{{ email_content_file }}"
 - set_fact:
     markdown_content: "{{ body }}"
 - include_role:
