@@ -16,14 +16,9 @@
   with_items:
   - "{{ existing_credentials_output.rest_output }}"
 
-- name: "Load up the inventory (source)"
-  uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventory_sources/"
-    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-    password: "{{ ansible_tower.admin_password }}"
-    force_basic_auth: yes
-    method: POST
-    body:
+- name: "Create new payload"
+  set_fact:
+    payload:
       name: "{{ source.name }}"
       description: "{{ source.description | default('') }}"
       source: "{{ source.source | default('scm') }}"
@@ -43,6 +38,15 @@
       update_cache_timeout: 0
       source_project: "{{ source_project_id | int }}"
       update_on_project_update: false
+
+- name: "Load up the inventory (source)"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventory_sources/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ payload }}"
     body_format: 'json'
     headers:
       Content-Type: "application/json"
