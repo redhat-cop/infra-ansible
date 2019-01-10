@@ -14,7 +14,7 @@
     body: "{ 'key': '{{ atlassian.jira.project.key }}',
              'name': '{{ atlassian.jira.project.name }}',
              'projectTypeKey': '{{ atlassian.jira.project.type_key | default('software')}}',
-             'projectTemplateKey': '{{ atlassian.jira.project.template_key | default('com.pyxis.greenhopper.jira:gh-simplified-scrum')}}',
+             'projectTemplateKey': '{{ atlassian.jira.project.template_key | default('com.pyxis.greenhopper.jira:gh-simplified-agility-scrum')}}',
              'description': '{{ atlassian.jira.project.description }}',
              'lead': '{{ atlassian.jira.lead }}',
              'assigneeType': 'PROJECT_LEAD',
