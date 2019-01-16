@@ -10,4 +10,4 @@
 
 - import_playbook: "services.yml"
 
-- import_playbook: "lb-vms.yml"
+- import_playbook: "manage-lb/lb-vms.yml"
