@@ -76,4 +76,16 @@
 
 - name: "Set Fact for VM command"
   set_fact:
-    virt_install_commands: "{{ virt_install_commands | default([]) + [ ('virt-install' + ' --connect ' + virtinstall_connect + ' --virt-type ' + virtinstall_virt_type + ' --name ' + virtinstall_name + ' --metadata \"title=' + virtinstall_title + ',description=' + virtinstall_description + ',name=' + virtinstall_name + '\"' + virt_install_network_string + ' --memory ' + virtinstall_memory + ' --vcpus ' + virtinstall_vcpus + virt_install_disk_string + ' --os-variant ' + virtinstall_os_variant + ' --location http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename + ' --initrd-inject=/tmp/' + virtinstall_ksfile | basename + ' --extra-args \"inst.repo=http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename + ' inst.ks=file:/' + virtinstall_ksfile | basename + '\"' + ' --graphics spice ' + ' --video qxl ' + ' --channel spicevmc ' + ' --autostart ') ] }}"
+    virt_install_commands: >
+      {{ virt_install_commands | default([]) + [ ('virt-install'
+      + ' --connect ' + virtinstall_connect
+      + ' --virt-type ' + virtinstall_virt_type
+      + ' --name ' + virtinstall_name
+      + ' --metadata "title=' + virtinstall_title + ',description=' + virtinstall_description + ',name=' + virtinstall_name + '"'
+      + virt_install_network_string + virt_install_disk_string
+      + ' --os-variant ' + virtinstall_os_variant
+      + ' --memory ' + virtinstall_memory + ' --vcpus ' + virtinstall_vcpus
+      + ' --location http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename
+      + ' --initrd-inject=/tmp/' + virtinstall_ksfile | basename
+      + ' --extra-args "inst.repo=http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename + ' inst.ks=file:/' + virtinstall_ksfile | basename + '"'
+      + ' --graphics spice ' + ' --video qxl ' + ' --channel spicevmc ' + ' --autostart ') ] }}
