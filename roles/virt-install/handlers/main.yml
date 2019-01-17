@@ -2,10 +2,9 @@
 
 - name: 'Unmount install ISO'
   mount:
-    path: "{{ mounted_iso[item] }}"
+    path: "{{ item.value }}"
     state: absent
-  with_items:
-  - "{{ mounted_iso.keys() }}"
+  loop: "{{ mounted_iso | dict2items }}"
 
 - name: 'Remove authorized_keys'
   file: 
