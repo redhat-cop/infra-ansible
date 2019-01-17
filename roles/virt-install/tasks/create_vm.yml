@@ -8,6 +8,7 @@
 - name: 'Gather the list of existing VMs'
   command: virsh list --name
   register: existing_vms
+  check_mode: false
 
 - name: 'Compose Command for new VM provisioning'
   include_tasks: 'virt-install.yml'
