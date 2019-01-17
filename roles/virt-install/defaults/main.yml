@@ -1,5 +1,9 @@
 ---
 
+# consider that this role isn't run against the created VMs but against the virtualization host,
+# i.e. you can only overwrite these variables in the inventory by defining them at the host level.
+# Use the libvirt_... variables to overwrite them at the VM level.
+
 default_http_dir: "/var/www/html"
 default_http_host: "192.168.122.1"
 
