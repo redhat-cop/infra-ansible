@@ -7,7 +7,7 @@
   with_items:
   - virt-install
   - httpd
-  - libselinux-python
+  - "{{ ((ansible_python_interpreter | default('somepython'))[-1] == '3') | ternary('python3-libselinux','libselinux-python') }}"
 
 - name: 'Enable and start libvirtd'
   service:
@@ -15,10 +15,9 @@
     enabled: yes
     state: started
 
-- name: 'Enable and start httpd'
+- name: 'Start httpd (leave enabled as-is)'
   service:
     name: httpd
-    enabled: no
     state: started
 
 - name: 'Enable and start firewalld'
