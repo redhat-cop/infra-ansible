@@ -64,6 +64,7 @@
     opts: loop
     fstype: iso9660
     state: mounted
+    boot: false # avoids that a dangling mount blocks boot process
   notify: 'Unmount install ISO'
   when:
   - mounted_iso[virtinstall_iso] is not defined
