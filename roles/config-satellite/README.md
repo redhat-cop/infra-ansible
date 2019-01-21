@@ -31,7 +31,7 @@ Example Playbook
 
 ```
 - name: 'Configure Satellite'
-  hosts: satellite_servers
+  hosts: satellite-server
   roles:
   - role: config-satellite
 ```
