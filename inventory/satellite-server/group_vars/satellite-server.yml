@@ -44,5 +44,8 @@ satellite_sync_plan: "CASL"
 
 # Add some activation keys that the users can utilize
 satellite_activation_keys:
-  casl-rhel:
-    subscription: "MySubs"
+- name: "casl-rhel1"
+  subscription: "MySubs"
+  type: "Physical"
+- name: "casl-rhel2"
+  subscription: "MySubs"
