@@ -45,6 +45,7 @@
   - name: "Obtain currently enabled repos"
     shell: 'subscription-manager repos --list-enabled | sed -ne "s/^Repo ID:[^a-zA-Z0-9]*\(.*\)/\1/p"'
     register: enabled_repos
+    check_mode: false  # aka run_always: true, makes sure next task doesn't unduly fail in check mode
 
   # Build the list of repos to disable/enable before calling 'subscription-manager' as it's a very 
   # expensive command to run and hence better to call just once (especially with a long list of repos)
