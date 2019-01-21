@@ -2,7 +2,34 @@
 
 - hosts: satellite-server
   pre_tasks:
-  - import_tasks: generate-lvm-list.yml
+    - import_tasks: generate-lvm-list.yml
   roles:
-  - role: config-lvm
-  - role: config-satellite
+    - role: config-lvm
+  tasks:
+    - import_role:
+        name: config-satellite
+        tasks_from: prereq
+      tags:
+        - 'never'
+        - 'install'
+    - import_role:
+        name: config-satellite
+        tasks_from: install
+      tags:
+        - 'never'
+        - 'install'
+    - import_role:
+        name: config-satellite
+        tasks_from: manifest
+      tags:
+        - 'always'
+    - import_role:
+        name: config-satellite
+        tasks_from: repos
+      tags:
+        - 'always'
+    - import_role:
+        name: config-satellite
+        tasks_from: activation_keys
+      tags:
+        - 'always'
