@@ -1,16 +1,6 @@
 ---
 
-- name: "Set the host to wait for"
-  set_fact:
-    update_host: "{{ (hostvars[inventory_hostname]['ansible_host'] is defined) |
-                      ternary(hostvars[inventory_hostname]['ansible_host'],
-                              hostvars[inventory_hostname]['ansible_ssh_host']) }}"
-
 - name: "Waiting for server to come back"
-  local_action: wait_for
-  args:
-    host: "{{ update_host }}"
-    port: 22
+  wait_for_connection:
     delay: 15
     timeout: 300
-    state: started
