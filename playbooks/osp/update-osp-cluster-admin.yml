@@ -2,13 +2,12 @@
 
 - hosts: infra_osp_hosts
   roles:
-  - { role: config-software-src, when: '"controller" in osp_roles' }
-  - { role: osp/admin-keystone-domain, when: '"controller" in osp_roles' }
-  - { role: osp/admin-volume-type, when: '"controller" in osp_roles' }
-  - { role: osp/admin-nova-service, when: '"controller" in osp_roles' }
-  - { role: osp/admin-nova-flavor, when: '"controller" in osp_roles' }
-  - { role: osp/admin-image, when: '"controller" in osp_roles' }
-  - { role: osp/admin-project, when: '"controller" in osp_roles' }
-  - { role: osp/admin-network, when: '"controller" in osp_roles' }
-  - { role: osp/admin-user, when: '"controller" in osp_roles' }
-
+    - role: config-software-src
+    - role: osp/admin-keystone-domain
+    - role: osp/admin-volume-type
+    - role: osp/admin-nova-service
+    - role: osp/admin-nova-flavor
+    - role: osp/admin-image
+    - role: osp/admin-project
+    - role: osp/admin-network
+    - role: osp/admin-user
