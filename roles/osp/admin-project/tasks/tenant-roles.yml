@@ -1,14 +1,5 @@
 ---
 
-- name: "Obtain the user IDs"
-  os_user:
-    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
-    user: "{{ item.user }}"
-    domain: "{{ item.user_domain | default(omit) }}"
-  register: list_of_os_users
-  with_items:
-    - "{{ project.members }}"
-
 - debug:
     msg: "{{ list_of_os_users }}"
 

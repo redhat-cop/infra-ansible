@@ -5,6 +5,13 @@
     name: 'python2-shade'
     state: present
 
+- name: "Obtain the user IDs"
+  shell: >
+    openstack user list -f yaml --domain {{ item }}
+  register: list_of_os_users
+  with_items:
+    - "{{ osp_ldap_domains | default([]) }}"
+
 - name: "Add projects / tenants"
   os_project:
     cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
