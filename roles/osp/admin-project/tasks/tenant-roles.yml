@@ -1,7 +1,7 @@
 ---
 
 - debug:
-    msg: "{{ list_of_os_users }}"
+    msg: "{{ list_of_os_users.stdout | from_yaml }}"
 
 - name: "Assign role for project {{ project.name }}"
   os_user_role:
