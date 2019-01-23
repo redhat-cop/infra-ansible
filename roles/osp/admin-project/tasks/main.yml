@@ -5,22 +5,6 @@
     name: 'python2-shade'
     state: present
 
-- name: "Obtain the user IDs"
-  shell: >
-    openstack user list -f yaml --domain {{ item.domain }}
-  register: list_of_os_users
-  with_items:
-    - "{{ osp_ldap_domains | default([]) }}"
-
-- name: "Map list of users to domains"
-  set_fact:
-    list_of_os_user_ids: "{{ list_of_os_user_ids | default({}) | combine ({ item.domain : list_of_os_users.results[loop.index0].stdout|from_yaml }) }}"
-  with_items:
-    - "{{ osp_ldap_domains | default([]) }}"
-
-- debug:
-    msg: "{{ list_of_os_user_ids }}"
-
 - name: "Add projects / tenants"
   os_project:
     cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"

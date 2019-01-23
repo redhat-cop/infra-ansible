@@ -1,15 +1,12 @@
 ---
 
-- debug:
-    msg: "{{ list_of_os_users.stdout | from_yaml }}"
-
 - name: "Assign role for project {{ project.name }}"
-  os_user_role:
-    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
-    user: "{{ item.0.user }}"
-    role: "{{ item.1 }}"
-    project: "{{ project.name }}"
-    domain: "{{ item.0.user_domain | default(omit) }}"
+  shell: >
+    openstack role add \
+      --user "{{ item.0.user }}" \
+      --user-domain "{{ item.0.user_domain | default('') }}" \
+      --project "{{ project.name }}" \
+      "{{ item.1 }}"
   with_subelements:
-    - "{{ project.members }}"
-    - roles
+  - "{{ project.members }}"
+  - roles
