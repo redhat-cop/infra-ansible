@@ -1,5 +1,11 @@
 ---
 
+- name: "Install prereq software"
+  package:
+    name: 'python2-shade'
+    state: present
+
+
 # - name: "Add EPEL temporary repository (but leave it disabled)"
 #   yum_repository:
 #     name: tmp-epel

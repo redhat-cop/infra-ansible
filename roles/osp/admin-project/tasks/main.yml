@@ -1,5 +1,10 @@
 ---
 
+- name: "Install prereq software"
+  package:
+    name: 'python2-shade'
+    state: present
+
 - name: "Add projects / tenants"
   os_project:
     cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
@@ -36,4 +41,3 @@
   - "{{ osp_projects | default([]) }}"
   loop_control:
     loop_var: project
-

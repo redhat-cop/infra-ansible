@@ -1,13 +1,12 @@
 ---
 
 - name: "Assign role for project {{ project.name }}"
-  shell: >
-    source {{ admin_keystonerc_file }};
-    openstack role add \
-      --user "{{ item.0.user }}" \
-      --user-domain "{{ item.0.user_domain | default('') }}" \
-      --project "{{ project.name }}" \
-      "{{ item.1 }}"
+  os_user_role:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
+    user: "{{ item.0.user }}"
+    role: "{{ item.1 }}"
+    project: "{{ project.name }}"
+    domain: "{{ item.0.user_domain | default(omit) }}"
   with_subelements:
-  - "{{ project.members }}"
-  - roles
+    - "{{ project.members }}"
+    - roles
