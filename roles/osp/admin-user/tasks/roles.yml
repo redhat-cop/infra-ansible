@@ -1,14 +1,13 @@
 ---
 
 - name: "Grant access for account {{ role.name }}"
-  os_user_role:
-    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
-    user: "{{ user.name }}"
-    role: "{{ role.1 }}"
-    project: "{{ role.0.name }}"
-    domain: "{{ role.0.domain }}"
+  shell: >
+    openstack role add \
+      --user "{{ role.name }}" \
+      --user-domain "{{ role.domain }}" \
+      --project "{{ item.0.name }}" \
+      --project-domain "{{ item.0.domain }}" \
+      "{{ item.1 }}"
   with_subelements:
-    - "{{ user.projects }}"
-    - roles
-  loop_control:
-    loop_var: role
+  - "{{ role.projects }}"
+  - roles
