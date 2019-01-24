@@ -1,5 +1,10 @@
 ---
 
+- name: "Install prereq software"
+  package:
+    name: 'python2-shade'
+    state: present
+
 - name: Manage Security Groups
   os_security_group:
     cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
@@ -21,7 +26,6 @@
     remote_ip_prefix: "{{ item.1.remote_ip_prefix | default(omit) }}"
   with_subelements:
   - "{{ security_groups.results }}"
-  - item.rules 
-  when: 
+  - item.rules
+  when:
   - item.0.invocation.module_args.state == 'present'
-

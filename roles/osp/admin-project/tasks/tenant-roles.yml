@@ -2,7 +2,6 @@
 
 - name: "Assign role for project {{ project.name }}"
   shell: >
-    source {{ admin_keystonerc_file }};
     openstack role add \
       --user "{{ item.0.user }}" \
       --user-domain "{{ item.0.user_domain | default('') }}" \
