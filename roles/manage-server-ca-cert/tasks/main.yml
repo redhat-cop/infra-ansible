@@ -1,0 +1,10 @@
+---
+
+- name: "Copy CA cert(s) to target server"
+  copy: 
+    src: "{{ item }}"
+    dest: "{{ server_ca_location }}{{ item|basename }}"
+  loop: "{{ list_of_additional_ca_certs }}"
+  notify:
+    - update trusted ca
+  become: yes
