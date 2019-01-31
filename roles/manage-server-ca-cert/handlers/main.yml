@@ -1,5 +1,0 @@
----
-
-- name: "update trusted ca"
-  command: /bin/update-ca-trust
-  become: yes
