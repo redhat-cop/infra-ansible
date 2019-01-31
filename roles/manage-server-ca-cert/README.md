@@ -17,6 +17,8 @@ Role Variables
 |**server_ca_location**|Location to copy the CAs to on the target server|no|/etc/pki/ca-trust/source/anchors/||
 
 
+**Note:** `list_of_additional_ca_certs` is currently a list of local files, but this could be enhanced in the future to support URLs and actual cert content as well. 
+
 
 Example Playbook
 ----------------
