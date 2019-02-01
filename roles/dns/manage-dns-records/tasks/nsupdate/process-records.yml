@@ -11,7 +11,7 @@
     value: "{{ item.value | default(omit) }}"
     type: "{{ item.type }}"
     ttl: "{{ item.ttl | default(omit) }}"
-    state: "{{ item.state | default(present) }}"
+    state: "{{ item.state | default('present') }}"
   with_items:
     - "{{ dns.1.entries }}"
   when:
