@@ -21,7 +21,7 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.inventories.variables|"all" variables for inventory|no||
 |ansible_tower.inventories.hosts|List of host vars (see below)|no||
 |ansible_tower.inventories.groups|List of group vars (see below)|no||
-|ansible_tower.inventories.sourcess|List of sources (see below)|no||
+|ansible_tower.inventories.sources|List of sources (see below)|no||
 
 **_Note:_** Inventories configuration will **only** happen if the `ansible_tower.inventories` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
