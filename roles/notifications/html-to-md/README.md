@@ -27,7 +27,7 @@ html_content: <p>Hello, this is <b>bold</b> text</p>
 ### Example Playbook
 
 ```
-- name: Test converting MD to HTML
+- name: Test converting HTML to MD
   hosts: localhost
   roles:
     - html-to-md
