@@ -1,7 +1,7 @@
-md-to-html
-=========
+html-to-md
+==========
 
-This role creates HTML content based on markdown (MD)
+This role creates markdown (MD) content based on HTML
 
 ## Requirements
 The CLI tool `pandoc` needs to be installed on the system, or set the `install_prereq` flag to automatically install it as part of the playbook run.
@@ -13,14 +13,14 @@ None
 
 | Variable | Description | Required | Additional Info |
 |:--------:|:-----------:|:--------:|:---------------:|
-|**markdown_content**| Markdown content to be converted to HTML | yes | N/A |
+|**html_content**| Markdown content to be converted to HTML | yes | N/A |
 |**install_prereq**| Install any prereq tools | No | Requires elevated privileges (`ansible_become: True`) |
 
 
 ### Example Inventory
 
 ```
-markdown_content: "Hello, this is **bold** text"
+html_content: <p>Hello, this is <b>bold</b> text</p>
 ```
 
 
@@ -30,12 +30,10 @@ markdown_content: "Hello, this is **bold** text"
 - name: Test converting MD to HTML
   hosts: localhost
   roles:
-    - md-to-html
+    - html-to-md
   tasks:
     - debug:
-        msg: "{{ md_to_html.html_body_message }}"
-    - debug:
-        msg: "{{ md_to_html.html_message }}"
+        msg: "{{ html_to_md.md_message }}"
 ```
 
 ### example CLI
