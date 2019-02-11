@@ -1,0 +1,7 @@
+---
+
+- include_tasks: "manage-vpcs.yml"
+  with_items: "{{ aws_networks }}"
+
+- include_tasks: "manage-subnets.yml"
+  with_items: "{{ aws_subnets }}"
