@@ -47,6 +47,7 @@
   - "{{ inventory.hosts }}"
   loop_control:
     loop_var: host
+  when: inventory.hosts is defined
 
 - name: "Process the inventory group entries"
   include_tasks: process-group.yml
@@ -54,6 +55,15 @@
   - "{{ inventory.groups }}"
   loop_control:
     loop_var: group
+  when: inventory.groups is defined
+
+- name: "Process the inventory sources"
+  include_tasks: process-source.yml
+  with_items:
+  - "{{ inventory.sources | default([])}}"
+  loop_control:
+    loop_var: source
+  when: inventory.sources is defined  
 
 - name: "Clear/Update facts"
   set_fact:
