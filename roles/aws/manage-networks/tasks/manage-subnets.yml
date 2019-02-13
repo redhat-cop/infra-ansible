@@ -26,6 +26,6 @@
       cidr: "{{ item.cidr_block }}"
       az: "{{item.availability_zone | default(omit) }}"
       map_public: "{{item.enable_public_ip | default(false) }}"
-      tags: "{{ item.tags + | default(omit) }}"
+      tags: "{{ item.tags | default(omit) }}"
       purge_tags: "{{ item.purge_tags | default(true) }}"
     delegate_to: localhost
