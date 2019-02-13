@@ -1,0 +1,5 @@
+---
+
+- hosts: manage-slack-host
+  roles:
+  - role: setup-slack
