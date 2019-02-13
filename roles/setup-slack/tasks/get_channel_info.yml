@@ -1,10 +1,12 @@
 ---
 - name: Get channel info
   uri:
-    url: "https://slack.com/api/channels.list?token={{ slack_token }}"
+    url: "https://slack.com/api/channels.list"
     method: GET
     status: [200]
     return_content: yes
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
   register: channel_data
 
 - name: Get group info
@@ -13,6 +15,8 @@
     method: GET
     status: [200]
     return_content: yes
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
   register: group_data
 
 - name: Update channel mapping

@@ -7,8 +7,24 @@
   set_fact:
     channels_ids: "{{ user.channels | map('extract', channel_mapping) | list }}"
 
+- name: Create user_create payload
+  set_fact:
+    user_payload:
+      channels: "{{ channels_ids|join(',') }}"
+      email: "{{ user.email }}"
+      first_name: "{{ user.first_name | urlencode }}"
+      last_name: "{{ user.last_name | urlencode }}"
+      set_active: true
+
+- debug: 
+    msg: "{{ channels_ids|join(',') }}"
+
 - name: Invite user
   uri:
-    url: "https://slack.com/api/users.admin.invite?token={{ slack_token }}&channels={{ channels_ids|join(',') }}&email={{ user.email }}&first_name={{ user.first_name | urlencode }}&last_name={{ user.last_name | urlencode }}&set_active=true"
-    method: GET
+    url: "https://slack.com/api/users.admin.invite"
+    method: POST
+    body_format: form-urlencoded
+    body: "{{ user_payload }}"
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
     status_code: [200]
