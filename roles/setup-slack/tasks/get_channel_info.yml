@@ -11,7 +11,7 @@
 
 - name: Get group info
   uri:
-    url: "https://slack.com/api/groups.list?token={{ slack_token }}"
+    url: "https://slack.com/api/groups.list"
     method: GET
     status: [200]
     return_content: yes
