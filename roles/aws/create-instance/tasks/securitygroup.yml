@@ -1,0 +1,12 @@
+---
+- name: Create Security Groups
+  ec2_group:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    purge_rules: false
+    purge_rules_egress: false
+    region: "{{ aws_region }}"
+    state: present
+    vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+    rules: "{{ item.rules }}"
+  with_items: "{{ security_groups | default([]) }}"

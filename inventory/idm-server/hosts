@@ -2,7 +2,11 @@
 [osp-provisioner]
 localhost
 
+#[aws-provisioner]
+#localhost
+
 [idm-server]
+idm.example.com
 
 [dns-server]
 localhost

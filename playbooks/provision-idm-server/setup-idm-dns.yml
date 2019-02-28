@@ -20,7 +20,7 @@
    - set_fact:
        dns_records: "{{ hostvars[groups['idm-server'][0]]['dns_records'] }}"
 
-- name: Add DNS records for IdM'
+- name: Add DNS records for IdM
   import_playbook: ../update-dns-records.yml
   vars:
     dns_records_add:

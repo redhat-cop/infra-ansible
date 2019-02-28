@@ -1,0 +1,8 @@
+---
+
+- import_tasks: getcreds.yml
+- import_tasks: getvpc.yml
+- import_tasks: getinstance.yml
+- import_tasks: dns.yml
+- import_tasks: instance.yml
+- import_tasks: securitygroup.yml

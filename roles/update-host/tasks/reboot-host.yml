@@ -8,4 +8,3 @@
   when:
     - host_updated.changed or force_host_reboot
   become: True
-

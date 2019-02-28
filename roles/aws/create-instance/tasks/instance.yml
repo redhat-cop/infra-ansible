@@ -1,0 +1,38 @@
+---
+- name: Create Instance
+  ec2:
+    assign_public_ip: "{{ aws_instance.assign_public_ip }}"
+    count_tag:
+      Name: "{{ aws_instance.hostname_prefix }}.{{ vpc_name }}.{{ dns_domain }}"
+    exact_count: 1
+    groups: "{{ aws_instance.security_groups }}"
+    instance_type: "{{ aws_instance.instance_type }}"
+    image: "{{ aws_instance.ami_id }}"
+    instance_tags:
+      Name: "{{ aws_instance.hostname_prefix }}.{{ vpc_name }}.{{ dns_domain }}"
+    key_name: "{{ aws_key_name }}"
+    monitoring: no
+    region: "{{ aws_region }}"
+    termination_protection: no
+    volumes:
+      - device_name: /dev/sda1
+        volume_type: gp2
+        volume_size: "{{ aws_instance.root_volume_size }}"
+        delete_on_termination: true
+    vpc_subnet_id: "{{ sub.subnets[0].subnet_id }}"
+    wait: yes
+    zone: "{{ aws_instance.zone }}"
+  retries: 3
+  delay: 3
+  register: ec2instance
+
+- name: Create Elastic IP
+  ec2_eip:
+    device_id: "{{ ec2instance.tagged_instances[0].id }}"
+    in_vpc: yes
+    region: "{{ aws_region }}"
+    release_on_disassociation: yes
+    state: present
+  retries: 3
+  register: eip
+  when: aws_instance.assign_public_ip

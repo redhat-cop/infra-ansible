@@ -4,7 +4,13 @@
   package:
     name: "{{ idm_rpms }}"
     state: installed
-  notify: Ensure firewalld is running
+
+# Cannot use a handler here
+- name: Ensure firewalld is running
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
 
 - name: 'Open Firewall for IdM use'
   firewalld:
@@ -14,10 +20,9 @@
     immediate: yes
   with_items:
   - ntp
-  - http 
+  - http
   - https
   - ldap
   - ldaps
   - kerberos
   - kpasswd
-

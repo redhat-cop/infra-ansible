@@ -21,12 +21,21 @@
   - 'never'
   - 'install'
 
+- import_playbook: ../aws/provision-instance.yml
+  when:
+  - hosting_infrastructure == 'aws'
+  tags:
+  - 'never'
+  - 'install'
+
 - import_playbook: ../rhsm.yml
   tags:
   - 'never'
   - 'install'
 
 - import_playbook: setup-idm-dns.yml
+  when:
+  - hosting_infrastructure == 'openstack'
   tags:
   - 'never'
   - 'install'
