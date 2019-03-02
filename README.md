@@ -15,6 +15,6 @@ This includes tasks like the following (but not limited to) automated:
 - [provisioning](playbooks/provision-satellite-server) and [admin](roles/config-satellite) of Satellite 6 servers.
 - management and admin of storage solutions ([NFS](roles/nfs-server), [iSCSI](roles/config-iscsi-client), [LVMs](roles/config-lvm), etc.)
 - [libvirt](roles/config-libvirt) installs and [VM management](roles/virt-install) ([PXE booting](roles/config-pxe), [vlans](roles/config-vlans)/[bonds](roles/config-bonding)/[routes](roles/config-routes))
-- user management with [IdM](roles/idm) and local users + IdM/IPA integrated hosts
+- user management with [IdM](playbooks/provision-idm-server) and local users + IdM/IPA integrated hosts
 - RHEL [subscription](roles/rhsm) management
 - 3rd party tooling, such as [Atlassian](roles/user-management) SaaS suite
