@@ -1,0 +1,9 @@
+---
+
+- include_tasks: "prereqs.yml"
+
+- include_tasks: "manage-existing-keys.yml"
+  with_items: "{{ existing_keys }}"
+
+- include_tasks: "manage-new-keys.yml"
+  with_items: "{{ new_keys }}"

@@ -1,0 +1,11 @@
+---
+
+- name: Manage Existing Keypair
+  block:
+  - name: "Create keypair: {{ item.name }}"
+    ec2_key:
+      name: "{{ item.name }}"
+      key_material: "{{ item.public_key }}"
+      aws_access_key: "{{ item.access_key | default(aws_key) }}"
+      aws_secret_key: "{{ item.access_secret | default(aws_secret) }}"
+      aws_region: "{{ item.region | default(aws_region) }}"

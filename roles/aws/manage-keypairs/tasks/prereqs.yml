@@ -1,0 +1,26 @@
+---
+
+- name: Initialize an empty list for our strings
+  set_fact:
+    existing_keys: []
+    new_keys: []
+
+- name: Get existing keys 
+  set_fact:
+    existing_keys: "{{ existing_keys }} + [ {{ item }} ]"
+  with_items: "{{ aws_keypairs | json_query('[?public_key!=null]') }}"
+
+- name: Show existing keys
+  debug:
+    msg: "{{ existing_keys }}"
+    verbosity: 2
+
+- name: Get new keys
+  set_fact:
+    new_keys: "{{ new_keys }} + [ {{ item }} ]"
+  with_items: "{{ aws_keypairs | json_query('[?key_location!=null]') }}"
+
+- name: Show new keys
+  debug:
+    msg: "{{ new_keys }}"
+    verbosity: 2
