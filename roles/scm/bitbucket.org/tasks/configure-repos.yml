@@ -43,6 +43,24 @@
   when:
     - create_repo_output.json.error.message != "Repository with this Slug and Owner already exists."
 
+- name: Perform initial commit (only for freshly created repos)
+  uri:
+    url: "{{ bitbucket_api_url }}/2.0/repositories/{{ repo.team_name }}/{{ repo.repo_name }}/src"
+    method: POST
+    user: "{{ bitbucket_username | b64decode | replace('\n', '') }}"
+    password: "{{ bitbucket_admin_password | b64decode | replace('\n', '') }}"
+    force_basic_auth: yes
+    body: "README.md={{ readme_contents }}&message=Initial%20commit"
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+    status_code: 200, 201
+  vars:
+    readme_contents: "{{ lookup( 'template', 'README.md.j2')|urlencode }}"
+  tags:
+    - create-repo
+  when:
+    - create_repo_output.status == 200
+
 - name: Add default reviewers for {{ repo.repo_name }}
   uri:
     url: "{{ bitbucket_api_url }}/2.0/repositories/{{ repo.team_name }}/{{ repo.repo_name }}/default-reviewers/{{ item }}"
