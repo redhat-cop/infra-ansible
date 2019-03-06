@@ -4,14 +4,14 @@
   set_fact:
     identities:
       users: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=users') }}"
-      user_groups: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=user_groups') }}"
+      groups: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=user_groups') }}"
 
 - name: "Display imported users values"
   debug:
     var: identities.users
     verbosity: 2
 
-- name: "Display imported user_groups values"
+- name: "Display imported groups values"
   debug:
-    var: identities.user_groups
+    var: identities.groups
     verbosity: 2
