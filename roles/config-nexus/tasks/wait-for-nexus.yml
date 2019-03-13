@@ -2,11 +2,11 @@
 
 - name: "Ensure the Nexus Server is Up"
   uri:
-    url: "http://{{ nexus_url }}/service/metrics/healthcheck"
+    url: "{{ nexus_protocol }}://{{ nexus_url }}/service/metrics/healthcheck"
     method: GET
     status_code: 200
     user: "{{ nexus_user }}"
-    password: "{{ nexus_password }}"
+    password: "{{ nexus_default_password }}"
     force_basic_auth: yes
   register: nexus_server_check_result
   until: nexus_server_check_result is success

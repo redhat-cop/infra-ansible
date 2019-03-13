@@ -6,4 +6,8 @@
   hosts: ocp-nexus
 
   roles:
-  - configure-nexus
+  - role: config-nexus
+    vars:
+      nexus_api_base_path: "/service/rest/v1"
+      nexus_password: "MyTestPassword"
+      nexus_protocol: http

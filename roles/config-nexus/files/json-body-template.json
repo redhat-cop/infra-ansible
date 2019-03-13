@@ -1,0 +1,5 @@
+{
+  "name": "{{ item.script_name }}",
+  "type": "groovy",
+  "content": "{{ groovy_script }}"
+}

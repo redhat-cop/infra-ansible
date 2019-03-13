@@ -1,11 +1,23 @@
 ---
+- name: Create file references
+  set_fact:
+    script_file_path: "{{ role_path }}/files/{{ item.script_file }}"
+    json_template_path: "{{ role_path }}/files/json-body-template.json"
+
+- name: Process groovy script with Jinja and replace newlines
+  set_fact:
+    groovy_script: "{{ lookup('template', script_file_path) | replace('\n', '\\n') }}"
+
+- name: Wrap groovy script in JSON body
+  set_fact:
+    json_body: "{{ lookup('template', json_template_path) }}"
 
 - name: "Check For Existing Script: {{ item.script_name }}"
   uri:
-    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}"
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}"
     method: GET
     user: "{{ nexus_user }}"
-    password: "{{ nexus_password }}"
+    password: "{{ nexus_default_password }}"
     force_basic_auth: yes
     status_code: 200,404
     validate_certs: false
@@ -13,10 +25,10 @@
 
 - name: "Delete Script if it Exists: {{ item.script_name }}"
   uri:
-    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}"
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}"
     method: DELETE
     user: "{{ nexus_user }}"
-    password: "{{ nexus_password }}"
+    password: "{{ nexus_default_password }}"
     force_basic_auth: yes
     status_code: 204
     validate_certs: false
@@ -24,25 +36,24 @@
 
 - name: "Create New Script: {{ item.script_name }}"
   uri:
-    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/"
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/"
     method: POST
     user: "{{ nexus_user }}"
-    password: "{{ nexus_password }}"
+    password: "{{ nexus_default_password }}"
     body_format: json
-    body: "{{ lookup('file', item.script_file )}}"
+    body: "{{ json_body }}"
     force_basic_auth: yes
     validate_certs: false
-    status_code: 204
+    status_code: '204'
 
 - name: "Execute New Script: {{ item.script_name }}"
   uri:
-    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}/run"
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}/run"
     method: POST
     user: "{{ nexus_user }}"
-    password: "{{ nexus_password }}"
+    password: "{{ nexus_default_password }}"
     headers:
       Content-Type: "text/plain"
     force_basic_auth: yes
     validate_certs: false
     status_code: 200
-
