@@ -1,0 +1,2 @@
+nexus_url: localhost:8081
+nexus_protocol: http
