@@ -5,3 +5,8 @@
   when: 
   - docker_install|default(False)
 
+- import_tasks: mtu.yml
+  when: 
+  - docker_install|default(False)
+  - check_mtu|default(True)
+

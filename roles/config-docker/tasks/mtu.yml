@@ -1,0 +1,16 @@
+---
+
+- name: Refresh facts for updated docker information
+  setup:
+
+- name: Find difference in mtu between the default ipv4 and docker devices
+  set_fact:
+    mtu_diff: "{{ ansible_facts.default_ipv4.mtu - ansible_facts.docker0.mtu }}"
+
+- name: Change docker mtu to ipv4 default
+  lineinfile:
+    path: /etc/sysconfig/docker-network
+    regexp: '^DOCKER_NETWORK_OPTIONS='
+    line: "DOCKER_NETWORK_OPTIONS=' --mtu={{ ansible_facts.default_ipv4.mtu }}'"
+  when: mtu_diff != 0
+  notify: restart docker
