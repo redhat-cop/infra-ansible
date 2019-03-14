@@ -14,7 +14,7 @@
     nexus_server_poll_delay_in_seconds: 10
   tasks:
   - name: Start nexus container
-    command: 'docker run -d -p 8081:8081 sonatype/nexus3'
+    command: 'docker run -d --name ansible_nexus_test -p 8081:8081 sonatype/nexus3'
   - name: "Ensure the Nexus Server is Up"
     uri:
       url: "{{ nexus_protocol }}://{{ nexus_url }}/service/metrics/healthcheck"
@@ -156,3 +156,7 @@
       resource_type: rubygems
       repo_type: group
       group_list: 'rubygems_hosted,rubygems_proxied'
+  - name: Kill test Nexus container
+    shell: "docker kill ansible_nexus_test"
+  - name: Delete Nexus container
+    shell: "docker rm ansible_nexus_test"
