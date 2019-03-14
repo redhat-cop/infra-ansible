@@ -10,112 +10,147 @@
     nexus_password: 'admin123'
     nexus_protocol: http
     nexus_url: 'localhost:8081'
-  roles:
-  - role: add-nexus-repo
+    nexus_server_poll_retries: 100
+    nexus_server_poll_delay_in_seconds: 10
+  tasks:
+  - name: Start nexus container
+    command: 'docker run -d -p 8081:8081 sonatype/nexus3'
+  - name: "Ensure the Nexus Server is Up"
+    uri:
+      url: "{{ nexus_protocol }}://{{ nexus_url }}/service/metrics/healthcheck"
+      method: GET
+      status_code: 200
+      user: "{{ nexus_user }}"
+      password: "{{ nexus_password }}"
+      force_basic_auth: yes
+    register: nexus_server_check_result
+    until: nexus_server_check_result is success
+    retries: '{{ nexus_server_poll_retries }}'
+    delay: '{{ nexus_server_poll_delay_in_seconds }}'
+  - include_role: 
+      name: add-nexus-repo
     vars:
       resource_name: hosted-yum
       resource_type: yum
       repo_type: hosted
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: proxied-epel
       resource_type: yum
       repo_type: proxy
       proxy_url: 'http://download.fedoraproject.org/pub/epel/7/'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: hosted-maven
       resource_type: maven
       repo_type: hosted
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: proxied-maven
       resource_type: maven
       repo_type: proxy
       proxy_url: 'https://repository.jboss.org/nexus/content/groups/public/'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'docker_hosted'
       resource_type: docker
       repo_type: hosted
       docker_http_port: 7080
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: "docker_proxied"
       resource_type: docker
       repo_type: proxy
       docker_http_port: 6080
       docker_registry_url: 'https://registry.access.redhat.com:443'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'docker_group'
       resource_type: docker
       repo_type: group
       docker_http_port: 5080
       group_list: 'docker_hosted,docker_proxied'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'npm_hosted'
       resource_type: npm
       repo_type: hosted
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'npm_proxied'
       resource_type: npm
       repo_type: proxy
       proxy_url: 'https://registry.npmjs.org'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'npm_group'
       resource_type: npm
       repo_type: group
       group_list: 'npm_hosted,npm_proxied'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'pypi_hosted'
       resource_type: pypi
       repo_type: hosted
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'pypi_proxied'
       resource_type: pypi
       repo_type: proxy
       proxy_url: 'https://pypi.org/'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'pypi_group'
       resource_type: pypi
       repo_type: group
       group_list: 'pypi_hosted,pypi_proxied'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'raw_hosted'
       resource_type: raw
       repo_type: hosted
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'raw_proxied'
       resource_type: raw
       repo_type: proxy
       proxy_url: 'http://www.google.com/'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'raw_group'
       resource_type: raw
       repo_type: group
       group_list: 'raw_hosted,raw_proxied'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'rubygems_hosted'
       resource_type: rubygems
       repo_type: hosted
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'rubygems_proxied'
       resource_type: rubygems
       repo_type: proxy
       proxy_url: 'https://rubygems.org'
-  - role: add-nexus-repo
+  - include_role:  
+      name: add-nexus-repo
     vars:
       resource_name: 'rubygems_group'
       resource_type: rubygems
