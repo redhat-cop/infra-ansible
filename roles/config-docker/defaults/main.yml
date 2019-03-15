@@ -1,3 +1,7 @@
 ---
 
 docker_username: root
+
+docker_network_interface: docker0
+
+docker_mtu_offset: 0
