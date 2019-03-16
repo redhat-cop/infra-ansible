@@ -1,0 +1,66 @@
+---
+- name: Create file references
+  set_fact:
+    script_file_path: "{{ role_path }}/files/configure-remote-user-token.groovy"
+
+- name: Process groovy script with Jinja and replace newlines
+  set_fact:
+    groovy_script: "{{ lookup('template', script_file_path) }}"
+    resource_name: remote_user_token
+
+- name: Group facts
+  set_fact:
+    json_data:
+      name: "{{ resource_name }}"
+      type: 'groovy'
+      content: "{{ groovy_script }}"
+
+- name: Wrap groovy script in JSON body
+  set_fact:
+    json_body: "{{ json_data | to_json }}"
+
+- name: "Check For Existing Script: {{ resource_name }}"
+  uri:
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ resource_name }}"
+    method: GET
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    status_code: 200,404
+    validate_certs: false
+  register: get_script_result
+
+- name: "Delete Script if it Exists: {{ resource_name }}"
+  uri:
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ resource_name }}"
+    method: DELETE
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    status_code: 204
+    validate_certs: false
+  when: get_script_result.status == 200
+
+- name: "Create New Script: {{ resource_name }}"
+  uri:
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    body_format: json
+    body: "{{ json_body }}"
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: '204'
+
+- name: "Execute New Script: {{ resource_name }}"
+  uri:
+    url: "{{ nexus_protocol }}://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ resource_name }}/run"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    headers:
+      Content-Type: "text/plain"
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
