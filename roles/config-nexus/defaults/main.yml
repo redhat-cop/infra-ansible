@@ -12,6 +12,7 @@ nist_cve_script_file: ../files/nist-proxy-repos.json
 nexus_server_poll_retries: 100
 nexus_server_poll_delay_in_seconds: 5
 nexus_api_base_path: /service/siesta/rest/v1
+nexus_validate_certs: true
 nexus_repos:
 - script_name: redhat-repos
   script_file: ../files/redhat-repos.json
