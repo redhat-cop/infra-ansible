@@ -17,7 +17,7 @@
 - name: Update the mtu if previously set 
   replace:
     path: /etc/sysconfig/docker-network
-    regexp: '--mtu=[1-9]\d*'
+    regexp: '--mtu=[0-9]\d*'
     replace: "--mtu={{ ansible_facts.default_ipv4.mtu - docker_mtu_offset }}"
   when: 
   - docker_mtu_set_check.rc == 0
