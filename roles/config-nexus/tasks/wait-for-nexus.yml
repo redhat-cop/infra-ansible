@@ -8,7 +8,7 @@
     user: "{{ nexus_user }}"
     password: "{{ nexus_password }}"
     force_basic_auth: yes
-    validate_certs: {{ nexus_validate_certs }}
+    validate_certs: "{{ nexus_validate_certs }}"
   register: nexus_server_check_result
   until: nexus_server_check_result is success
   retries: '{{ nexus_server_poll_retries }}'
