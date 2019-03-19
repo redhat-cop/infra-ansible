@@ -12,6 +12,6 @@ rhsm_repos:
 
 idm_master_hostname: idm.example.com
 idm_domain: example.com
-idm_realm: example.com
+idm_realm: EXAMPLE.COM
 idm_dm_password: my_dm_password
 idm_admin_password: my_admin_password
