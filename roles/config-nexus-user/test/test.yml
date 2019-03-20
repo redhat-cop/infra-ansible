@@ -81,9 +81,9 @@
         user: "newuser"
         password: "SomeOtherPassword"
         force_basic_auth: yes
-  # - name: Clean up test containers
-  #   always:
-  #   - name: Stop Nexus test container
-  #     command: 'docker kill nexus_token_test'
-  #   - name: Delete Nexus test container
-  #     command: 'docker rm nexus_token_test'
+  - name: Clean up test containers
+    always:
+    - name: Stop Nexus test container
+      command: 'docker kill nexus_token_test'
+    - name: Delete Nexus test container
+      command: 'docker rm nexus_token_test'
