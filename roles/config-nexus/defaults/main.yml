@@ -6,6 +6,7 @@ nexus_password: admin123
 nexus_server_poll_retries: 100
 nexus_server_poll_delay_in_seconds: 5
 nexus_api_base_path: /service/siesta/rest/v1
+nexus_validate_certs: true
 nexus_repos:
 - script_name: redhat-repos
   script_file: redhat-repos-script.groovy
@@ -13,7 +14,3 @@ nexus_repos:
   script_file: custom-repos-script.groovy
 - script_name: nist-proxy-repos
   script_file: nist-proxy-repos.groovy
-- script_name: configure-remote-user-token
-  script_file: configure-remote-user-token.groovy
-- script_name: update-admin-password
-  script_file: custom-admin-password.groovy

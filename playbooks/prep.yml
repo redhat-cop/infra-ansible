@@ -9,6 +9,15 @@
       register: username
     - set_fact:
         rhsm_username: "{{ username.user_input }}"
+    tags:
+    - configure_rhsm
+    when:
+    - rhsm_register|default(False)
+    - rhsm_activationkey is undefined
+    - rhsm_org_id is undefined
+    - rhsm_username is undefined
+
+  - block:
     - pause:
         prompt: 'Please enter your Red Hat Subscription password'
         echo: no
@@ -23,3 +32,4 @@
     - rhsm_register|default(False)
     - rhsm_activationkey is undefined
     - rhsm_org_id is undefined
+    - rhsm_password is undefined

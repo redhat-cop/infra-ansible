@@ -4,7 +4,7 @@
     ipa-server-install -U
       --hostname="{{ idm_master_hostname | default(ansible_fqdn) }}"
       --domain="{{ idm_domain }}"
-      --realm="{{ idm_realm }}"
+      --realm="{{ idm_realm | upper }}"
       --ds-password="{{ idm_dm_password }}"
       --admin-password="{{ idm_admin_password }}"
   ignore_errors: true
