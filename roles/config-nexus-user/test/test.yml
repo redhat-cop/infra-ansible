@@ -7,7 +7,7 @@
   vars:
     nexus_api_base_path: '/service/rest/v1'
     nexus_user: admin
-    nexus_password: 'admin123'
+    nexus_password: 'admin123'  ## ADMIN Password
     nexus_protocol: http
     nexus_url: 'localhost:8081'
     nexus_server_poll_retries: 100
@@ -37,9 +37,6 @@
         target_nexus_user: 'admin'
         target_nexus_password: 'MyTestPassword'
         target_nexus_roles: "nx-admin"
-    # - name: Wait for admin script to run
-    #   pause:
-    #     seconds: 10
     - name: Verify admin password was changed
       uri:
         url: "{{ nexus_protocol }}://{{ nexus_url }}/service/metrics/healthcheck"
@@ -53,14 +50,11 @@
       include_role: 
         name: config-nexus-user
       vars:
-        nexus_password: 'MyTestPassword'
+        nexus_password: 'MyTestPassword'  ## ADMIN Password
         target_nexus_email: 'newuser@example.com'
         target_nexus_user: 'newuser'
         target_nexus_password: 'NewUserTestPassword'
         target_nexus_roles: "nx-anonymous,nx-admin"
-    # - name: Wait for newuser script to run
-    #   pause:
-    #     seconds: 30
     - name: Verify new user was created
       uri:
         url: "{{ nexus_protocol }}://{{ nexus_url }}/service/metrics/healthcheck"
@@ -69,6 +63,23 @@
         validate_certs: false
         user: "newuser"
         password: "NewUserTestPassword"
+        force_basic_auth: yes
+    - name: Alter new user but leave groups the same
+      include_role: 
+        name: config-nexus-user
+      vars:
+        nexus_password: 'MyTestPassword'  ## ADMIN Password
+        target_nexus_email: 'newuser@example.com'
+        target_nexus_user: 'newuser'
+        target_nexus_password: 'SomeOtherPassword'
+    - name: Verify new user still works
+      uri:
+        url: "{{ nexus_protocol }}://{{ nexus_url }}/service/metrics/healthcheck"
+        method: GET
+        status_code: 200
+        validate_certs: false
+        user: "newuser"
+        password: "SomeOtherPassword"
         force_basic_auth: yes
   # - name: Clean up test containers
   #   always:
