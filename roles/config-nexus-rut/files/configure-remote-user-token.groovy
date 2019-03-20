@@ -10,7 +10,7 @@ def capabilityRegistry = container.lookup(DefaultCapabilityRegistry.class.getNam
 
 //Capability specific values/properties
 def capabilityType = CapabilityType.capabilityType("rutauth")
-def capabilityProps = ['httpHeader': '{{ nexus_rut_header }}']
+def capabilityProps = ['httpHeader': '{{ nexus_rut_header | default("X-Forwarded-User")}}']
 def capabilityNotes = 'configured through scripting api'
 
 //check if existing Rut Auth capability exists
