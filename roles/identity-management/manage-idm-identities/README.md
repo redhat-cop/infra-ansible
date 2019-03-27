@@ -13,6 +13,7 @@ Role Variables
 |**ipa_admin_user**|The IPA/IdM admin user with proper permissions to administer identities|yes|N/A|
 |**ipa_admin_password**|The IPA/IdM admin password for the above mentioned admin user|yes|N/A|
 |**ipa_validate_certs**|Whether to validate the IPA/IdM certificate|no|True|
+|**ipa_password_reset_users**|A list of users who's passwords you wish to reset|no|[]|
 
 In addition to the above mentioned variables, the role also requires an `identity` dictionary with a list of users and groups as documented in the [identity-management README](../README.md).
 
