@@ -21,3 +21,9 @@
   with_items:
   - "{{ nexus_repos | default([]) }}"
 
+- name: "Configure Nexus Admin Password with {{ new_nexus_password }}"
+  include_tasks: configure-repos.yml
+  when:
+  - configure_nexus_password
+  with_items:
+  - "{{ admin_setup | default([]) }}"

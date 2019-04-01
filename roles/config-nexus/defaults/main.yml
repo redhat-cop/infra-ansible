@@ -1,6 +1,8 @@
 ---
 nexus_user: admin
 nexus_password: admin123
+configure_nexus_password: false
+new_nexus_password: admin123
 configure_redhat_repos: true
 nexus_redhat_script_name: redhat-repos
 nexus_redhat_script_file: ../files/redhat-repos.json
@@ -20,3 +22,6 @@ nexus_repos:
   script_file: ../files/custom-repos.json
 - script_name: nist-proxy-repos
   script_file: ../files/nist-proxy-repos.json
+admin_setup:
+- script_name: admin-password
+  script_file: ../files/admin-password.json
