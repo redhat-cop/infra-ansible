@@ -33,33 +33,6 @@
     args:
       chdir: "{{ ansible_tower_dir }}"
 
-  - name: "Wait for Tower to become available before proceeding (30 sec max)"
-    uri:
-      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v1/config/"
-      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-      password: "{{ ansible_tower.admin_password }}"
-      force_basic_auth: yes
-      method: GET
-      validate_certs: no
-    register: status_output
-    until: status_output.status == 200
-    retries: 6
-    delay: 5
-
-  - name: "Add Tower license"
-    uri:
-      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v1/config/"
-      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-      password: "{{ ansible_tower.admin_password }}"
-      force_basic_auth: yes
-      method: POST
-      body: '{{ lookup("file", ansible_tower.install.license_file) | from_json | combine({"eula_accepted":"true"}) | to_json }}'
-      body_format: 'json'
-      headers:
-        Content-Type: "application/json"
-        Accept: "application/json"
-      validate_certs: no
-
   - name: "Download and Install the 'oc' client for OpenShift interactions"
     shell: curl {{ ansible_tower_oc_download_url }} | tar -C /bin/ -xzf -
     args:
