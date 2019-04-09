@@ -35,6 +35,9 @@ Example Playbooks
 
 ```
 - hosts: cert-host
+  vars:
+    csr_content: ...
+    csr_key: ...
   roles:
   - idm-host-cert
 ```

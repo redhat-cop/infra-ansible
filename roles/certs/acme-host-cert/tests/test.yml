@@ -1,4 +1,5 @@
 ---
-- hosts: localhost
+- hosts: cert-host
   roles:
-  - certs/idm-host-cert
+  - certs/generate-csr
+  - certs/acme-host-cert

@@ -1,15 +1,19 @@
 ---
 
-csr_host_name: "host-1.example.com"
-csr_country: "US"
-csr_state: "North Carolina"
-csr_location: "Raleigh"
-csr_org_name: "Red Hat, Inc."
-csr_org_unit: "Open Innovation Labs"
-csr_email: "myemail@example.com"
-csr_subject_alt_names:
-- my-host-1.example.com
-- www-host-1.example.com
+host_name: "host-1.example.com"
 
-target_csr_file: "/tmp/{{ csr_host_name }}.csr"
-target_host_key_file: "/tmp/{{ csr_host_name }}.key"
+csr:
+  hostname: "{{ host_name }}"
+  country: "US"
+  state: "North Carolina"
+  location: "Raleigh"
+  org_name: "Red Hat, Inc."
+  org_unit: "Open Innovation Labs"
+  email: "myemail@example.com"
+  subject_alt_names:
+    - my-host-1.example.com
+    - www-host-1.example.com
+
+target_cert_files:
+  csr: "/tmp/{{ host_name}}/{{ host_name }}.csr"
+  key: "/tmp/{{ host_name }}/{{ host_name }}.key"
