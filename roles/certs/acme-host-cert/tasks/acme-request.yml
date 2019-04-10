@@ -17,6 +17,3 @@
     force: "{{ acme.force | default(omit) }}"
     data: "{{ acme_certificate_output | default(omit) }}"
   register: acme_certificate_output
-
-- debug:
-    msg: "{{ acme_certificate_output }}"

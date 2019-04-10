@@ -22,6 +22,5 @@
     pause:
       seconds: "{{ dns_wait_seconds | default(5) }}"
   when:
-    - acme_certificate_output.changed
     - acme_certificate_output.challenge_data_dns is defined
     - acme_certificate_output.challenge_data_dns.keys()|length > 0
