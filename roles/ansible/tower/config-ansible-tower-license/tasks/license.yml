@@ -1,0 +1,46 @@
+---
+
+- block:
+  - name: Get Route Info
+    shell: "oc get route -n ansible-tower {{ kubernetes_deployment_name }}-web-svc -o json"
+    register: route
+  - set_fact:
+      route: "{{ route.stdout | from_json }}"
+  - set_fact:
+      default_ansible_tower_url: "{{ route.spec.port.targetPort }}://{{ route.spec.host }}"
+  when:
+  - default_ansible_tower_url is undefined
+  - ansible_tower.url is undefined
+
+- name: "Wait for Tower to become available before proceeding (30 sec max)"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: GET
+    validate_certs: "{{ validate_tower_certs | default(false) }}"
+  register: status_output 
+  until: status_output.status == 200 
+  retries: 6
+  delay: 5
+
+- name: "Check Tower URL for redirect"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+    validate_certs: "{{ validate_tower_certs | default(false) }}"
+  register: tower_url
+
+- name: "Add Tower license"
+  uri:
+    url: "{{ tower_url.url | regex_replace('\\/$','')}}/api/v2/config/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: '{{ lookup("file", ansible_tower.install.license_file) | from_json | combine({"eula_accepted":"true"}) | to_json }}'
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ validate_tower_certs | default(false) }}"
