@@ -1,0 +1,29 @@
+---
+
+- name: Get JAR name
+  set_fact:
+    jar_name: "{{ plugin_url.split('/')[-1] }}"
+
+- name: Download the SonarQube plugin
+  get_url:
+    url: "{{ plugin_url }}"
+    dest: "/tmp/{{ jar_name }}"
+    mode: 0440
+
+## The Jinja2 template and the Go template in the following task conflict,
+## so the weird double-curly-braces surrounded by double-curly-braces is required.
+- name: Find sonarqube pod
+  command: >-
+      oc get pods --namespace={{ namespace }} -l="app==sonarqube"
+      -o jsonpath="{.items[0].metadata.name}"
+  register: pod_name_lines
+
+- name: Extract pod name
+  set_fact:
+    pod_name: "{{ pod_name_lines.stdout }}"
+
+- name: Copy plugin to SonarQube pod
+  command: "oc cp /tmp/{{ jar_name }} {{ namespace }}/{{ pod_name }}:{{ install_location }}/{{ jar_name }}"
+
+- name: Redeploy SonarQube
+  command: "oc rollout latest --namespace={{ namespace }} {{ pod_prefix }}"

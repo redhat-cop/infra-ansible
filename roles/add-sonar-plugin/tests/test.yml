@@ -1,0 +1,10 @@
+- name: Install C++ Community Plugin For SonarQube
+  hosts: ocp-sonarqube
+
+  roles:
+  - role: add-sonar-plugin
+    vars:
+      plugin_url: https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-1.2.2/sonar-cxx-plugin-1.2.2.1653.jar
+      install_location: /opt/sonarqube/extensions/plugins
+      namespace: deven-role-test
+      pod_prefix: sonarqube
