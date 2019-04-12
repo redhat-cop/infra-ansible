@@ -37,7 +37,7 @@ target_cert_files:
 
 #
 # Use `openssl genrsa` to generate an account key - if you don't have one.
-# See [ansible 'acme_certificate' docs](https://docs.ansible.com/ansible/latest/modules/acme_certificate_module.html) for more details.
+# See Ansible 'acme_certificate' docs for more details: https://docs.ansible.com/ansible/latest/modules/acme_certificate_module.html
 #
 acme:
   account_key_content: |
