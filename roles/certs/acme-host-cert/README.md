@@ -1,14 +1,14 @@
-idm-host-cert
-=============
+acme-host-cert
+==============
 
 This ansible role is used to create host certificates, using Let's Encrypt / ACME protocol
 
-A certificate is created by submitting a request to Let's Encrypt with the FQDN for the requested certificate. Let's Encrypt will then return a challenge that is used to update the DNS servers with a TXT record for validation. Once this is done, the validation will be performed by a 2nd call to Let's Encrypt. Once validated, the certificates are returned and this role write them to files for further consumption.
+A certificate is created by submitting a request to Let's Encrypt with the FQDN for the requested certificate. Let's Encrypt will then return a challenge that is used to update the DNS servers with a TXT record for validation. Once this is done, the validation will be performed by a 2nd call to Let's Encrypt. Once validated, the certificates are returned and this role writes them to files for further consumption.
 
 Requirements
 ------------
 
-None, other than a valid inventory per the variables and examples below.
+- If using DNS to validate the TXT record, need to have the `python2-dns` and/or `python3-dns` package installed (Fedora/RHEL)
 
 Role Variables
 --------------

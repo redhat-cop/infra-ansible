@@ -6,20 +6,22 @@ This ansible role is used to create a CSR (Certificate Signing Request) for use 
 Requirements
 ------------
 
-- An operational IdM/IPA account with the proper permissions to manage hosts.
+- need to have the `python2-pyOpenSSL` and/or `python3-pyOpenSSL` package installed (Fedora/RHEL)
 
 Role Variables
 --------------
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|csr_host_name| The hostname/FQDN of the host | yes | |
-|csr_country| CSR Country (e.g.: 'US') | yes | |
-|csr_state| CSR State (e.g.: North Carolina) | yes | |
-|csr_location| CSR Location/City/Town (e.g.: Raleigh) | yes | |
-|csr_org_name| CSR Organization/Company Name (e.g.: Red Hat, Inc.) | yes | |
-|csr_org_unit| CSR Organization Name (e.g.: Community of Practice) | yes | |
-|csr_email| CSR E-mail address to be used | true | |
-|csr_subject_alt_names| List of CSR SANs | false | |
+|host_name | The hostname/FQDN of the host | yes | |
+|csr.country | CSR Country (e.g.: 'US') | yes | |
+|csr.state | CSR State (e.g.: North Carolina) | yes | |
+|csr.location | CSR Location/City/Town (e.g.: Raleigh) | yes | |
+|csr.org_name | CSR Organization/Company Name (e.g.: Red Hat, Inc.) | yes | |
+|csr.org_unit | CSR Organization Name (e.g.: Community of Practice) | yes | |
+|csr.email | CSR E-mail address to be used | true | |
+|csr.subject_alt_names | List of CSR SANs | false | |
+|target_cert_files.csr | File used for writing the CSR content | false | |
+|target_cert_files.key | File used for writing the Certificate Private Key | false | |
 
 
 
@@ -44,19 +46,21 @@ localhost
 **inventory/csr-host**
 ```
 ---
-csr_host_name: "host-1.example.com"
-csr_country: "US"
-csr_state: "North Carolina"
-csr_location: "Raleigh"
-csr_org_name: "Red Hat, Inc."
-csr_org_unit: "Open Innovation Labs"
-csr_email: "myemail@example.com"
-csr_subject_alt_names:
-- my-host-1.example.com
-- www-host-1.example.com
+host_name: "host-1.example.com"
+csr:
+  country: "US"
+  state: "North Carolina"
+  location: "Raleigh"
+  org_name: "Red Hat, Inc."
+  org_unit: "Open Innovation Labs"
+  email: "myemail@example.com"
+  subject_alt_names:
+    - my-host-1.example.com
+    - www-host-1.example.com
 
-target_csr_file: "/tmp/{{ csr_host_name }}.csr"
-target_host_key_file: "/tmp/{{ csr_host_name }}.key"
+target_cert_files:
+  csr: "/tmp/{{ csr_host_name }}.csr"
+  key: "/tmp/{{ csr_host_name }}.key"
 ```
 
 License
