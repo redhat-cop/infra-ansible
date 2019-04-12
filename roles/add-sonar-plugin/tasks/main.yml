@@ -3,6 +3,7 @@
 - name: Get JAR name
   set_fact:
     jar_name: "{{ plugin_url.split('/')[-1] }}"
+    plugin_name: "{{ plugin_url.split('/')[-1] | regex_replace('-([0-9]+\\.?)+\\.jar', '') }}"
 
 - name: Download the SonarQube plugin
   get_url:
@@ -14,13 +15,17 @@
 ## so the weird double-curly-braces surrounded by double-curly-braces is required.
 - name: Find sonarqube pod
   command: >-
-      oc get pods --namespace={{ namespace }} -l="app==sonarqube"
+      oc get pods --namespace={{ namespace }} -l='app==sonarqube'
       -o jsonpath="{.items[0].metadata.name}"
   register: pod_name_lines
 
 - name: Extract pod name
   set_fact:
     pod_name: "{{ pod_name_lines.stdout }}"
+
+- name: Delete any existing matching plugins
+  command: >-
+    oc exec --namespace={{ namespace }} {{ pod_name }} -- rm -f {{ install_location }}/{{ plugin_name }}*.jar
 
 - name: Copy plugin to SonarQube pod
   command: "oc cp /tmp/{{ jar_name }} {{ namespace }}/{{ pod_name }}:{{ install_location }}/{{ jar_name }}"

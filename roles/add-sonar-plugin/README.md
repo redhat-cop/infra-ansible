@@ -21,3 +21,5 @@ This role uses the OpenShift command-line tool to upload a JAR based SonarQube p
 * Deploy a [Labs CI/CD environment](https://github.com/rht-labs/labs-ci-cd)
 * Apply the role using the test playbook: `ansible-playbook -i inventory test.yml
 * Verify deployment after SonarQube restarts
+* Apply the inventory a second time and ensure that SonarQube continues to start
+  * Multiple instances of the same plugin will cause SonarQube to fail on startup
