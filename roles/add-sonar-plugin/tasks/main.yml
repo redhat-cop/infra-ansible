@@ -17,18 +17,28 @@
   command: >-
       oc get pods --namespace={{ namespace }} -l='app==sonarqube'
       -o jsonpath="{.items[0].metadata.name}"
-  register: pod_name_lines
+  register: pod_name
 
 - name: Extract pod name
   set_fact:
-    pod_name: "{{ pod_name_lines.stdout }}"
+    pod_name: "{{ pod_name.stdout }}"
+
+- name: Check for existing plugin install_location
+  command: >-
+    oc exec -i --namespace={{ namespace }} {{ pod_name }} -- find {{ install_location }}/ -type f -name '{{ plugin_name }}*jar'
+  register: existing_plugin
 
 - name: Delete any existing matching plugins
   command: >-
-    oc exec --namespace={{ namespace }} {{ pod_name }} -- rm -f {{ install_location }}/{{ plugin_name }}*.jar
+    oc exec --namespace={{ namespace }} {{ pod_name }} -- find {{ install_location }}/ -type f -name '{{ plugin_name }}*jar' -delete
+  when: existing_plugin is defined and not existing_plugin.stdout.endswith(jar_name)
 
 - name: Copy plugin to SonarQube pod
   command: "oc cp /tmp/{{ jar_name }} {{ namespace }}/{{ pod_name }}:{{ install_location }}/{{ jar_name }}"
+  when: existing_plugin is not defined or not existing_plugin.stdout.endswith(jar_name)
 
 - name: Redeploy SonarQube
-  command: "oc rollout latest --namespace={{ namespace }} {{ pod_prefix }}"
+  # command: "oc rollout latest --namespace={{ namespace }} {{ pod_prefix }}"
+  debug:
+    msg: "Restarting sonarqube"
+  when: existing_plugin is not defined or not existing_plugin.stdout.endswith(jar_name)
