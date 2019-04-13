@@ -38,7 +38,5 @@
   when: existing_plugin is not defined or not existing_plugin.stdout.endswith(jar_name)
 
 - name: Redeploy SonarQube
-  # command: "oc rollout latest --namespace={{ namespace }} {{ pod_prefix }}"
-  debug:
-    msg: "Restarting sonarqube"
+  command: "oc rollout latest --namespace={{ namespace }} {{ pod_prefix }}"
   when: existing_plugin is not defined or not existing_plugin.stdout.endswith(jar_name)
