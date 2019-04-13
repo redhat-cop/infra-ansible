@@ -5,12 +5,6 @@
     jar_name: "{{ plugin_url.split('/')[-1] }}"
     plugin_name: "{{ plugin_url.split('/')[-1] | regex_replace('-([0-9]+\\.?)+\\.jar', '') }}"
 
-- name: Download the SonarQube plugin
-  get_url:
-    url: "{{ plugin_url }}"
-    dest: "/tmp/{{ jar_name }}"
-    mode: 0440
-
 ## The Jinja2 template and the Go template in the following task conflict,
 ## so the weird double-curly-braces surrounded by double-curly-braces is required.
 - name: Find sonarqube pod
@@ -27,6 +21,13 @@
   command: >-
     oc exec -i --namespace={{ namespace }} {{ pod_name }} -- find {{ install_location }}/ -type f -name '{{ plugin_name }}*jar'
   register: existing_plugin
+
+- name: Download the SonarQube plugin
+  get_url:
+    url: "{{ plugin_url }}"
+    dest: "/tmp/{{ jar_name }}"
+    mode: 0440
+  when: existing_plugin is not defined or not existing_plugin.stdout.endswith(jar_name)
 
 - name: Delete any existing matching plugins
   command: >-
