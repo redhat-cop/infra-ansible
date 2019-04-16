@@ -2,7 +2,7 @@
 
 - name: "Ensure the Nexus Server is Up"
   uri:
-    url: "http://{{ nexus_url }}/service/metrics/healthcheck"
+    url: "https://{{ nexus_url }}/service/metrics/healthcheck"
     method: GET
     status_code: 200
     user: "{{ nexus_user }}"
