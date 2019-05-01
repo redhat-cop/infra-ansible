@@ -4,4 +4,10 @@ docker_username: root
 
 docker_network_interface: docker0
 
-docker_mtu_offset: 0
+mtu_offset: 0
+
+docker_interface: docker0
+
+external_interface: default_ipv4
+
+docker_network_file: /etc/sysconfig/docker-network

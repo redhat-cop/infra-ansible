@@ -1,49 +1,30 @@
 ---
 
-- name: Refresh facts for updated docker information
-  setup:
-
-- name: Find difference in mtu between the default ipv4 and docker devices
+- name: "Set Docker MTU based on parameters" 
   set_fact:
-    mtu_diff: "{{ ansible_facts.default_ipv4.mtu - ansible_facts[lookup('vars','docker_network_interface')].mtu }}"
+    new_mtu: "{{ ansible_facts[external_interface].mtu - mtu_offset|int }}"
 
-- name: Check if file has mtu set 
-  command: grep -q "mtu=" /etc/sysconfig/docker-network
-  register: docker_mtu_set_check
-  check_mode: no
-  ignore_errors: yes 
-  changed_when: no
+- name: "Check if the entry exists in the file"
+  lineinfile:
+    path: "{{ docker_network_file }}"
+    regexp: '^DOCKER_NETWORK_OPTIONS=".*"$'
+    state: absent
+  check_mode: yes
+  register: mtu_config_exists
 
-- name: Update the mtu if previously set 
-  replace:
-    path: /etc/sysconfig/docker-network
-    regexp: '--mtu=[0-9]\d*'
-    replace: "--mtu={{ ansible_facts.default_ipv4.mtu - docker_mtu_offset }}"
-  when: 
-  - docker_mtu_set_check.rc == 0
-  notify: 
-  - restart docker
-  
 - block:
-  - name: Append mtu option
+  - name: "Update file based on mtu_diff - mtu_offset"
     replace:
-      path: /etc/sysconfig/docker-network
-      regexp: '^DOCKER_NETWORK_OPTIONS=(.*)$'
-      replace: 'DOCKER_NETWORK_OPTIONS=\1 --mtu={{ ansible_facts.default_ipv4.mtu - docker_mtu_offset }}'
-
-  - name: Format file arguments 
-    replace:
-      path: /etc/sysconfig/docker-network 
-      regexp: "'" 
-      replace: ""
-
-  - name: Format file arguments
-    replace:
-      path: /etc/sysconfig/docker-network
-      regexp: "^DOCKER_NETWORK_OPTIONS=(.*)"
-      replace: DOCKER_NETWORK_OPTIONS='\1'
-    notify: 
-    - restart docker    
+      path: "{{ docker_network_file }}"
+      regexp: '^DOCKER_NETWORK_OPTIONS="\s*(.*(?=--mtu=\d+))(--mtu=\d+)\s*(.*)"$|^DOCKER_NETWORK_OPTIONS="(.*)"$'
+      replace: 'DOCKER_NETWORK_OPTIONS="\1 --mtu={{ new_mtu }} \3\4"'
+    when:
+    - mtu_config_exists.found
+  - name: "Add line if it wasn't updated above"
+    lineinfile:
+      path: "{{ docker_network_file }}"
+      line: 'DOCKER_NETWORK_OPTIONS="--mtu={{ new_mtu }}"'
+    when:
+    - not mtu_config_exists.found
   when:
-  - docker_mtu_set_check.rc == 1
-  
+  - new_mtu != ansible_facts[docker_interface].mtu
