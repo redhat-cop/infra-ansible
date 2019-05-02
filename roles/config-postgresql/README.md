@@ -1,4 +1,4 @@
-# Redis
+# PostgreSQL
 
 Ansible Role to help configure [PostgreSQL](https://www.postgresql.org/) on a standalone instance.
 
