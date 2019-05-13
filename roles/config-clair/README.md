@@ -12,7 +12,7 @@ This role contains a number of variables to customize the deployment of Clair. T
 
 | Name | Description | Default|
 |---|---|---|
-|clair_image|Clair image|`quay.io/coreos/clair-jwt:v2.0.4`|
+|clair_image|Clair image|`quay.io/coreos/clair-jwt:v2.0.8`|
 |clair_config_dir|Directory for Clair configurations| `/var/lib/clair/config`| 
 |clair_host_proxy_port|Port to the clair proxy on the host |`6060`|
 |clair_host_api_port|Port to the clair API on the host |`6061`|
