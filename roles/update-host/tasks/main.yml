@@ -1,5 +1,9 @@
 ---
 
-- import_tasks: update-host.yml
-- import_tasks: reboot-host.yml
-- import_tasks: wait-for-host.yml 
+  - include_tasks: update-host.yml
+    when: pkg_update|default(False)
+
+  - include_tasks: reboot_host.yml
+    when: host_updated.changed
+
+#- include_tasks: wait-for-host.yml 

@@ -1,0 +1,6 @@
+---
+
+  - name: "Reboot the host"
+    become: "True"
+    reboot:
+      post_reboot_delay: "15"
