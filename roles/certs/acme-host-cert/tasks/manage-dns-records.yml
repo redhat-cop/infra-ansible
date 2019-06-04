@@ -15,8 +15,8 @@
     loop: "{{ acme_certificate_output.challenge_data_dns | dictsort }}"
 
   - name: "Call 'manage-dns-records' to update DNS server(s)"
-    import_role:
-      name: "../../../dns/manage-dns-records"
+    include_role:
+      name: "dns/manage-dns-records"
 
   - name: "Wait a time-period before proceeding"
     pause:
