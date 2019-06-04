@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
-''' generate_csr ansible module ''' 
+''' generate_csr ansible module '''
 
 from ansible.module_utils.basic import * # noqa: F403
 from OpenSSL import crypto, SSL

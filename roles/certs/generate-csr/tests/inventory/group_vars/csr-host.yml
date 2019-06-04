@@ -1,0 +1,19 @@
+---
+
+host_name: "host-1.example.com"
+
+csr:
+  hostname: "{{ host_name }}"
+  country: "US"
+  state: "North Carolina"
+  location: "Raleigh"
+  org_name: "Red Hat, Inc."
+  org_unit: "Open Innovation Labs"
+  email: "myemail@example.com"
+  subject_alt_names:
+    - my-host-1.example.com
+    - www-host-1.example.com
+
+target_cert_files:
+  csr: "/tmp/{{ host_name}}/{{ host_name }}.csr"
+  key: "/tmp/{{ host_name }}/{{ host_name }}.key"

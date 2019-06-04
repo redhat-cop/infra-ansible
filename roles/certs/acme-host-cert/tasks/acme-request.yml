@@ -1,0 +1,19 @@
+---
+
+- name: "Create(1st) or Verify(2nd) ACME challenge"
+  acme_certificate:
+    account_key_content: "{{ acme.account_key_content | default(omit) }}"
+    account_key_src: "{{ acme.account_key_src | default(omit) }}"
+    account_email: "{{ acme.email | default(omit) }}"
+    src: "{{ target_cert_files.csr }}"
+    dest: "{{ target_cert_files.host_cert | default(omit) }}"
+    fullchain_dest: "{{ target_cert_files.fullchain | default(omit) }}"
+    chain_dest: "{{ target_cert_files.intermediate_ca | default(omit) }}"
+    challenge: "{{ acme.challenge | default(default_acme_challenge) }}"
+    acme_directory: "{{ acme.directory | default(default_acme_directory) }}"
+    acme_version: "{{ acme.version | default(default_acme_version) }}"
+    terms_agreed: "{{ acme.terms_agreed | default('yes') }}"
+    remaining_days: "{{ acme.remaining_days | default(omit) }}"
+    force: "{{ acme.force | default(omit) }}"
+    data: "{{ acme_certificate_output | default(omit) }}"
+  register: acme_certificate_output

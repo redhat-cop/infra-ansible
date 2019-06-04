@@ -1,0 +1,23 @@
+---
+
+# Create ACME / Let's Encrypt request
+- import_tasks: "acme-request.yml"
+
+# Add DNS TXT records for the ACME request
+- block:
+  - import_tasks: "manage-dns-records.yml"
+    vars:
+      dns_state: 'present'
+
+  # Ensure target directories exists
+  - import_tasks: "create-directories.yml"
+
+  # Verify ACME / Let's Encrypt request
+  - import_tasks: "acme-request.yml"
+
+  # Remove DNS TXT records no longer needed
+  - import_tasks: "manage-dns-records.yml"
+    vars:
+      dns_state: 'absent'
+  when:
+  - acme_certificate_output.changed

@@ -1,7 +1,7 @@
 ---
 
 - name: "Register host"
-  uri: 
+  uri:
     url: "https://{{ idm_fqdn }}/ipa/session/json"
     method: POST
     body: '{"method":"host_add","params":[["{{ host_name }}"],{"force": {{ host_force_add }}, "description": "{{ host_description }}", "version": "{{ api_version }}" }],"id":0}'

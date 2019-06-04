@@ -1,0 +1,7 @@
+---
+
+default_acme_directory: https://acme-v02.api.letsencrypt.org/directory
+default_acme_version: 2
+default_acme_challenge: 'dns-01'
+
+acme: {}

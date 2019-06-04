@@ -7,7 +7,7 @@
     key_secret: "{{ nsupdate.key_secret }}"
     key_algorithm: "{{ nsupdate.key_algorithm }}"
     zone: "{{ dns.1.dns_domain }}"
-    record: "{{ item.record }}"
+    record: "{{ item.record | replace('.' + dns.1.dns_domain, '') }}"
     value: "{{ item.value | default(omit) }}"
     type: "{{ item.type }}"
     ttl: "{{ item.ttl | default(omit) }}"
@@ -17,6 +17,6 @@
   when:
     - dns.1.entries is defined
   register: nsupdate_result
-  until: nsupdate_result | succeeded
+  until: nsupdate_result is succeeded
   retries: 10
   delay: 1
