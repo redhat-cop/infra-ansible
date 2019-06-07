@@ -2,17 +2,7 @@
 
 - hosts: ansible-tower
   tasks:
-  - name: "Copy custom Tower SSL certificate and Key"
-    block:
-      - copy:
-          src: "{{ ansible_tower.install.ssl_certificate.cert }}"
-          dest: /etc/tower/tower.cert
+  - import_role:
+      name: ansible/tower/config-ansible-tower
+      tasks_from: install-cert
 
-      - copy:
-          src: "{{ ansible_tower.install.ssl_certificate.key }}"
-          dest: /etc/tower/tower.key
-
-      - service:
-          name: supervisord
-          state: restarted
-    become: true
