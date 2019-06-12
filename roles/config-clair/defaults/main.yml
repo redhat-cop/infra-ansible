@@ -10,7 +10,7 @@ systemd_service_dir: /usr/lib/systemd/system
 systemd_environmentfile_dir: /etc/sysconfig
 
 # Clair
-clair_image: quay.io/coreos/clair-jwt:v2.0.4
+clair_image: quay.io/coreos/clair-jwt:v2.0.8
 clair_config_dir: /var/lib/clair/config
 clair_container_config_dir: /config
 clair_ssl_trust_configure: False
