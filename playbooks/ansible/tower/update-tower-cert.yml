@@ -1,0 +1,8 @@
+---
+
+- hosts: ansible-tower
+  tasks:
+  - import_role:
+      name: ansible/tower/config-ansible-tower
+      tasks_from: install-cert
+

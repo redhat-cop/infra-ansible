@@ -28,6 +28,12 @@ Any consecutive runs can be done without the tags to speed up execution:
 > ansible-playbook -i inventory configure-ansible-tower.yml
 ```
 
+To update certificates after expiration: 
+```bash
+> ansible-playbook -i inventory install-tower-cert.yml
+```
+Be sure that your inventory points to new certificates. If you are using Let's Encrypt for your CA you can use the [generate-lets-encrypt-cert](../../certs/generate-lets-encrypt-cert.yml) playbook. 
+
 
 License
 -------
