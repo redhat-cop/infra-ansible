@@ -9,7 +9,7 @@
                                       'ttl': '30',
                                       'state': dns_state,
                                       'record': item.0,
-                                      'value': item.1
+                                      'value': item[1][0]
                                     }]
                                 }}"
     loop: "{{ acme_certificate_output.challenge_data_dns | dictsort }}"

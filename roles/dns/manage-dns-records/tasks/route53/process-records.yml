@@ -12,7 +12,7 @@
   route53:
     zone: "{{ dns.1.dns_domain }}"
     record: "{{ item.record }}"
-    value: "{{ item.value | default(omit) }}"
+    value: '"{{ item.value | default(omit) }}"'
     type: "{{ item.type }}"
     ttl: "{{ item.ttl | default(omit) }}"
     state: "{{ item.state | default('present') }}"
