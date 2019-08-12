@@ -20,9 +20,9 @@
   include_tasks: configure-repos.yml
   with_items:
   - "{{ nexus_repos | default([]) }}"
-  when: nexus_server_check_result.status == 200 || nexus_skip_wait_failure == false
+  when: nexus_server_check_result.status != -1
 
 - name: "Gracefully Fail"
   debug:
     msg: Nexus Server STILL isn't up, scripts were NOT curled in. Please try again at a later time.
-  when: nexus_server_check_result != 200
+  when: nexus_server_check_result.status == -1
