@@ -13,4 +13,4 @@
   until: nexus_server_check_result is success
   retries: '{{ nexus_server_poll_retries }}'
   delay: '{{ nexus_server_poll_delay_in_seconds }}'
-
+  ignore_errors: "{{ nexus_skip_wait_failure }}"
