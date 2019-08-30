@@ -15,7 +15,7 @@ One of the two:
 
 Please see the **sample** inventory in the inventory area:
 
-- [satellite-server](../../inventory/satellite-server/README.md)
+- [satellite-server](../../inventory/satellite-server)
 
 You will need to modify this sample inventory to fit your desired configuration.
 

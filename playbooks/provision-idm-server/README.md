@@ -18,7 +18,7 @@ You must have a working DNS server which accepts "nsupdate" connections for the 
 
 Please see the **sample** inventory in the inventory area:
 
-- [IdM-server](../../inventory/idm-server/README.md)
+- [IdM-server](../../inventory/idm-server)
 
 
 You will need to modify this sample inventory to fit your desired configuration, including information from your DNS server such as the key names, secrets, and more.
