@@ -21,7 +21,7 @@ This role contains a number of variables to customize the deployment of Clair. T
 
 ## Dependencies
 
-* [container-storage-setup](../container-storage-setup)
+* [container-storage-setup](../config-container-storage-setup)
 * [config-docker](../config-docker)
 
 
