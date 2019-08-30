@@ -17,7 +17,7 @@ One of the two:
 
 Please see the **sample** inventory in the inventory area:
 
-- [ansible-tower](../../inventory/ansible-tower/README.md)
+- [ansible-tower](../../inventory/ansible-tower)
 
 You will need to modify this sample inventory to fit your desired configuration.
 

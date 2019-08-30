@@ -17,7 +17,7 @@ The following dictionary is expected:
 
   - dns_data.named_global_config: This dictionary will be used to ensure the DNS server is properly configured. See README one level up for more details.
 
-> **Note:** This role does **not** configure any views/zones - please use the [manage-dns-zones](../manage-dns-zones) role for this purpose.
+> **Note:** This role does **not** configure any views/zones - please use the [manage-dns-zones](../manage-dns-zones-bind) role for this purpose.
 
 
 Example Playbook

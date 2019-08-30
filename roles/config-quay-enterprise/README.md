@@ -28,7 +28,7 @@ If `quay_superuser_username`, `quay_superuser_password` and `quay_superuser_emai
 
 ## Dependencies
 
-* [container-storage-setup](../container-storage-setup)
+* [container-storage-setup](../config-container-storage-setup)
 * [config-docker](../config-docker)
 
 ## Example Inventory
