@@ -1,6 +1,6 @@
 Manage AWS Security Groups Role
+===============================
 
-=========
 An ansible role that allows you to manage existing or new AWS Security Groups
 
 Requirements

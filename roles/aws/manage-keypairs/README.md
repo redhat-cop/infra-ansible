@@ -1,5 +1,5 @@
-Manage AWS Networks Role
-=========
+Manage AWS Keypairs Role
+========================
 
 An ansible role that allows you to manage existing or new AWS keypairs 
 
