@@ -1,0 +1,17 @@
+---
+
+- name: "Manage VPC's"
+  block:
+  - name: "Create VPC: {{ item.name }}"
+    ec2_vpc_net:
+      name: "{{ item.name }}"
+      cidr_block: "{{ item.cidr_blocks }}"
+      aws_access_key: "{{ aws_key }}"
+      aws_secret_key: "{{ aws_secret }}"
+      region: "{{ item.region | default(aws_region) }}"
+      dns_hostnames: "{{ item.enable_dns_hostnames | default(true) }}"
+      dns_support: "{{ item.enable_dns_support | default(true) }}"
+      multi_ok: "{{ item.enable_multi | default(false) }}"
+      purge_cidrs: "{{ item.purge_cidrs | default(false) }}"
+      tags: "{{ item.tags | default(omit) }}"
+      state: "{{ item.state | default('present') }}"
