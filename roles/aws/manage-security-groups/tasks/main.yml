@@ -1,0 +1,4 @@
+---
+
+- include_tasks: "manage-security-groups.yml"
+  with_items: "{{ aws_security_groups }}"
