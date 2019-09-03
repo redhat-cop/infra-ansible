@@ -23,7 +23,8 @@
   group:
     name: docker
     state: present
-  notify: restart docker
+  notify: 
+  - restart docker
 
 - name: "Add username to the docker group" 
   user:
