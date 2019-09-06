@@ -22,11 +22,16 @@
     oc exec -i --namespace={{ namespace }} {{ pod_name }} -- find {{ install_location }}/ -type f -name '{{ plugin_name }}*jar'
   register: existing_plugin
 
+- name: Create tempfile for sonar plugin list
+  tempfile:
+    state: file
+    suffix: temp
+  register: plugin_list_tempfile
+
 - name: Download the SonarQube plugin
   get_url:
     url: "{{ plugin_url }}"
-    dest: "/tmp/{{ jar_name }}"
-    mode: 0440
+    dest: "{{ plugin_list_tempfile }}"
   when: existing_plugin is not defined or not existing_plugin.stdout.endswith(jar_name)
 
 - name: Delete any existing matching plugins
