@@ -9,13 +9,7 @@
     - dns.0.name != 'public'
 
 - name: "Manage Route53 DNS records for view: {{ dns.0.name }}, zone: {{ dns.1.dns_domain }}"
-  route53:
-    zone: "{{ dns.1.dns_domain }}"
-    record: "{{ item.record }}"
-    value: "{{ item.value | default(omit) }}"
-    type: "{{ item.type }}"
-    ttl: "{{ item.ttl | default(omit) }}"
-    state: "{{ item.state | default('present') }}"
+  include_tasks: process-one-record.yml
   with_items:
     - "{{ dns.1.entries }}"
   when:

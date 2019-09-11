@@ -1,0 +1,19 @@
+---
+
+- name: "Apply workaround fix for Route53 TXT records"
+  set_fact:
+    record_value: "{{ (item.type == 'TXT') | ternary('\"' + item.value + '\"', item.value) }}"
+  when:
+    - item.value is defined 
+
+- route53:
+    zone: "{{ dns.1.dns_domain }}"
+    record: "{{ item.record }}"
+    value: '{{ record_value | default(omit) }}'
+    type: "{{ item.type }}"
+    ttl: "{{ item.ttl | default(omit) }}"
+    overwrite: "{{ item.overwrite | default(omit) }}"
+    private_zone: "{{ dns.1.route53.private_zone | default(omit) }}"
+    vpc_id: "{{ dns.1.route53.vpc_id | default(omit) }}"
+    hosted_zone_id: "{{ dns.1.route53.hosted_zone_id | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
