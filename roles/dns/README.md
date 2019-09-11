@@ -83,8 +83,10 @@ dns_data:
       route53:
         aws_access_key: "ADFGIASDF343FMSDFF5431A"
         aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
-        vpc_id: vpc-9dcde6f8
-        vpc_region: eu-west-1
+        vpc_id: vpc-9dcde6f8  # Private Zones only
+        vpc_region: eu-west-1 # Private Zones only
+        private_zone: true
+        hosted_zone_id: Z07234592MWCM9XJSSPYU
       nsupdate:
       - server: "192.168.48.26"
         key_name: "private-first.example.com"
