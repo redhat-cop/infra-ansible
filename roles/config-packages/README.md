@@ -11,7 +11,7 @@ A Linux distro supported by the Ansible 'package' module
 Role Variables
 --------------
 
-- list_of_packages: The list of packages (RPMs) to install
+- list_of_packages_to_install: The list of packages (RPMs) to install
 
 
 Dependencies
