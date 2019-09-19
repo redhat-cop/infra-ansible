@@ -19,9 +19,12 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.credentials.description|Description for the credential|no|nothing('')|
 |ansible_tower.credentials.organization|Name of the existing org to tie these credentials with|yes||
 |ansible_tower.credentials.type|Type of credentials ('machine', 'aws', etc)|yes||
+|ansible_tower.credentials.inputs|Additional input parameters|no||
 
 
 **_Note:_** Credential configuration will **only** happen if the `ansible_tower.credentials` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
+
+**_Note:_** Credential input will **only** happen if the `ansible_tower.credentials.inputs` portion of the dictionary is defined and complete as per [Tower Credential Types documentation](https://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html#credential-types).
 
 
 ## Example Inventory
@@ -39,6 +42,15 @@ ansible_tower:
     description: "My Credential 2"
     organization: "Default"
     credential_type: "Machine"
+  - name: "Cred3"
+    description: "My Credential 3"
+    organization: "Default"
+    credential_type: "Ansible Tower"
+    inputs:
+      host: "localhost"
+      username: "my_user"
+      password: 'my_password'
+      verify_ssl: true
 ```
 
 ## Example Playbook
