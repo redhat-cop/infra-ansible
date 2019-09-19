@@ -5,5 +5,5 @@
     name: '{{ item }}'
     state: installed
   with_items:
-  - "{{ list_of_packages_to_install }}"
+  - "{{ list_of_packages_to_install | default([]) }}"
 
