@@ -2,6 +2,7 @@
 
 - hosts: ansible-tower
   roles:
+  - role: config-packages
   - role: ansible/tower/config-ansible-tower
   - role: ansible/tower/config-ansible-tower-license
   - role: ansible/tower/config-ansible-tower-ldap
