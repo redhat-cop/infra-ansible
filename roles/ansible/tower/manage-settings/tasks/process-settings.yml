@@ -7,7 +7,7 @@
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: true
     method: PATCH
-    body: "{{ existing_settings_output | combine(ansible_tower.settings, recursive=True) | to_json) }}"
+    body: "{{ existing_settings_output | combine(ansible_tower.settings, recursive=True) | to_json }}"
     body_format: json
     headers:
       Content-Type: application/json
