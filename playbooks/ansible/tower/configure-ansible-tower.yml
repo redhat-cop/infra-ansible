@@ -12,6 +12,7 @@
 
 - hosts: tower-management-host
   roles:
+  - role: ansible/tower/manage-settings
   - role: ansible/tower/manage-projects
   - role: ansible/tower/manage-credential-types
   - role: ansible/tower/manage-credentials
