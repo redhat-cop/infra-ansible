@@ -18,3 +18,19 @@ ansible_tower:
       users:
       - name: user1
         role: Execute
+  - name: "Job 2"
+    description: "My Job 2"
+    inventory: "Inventory1"
+    project: "Project1"
+    playbook: "playbooks/prep.yml"
+    credentials:
+    - "Cred1"
+    extra_vars: "---\\nhello: world\\n"
+    ask_variables_on_launch: true
+    permissions:
+      teams:
+      - name: team1
+        role: Execute
+      users:
+      - name: user1
+        role: Execute

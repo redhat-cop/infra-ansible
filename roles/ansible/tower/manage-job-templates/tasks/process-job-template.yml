@@ -16,28 +16,44 @@
   with_items:
   - "{{ existing_projects_output.rest_output }}"
 
-- name: "Get the credential id based on the credential name"
+- name: "Get the job template id based on job template name"
   set_fact:
-    credential_id: "{{ item.id }}"
+    job_template_id: "{{ item.id }}"
   when:
-  - item.name|trim == job_template.credential|trim
+  - item.name|trim == job_template.name|trim
   with_items:
-  - "{{ existing_credentials_output.rest_output }}"
+  - "{{ existing_job_templates_output.rest_output }}"
 
 - name: "Load up the job template"
-  uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/job_templates/"
-    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-    password: "{{ ansible_tower.admin_password }}"
-    force_basic_auth: yes
-    method: POST
-    body: "{{ lookup('template', 'job-template.j2') }}"
-    body_format: 'json'
-    headers:
-      Content-Type: "application/json"
-      Accept: "application/json"
-    validate_certs: no
-    status_code: 200,201,400
+  block:
+  - name: "Create job template {{ job_template.name }}"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/job_templates/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: POST
+      body: "{{ lookup('template', 'job-template.j2') }}"
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+      status_code: 200,201,400
+    register: job_template_creation_output
+
+  - name: "Get the created job template id"
+    set_fact:
+      job_template_id: "{{ job_template_creation_output.json.id }}"
+  when:
+  - job_template_id is not defined
+
+- name: "Add credentials to job template: {{ job_template.name }}"
+  include_tasks: process-job-template-credentials.yml
+  loop: "{{ job_template.credentials | default([ job_template.credential|trim ]) }}"
+  loop_control:
+    loop_var: job_template_credential
+  when: (job_template.credentials is defined) or (job_template.credential is defined)
 
 # Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Obtain the current roles"
