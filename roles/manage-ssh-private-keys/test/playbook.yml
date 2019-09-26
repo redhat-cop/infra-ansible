@@ -1,0 +1,7 @@
+---
+
+# Test the role to add the keys
+- name: "Update  access"
+  hosts: all
+  roles:
+    - role: manage-ssh-private-keys
