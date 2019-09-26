@@ -20,6 +20,7 @@ The variables used must be defined in the Ansible Inventory using the `ssh_priva
 |ssh_private_keys.group|Remote group of the ssh private key|yes||
 |ssh_private_keys.mode|Remote file mode for the private ssh key|no|0400|
 |ssh_private_keys.create_dest_dir|Create the remote directory if it doesn't exist|no|false|
+|ssh_private_keys.directory_mode|Remote directory mode for the parent directory|no|0700|
 
 
 ## Example Inventory
@@ -33,6 +34,7 @@ ssh_private_keys:
     owner: awx
     group: awx
     create_dest_dir: true
+    directory_mode: 0750
   - src: /home/user2/.ssh/id_rsa_user2
     dest: /home/user2/.ssh/id_rsa_user2
     owner: user2

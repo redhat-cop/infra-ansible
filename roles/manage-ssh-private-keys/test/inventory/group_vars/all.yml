@@ -6,6 +6,7 @@ ssh_private_keys:
     owner: awx
     group: awx
     create_dest_dir: true
+    directory_mode: 0750
   - src: "{{ inventory_dir }}/../id_rsa_user2"
     dest: /home/user2/.ssh/id_rsa_user2
     owner: user2
