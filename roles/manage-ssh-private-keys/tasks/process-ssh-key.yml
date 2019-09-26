@@ -1,0 +1,20 @@
+---
+
+- name: Create destination path {{ ssh_key.dest | dirname }}
+  file:
+    path: "{{ ssh_key.dest | dirname }}"
+    state: directory
+    owner: "{{ ssh_key.owner }}"
+    group: "{{ ssh_key.group }}"
+    mode: "{{ ssh_key.directory_mode | default(0700) }}"
+  when:
+    - ssh_key.create_dest_dir is defined
+    - ssh_key.create_dest_dir
+
+- name: Copy SSH key {{ ssh_key.src | basename }} to {{ ssh_key.dest }}
+  copy:
+    src: "{{ ssh_key.src }}"
+    dest: "{{ ssh_key.dest }}"
+    owner: "{{ ssh_key.owner }}"
+    group: "{{ ssh_key.group }}"
+    mode: "{{ ssh_key.mode | default(0400) }}"

@@ -1,0 +1,14 @@
+---
+# needed to setup for the test conditions
+ssh_private_keys:
+  - src: "{{ inventory_dir }}/../id_rsa_user1"
+    dest: /var/lib/awx/.ssh/id_rsa_user1
+    owner: awx
+    group: awx
+    create_dest_dir: true
+    directory_mode: 0750
+  - src: "{{ inventory_dir }}/../id_rsa_user2"
+    dest: /home/user2/.ssh/id_rsa_user2
+    owner: user2
+    group: user2
+    mode: 0600

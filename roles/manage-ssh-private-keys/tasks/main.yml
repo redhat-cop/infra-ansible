@@ -1,0 +1,10 @@
+---
+
+- name: Add SSH keys to remote host
+  include_tasks: process-ssh-key.yml
+  loop: "{{ ssh_private_keys }}"
+  loop_control:
+    loop_var: ssh_key
+  when:
+    - ssh_private_keys is defined
+    - (ssh_private_keys | type_debug) == 'list'
