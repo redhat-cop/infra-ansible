@@ -1,0 +1,19 @@
+---
+
+- name: Install Python software packages
+  pip:
+    name: "{{ item }}"
+  loop: "{{ pip.packages | default([]) }}"
+  when:
+    - pip is defined
+    - pip.virtualenv is not defined
+
+- name: Install Python software packages using {{ pip.virtualenv }}
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ pip.virtualenv }}"
+    virtualenv_python: "{{ pip.virtualenv_python | default(None) }}"
+  loop: "{{ pip.packages | default([]) }}"
+  when:
+    - pip is defined
+    - pip.virtualenv is defined

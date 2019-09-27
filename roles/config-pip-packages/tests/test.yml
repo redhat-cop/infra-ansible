@@ -1,0 +1,5 @@
+---
+- name: Test install pip packages
+  hosts: all
+  roles:
+    - config-pip-packages
