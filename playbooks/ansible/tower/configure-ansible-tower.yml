@@ -2,11 +2,11 @@
 
 - hosts: ansible-tower
   roles:
-  - role: config-pip-packages
   - role: ansible/tower/config-ansible-tower
   - role: ansible/tower/config-ansible-tower-license
   - role: ansible/tower/config-ansible-tower-ldap
   - role: config-packages
+  - role: config-pip-packages
   tags:
   - 'never'
   - 'install'
