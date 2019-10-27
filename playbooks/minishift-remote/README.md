@@ -29,4 +29,4 @@ An example inventory can be found in the [inventory/minishift-remote](../../inve
 |docker_install|Install and configure Docker on remote machine| `true`|
 |install_prerequisites|Install dependencies used by Minishift | 80, 443, 2376, 4001 |
 
-Additional options can also be found in the [minishift-remote](../../roles/minishift-remote) role to further tailor the execution.
+Additional options can also be found in the [minishift-remote](../../roles/config-minishift-remote) role to further tailor the execution.
