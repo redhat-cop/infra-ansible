@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - identity-management/htpasswd-from-dict
+  vars:
+    htpasswd_users:
+      - username: user1
+        password: password1
+      - username: user2
+        password: password2
+    htpasswd_output_path: /tmp/ansible-test/htpasswd
