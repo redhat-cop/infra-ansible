@@ -1,0 +1,17 @@
+---
+- name: Ensure {{ htpasswd_output_path | dirname }} exist
+  file:
+    path: "{{ htpasswd_output_path | dirname }}"
+    state: directory
+
+- name: Delete old htpasswd file (if it exist)
+  file:
+    path: "{{ htpasswd_output_path }}"
+    state: absent
+
+- name: Create htpasswd file
+  htpasswd:
+    path: "{{ htpasswd_output_path }}"
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+  loop: "{{ htpasswd_users }}"
