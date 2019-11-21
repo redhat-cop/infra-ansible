@@ -1,0 +1,25 @@
+---
+
+- block: # when ansible_tower.settings is defined
+
+  - name: "Set default values"
+    set_fact:
+      existing_settings_output: []
+      processed_credentials: []
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing settings"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/settings/all/"
+    register: existing_settings_output
+
+  - name: "Process the inventory credentials"
+    include_tasks: process-settings.yml
+    with_items:
+      - "{{ ansible_tower.settings }}"
+
+  when:
+    - ansible_tower.settings is defined

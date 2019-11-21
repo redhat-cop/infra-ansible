@@ -1,0 +1,16 @@
+---
+
+- name: Update the settings
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/settings/all/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: true
+    method: PATCH
+    body: "{{ existing_settings_output | combine(ansible_tower.settings, recursive=True) | to_json }}"
+    body_format: json
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    validate_certs: false
+    status_code: 200,400
