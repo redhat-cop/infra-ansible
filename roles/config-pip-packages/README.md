@@ -17,7 +17,7 @@ The variables used must be defined in the Ansible Inventory using the `pip` dict
 |:---------|:------------|:---------|:---------|
 |pip.packages|List of packages to install|yes|[]|
 |pip.virtualenv|The virtualenv to install packages in|no||
-|pip.virtualenv_python|The python executable used for virtualenv|no|None|
+|pip.virtualenv_python|The python executable used for virtualenv|no||
 
 Example Inventory
 -----------------
