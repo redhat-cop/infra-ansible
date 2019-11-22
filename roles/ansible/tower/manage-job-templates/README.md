@@ -61,7 +61,7 @@ ansible_tower:
     inventory: "Inventory1"
     project: "Project1"
     playbook: "playbooks/prep.yml"
-    credential:
+    credentials:
     - "Cred1"
     extra_vars: "---\\nhello: world\\n"
     ask_variables_on_launch: true
