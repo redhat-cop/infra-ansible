@@ -1,0 +1,8 @@
+---
+
+- name: Install Python software packages
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ pip.virtualenv | default(omit) }}"
+    virtualenv_python: "{{ pip.virtualenv_python | default(omit) }}"
+  loop: "{{ pip.packages }}"

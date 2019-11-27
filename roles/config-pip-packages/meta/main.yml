@@ -1,0 +1,23 @@
+galaxy_info:
+  author: Red Hat Containers Community of Practice
+  description: A small wrapper role around the Ansible pip module
+  company: Red Hat, Inc
+
+  issue_tracker_url: http://github.com/redhat-cop/infra-ansible/issues
+  license: license (Apache 2.0)
+
+  min_ansible_version: 2.0
+  platforms:
+    - name: Fedora
+      versions:
+        - all
+    - name: EL
+      versions:
+        - 6
+        - 7
+  galaxy_tags:
+    - system
+    - packaging
+    - python
+    - pip
+    - tools
