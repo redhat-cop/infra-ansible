@@ -6,9 +6,6 @@ ansible_connection: local
 #       - please replace with valid values and files
 
 ansible_tower:
-  openshift_host: https://console.openshift.local
-  openshift_user: "admin"
-  openshift_password: "secret"
   admin_username: "admin"
   admin_password: "secret"
   pg_username: "awx"
@@ -18,4 +15,3 @@ ansible_tower:
   rabbitmq_erlang_cookie: "secret"
   install:
     license_file: "{{ inventory_dir }}/../files/example-license.json"
-
