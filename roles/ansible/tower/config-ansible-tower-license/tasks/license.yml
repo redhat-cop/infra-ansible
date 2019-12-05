@@ -1,7 +1,5 @@
 ---
 
-- block:
-
 - name: "Wait for Tower to become available before proceeding (30 sec max)"
   uri:
     url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
