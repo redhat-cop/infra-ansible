@@ -8,10 +8,6 @@ ansible_connection: local
 ansible_tower:
   admin_username: "admin"
   admin_password: "secret"
-  pg_username: "awx"
-  pg_password: "redhat"
-  rabbitmq_password: "secret"
-  secret_key: "mysecrettoken"
-  rabbitmq_erlang_cookie: "secret"
+  url: https://tower.example.com
   install:
     license_file: "{{ inventory_dir }}/../files/example-license.json"
