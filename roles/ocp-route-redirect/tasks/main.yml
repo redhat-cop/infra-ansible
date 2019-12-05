@@ -1,0 +1,13 @@
+---
+
+- name: Check for required vars
+  fail:
+    msg: "The required var has not been set: {{ item }}"
+  when:
+  - vars[item] is undefined
+  with_items:
+  - route_redirect_name
+  - route_redirect_namespace
+  - route_redirect_var_name
+
+- import_tasks: redirect.yml

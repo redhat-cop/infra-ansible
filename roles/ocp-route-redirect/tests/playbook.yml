@@ -1,0 +1,8 @@
+---
+
+- hosts: redirect_host
+  tasks:
+    - import_role:
+        name: ocp-route-redirect
+    - debug:
+        msg: "key={{route_redirect_var_name}}, value={{ my_test_var_name }}"

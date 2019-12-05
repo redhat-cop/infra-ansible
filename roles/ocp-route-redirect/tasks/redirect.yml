@@ -1,0 +1,19 @@
+---
+
+- k8s_facts:
+    api_version: route.openshift.io/v1
+    kind: Route
+    name: "{{ route_redirect_name }}"
+    namespace: "{{ route_redirect_namespace }}"
+  register: route
+
+- set_fact:
+    route: "http://{{ (route.resources | first).spec.host }}"
+
+- uri:
+    url: "{{ route }}"
+    validate_certs: "{{ route_redirect_validate_certs | default(false) }}"
+  register: redirect_url
+
+- set_fact:
+    {"{{ route_redirect_var_name }}" : "{{ redirect_url.url }}" }
