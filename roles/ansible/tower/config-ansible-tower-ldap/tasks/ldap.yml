@@ -21,7 +21,7 @@
 
   - name: "Update Ansible Tower LDAP config"
     uri:
-      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v1/settings/ldap/"
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/settings/ldap/"
       user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
       password: "{{ ansible_tower.admin_password }}"
       force_basic_auth: yes
@@ -35,6 +35,7 @@
     notify:
     - restart-tower
 
+# This is only useful if the bind user is in the necessary LDAP group
   - name: "Force LDAP Sync"
     uri:
       url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/"
