@@ -1,16 +1,6 @@
 ---
 
 - block:
-  - name: Get Route Info
-    shell: "oc get route -n ansible-tower {{ kubernetes_deployment_name }}-web-svc -o json"
-    register: route
-  - set_fact:
-      route: "{{ route.stdout | from_json }}"
-  - set_fact:
-      default_ansible_tower_url: "{{ route.spec.port.targetPort }}://{{ route.spec.host }}"
-  when:
-  - default_ansible_tower_url is undefined
-  - ansible_tower.url is undefined
 
 - name: "Wait for Tower to become available before proceeding (30 sec max)"
   uri:
