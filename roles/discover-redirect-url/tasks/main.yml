@@ -11,10 +11,10 @@
   - redirect_var_name
 
 - set_fact:
-      url: "{{redirect_url_protocol }}://{{ redirect_url }}"
-
-- debug:
-    msg: "{{ url | final_url }}"
+    url: "{{redirect_url_protocol }}://{{ redirect_url }}"
 
 - set_fact:
-    {"{{ redirect_var_name }}" : "{{ redirect_url.url }}" }
+    url: "{{ url | final_url }}"
+
+- set_fact:
+    {"{{ redirect_var_name }}" : "{{ url }}" }
