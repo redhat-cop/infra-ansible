@@ -14,7 +14,7 @@
     url: "{{redirect_url_protocol }}://{{ redirect_url }}"
 
 - set_fact:
-    url: "{{ url | final_url }}"
+    url: "{{ url | final_url | regex_replace('\\/$','') }}"
 
 - set_fact:
     {"{{ redirect_var_name }}" : "{{ url }}" }
