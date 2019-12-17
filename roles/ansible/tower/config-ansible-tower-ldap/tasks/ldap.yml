@@ -2,6 +2,10 @@
 
 - block: # become: True
 
+  - name: "Check if this is a containerized workload"
+    set_fact:
+      tower_containerized: "{{ ansible_tower.containerized | default(false) }}"
+
   - name: "Upload Cert CA to Ansible Tower (if applicable)"
     copy:
       src: "{{ ansible_tower.ldap.ca_cert }}"
@@ -9,6 +13,7 @@
     when:
     - ansible_tower.ldap.ca_cert is defined
     - ansible_tower.ldap.ca_cert|trim != ''
+    - tower_containerized is false
     notify:
     - restart-tower
     register: ca_uploaded
@@ -18,6 +23,7 @@
     when:
     - ca_uploaded is defined
     - ca_uploaded.changed
+    - tower_containerized is false
 
   - name: "Update Ansible Tower LDAP config"
     uri:
@@ -32,8 +38,10 @@
         Content-Type: "application/json"
         Accept: "application/json"
       validate_certs: no
+{% if tower_containerized is true %}
     notify:
     - restart-tower
+{% endif %}
 
 # This is only useful if the bind user is in the necessary LDAP group
   - name: "Force LDAP Sync"
