@@ -1,19 +1,26 @@
----
+# This will create or update a default admin (superuser) account in Tower
+admin_user: admin
+admin_password: 'password123'
+secret_key: 'secretpassword'
+pg_username: 'awx'
+pg_password: 'password123'
+pg_database: 'tower'
+pg_port: 5432
+pg_sslmode: 'prefer'  # set to 'verify-full' for client-side enforced SSL
+rabbitmq_password: 'secret'
+rabbitmq_erlang_cookie: 'secretcookie'
+# rabbitmq_use_ssl: True
 
-ansible_connection: local
+openshift_host: https://console.example.com
+# openshift_skip_tls_verify=false
+openshift_project: ansible-tower
+openshift_user: sa
+openshift_password: password123
 
-# NOTE: below is an example on how these params and files can be specified
-#       - please replace with valid values and files
-
-ansible_tower:
-  openshift_host: https://console.openshift.local
-  openshift_user: "admin"
-  openshift_password: "secret"
-  admin_password: "secret"
-  pg_username: "awx"
-  pg_password: "redhat"
-  rabbitmq_password: "secret"
-  secret_key: "mysecrettoken"
-  rabbitmq_erlang_cookie: "secret"
+# Name of a PVC you've already provisioned for database:
+# openshift_pg_pvc_name=postgresql
+# Or... use an emptyDir volume for the OpenShift Postgres pod.
+# Useful for demos or testing purposes.
+openshift_pg_emptydir: true 
 
 

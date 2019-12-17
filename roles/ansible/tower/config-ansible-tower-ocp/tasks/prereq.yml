@@ -1,0 +1,18 @@
+# main.yml
+---
+- include_tasks: check_openshift.yml
+  when: openshift_host is defined and openshift_host != ''
+
+- include_tasks: check_kubernetes.yml
+  when: kubernetes_context is defined and kubernetes_context != ''
+
+- name: Check if inventory file variables are defined
+  fail: msg="Please specify the value of {{item}} in your inventory file"
+  when: "{{item}} is undefined or {{item}} == ''"
+  with_items:
+    - admin_password
+    - secret_key
+    - pg_username
+    - pg_password
+    - rabbitmq_password
+    - rabbitmq_erlang_cookie

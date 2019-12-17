@@ -37,14 +37,22 @@ metadata:
 data:
   enabled_plugins: |
       [rabbitmq_management,rabbitmq_peer_discovery_k8s].
+  rabbitmq_definitions.json: |
+      {
+        "users":[{"name": "{{ rabbitmq_user }}", "password": "{{ rabbitmq_password }}", "tags": "administrator"}],
+        "permissions":[
+          {"user":"{{ rabbitmq_user }}","vhost":"awx","configure":".*","write":".*","read":".*"}
+        ],
+        "vhosts":[{"name":"awx"}],
+        "policies":[
+            {"vhost":"awx","name":"ha-all","pattern":".*","definition":{"ha-mode":"all","ha-sync-mode":"automatic"}}
+        ]
+      }
   rabbitmq.conf: |
-      default_user = {{ rabbitmq_user }}
-      default_pass = {{ rabbitmq_password }}
-      default_vhost = awx
-
       ## Clustering
+      management.load_definitions = /etc/rabbitmq/rabbitmq_definitions.json
       cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
-      cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+      cluster_formation.k8s.host = kubernetes.default.svc
       cluster_formation.k8s.address_type = ip
       cluster_formation.node_cleanup.interval = 10
       cluster_formation.node_cleanup.only_log_warning = false
@@ -53,6 +61,20 @@ data:
       queue_master_locator=min-masters
       ## enable guest user
       loopback_users.guest = false
+{% if rabbitmq_use_ssl|default(False)|bool %}
+      ssl_options.cacertfile=/etc/pki/rabbitmq/ca.crt
+      ssl_options.certfile=/etc/pki/rabbitmq/server-combined.pem
+      ssl_options.verify=verify_peer
+{% endif %}
+  rabbitmq-env.conf: |
+      NODENAME=${RABBITMQ_NODENAME}
+      USE_LONGNAME=true
+{% if rabbitmq_use_ssl|default(False)|bool %}
+      ERL_SSL_PATH=$(erl -eval 'io:format("~p", [code:lib_dir(ssl, ebin)]),halt().' -noshell)
+      SSL_ADDITIONAL_ERL_ARGS="-pa '$ERL_SSL_PATH' -proto_dist inet_tls -ssl_dist_opt server_certfile /etc/pki/rabbitmq/server-combined.pem -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
+      SERVER_ADDITIONAL_ERL_ARGS="$SERVER_ADDITIONAL_ERL_ARGS $SSL_ADDITIONAL_ERL_ARGS"
+      CTL_ERL_ARGS="$SSL_ADDITIONAL_ERL_ARGS"
+{% endif %}
 
 {% if kubernetes_context is defined %}
 ---
@@ -115,6 +137,7 @@ metadata:
   name: {{ kubernetes_deployment_name }}
   namespace: {{ kubernetes_namespace }}
 spec:
+  serviceName: {{ kubernetes_deployment_name }}
   replicas: 1
   template:
     metadata:
@@ -125,6 +148,35 @@ spec:
     spec:
       serviceAccountName: awx
       terminationGracePeriodSeconds: 10
+{% if custom_venvs is defined %}
+      initContainers:
+        - image: 'centos:7'
+          name: init-custom-venvs
+          command:
+            - sh
+            - '-c'
+            - >-
+              yum install -y ansible curl python-setuptools epel-release \
+                openssl openssl-devel gcc python-devel &&
+              yum install -y python-virtualenv python36 python36-devel &&
+              mkdir -p {{ custom_venvs_path }} &&
+{% for custom_venv in custom_venvs %}
+              virtualenv -p {{ custom_venv.python | default(custom_venvs_python) }} \
+                {{ custom_venvs_path }}/{{ custom_venv.name }} &&
+              source {{ custom_venvs_path }}/{{ custom_venv.name }}/bin/activate &&
+              {{ custom_venvs_path }}/{{ custom_venv.name }}/bin/pip install -U psutil \
+                "ansible=={{ custom_venv.python_ansible_version }}" &&
+{% if custom_venv.python_modules is defined %}
+              {{ custom_venvs_path }}/{{ custom_venv.name }}/bin/pip install -U \
+                {% for module in custom_venv.python_modules %}{{ module }} {% endfor %} &&
+{% endif %}
+              deactivate &&
+{% endfor %}
+              :
+          volumeMounts:
+            - name: custom-venvs
+              mountPath: {{ custom_venvs_path }}
+{% endif %}
       containers:
         - name: {{ kubernetes_deployment_name }}-web
           image: "{{ kubernetes_web_image }}:{{ kubernetes_web_version }}"
@@ -132,17 +184,47 @@ spec:
           ports:
             - containerPort: 8052
           volumeMounts:
+{% if ca_trust_dir is defined %}
+            - name: {{ kubernetes_deployment_name }}-ca-trust-dir
+              mountPath: "/etc/pki/ca-trust/source/anchors/"
+              readOnly: true
+{% endif %}
+{% if project_data_dir is defined %}
+            - name: {{ kubernetes_deployment_name }}-project-data-dir
+              mountPath: "/var/lib/awx/projects"
+              readOnly: false
+{% endif %}
+{% if custom_venvs is defined %}
+            - name: custom-venvs
+              mountPath: {{ custom_venvs_path }}
+{% endif %}
             - name: {{ kubernetes_deployment_name }}-application-config
-              mountPath: "/etc/tower"
+              mountPath: "/etc/tower/settings.py"
+              subPath: settings.py
               readOnly: true
 
-            - name: "{{ kubernetes_deployment_name }}-confd"
+            - name: "{{ kubernetes_deployment_name }}-application-credentials"
               mountPath: "/etc/tower/conf.d/"
               readOnly: true
+
+            - name: {{ kubernetes_deployment_name }}-secret-key
+              mountPath: "/etc/tower/SECRET_KEY"
+              subPath: SECRET_KEY
+              readOnly: true
+
           resources:
             requests:
               memory: "{{ web_mem_request }}Gi"
               cpu: "{{ web_cpu_request }}m"
+{% if web_mem_limit is defined or web_cpu_limit is defined %}
+            limits:
+{% endif %}
+{% if web_mem_limit is defined %}
+              memory: "{{ web_mem_limit }}Gi"
+{% endif %}
+{% if web_cpu_limit is defined %}
+              cpu: "{{ web_cpu_limit }}m"
+{% endif %}
         - name: {{ kubernetes_deployment_name }}-celery
           securityContext:
             privileged: true
@@ -151,44 +233,44 @@ spec:
             - /usr/bin/launch_awx_task.sh
           imagePullPolicy: Always
           volumeMounts:
+{% if ca_trust_dir is defined %}
+            - name: {{ kubernetes_deployment_name }}-ca-trust-dir
+              mountPath: "/etc/pki/ca-trust/source/anchors/"
+              readOnly: true
+{% endif %}
+{% if custom_venvs is defined %}
+            - name: custom-venvs
+              mountPath: {{ custom_venvs_path }}
+{% endif %}
             - name: {{ kubernetes_deployment_name }}-application-config
-              mountPath: "/etc/tower"
+              mountPath: "/etc/tower/settings.py"
+              subPath: settings.py
               readOnly: true
 
-            - name: "{{ kubernetes_deployment_name }}-confd"
+            - name: "{{ kubernetes_deployment_name }}-application-credentials"
               mountPath: "/etc/tower/conf.d/"
+              readOnly: true
+
+            - name: {{ kubernetes_deployment_name }}-secret-key
+              mountPath: "/etc/tower/SECRET_KEY"
+              subPath: SECRET_KEY
               readOnly: true
           env:
             - name: AWX_SKIP_MIGRATIONS
               value: "1"
-            - name: DATABASE_USER
-              value: {{ pg_username }}
-            - name: DATABASE_NAME
-              value: {{ pg_database }}
-            - name: DATABASE_HOST
-              value: {{ pg_hostname|default('postgresql') }}
-            - name: DATABASE_PORT
-              value: "{{ pg_port|default('5432') }}"
-            - name: DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ kubernetes_deployment_name }}-secrets"
-                  key: pg_password
-            - name: MEMCACHED_HOST
-              value: {{ memcached_hostname|default('localhost') }}
-            - name: RABBITMQ_HOST
-              value: {{ rabbitmq_hostname|default('localhost') }}
-            - name: AWX_ADMIN_USER
-              value: {{ admin_user }}
-            - name: AWX_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ kubernetes_deployment_name }}-secrets"
-                  key: admin_password
           resources:
             requests:
               memory: "{{ task_mem_request }}Gi"
               cpu: "{{ task_cpu_request }}m"
+{% if task_mem_limit is defined or task_cpu_limit is defined %}
+            limits:
+{% endif %}
+{% if task_mem_limit is defined %}
+              memory: "{{ task_mem_limit }}Gi"
+{% endif %}
+{% if task_cpu_limit is defined %}
+              cpu: "{{ task_cpu_limit }}m"
+{% endif %}
         - name: {{ kubernetes_deployment_name }}-rabbit
           image: "{{ kubernetes_rabbitmq_image }}:{{ kubernetes_rabbitmq_version }}"
           imagePullPolicy: Always
@@ -201,12 +283,14 @@ spec:
               containerPort: 5672
           livenessProbe:
             exec:
-              command: ["rabbitmqctl", "status"]
+              command:
+              - /usr/local/bin/healthchecks/rabbit_health_node.py
             initialDelaySeconds: 30
             timeoutSeconds: 10
           readinessProbe:
             exec:
-              command: ["rabbitmqctl", "status"]
+              command:
+              - /usr/local/bin/healthchecks/rabbit_health_node.py
             initialDelaySeconds: 10
             timeoutSeconds: 10
           env:
@@ -225,13 +309,35 @@ spec:
                   key: rabbitmq_erlang_cookie
             - name: K8S_SERVICE_NAME
               value: "rabbitmq"
+            - name: RABBITMQ_USER
+              value: {{ rabbitmq_user }}
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ kubernetes_deployment_name }}-secrets"
+                  key: rabbitmq_password
           volumeMounts:
             - name: rabbitmq-config
               mountPath: /etc/rabbitmq
+            - name: rabbitmq-healthchecks
+              mountPath: /usr/local/bin/healthchecks
+{% if rabbitmq_use_ssl|default(False)|bool %}
+            - name: "{{ kubernetes_deployment_name }}-rabbitmq-certs-vol"
+              mountPath: /etc/pki/rabbitmq
+{% endif %}
           resources:
             requests:
               memory: "{{ rabbitmq_mem_request }}Gi"
               cpu: "{{ rabbitmq_cpu_request }}m"
+{% if rabbitmq_mem_limit is defined or rabbitmq_cpu_limit is defined %}
+            limits:
+{% endif %}
+{% if rabbitmq_mem_limit is defined %}
+              memory: "{{ rabbitmq_mem_limit }}Gi"
+{% endif %}
+{% if rabbitmq_cpu_limit is defined %}
+              cpu: "{{ rabbitmq_cpu_limit }}m"
+{% endif %}
         - name: {{ kubernetes_deployment_name }}-memcached
           image: "{{ kubernetes_memcached_image }}:{{ kubernetes_memcached_version }}"
           imagePullPolicy: Always
@@ -239,22 +345,66 @@ spec:
             requests:
               memory: "{{ memcached_mem_request }}Gi"
               cpu: "{{ memcached_cpu_request }}m"
+{% if memcached_mem_limit is defined or memcached_cpu_limit is defined %}
+            limits:
+{% endif %}
+{% if memcached_mem_limit is defined %}
+              memory: "{{ memcached_mem_limit }}Gi"
+{% endif %}
+{% if memcached_cpu_limit is defined %}
+              cpu: "{{ memcached_cpu_limit }}m"
+{% endif %}
+{% if tolerations is defined %}
+      tolerations:
+{{ tolerations | to_nice_yaml(indent=2) | indent(width=8, indentfirst=True) }}
+{% endif %}
+{% if node_selector is defined %}
+      nodeSelector:
+{{ node_selector | to_nice_yaml(indent=2) | indent(width=8, indentfirst=True) }}
+{% endif %}
+{% if affinity is defined %}
+      affinity:
+{{ affinity | to_nice_yaml(indent=2) | indent(width=8, indentfirst=True) }}
+{% endif %}
       volumes:
+{% if ca_trust_dir is defined %}
+        - name: {{ kubernetes_deployment_name }}-ca-trust-dir
+          hostPath:
+            path: "{{ ca_trust_dir }}"
+            type: Directory
+{% endif %}
+{% if project_data_dir is defined %}
+        - name: {{ kubernetes_deployment_name }}-project-data-dir
+          hostPath:
+            path: "{{ project_data_dir }}"
+            type: Directory
+{% endif %}
+{% if custom_venvs is defined %}
+        - name: custom-venvs
+          emptyDir: {}
+{% endif %}
         - name: {{ kubernetes_deployment_name }}-application-config
           configMap:
             name: {{ kubernetes_deployment_name }}-config
             items:
               - key: {{ kubernetes_deployment_name }}_settings
                 path: settings.py
-              - key: secret_key
-                path: SECRET_KEY
 
-        - name: "{{ kubernetes_deployment_name }}-confd"
+        - name: "{{ kubernetes_deployment_name }}-application-credentials"
           secret:
             secretName: "{{ kubernetes_deployment_name }}-secrets"
             items:
-              - key: confd_contents
-                path: 'secrets.py'
+              - key: credentials_py
+                path: 'credentials.py'
+              - key: environment_sh
+                path: 'environment.sh'
+
+        - name: {{ kubernetes_deployment_name }}-secret-key
+          secret:
+            secretName: "{{ kubernetes_deployment_name }}-secrets"
+            items:
+              - key: secret_key
+                path: SECRET_KEY
 
         - name: rabbitmq-config
           configMap:
@@ -264,6 +414,60 @@ spec:
               path: rabbitmq.conf
             - key: enabled_plugins
               path: enabled_plugins
+            - key: rabbitmq_definitions.json
+              path: rabbitmq_definitions.json
+            - key: rabbitmq-env.conf
+              path: rabbitmq-env.conf
+
+{% if rabbitmq_use_ssl|default(False)|bool %}
+        - name: "{{ kubernetes_deployment_name }}-rabbitmq-certs-vol"
+          secret:
+            secretName: "{{ kubernetes_deployment_name }}-rabbitmq-certs"
+            items:
+              - key: rabbitmq_ssl_cert
+                path: 'server.crt'
+              - key: rabbitmq_ssl_key
+                path: 'server.key'
+              - key: rabbitmq_ssl_cacert
+                path: 'ca.crt'
+              - key: rabbitmq_ssl_combined
+                path: 'server-combined.pem'
+{% endif %}
+        - name: rabbitmq-healthchecks
+          configMap:
+            name: {{ kubernetes_deployment_name }}-healthchecks
+            items:
+            - key: rabbit_health_node.py
+              path: rabbit_health_node.py
+            defaultMode: 0755
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ kubernetes_deployment_name }}-healthchecks
+  namespace: {{ kubernetes_namespace }}
+data:
+  rabbit_health_node.py: |
+    #!/usr/bin/env python
+    try:
+      from http.client import HTTPConnection
+    except ImportError:
+      from httplib import HTTPConnection
+    import sys
+    import os
+    import base64
+    authsecret = base64.b64encode(os.getenv('RABBITMQ_USER') + ':' + os.getenv('RABBITMQ_PASSWORD'))
+    conn=HTTPConnection('localhost:15672')
+    conn.request('GET', '/api/healthchecks/node', headers={'Authorization': 'Basic %s' % authsecret})
+    r1 = conn.getresponse()
+    if r1.status != 200:
+      sys.stderr.write('Received http error %i\\n' % (r1.status))
+      sys.exit(1)
+    body = r1.read()
+    if body != '{"status":"ok"}':
+      sys.stderr.write('Received body: %s' % body)
+      sys.exit(2)
+    sys.exit(0)
 ---
 apiVersion: v1
 kind: Service
@@ -303,10 +507,27 @@ kind: Ingress
 metadata:
   name: {{ kubernetes_deployment_name }}-web-svc
   namespace: {{ kubernetes_namespace }}
+{% if kubernetes_ingress_annotations is defined %}
+  annotations:
+{% for key, value in kubernetes_ingress_annotations.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+
+spec:
+  rules:
+  - host: {{ kubernetes_ingress_hostname }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ kubernetes_deployment_name }}-web-svc
+          servicePort: 80
+{% else %}
 spec:
   backend:
     serviceName: {{ kubernetes_deployment_name }}-web-svc
     servicePort: 80
+{% endif %}
 {% endif %}
 {% if openshift_host is defined %}
 ---

@@ -1,0 +1,39 @@
+---
+- name: kubernetes_namespace should be defined
+  assert:
+    that:
+      - kubernetes_namespace is defined and kubernetes_namespace != ''
+    msg: "Set the value of 'kubernetes_namespace' in the inventory file."
+
+- name: Check if the kubectl command is installed
+  shell: type kubectl
+  register: kubectl_result
+  ignore_errors: yes
+
+- name: Ensure kubectl is installed
+  assert:
+    that:
+      - kubectl_result.rc == 0
+    msg: "Install kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl/"
+
+- name: Check if the helm command is installed
+  shell: type helm
+  register: helm_result
+  ignore_errors: yes
+
+- name: Ensure helm is installed
+  assert:
+    that:
+      - helm_result.rc == 0
+    msg: "Install Helm: https://helm.sh/"
+
+- name: Get Helm / Tiller Version
+  shell: helm version
+  register: helm_version
+  ignore_errors: yes
+
+- name: Ensure Tiller is installed in the cluster
+  assert:
+    that:
+      - "'cannot connect to Tiller' not in helm_version.stderr"
+    msg: "Install Tiller in the cluster with 'helm init'"
