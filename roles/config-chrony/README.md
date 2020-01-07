@@ -1,4 +1,4 @@
-config-bonding
+config-chrony
 ==============
 
 name: config-chrony
