@@ -1,0 +1,16 @@
+---
+# defaults file to use to default variables 
+
+config_chrony_services:
+  - firewalld
+  - chronyd
+
+config_chrony_firewall_services:
+  - ntp
+
+config_chrony_packages:
+  - chrony
+  - firewalld
+  - python-firewall
+
+chrony_allow_subnet: 127.0.0.1

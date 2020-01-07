@@ -4,16 +4,14 @@
   package:
     name: '{{ item }}'
     state: installed
-  with_items:
-  - chrony
-  - firewalld
-  - python-firewall
+  loop: "{{ config_chrony_packages }}"
 
 - name: 'Start firewalld'
   service:
-    name: firewalld
+    name: "{{ item }}"
     state: started
     enabled: yes
+  loop: "{{ config_chrony_services }}"
 
 - name: 'Open Firewall for NTP/Chrony use'
   firewalld:
@@ -21,7 +19,6 @@
     permanent: yes
     state: enabled
     immediate: yes
-  with_items:
-  - ntp
+  loop: "{{ config_chrony_firewall_services }}"
 
 
