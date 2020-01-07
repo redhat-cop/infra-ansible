@@ -16,8 +16,9 @@ Defaults file has example of variables that can be used. There is only one varia
 
 ```
 # Variables to set.
-## The following variable is required to allow your network subnet to access the ntp service.
-chrony_allow_subnet:
+# The following variable is required to allow your network subnet to access the ntp service. Default value is 127.0.0.1.
+
+chrony_allow_subnet: 192.168.0.1
 
 ```
 Example Playbook
