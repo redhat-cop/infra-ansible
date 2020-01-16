@@ -1,4 +1,11 @@
 
+{% if ((fe.lb_mode is defined and fe.lb_mode == 'http') or
+       (fe.lb_mode is undefined and fe.lb_host_port|string == '80')) %}
+{% set lb_http_mode = True %}
+{% else %}
+{% set lb_http_mode = False %}
+{% endif %}
+
 {% if ((fe.lb_ssl_enabled is defined and fe.lb_ssl_enabled) or
        (fe.lb_ssl_enabled is undefined and fe.lb_host_port|string == '443')) %}
 {% set lb_ssl_enabled = True %}
@@ -8,16 +15,21 @@
 
 frontend {{ fe.lb_name }}
     bind {{ fe.lb_host_vip | default('*') }}:{{ fe.lb_host_port }}
-{% if lb_ssl_enabled %}
+{% if fe.lb_mode is defined %}
+    mode {{ fe.lb_mode }}
+{% elif lb_ssl_enabled %}
     mode tcp
+{% endif %}
 
+{% if lb_ssl_enabled %}
     tcp-request inspect-delay 5s
     tcp-request content accept if { req_ssl_hello_type 1 }
 {% endif %}
 
 {% if lb_config.lb_entries is defined %}
 {% for entry in lb_config.lb_entries %}
-{% if entry.lb_match_port|string == fe.lb_host_port|string %}
+{% if entry.lb_match_fqdn is defined and
+      entry.lb_match_port|string == fe.lb_host_port|string %}
 {% set lb_match_fqdn = (entry.name | default(entry.lb_match_fqdn)) | regex_replace('^\.', '') %}
 {% if lb_ssl_enabled %}
     acl {{ lb_match_fqdn }} req_ssl_sni -m end {{ entry.lb_match_fqdn }}
@@ -28,11 +40,13 @@ frontend {{ fe.lb_name }}
 {% endfor %}
 
 {% for entry in lb_config.lb_entries %}
-{% if entry.lb_match_port|string == fe.lb_host_port|string %}
+{% if entry.lb_match_fqdn is defined and
+      entry.lb_match_port|string == fe.lb_host_port|string %}
 {% set lb_match_fqdn = (entry.name | default(entry.lb_match_fqdn)) | regex_replace('^\.', '') %}
     use_backend {{ lb_match_fqdn }}-{{ entry.lb_match_port }} if {{ lb_match_fqdn }}
 {% endif %}
 {% endfor %}
-{% else %}
-    default_backend {{ fe.lb_name }}
 {% endif %}
+
+    default_backend default_backend-{{ fe.lb_host_port }}
+
