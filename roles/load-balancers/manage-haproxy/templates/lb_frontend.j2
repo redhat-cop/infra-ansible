@@ -43,10 +43,12 @@ frontend {{ fe.lb_name }}
 {% if entry.lb_match_fqdn is defined and
       entry.lb_match_port|string == fe.lb_host_port|string %}
 {% set lb_match_fqdn = (entry.name | default(entry.lb_match_fqdn)) | regex_replace('^\.', '') %}
+{% set lb_default_needed = False %}
     use_backend {{ lb_match_fqdn }}-{{ entry.lb_match_port }} if {{ lb_match_fqdn }}
 {% endif %}
 {% endfor %}
 {% endif %}
 
+{% if lb_default_needed is defined %}
     default_backend default_backend-{{ fe.lb_host_port }}
-
+{% endif %}
