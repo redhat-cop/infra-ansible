@@ -28,24 +28,17 @@ lb_config:
     lb_host_vip: '192.168.1.10'
     lb_host_port: 443
     lb_ssl_enabled: True [optional for port 443]
+    lb_mode: tcp [optional for port 443]
   - lb_name: my-secure-web-server-8443
     lb_host_vip: '192.168.1.10'
     lb_host_port: 8443
     lb_ssl_enabled: True
+    lb_mode: tcp
+  - lb_name: my-random-port-server-22623
+    lb_host_vip: '192.168.1.10'
+    lb_host_port: 22623
+    lb_mode: tcp
   lb_entries:
-  - lb_match_fqdn: master.env1.example.com
-    lb_match_port: 8443
-    lb_ssl_enabled: True
-    backends:
-    - host: master.env1.example.com
-      port: 8443
-  - lb_match_fqdn: .apps.env1.example.com
-    lb_match_port: 443
-    backends:
-    - host: router1.env1.example.com
-      port: 443
-    - host: router2.env1.example.com
-      port: 443
   - lb_match_fqdn: apps.env1.example.com
     lb_match_port: 80
     backends:
@@ -53,6 +46,33 @@ lb_config:
       port: 80
     - host: router2.env1.example.com
       port: 80
+  - lb_match_fqdn: .apps.env1.example.com
+    lb_match_port: 443
+    lb_ssl_enabled: True [optional for port 443]
+    lb_mode: tcp [optional for port 443]
+    backends:
+    - host: router1.env1.example.com
+      port: 443
+    - host: router2.env1.example.com
+      port: 443
+  - lb_match_fqdn: master.env1.example.com
+    lb_match_port: 8443
+    lb_ssl_enabled: True
+    lb_mode: tcp
+    backends:
+    - host: master.env1.example.com
+      port: 8443
+  - lb_match_port: 22623
+    lb_mode: tcp
+    lb_balance: first
+    backends:
+    - host: router1.env1.example.com
+      port: 22623
+      check: 'check'
+    - host: router2.env1.example.com
+      port: 22623
+      check: 'check'
+
 ```
 
 

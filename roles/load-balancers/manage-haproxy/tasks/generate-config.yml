@@ -30,7 +30,7 @@
   - name: 'Configure and Populate LB Frontends'
     template:
       src: "{{ lb_frontend_template | default('lb_frontend.j2') }}"
-      dest: '{{ haproxy_temp_dir }}/0002_lb_{{ fe.lb_name }}_{{ fe.lb_host_vip }}_{{ fe.lb_host_port }}.cfg'
+      dest: '{{ haproxy_temp_dir }}/0002_lb_{{ fe.lb_name }}_{{ fe.lb_host_vip | default("undef") }}_{{ fe.lb_host_port }}.cfg'
     loop_control:
       loop_var: fe
     loop: "{{ lb_config.frontends|flatten(levels=1) }}"
