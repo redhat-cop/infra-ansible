@@ -3,7 +3,7 @@
 
 {% if ((fe.lb_ssl_enabled is defined and fe.lb_ssl_enabled) or
        (fe.lb_ssl_enabled is undefined and fe.lb_host_port|string == '443')) %}
-{% set lb_ssl_enabled = True %}
+{% set lb_ssl.enabled = True %}
 {% endif -%}
 
 
