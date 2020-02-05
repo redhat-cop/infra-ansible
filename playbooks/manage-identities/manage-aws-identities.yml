@@ -1,0 +1,7 @@
+
+---
+
+- name: Manage AWS Identities (users/groups)
+  hosts: identity-hosts
+  roles:
+    - role: identity-management/manage-aws-identities

@@ -1,0 +1,14 @@
+---
+
+# Create a user
+- name: Create user(s)
+  iam_user:
+    name: "{{ user_data.user_name }}"
+    state: present
+  loop: "{{ identities.users|flatten(levels=1) }}"
+  loop_control:
+    loop_var: user_data
+  when:
+    - identities.users|length > 0
+    - user_data.targets is undefined or 'aws' in user_data.targets
+    - user_data.state|default('present') == 'present'

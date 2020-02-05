@@ -1,0 +1,16 @@
+---
+
+- name: Delete Group(s)
+  iam_group:
+    name: "{{ group.name }}"
+    state: absent
+  loop: "{{ identities.groups }}"
+  loop_control:
+    loop_var: group
+  when:
+    - identities.groups|length > 0
+    - group.targets is undefined or
+      'aws' in group.targets
+    - group.state is defined
+    - group.state == 'absent'
+
