@@ -1,10 +1,8 @@
 ---
 
 # Create a user
-- name: Create user(s)
-  iam_user:
-    name: "{{ user_data.user_name }}"
-    state: present
+- name: Create user and gather user info
+  include_tasks: process_one_user.yml
   loop: "{{ identities.users|flatten(levels=1) }}"
   loop_control:
     loop_var: user_data
