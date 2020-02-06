@@ -9,21 +9,28 @@ Role Variables
 
 ```
 ---
-aws:
-  url: https://example.aws.net
-  username: example
-  password: example
+# AWS Region is required, however most IAM resources are global
+aws_region: us-east-1
+aws_access_key: <your_key_id>
+aws_secret_key: <your_secret>
 
-  identities:
-     ## See README one level up for sample 'identities' dictionary
+identities:
+   ## See README one level up for sample 'identities' dictionary
 
 ```
 
+```
+# By default, this role will check for your AWS Credentials in the following env vars:
+export AWS_ACCESS_KEY_ID=<your_access_key_id>
+export AWS_SECRET_ACCESS_KEY=<your_access_key_secret>
+```
+
+
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**aws.url**|The url of the site we want to manage users in|yes|N/A|
-|**aws.username**|Username of an admin of the above mentioned site|yes|N/A|
-|**aws.password**|The password of the above mentioned admin user|yes|N/A|
+|**aws_region**|AWS Region required, however users are global|yes|N/A|
+|**aws_access_key**|AWS Access Key ID|yes|env var|
+|**aws_secret_key**|AWS Secret Access Key|yes|env var|
 
 
 
