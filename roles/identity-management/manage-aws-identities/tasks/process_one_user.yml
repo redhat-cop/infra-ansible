@@ -15,8 +15,9 @@
   - name: Set initial password for user
     command: "aws iam create-login-profile --user-name {{ user_data.user_name }} --password {{ initial_password }} --password-reset-required"
   - debug:
-      msg: 
+      msg:
         - "Username: {{ user_data.user_name }}"
         - "Password: {{ initial_password }}"
         - "User must change password at next logon"
   when: _create_user.changed
+  no_log: True

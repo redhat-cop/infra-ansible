@@ -9,7 +9,6 @@ Role Variables
 
 ```
 ---
-# AWS Region is required, however most IAM resources are global
 aws_region: us-east-1
 aws_access_key: <your_key_id>
 aws_secret_key: <your_secret>
@@ -28,7 +27,7 @@ export AWS_SECRET_ACCESS_KEY=<your_access_key_secret>
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**aws_region**|AWS Region required, however users are global|yes|N/A|
+|**aws_region**|AWS Region required, however users are global|yes|us-east-1|
 |**aws_access_key**|AWS Access Key ID|yes|env var|
 |**aws_secret_key**|AWS Secret Access Key|yes|env var|
 
