@@ -6,7 +6,7 @@
     state: restarted
   become: True
 
-- name: restart-nginx
+- name: reload-nginx
   service:
     name: nginx
     state: reloaded

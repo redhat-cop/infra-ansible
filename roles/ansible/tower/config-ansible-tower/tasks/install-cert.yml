@@ -6,13 +6,13 @@
       src: "{{ ansible_tower.install.ssl_certificate.cert }}"
       dest: /etc/tower/tower.cert
     notify:
-    - restart-nginx
+    - reload-nginx
 
   - copy:
       src: "{{ ansible_tower.install.ssl_certificate.key }}"
       dest: /etc/tower/tower.key
     notify:
-    - restart-nginx
+    - reload-nginx
   when:
   - ansible_tower.install.ssl_certificate is defined
   become: True
