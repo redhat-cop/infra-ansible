@@ -9,5 +9,5 @@
 - name: restart-nginx
   service:
     name: nginx
-    state: restarted
+    state: reloaded
   become: True
