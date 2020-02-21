@@ -13,10 +13,13 @@ If the IdM / IPA integration is to be used, it is a prerequisites that the envir
 2. When enabling VNC, and you already have a shared home directory, make sure the proper changes are made to the VNC configuration (typically in `~/.vnc` ) to allow for the service to run correctly.
 
 ## Example run
-How to run the playbook may depend on the options selected. However, below is an example execution whereas the password for IPA/IdM integration (with `ipa_client_install` set to `True` in the inventory) is passed in rather than statically set in the inventory. Modify the inventory to your liking in `playbooks/bastion/inventory`, then at the top level of the repository, execute the following command:
+How to run the playbook may depend on the options selected. However, below is an example execution whereas the password for IPA/IdM integration (with `ipa_client_install` set to `True` in the inventory) is passed in rather than statically set in the inventory. Modify the inventory to your liking in `inventory/bastion/`, then at the top level of the repository, execute the following command:
 
 ```
-> ansible-playbook -i playbooks/bastion/inventory playbooks/bastion/install.yml -e 'ipa_password=<ipa/IdM password>'
+## provision bastion host
+> ansible-playbook -i playbooks/provision-bastion/inventory playbooks/bastion/bastion.yml
+## install and configure bastion
+> ansible-playbook -i playbooks/provision-bastion/inventory playbooks/bastion/install.yml -e 'ipa_password=<ipa/IdM password>'
 ```
 
 **Note:** If your password contains any special characters, e.g.: a '!', it's important to use the single quotes for the passed in value as it otherwise may be interpereted by the shell.
