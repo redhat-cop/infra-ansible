@@ -1,13 +1,5 @@
 ---
 
 - name: restart-tower
-  service:
-    name: supervisord
-    state: restarted
-  become: True
-
-- name: reload-nginx
-  service:
-    name: nginx
-    state: reloaded
+  command: ansible-tower-service restart
   become: True
