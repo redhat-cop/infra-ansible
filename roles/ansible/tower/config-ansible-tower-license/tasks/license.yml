@@ -7,17 +7,11 @@
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: yes
     method: GET
-    validate_certs: "{{ validate_tower_certs | default(false) }}"
+    validate_certs: "{{ validate_tower_certs | default(true) }}"
   register: status_output 
   until: status_output.status == 200 
   retries: 6
   delay: 5
-
-- name: "Check Tower URL for redirect"
-  uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
-    validate_certs: "{{ validate_tower_certs | default(false) }}"
-  register: tower_url
 
 - name: "Add Tower license"
   uri:
@@ -31,4 +25,4 @@
     headers:
       Content-Type: "application/json"
       Accept: "application/json"
-    validate_certs: "{{ validate_tower_certs | default(false) }}"
+    validate_certs: "{{ validate_tower_certs | default(true) }}"

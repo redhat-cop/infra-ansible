@@ -18,7 +18,7 @@ The variables used to configure Ansible Tower LDAP are outlined in the table bel
 |ansible_tower.admin_username|Admin username for the Ansible Tower install|yes||
 |ansible_tower.install.license_file|Path to valid Ansible Tower license content|yes||
 
-
+**Note:** You should ensure that the ansible_tower.url variable that is being used is not being redirected (i.e. redirected from http -> https, etc.). If there are concerns with how you're getting/setting this URL, you can use the `discover-url-redirect` role found in this repo.
 
 ## Example Inventory
 ```yaml
