@@ -1,0 +1,8 @@
+---
+
+- hosts: redirect_host
+  tasks:
+    - import_role:
+        name: discover-redirect-url
+    - debug:
+        msg: "key={{redirect_var_name}}, value={{ my_test_var_name }}"

@@ -1,0 +1,20 @@
+---
+
+- name: Check for required vars
+  fail:
+    msg: "The required var has not been set: {{ item }}"
+  when:
+  - vars[item] is undefined
+  with_items:
+  - redirect_url
+  - redirect_url_protocol
+  - redirect_var_name
+
+- set_fact:
+    url: "{{redirect_url_protocol }}://{{ redirect_url }}"
+
+- set_fact:
+    url: "{{ url | final_url | regex_replace('\\/$','') }}"
+
+- set_fact:
+    {"{{ redirect_var_name }}" : "{{ url }}" }
