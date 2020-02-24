@@ -1,0 +1,13 @@
+---
+
+- name: Ensure Destination Directory Exists
+  file:
+    path: "{{ file_destination_root }}/{{ file_destination }}"
+    state: directory
+
+- name: "Get {{ rem_file_name }} from {{ rem_file_protocol }}://{{ rem_file_location }}"
+  get_url:
+    url: "{{ rem_file_protocol }}://{{ rem_file_location }}/{{ rem_file_name }}"
+    dest: "{{ file_destination_root }}/{{ file_destination }}/{{ file_name }}"
+    mode: "{{ file_perms | default(0755) }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
