@@ -4,7 +4,8 @@
   iam_user:
     name: "{{ user_data.user_name }}"
     state: present
-  register: _create_user
+    profile: "{{ profile_data.profile_name }}"
+  register: create_user
 
 # Set initial password for new users
 - block:
@@ -13,11 +14,11 @@
       initial_password: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters') }}"
 
   - name: Set initial password for user
-    command: "aws iam create-login-profile --user-name {{ user_data.user_name }} --password {{ initial_password }} --password-reset-required"
+    command: "aws iam create-login-profile --profile {{ profile_data.profile_name }} --user-name {{ user_data.user_name }} --password {{ initial_password }} --password-reset-required"
   - debug:
       msg:
         - "Username: {{ user_data.user_name }}"
         - "Password: {{ initial_password }}"
         - "User must change password at next logon"
-  when: _create_user.changed
+  when: create_user.changed
   no_log: True

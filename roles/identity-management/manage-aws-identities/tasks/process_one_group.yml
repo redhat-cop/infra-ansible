@@ -2,7 +2,7 @@
 
 - name: Create group(s)
   iam_group:
-    name: "{{ group_data.name }}"
+    name: "{{ group_data.group_name }}"
     managed_policy: "{{ group_data.managed_policy_arn|default(omit) }}"
     users: "{{ group_data.members }}"
     state: present
