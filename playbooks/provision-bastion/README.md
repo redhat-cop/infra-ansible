@@ -16,9 +16,9 @@ If the IdM / IPA integration is to be used, it is a prerequisites that the envir
 How to run the playbook may depend on the options selected. However, below is an example execution whereas the password for IPA/IdM integration (with `ipa_client_install` set to `True` in the inventory) is passed in rather than statically set in the inventory. Modify the inventory to your liking in `inventory/bastion/`, then at the top level of the repository, execute the following command:
 
 ```
-## provision bastion host
+## Provision, Install and Configure Bastion on a supported target hosting_infrastructure
 > ansible-playbook -i playbooks/provision-bastion/inventory playbooks/bastion/bastion.yml
-## install and configure bastion
+## Install and configure bastion (no provisioning)
 > ansible-playbook -i playbooks/provision-bastion/inventory playbooks/bastion/install.yml -e 'ipa_password=<ipa/IdM password>'
 ```
 
