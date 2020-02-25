@@ -20,7 +20,6 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.job_templates.inventory|The name of the inventory to be used with this Job Template|yes||
 |ansible_tower.job_templates.project|The name of the project to be used with this Job Template|yes||
 |ansible_tower.job_templates.playbook|Name of the playbook to be called when the job is launched|yes||
-|ansible_tower.job_templates.credential|Deprecated, see `ansible_tower.job_templates.credentials`|no||
 |ansible_tower.job_templates.credentials|List of credentials to be used with this Job Template|no||
 |ansible_tower.job_templates.ask_variables_on_launch|Does this Job Template accept input variables at runtime|no|false|
 |ansible_tower.job_templates.extra_vars|Extra Variables to be passed at runtime|no|nothing('')|
