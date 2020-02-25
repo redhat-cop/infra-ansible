@@ -1,0 +1,8 @@
+---
+
+file_destination_root: "{{ inventory_dir }}/../files"
+
+validate_certs: true
+
+file_perms: 0755
+file_name: "{{ rem_file_name }}"

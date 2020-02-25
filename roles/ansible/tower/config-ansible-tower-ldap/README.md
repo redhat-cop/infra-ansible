@@ -15,6 +15,7 @@ The variables used to configure Ansible Tower LDAP are outlined in the table bel
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
 |ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
+|ansible_tower.containerized|Indicates whether this workload runs in a container|no|false|
 |ansible_tower.install.ldap.ca_cert|CA Certificate used for LDAP integration|no||
 |ansible_tower.install.ldap.uri|ldaps URL for LDAP server|yes||
 |ansible_tower.install.ldap.bind_dn|Bind DN used for LDAP integration|yes||
@@ -77,6 +78,7 @@ ansible_tower:
 
 ansible_tower:
   admin_password: 'admin'
+  containerized: false
   ldap:
     ca_cert: "{{ inventory_dir }}/../files/ca.crt"
     uri: "ldaps://idm.test.example.com:636"
