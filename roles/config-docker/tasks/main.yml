@@ -1,6 +1,11 @@
 ---
 
 - block:
+  - name: Configure cgroups v1
+    import_tasks: kernel_cgroups_v1.yml
+    when:
+    - kernel_cgroups_v1|default(False)
+
   - name: "Install, configure and enable Docker"
     import_tasks: docker.yml
   
