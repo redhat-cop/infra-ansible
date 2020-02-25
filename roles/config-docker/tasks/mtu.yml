@@ -4,6 +4,9 @@
   set_fact:
     new_mtu: "{{ ansible_facts[external_interface].mtu - mtu_offset|int }}"
 
+- name: "Gather facts"
+  setup:
+
 - block:
   - name: "Check if the file {{ docker_network_file }} exists"
     stat:
