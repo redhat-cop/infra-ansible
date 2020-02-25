@@ -1,0 +1,13 @@
+---
+- name: Update Grub config file
+  shell: grubby --args="{{ grub_add_arg }}" --update-kernel=ALL
+
+- name: Reboot the host
+  shell: sleep 5 && shutdown -r now "Ansible Reboot of host"
+  async: 1
+  poll: 0
+  ignore_errors: true
+
+- name: Waiting for the server to come back
+  local_action: wait_for host={{ ansible_host }} state=started port=22 delay=30
+  become: no

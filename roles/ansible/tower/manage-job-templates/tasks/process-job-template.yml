@@ -50,7 +50,7 @@
 
 - name: "Add credentials to job template: {{ job_template.name }}"
   include_tasks: process-job-template-credentials.yml
-  loop: "{{ job_template.credentials | default([ job_template.credential|trim ]) }}"
+  loop: "{{ job_template.credentials | default([ job_template.credential|trim ]) | default(omit) }}"
   loop_control:
     loop_var: job_template_credential
   when: (job_template.credentials is defined) or (job_template.credential is defined)
