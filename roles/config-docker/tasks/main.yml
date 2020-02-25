@@ -1,10 +1,10 @@
 ---
 
 - block:
-  - name: Configure Fedora 31 to use cgroups v1
-    import_tasks: fedora_kernel_cgroups.yml
+  - name: Configure cgroups v1
+    import_tasks: kernel_cgroups_v1.yml
     when:
-    - (ansible_distribution == "Fedora") and (ansible_distribution_version == "31")
+    - kernel_cgroups_v1|default(False)
 
   - name: "Install, configure and enable Docker"
     import_tasks: docker.yml
