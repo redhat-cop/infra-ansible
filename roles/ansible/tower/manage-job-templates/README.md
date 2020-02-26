@@ -25,6 +25,8 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.job_templates.ask_variables_on_launch|Does this Job Template accept input variables at runtime|no|false|
 |ansible_tower.job_templates.extra_vars|Extra Variables to be passed at runtime|no|nothing('')|
 |ansible_tower.job_templates.permissions|Permissions to run the job (see below)|no||
+|ansible_tower.job_templates.inventory_limit_pattern|Host pattern to further constrain the list of hosts that will be managed or affected by the playbook|no|nothing('')|
+|ansible_tower.job_templates.enable_privilege_escalation|Wheter or not to run the related playbook as an administrator|no|false|
 
 
 **_Note:_** Job Template configuration will **only** happen if the `ansible_tower.job_templates` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
