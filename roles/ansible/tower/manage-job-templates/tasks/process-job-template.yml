@@ -56,7 +56,7 @@
 
 - name: "Prepare job_template_credentials fact before loop below, look at deprecated variable next"
   set_fact:
-    list_of_job_template_credentials: "{{ [ job_template.credential ] }}"
+    list_of_job_template_credentials: "{{ [ job_template.credential|trim ] }}"
   when:
     - job_template.credential is defined
 
