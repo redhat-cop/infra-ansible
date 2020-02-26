@@ -48,12 +48,23 @@
   when:
   - job_template_id is not defined
 
+- name: "Prepare job_template_credentials fact before loop below, look for a list first"
+  set_fact:
+    list_of_job_template_credentials: "{{ job_template.credentials }}"
+  when:
+    - job_template.credentials is defined
+
+- name: "Prepare job_template_credentials fact before loop below, look at deprecated variable next"
+  set_fact:
+    list_of_job_template_credentials: "{{ [ job_template.credential ] }}"
+  when:
+    - job_template.credential is defined
+
 - name: "Add credentials to job template: {{ job_template.name }}"
   include_tasks: process-job-template-credentials.yml
-  loop: "{{ job_template.credentials | default([ job_template.credential|trim ]) | default(omit) }}"
+  loop: "{{ list_of_job_template_credentials | default([]) }}"
   loop_control:
     loop_var: job_template_credential
-  when: (job_template.credentials is defined) or (job_template.credential is defined)
 
 # Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Obtain the current roles"
