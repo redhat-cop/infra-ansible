@@ -8,7 +8,7 @@
     "credential": null,
     "vault_credential": null,
     "forks": 0,
-    "limit": "",
+    "limit": "{{ job_template.inventory_limit_pattern | default('') }}",
     "verbosity": 0,
     "extra_vars": "{{ job_template.extra_vars | default('') }}",
     "job_tags": "",
@@ -28,7 +28,7 @@
     "ask_inventory_on_launch": false,
     "ask_credential_on_launch": false,
     "survey_enabled": false,
-    "become_enabled": false,
+    "become_enabled": {{ job_template.enable_privilege_escalation | default(false) }},
     "diff_mode": false,
     "allow_simultaneous": true
 }

@@ -7,7 +7,7 @@
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: yes
     method: GET
-    validate_certs: "{{ validate_tower_certs | default(true) }}"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
   register: status_output 
   until: status_output.status == 200 
   retries: 6
@@ -15,7 +15,7 @@
 
 - name: "Add Tower license"
   uri:
-    url: "{{ tower_url.url | regex_replace('\\/$','')}}/api/v2/config/"
+    url: "{{ ansible_tower.url | regex_replace('\\/$','')}}/api/v2/config/"
     user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: yes
@@ -25,4 +25,4 @@
     headers:
       Content-Type: "application/json"
       Accept: "application/json"
-    validate_certs: "{{ validate_tower_certs | default(true) }}"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
