@@ -1,10 +1,7 @@
 manage-dns-zones-route53
 ========================
 
-This role can be used to manage views and zones for different DNS service providers. The supported ones are:
-
-  - named
-  - route53
+This role can be used to manage views and zones for AWS Route 53.
 
 
 Requirements
@@ -33,7 +30,6 @@ Role Variables
 
 A dictionary, `dns_data`, with the following variables is expected:
 
-  - named_global_config: if `named` is used, this will be the global configuration for the named/bind server.
   - views: List with views to configure as part of the DNS server/service.
     - name: Name of the view
     - zones: List of Hosted Zones
@@ -58,7 +54,7 @@ Example Playbook
 ```
 - hosts: servers
   roles:
-    - role: manage-dns-zones
+    - role: manage-dns-zones-route53
 ```
 
 Example Inventory
