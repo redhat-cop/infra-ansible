@@ -28,8 +28,8 @@ Example Playbooks
 ```
 - hosts: new-dns-servers
   roles:
-  - role: cofig-dns-server
-  - role: manage-dns-zones
+  - role: cofig-dns-server-bind
+  - role: manage-dns-zones-bind
   - role: manage-dns-records
 ```
 
@@ -42,7 +42,7 @@ Example Playbooks
 ```
 - hosts: route53-servers
   roles:
-  - role: manage-dns-zones
+  - role: manage-dns-zones-route53
   - role: manage-dns-records
 ```
 
