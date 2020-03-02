@@ -10,7 +10,7 @@ Requirements
 None
 
 Variables
-------------------
+---------
 
 Defaults file has example of variables that can be used. It is advisable to create the following vars.
 
