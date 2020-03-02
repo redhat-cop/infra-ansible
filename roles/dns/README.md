@@ -56,7 +56,7 @@ Example Inventory
 ```
 print_dns_keys: True
 dnssec_keygen_algorithm: hmac-sha512  # Default: 'HMAC-SH256'
-default_dnssec_keygen_size: 512       # Default: '256'
+dnssec_keygen_size: 512               # Default: '256'
 
 dns_data:
   named_global_config:
