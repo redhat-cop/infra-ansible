@@ -1,11 +1,5 @@
 ---
 
-- name: "Ensure chrony service is enabled and started" 
-  service:
-    name: chronyd
-    enabled: yes
-    state: started
-
 - name: "Ensure chrony is listening on the correct subnet"
   lineinfile: 
     path: /etc/chrony.conf
