@@ -18,6 +18,10 @@ docker_install: True
 docker_compose_install: True
 docker_username: bob
 
+# option to enable cgroups v1 via kernel parameter
+# enable this option if your OS uses cgroups v2 and you want to have docker installed
+kernel_cgroups_v1: False
+
 vnc_server_install: False
 
 list_of_packages_to_install:

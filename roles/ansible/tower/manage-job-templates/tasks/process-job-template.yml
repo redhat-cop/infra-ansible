@@ -1,5 +1,11 @@
 ---
 
+- name: "Reset facts to ensure we start over"
+  set_fact:
+    inventory_id: ""
+    project_id: ""
+    job_template_id: ""
+
 - name: "Get the inventory id based on the inventory name"
   set_fact:
     inventory_id: "{{ item.id }}"
@@ -46,14 +52,19 @@
     set_fact:
       job_template_id: "{{ job_template_creation_output.json.id }}"
   when:
-  - job_template_id is not defined
+  - job_template_id is not defined or job_template_id == ""
+
+- name: "Prepare list_of_job_template_credentials fact based on deprecated variable"
+  set_fact:
+    list_of_job_template_credentials: "{{ [ job_template.credential|trim ] }}"
+  when:
+    - job_template.credential is defined
 
 - name: "Add credentials to job template: {{ job_template.name }}"
   include_tasks: process-job-template-credentials.yml
-  loop: "{{ job_template.credentials | default([ job_template.credential|trim ]) }}"
+  loop: "{{ job_template.credentials | default(list_of_job_template_credentials) | default([]) }}"
   loop_control:
     loop_var: job_template_credential
-  when: (job_template.credentials is defined) or (job_template.credential is defined)
 
 # Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: "Obtain the current roles"
