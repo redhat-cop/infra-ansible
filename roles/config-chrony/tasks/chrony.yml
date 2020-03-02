@@ -1,10 +1,4 @@
 ---
-# Moved this to the prereqs as it uses a loop to enable services
-#- name: "Ensure chrony service is enabled and started" 
-#  service:
-#    name: chronyd
-#  enabled: yes
-#    state: started
 
 - name: "Ensure chrony is listening on the correct subnet"
   lineinfile: 

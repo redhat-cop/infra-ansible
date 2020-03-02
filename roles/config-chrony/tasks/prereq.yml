@@ -2,9 +2,8 @@
 
 - name: 'Install required packages'
   package:
-    name: '{{ item }}'
+    name: '{{ config_chrony_packages }}'
     state: installed
-  loop: "{{ config_chrony_packages }}"
 
 - name: 'Start firewalld'
   service:
