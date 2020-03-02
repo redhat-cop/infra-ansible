@@ -25,8 +25,8 @@
 - name: Generate keys for nsupdate
   command: >
     /sbin/dnssec-keygen
-      -a {{ default_dnssec_keygen_algorithm }}
-      -b {{ default_dnssec_keygen_size }}
+      -a {{ dnssec_keygen_algorithm | default(default_dnssec_keygen_algorithm) }}
+      -b {{ dnssec_keygen_size | default(default_dnssec_keygen_size) }}
       -n USER
       -r /dev/urandom
       -K /var/named {{ item.name }}
