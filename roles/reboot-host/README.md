@@ -32,7 +32,7 @@ Example Playbook
 Example Inventory
 -------------------
 
-Enable updates on all hosts
+Hosts to reboot.
 
 ```
   [test_hosts]
