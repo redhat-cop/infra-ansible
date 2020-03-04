@@ -3,7 +3,7 @@
     - name: create the docker-storage config file
       template:
         src: docker-storage-setup-overlayfs.j2
-        dest: /etc/sysconfig/docker-storage-setup
+        dest: "{{config_file_dest}}"
         owner: root
         group: root
         mode: 0644
@@ -15,7 +15,7 @@
     - name: create the docker-storage-setup config file
       template:
         src: docker-storage-setup-dm.j2
-        dest: /etc/sysconfig/docker-storage-setup
+        dest: "{{config_file_dest}}"
         owner: root
         group: root
         mode: 0644
@@ -27,7 +27,7 @@
     - name: create the docker-storage-setup config file for CentOS
       template:
         src: docker-storage-setup-dm.j2
-        dest: /etc/sysconfig/docker-storage-setup
+        dest: "{{config_file_dest}}"
         owner: root
         group: root
         mode: 0644

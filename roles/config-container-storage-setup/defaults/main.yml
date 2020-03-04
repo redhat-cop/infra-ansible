@@ -4,3 +4,6 @@ docker_data_size: 95%VG
 docker_dm_basesize: "3G"
 container_root_lv_name: dockerlv
 container_root_lv_mount_path: /var/lib/docker
+
+config_file_dest: /etc/sysconfig/docker-storage-setup
+                  
