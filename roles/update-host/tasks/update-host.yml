@@ -1,12 +1,10 @@
 ---
 
 - name: "Update the host"
+  become: True
   package:
     name: "*"
     state: latest
   register: host_updated
-  when: 
-    - pkg_update|default(False) 
-  become: True
-
-
+  notify:
+    - reboot the host
