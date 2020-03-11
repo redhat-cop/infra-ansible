@@ -1,7 +1,0 @@
----
-
-- name: Processes multiple profiles
-  include_tasks: process_one_user.yml
-  loop: "{{ identities.profiles }}"
-  loop_control:
-    loop_var: profile_data
