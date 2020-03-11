@@ -1,5 +1,9 @@
 ---
 
+#- name: Debug groups
+#  debug:
+#    var: profile_data
+
 - name: Processes groups and their members
   iam_group:
     name: "{{ group_data.group_name }}"
@@ -7,10 +11,10 @@
     users: "{{ group_data.1.members|default(omit) }}"
     profile: "{{ profile_data.profile_name }}"
     state: present
-  loop: "{{ profile_data.0.groups }}"
+  loop: "{{ profile_data.groups }}"
   loop_control:
     loop_var: group_data
   when:
-    - profile_data.0.groups|length > 0
-    - group_data.targets is undefined or 'aws' in group_data.targets
+    - profile_data.groups|length > 0
+    - group_data.targets is undefined or 'aws' in identities.targets
     - group_data.state|default('present') == 'present'

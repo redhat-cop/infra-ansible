@@ -3,6 +3,9 @@
 - name: "Process users for AWS"
   block:
 
+  - name: Debug profile data
+    debug:
+      var: profile_data
   - name: Create AWS user
     iam_user:
       name: "{{ user_data.user_name }}"
@@ -37,6 +40,6 @@
     set_fact:
       identities: "{{ identities|combine({'users': list_of_users}) }}"
 
-when:
-  - identities.users is defined
-  - identities.users|length > 0
+  when:
+    - identities.users is defined
+    - identities.users|length > 0

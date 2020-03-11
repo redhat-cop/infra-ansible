@@ -2,12 +2,15 @@
 
 - name: "Process password for AWS user(s)"
   block:
+    - name: Debug profile data
+      debug:
+        var: profile_data
     - name: Set initial password for AWS user
-      command: "aws iam create-login-profile --profile {{ identities.profiles.profile_name }} --user-name {{ identities.users.user_name }} --password {{ initial_password }} --password-reset-required"
+      command: "aws iam create-login-profile --profile {{ profile_data.profile_name }} --user-name {{ user_data.user_name }} --password {{ user_data.password }} --password-reset-required"
     - debug:
         msg:
-          - "Username: {{ identities.users.user_name }}"
-          - "Password: {{ initial_password }}"
+          - "Username: {{ user_data.user_name }}"
+          - "Password: {{ user_data.password }}"
           - "User must change password at next login."
       with_items:
         - "{{ identities.users }}"
@@ -20,7 +23,6 @@
           'aws' in user_data.targets
         - user_data.password is defined
         - user_data.password|trim != ''
-  no_log: True
   when:
     - identities.targets is undefined or
       'aws' in identities.targets
