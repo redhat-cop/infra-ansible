@@ -3,16 +3,16 @@
 - name: "Process password for AWS user(s)"
   block:
     - name: Set initial password for AWS user
-      command: "aws iam create-login-profile --profile {{ identities.users.aws_profile }} --user-name {{ identities.users.user_name }} --password {{ identities.users.password }} --password-reset-required"
+      command: "aws iam create-login-profile --profile {{ user_data.aws_profile }} --user-name {{ user_data.user_name }} --password {{ user_data.password }} --password-reset-required"
       with_items:
         - "{{ identities.users }}"
+      loop_control:
+        loop_var: user_data
       when:
         - identities.users is defined
-        - identities.users|length > 0
-        - identities.users.targets is undefined or
-          'aws' in identities.users.targets
-        - identities.users.password is defined
-        - identities.users.password|trim != ''
+        - identities.users > 0
+        - user_data.user_name is defined
+        - user_data.password is defined
+        - user_data.aws_profile is defined
   when:
-    - identities.targets is undefined or
-      'aws' in identities.targets
+    - identities.users is defined

@@ -32,9 +32,6 @@
     set_fact:
       list_of_users: []
 
-  - debug:
-      var: aws_user_list
-
   - name: "Create password generation dataset"
     set_fact:
       list_of_users: "{{ list_of_users + [ aws_data.user_data|combine(aws_data|set_user_flags, {'aws_profile': profile_data.profile_name}) ] }}"

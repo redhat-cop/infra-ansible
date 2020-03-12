@@ -1,9 +1,5 @@
 ---
 
-#- name: Debug groups
-#  debug:
-#    var: profile_data
-
 - name: Debug group members
   debug:
     var: group_data.1.members

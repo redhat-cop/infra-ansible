@@ -5,7 +5,7 @@ def set_user_flags(entry):
         'notify_user': False
     }
 
-    if 'user' in entry.keys() and 'has_password' in entry['user'].keys() and entry['user']['has_password'] == False:
+    if 'iam_user' in entry.keys() and entry['changed']:
         data['generate_password'] = True
         data['notify_user'] = True
 
