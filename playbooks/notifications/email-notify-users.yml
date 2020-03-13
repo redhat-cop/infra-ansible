@@ -10,6 +10,7 @@
       user_name: "{{ item.user_name }}"
       password: "{{ item.password }}"
       email_to: "{{ item.email }}"
+      aws_profile: "{{ item.aws_profile|default(omit) }}"
     when:
     - item.notify_user == True
     with_items:
