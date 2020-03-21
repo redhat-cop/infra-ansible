@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This role allow users to automate the creation of their OpenStack Platform (OSP) secrurity groups (with corresponding security rules). 
+This role allow users to automate the creation of their OpenStack Platform (OSP) secrurity groups (with corresponding security rules).
 
 Requirements
 ------------
@@ -48,7 +48,7 @@ osp_security_groups:
     port_range_min: 80
     port_range_max: 80
     direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+    remote_ip_prefix: 0.0.0.0/0
   - protocol: tcp
     port_range_min: 22
     port_range_max: 22
@@ -59,7 +59,7 @@ osp_security_groups:
   rules:
   - protocol: icmp
     direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+    remote_ip_prefix: 0.0.0.0/0
 
 ```
 
@@ -67,7 +67,8 @@ osp_security_groups:
 License
 -------
 
-BSD
+Apache License 2.0
+
 
 Author Information
 ------------------
