@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This role allow users to automate the creation of their OpenStack Platform (OSP) volumes (cinder). 
+This role allow users to automate the creation of their OpenStack Platform (OSP) volumes (cinder).
 
 Requirements
 ------------
@@ -54,7 +54,8 @@ osp_volumes:
 License
 -------
 
-BSD
+Apache License 2.0
+
 
 Author Information
 ------------------

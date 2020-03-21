@@ -16,7 +16,7 @@ This sub-directory contains a variety of roles to support installation, configur
 
 ### Administration
 
-These are roles used to administer an OpenStack environment, such as add projects/tenants, network setup/modifications, instances, volumes, etc. The implementations are generic and should work on any OpenStack environment. However, note that these have been tested with Red Hat OpenStack Platform version 11, and hence only guaranteed to work with this version.
+These are roles used to administer an OpenStack environment, such as add projects/tenants, network setup/modifications, instances, volumes, etc. The implementations are generic and should work on any OpenStack environment. However, note that these have been tested with Red Hat OpenStack Platform version 13, and hence only guaranteed to work with this version.
 
 - admin-floating-ip: Manage floating ip addresses to instances.
 - admin-image: Manage Images used for booting instances.

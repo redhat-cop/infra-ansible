@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This role allow users to add or remove a floating IP to an instance. 
+This role allow users to add or remove a floating IP to an instance.
 
 Requirements
 ------------
@@ -46,7 +46,7 @@ osp_floating_ips:
 License
 -------
 
-BSD
+Apache License 2.0
 
 Author Information
 ------------------
