@@ -5,7 +5,9 @@ An Ansible role that manages AWS identities - users and groups for multiple AWS 
 
 This role assumes that you have your [AWS Named Profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) configured and the profile names match your account alias.
 
-The email address is not related to the AWS IAM User but will be used to send a one-time password upon account creation. Since we are using named profiles, they will be notified with a sign-in link for "https://{{ profile_name}}.signin.aws.amazon.com/console"
+The email address is not related to the AWS IAM User but will be used to send a one-time password upon account creation. Since we are using named profiles, they will be notified with a sign-in link for:
+
+https://<aws_profile>.signin.aws.amazon.com/console
 
 Role Variables
 --------------
@@ -61,14 +63,32 @@ Variable Descriptions
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|targets|This will differentiate your inventory from other Identity Management inventories|yes|N/A|
+|targets|Target environment, (e.g., AWS IAM, IdM, etc)|yes|N/A|
 |users|Each user must exist in a profiles.groups.members to be created in an account|yes|N/A|
 |profiles|Define profile, with unique groups and members per profile|yes|N/A|
 
-Sample Inventory
---------------
+Example Notification
+--------------------
 
+---
 
+title: Login Info - Hooli AWS Account
+
+body: |
+  Hi {{ first_name }}, <br />
+  Please use the following temporary password to access the Hooli AWS Account
+
+  Username: **{{ user_name }}** <br />
+  Temporary password: **{{ password }}**
+
+  Login to the AWS Console at: https://{{ aws_profile }}.signin.aws.amazon.com/console
+
+  You will be prompted to change your password on first login.
+
+  Please reply to this e-mail if you have any questions.
+
+  Regards <br />
+  The Hooli Team
 
 License
 -------
