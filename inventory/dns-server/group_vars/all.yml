@@ -31,6 +31,14 @@ ansible_user: centos
 # leave commented out if you want to `--auto-attach` a pool
 #rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"
 
+#####
+# Uncomment following in case you want to have different nsupdate key algorithm format
+# and/or key size
+# - the default value for key algorithm is "HMAC-SHA256" and key size is "256"
+# - check "nsupdate" module and key_algorithm variable for options
+# - check "/sbin/dnssec-keygen" for available key sizes with your type of key
+#dnssec_keygen_algorithm: "<format>"
+#dnssec_keygen_size: "<size>"
 
 dns_data:
   views:
