@@ -1,9 +1,5 @@
 ---
 
-- name: Debug group members
-  debug:
-    var: group_data.1.members
-
 - name: Processes groups and their members
   iam_group:
     name: "{{ group_data.group_name }}"
