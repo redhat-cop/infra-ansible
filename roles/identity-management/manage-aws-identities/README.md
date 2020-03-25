@@ -7,7 +7,7 @@ This role assumes that you have your [AWS Named Profiles](https://docs.aws.amazo
 
 The email address is not related to the AWS IAM User but will be used to send a one-time password upon account creation. Since we are using named profiles, they will be notified with a sign-in link for:
 
-https://<aws_profile>.signin.aws.amazon.com/console
+https://{{ aws_profile }}.signin.aws.amazon.com/console
 
 Role Variables
 --------------
