@@ -70,6 +70,7 @@ Variable Descriptions
 Example Notification
 --------------------
 
+```yaml
 ---
 
 title: Login Info - Hooli AWS Account
@@ -89,6 +90,7 @@ body: |
 
   Regards <br />
   The Hooli Team
+```
 
 License
 -------
