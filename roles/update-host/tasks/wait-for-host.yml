@@ -1,0 +1,6 @@
+---
+
+- name: "Waiting for server to come back"
+  wait_for_connection:
+    delay: 15
+    timeout: 300

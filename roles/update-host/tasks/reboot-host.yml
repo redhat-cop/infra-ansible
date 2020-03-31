@@ -1,0 +1,8 @@
+---
+
+- name: "Reboot the host - {{ inventory_hostname }}"
+  reboot:
+  ignore_errors: true
+  when:
+    - host_updated.changed or force_host_reboot
+  become: True
