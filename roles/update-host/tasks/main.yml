@@ -2,4 +2,4 @@
 
 - import_tasks: update-host.yml
 - import_tasks: reboot-host.yml
-- import_tasks: wait-for-host.yml 
+- import_tasks: wait-for-host.yml
