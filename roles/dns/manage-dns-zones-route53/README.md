@@ -1,7 +1,7 @@
 manage-dns-zones-route53
 ========================
 
-This role can be used to manage views and zones for AWS Route 53.
+This role can be used to manage both public and private zones for AWS Route 53.
 
 
 Requirements
