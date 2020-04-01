@@ -28,22 +28,22 @@ Example Playbooks
 ```
 - hosts: new-dns-servers
   roles:
-  - role: cofig-dns-server
-  - role: manage-dns-zones
-  - role: manage-dns-records
+  - role: dns/cofig-dns-server-bind
+  - role: dns/manage-dns-zones-bind
+  - role: dns/manage-dns-records
 ```
 
 ```
 - hosts: existing-nsupdate-servers
   roles:
-  - role: manage-dns-records
+  - role: dns/manage-dns-records
 ```
 
 ```
 - hosts: route53-servers
   roles:
-  - role: manage-dns-zones
-  - role: manage-dns-records
+  - role: dns/manage-dns-zones-route53
+  - role: dns/manage-dns-records
 ```
 
 
@@ -83,8 +83,8 @@ dns_data:
       state: present
       named: True
       route53:
-        aws_access_key: "ADFGIASDF343FMSDFF5431A"
-        aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
         vpc_id: vpc-9dcde6f8  # Private Zones only
         vpc_region: eu-west-1 # Private Zones only
         private_zone: true
@@ -135,8 +135,8 @@ dns_data:
     zones:
     - dns_domain: first.example.com
       route53:
-        aws_access_key: "ADFGIASDF343FMSDFF5431A"
-        aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
       entries:
       - type: A
         record: master

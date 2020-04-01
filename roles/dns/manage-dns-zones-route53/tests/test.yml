@@ -2,4 +2,4 @@
 
 - hosts: dns-servers
   roles:
-  - role: dns/manage-dns-zones
+    - dns/manage-dns-zones-route53
