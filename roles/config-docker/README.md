@@ -1,25 +1,25 @@
-Set of Roles
-============
+config-docker
+=============
 
-The ansible roles found in this directory are associated with configuring a docker set up.
+The config-docker role is associated with configuring a docker set up.
 
 Effectively, the `docker.yml` task will install packages for docker and add users to the docker user group.
 
 Requirements
 ------------
 
-1. Docker installed on the host machine.
-2. A username for configuring docker access
+* A username for configuring docker access
 
 
 Role Variables
 --------------
-docker_install is used to control if Docker should be installed or not. docker_username is used to configure which user should have access to use docker (and hence be part of the 'docker' group).
 
-```
-docker_username: root
-docker_install: True
-```
+Defaults file has example of variables that can be used.
+
+| Variable | Description | Required | Defaults |
+|:--------:|:-----------:|:--------:|:--------:|
+|**docker_install**|  Used to determine if Docker should be installed. | yes | False |
+|**docker_username**| Used to configure which user should have access to use docker and be part of the 'docker' group. | yes | False |
 
 
 Dependencies

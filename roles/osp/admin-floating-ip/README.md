@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This role allow users to automate the creation of their OpenStack Platform (OSP) volumes (cinder).
+This role allow users to add or remove a floating IP to an instance.
 
 Requirements
 ------------
@@ -15,7 +15,7 @@ Role Variables
 
 See `Example Inventory` below for more specific details. At a high level, the following variables need to be defined:
 
-- `osp_volumes`: A list of volumes to create
+- `osp_floating_ips`: A list of floating ip's to create
 
 Dependencies
 ------------
@@ -29,7 +29,7 @@ Example Playbook
 ```
     - hosts: servers
       roles:
-      - role: osp-admin-volume
+      - role: osp_floating_ips
 ```
 
 **Note:** Make sure to source the OpenStack RC file (with proper access rights) before running this playbook/role.
@@ -38,16 +38,8 @@ Example Inventory
 ----------------
 
 ```
-osp_volumes:
-- name: "vol1"
-  display_description: "Volume 1"
-  display_name: "Vol1"
-  size: 5
-- name: "vol2"
-  display_description: "Volume 2"
-  display_name: "Vol2"
-  size: 15
-
+osp_floating_ips:
+- server: "server1"
 ```
 
 
@@ -55,7 +47,6 @@ License
 -------
 
 Apache License 2.0
-
 
 Author Information
 ------------------
