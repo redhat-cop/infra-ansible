@@ -1,4 +1,7 @@
-import urllib2
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 
 class FilterModule(object):
     def filters(self):
@@ -7,7 +10,6 @@ class FilterModule(object):
         }
 
     def final_url(self, url_var):
-        req = urllib2.Request(url=url_var)
-        resp = urllib2.urlopen(req, timeout=3)
+        resp = urlopen(url_var, timeout=3)
         redirected = resp.geturl()
         return redirected 
