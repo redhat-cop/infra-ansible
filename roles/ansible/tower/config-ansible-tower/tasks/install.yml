@@ -7,20 +7,20 @@
       name: "{{ ansible_tower_epel_download_url }}"
       state: present
 
+  - name: "Download & Unpack Ansible Tower installer"
+    unarchive:
+      src: "{{ ansible_tower_download_url }}"
+      dest: "."
+      list_files: true
+      remote_src: true
+      exclude: "inventory"
+    register: ansible_tower_download_fact
+
+  # The first file listed in the output of the unarchiving from downloading tower
+  # is the directory so set that as ansible_tower_dir
   - name: "Set installation dir fact"
     set_fact:
-      ansible_tower_dir: "{{ ansible_tower_download_url | basename | regex_replace('.tar.gz','') }}"
-
-  - name: "Check if installer dir exists"
-    stat:
-      path: "{{ ansible_tower_dir }}"
-    register: installer_dir
-
-  - name: "Download & Unpack Ansible Tower installer"
-    shell: curl {{ ansible_tower_download_url }} | tar xzf -
-    args:
-      warn: False
-    when: not installer_dir.stat.exists
+      ansible_tower_dir: "{{ ansible_tower_download_fact.files.0 }}"
 
   - name: "Set up the Ansible Tower inventory"
     template:
