@@ -1,0 +1,9 @@
+---
+- name: Process all tasks
+  include_tasks: process_all_tasks.yml
+  loop: "{{ identities.profiles }}"
+  loop_control:
+    loop_var: profile_data
+  when:
+    - identities.targets is undefined or 'aws' in identities.targets
+    - profile_data.profile_name|length > 0

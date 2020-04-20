@@ -1,0 +1,52 @@
+---
+
+- name: "Process users for AWS"
+  block:
+
+  - name: "Make sure the members_in_profile is empty to start with"
+    set_fact:
+      members_in_profile: []
+  - name: Set members_in_profile fact
+    set_fact: 
+      members_in_profile: "{{ members_in_profile + [ item.1 ] }}"
+    with_subelements:
+      - "{{ profile_data.groups }}"
+      - members
+
+  - name: Create AWS user
+    iam_user:
+      name: "{{ user_data.user_name }}"
+      state: present
+      profile: "{{ profile_data.profile_name }}"
+    register: aws_user_list
+    loop: "{{ identities.users }}"
+    loop_control:
+      loop_var: user_data
+    when:
+      - identities.users|length > 0
+      - user_data.user_name in members_in_profile
+      - user_data.targets is undefined or 'aws' in user_data.targets
+      - user_data.state|default('present') == 'present'
+
+  - name: "Make sure the list_of_users is empty to start with"
+    set_fact:
+      list_of_users: []
+
+  - name: "Create password generation dataset"
+    set_fact:
+      list_of_users: "{{ list_of_users + [ aws_data.user_data|combine(aws_data|set_user_flags, {'aws_profile': profile_data.profile_name}) ] }}"
+    with_items:
+      - "{{ aws_user_list.results }}"
+    loop_control:
+      loop_var: aws_data
+    when:
+      - aws_user_list is defined
+      - aws_user_list.results is defined
+
+  - name: "Add processed users back to the 'identities' list"
+    set_fact:
+      identities: "{{ identities|combine({'users': list_of_users}) }}"
+
+  when:
+    - identities.users is defined
+    - identities.users|length > 0

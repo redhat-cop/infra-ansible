@@ -1,0 +1,14 @@
+---
+- name: Delete Group(s)
+  iam_group:
+    name: "{{ group_data.group_name }}"
+    state: absent
+    profile: "{{ profile_data.profile_name }}"
+  loop: "{{ profile_data.groups }}"
+  loop_control:
+    loop_var: group_data
+  when:
+    - profile_data.groups|length > 0
+    - group_data.targets is undefined or 'aws' in group_data.targets
+    - group_data.state is defined
+    - group_data.state == 'absent'

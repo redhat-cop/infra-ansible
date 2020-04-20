@@ -1,0 +1,16 @@
+---
+
+- name: Processes groups and their members
+  iam_group:
+    name: "{{ group_data.group_name }}"
+    managed_policy: "{{ group_data.managed_policy_arn|default(omit) }}"
+    users: "{{ group_data.members|default(omit) }}"
+    profile: "{{ profile_data.profile_name }}"
+    state: present
+  loop: "{{ profile_data.groups }}"
+  loop_control:
+    loop_var: group_data
+  when:
+    - profile_data.groups|length > 0
+    - group_data.targets is undefined or 'aws' in identities.targets
+    - group_data.state|default('present') == 'present'

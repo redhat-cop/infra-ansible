@@ -1,0 +1,17 @@
+---
+- name: Delete User(s)
+  iam:
+    iam_type: user
+    name: "{{ user_data.user_name }}"
+    state: absent
+    groups: ""
+    profile: "{{ profile_data.profile_name }}"
+  loop: "{{ identities.users }}"
+  loop_control:
+    loop_var: user_data
+  when:
+    - identities.users|length > 0
+    - user_data.targets is undefined or
+      'aws' in user_data.targets
+    - user_data.state is defined
+    - user_data.state == 'absent'
