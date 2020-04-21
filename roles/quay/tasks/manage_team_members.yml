@@ -1,0 +1,26 @@
+---
+
+- name: Get Team Members
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members"
+    validate_certs: "{{ quay_validate_certs }}"
+    status_code:
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: quay_team_members
+
+- name: Add Team Members
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members/{{ quay_organization.name + '+' + team_member.name if 'type' in team_member and team_member.type == 'robot' else team_member.name }}"
+    method: PUT
+    body:
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 201
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: add_team_member_results
+  when: (quay_team_members.json.members |selectattr('name', 'equalto',team_member.name)|list)|length == 0

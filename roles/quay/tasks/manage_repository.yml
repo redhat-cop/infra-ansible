@@ -1,0 +1,62 @@
+---
+
+- name: Check if repository exists
+  uri:
+    url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 200
+      - 404
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: quay_repository_exists
+
+
+- name: Create Quay Repository
+  uri:
+    url: "{{ quay_api_base }}/repository"
+    method: POST
+    body:
+      repository: "{{ quay_repository.name }}"
+      namespace: "{{ quay_repository.namespace | default(quay_organization.name) }}"
+      repo_kind: "{{ quay_repository.kind | default('image') }}"
+      visibility: "{{ quay_repository.visibility | default('private') }}"
+      description: "{{ quay_repository.description | default('') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code: 201
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: quay_repository_exists.status == 404
+
+- name: Update Quay Repository
+  uri:
+    url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}"
+    method: PUT
+    body:
+      repository: "{{ quay_repository.name }}"
+      namespace: "{{ quay_repository.namespace | default(quay_organization.name) }}"
+      repo_kind: "{{ quay_repository.kind | default('image') }}"
+      visibility: "{{ quay_repository.visibility | default('private') }}"
+      description: "{{ quay_repository.description | default('') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code: 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: quay_repository_exists.status == 200
+
+- name: Manage Permissions
+  uri:
+    url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/{{ 'team' if 'type' in item and item.type == 'team' else 'user' }}/{{ (quay_repository.namespace | default(quay_organization.name)) + '+' + item.name if item.type == 'robot' else item.name }}"
+    method: PUT
+    body:
+      role: "{{ item.role | default('read') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code: 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  loop: "{{ quay_repository.permissions }}"  
+

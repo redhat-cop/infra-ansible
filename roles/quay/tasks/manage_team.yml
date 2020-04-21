@@ -1,0 +1,22 @@
+---
+
+- name: Crerate/Update Quay Team
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}"
+    method: PUT
+    body:
+      name: "{{ quay_team.name }}"
+      role: "{{ quay_team.role | default('member') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 201
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+
+- name: Manage Team Members
+  include_tasks: manage_team_members.yml
+  loop: "{{ quay_team.members }}"
+  loop_control:
+    loop_var: team_member
