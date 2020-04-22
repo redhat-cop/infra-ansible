@@ -9,7 +9,7 @@
   assert:
     that:
       (quay_api_token|trim|length) > 0
-    fail_msg: "Quay API Token or username and password must be specified"
+    fail_msg: "Quay API Token must be specified"
 
 - name: Manage Organizations
   include_tasks: manage_organization.yml
