@@ -1,0 +1,10 @@
+---
+quay_host: https://quay.io
+
+quay_api_base: "{{ quay_host }}/api/v1"
+
+quay_api_token: ""
+
+quay_validate_certs: true
+
+orgs: []

@@ -1,0 +1,27 @@
+---
+
+- name: Check if Robot exists
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots/{{ quay_robot.name }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    status_code:
+      - 200
+      - 400
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: quay_robot_exists
+
+- name: Create/Update Quay Robot
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots/{{ quay_robot.name }}"
+    method: PUT
+    body:
+      description: "{{ quay_robot.description | default('') }}"
+      force_basic_auth: true
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 201
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: quay_robot_exists.status == 400

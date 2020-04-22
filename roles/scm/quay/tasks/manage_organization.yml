@@ -1,0 +1,59 @@
+---
+
+- name: Check if Organization Exists
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    status_code:
+      - 200
+      - 404
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: quay_organization_exists
+
+
+- name: Create Quay Organization
+  uri:
+    url: "{{ quay_api_base }}/organization/"
+    method: POST
+    body:
+      name: "{{ quay_organization.name }}"
+      email: "{{ quay_organization.email | default('') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code: 201
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: quay_organization_exists.status == 404
+
+- name: Update Quay Organization
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
+    method: PUT
+    body:
+      name: "{{ quay_organization.name }}"
+      email: "{{ quay_organization.email | default('') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code: 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: quay_organization_exists.status == 200
+
+- name: Manage Robots
+  include_tasks: manage_robot.yml
+  loop: "{{ quay_organization.robots }}"
+  loop_control:
+    loop_var: quay_robot
+
+- name: Manage Teams
+  include_tasks: manage_team.yml
+  loop: "{{ quay_organization.teams }}"
+  loop_control:
+    loop_var: quay_team
+
+- name: Manage Repositories
+  include_tasks: manage_repository.yml
+  loop: "{{ quay_organization.repos }}"
+  loop_control:
+    loop_var: quay_repository
