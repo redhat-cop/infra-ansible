@@ -17,7 +17,6 @@
     method: PUT
     body:
       description: "{{ quay_robot.description | default('') }}"
-      force_basic_auth: true
     validate_certs: "{{ quay_validate_certs }}"
     body_format: json
     status_code:

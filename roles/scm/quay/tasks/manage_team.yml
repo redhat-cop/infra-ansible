@@ -17,6 +17,6 @@
 
 - name: Manage Team Members
   include_tasks: manage_team_members.yml
-  loop: "{{ quay_team.members }}"
+  loop: "{{ quay_team.members | default([]) }}"
   loop_control:
     loop_var: team_member

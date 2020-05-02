@@ -13,7 +13,7 @@
 
 - name: Manage Organizations
   include_tasks: manage_organization.yml
-  loop: "{{ orgs }}"
+  loop: "{{ orgs | default([]) }}"
   loop_control:
     loop_var: quay_organization
 
