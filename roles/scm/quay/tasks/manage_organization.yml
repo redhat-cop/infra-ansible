@@ -42,18 +42,18 @@
 
 - name: Manage Robots
   include_tasks: manage_robot.yml
-  loop: "{{ quay_organization.robots }}"
+  loop: "{{ quay_organization.robots | default([]) }}"
   loop_control:
     loop_var: quay_robot
 
 - name: Manage Teams
   include_tasks: manage_team.yml
-  loop: "{{ quay_organization.teams }}"
+  loop: "{{ quay_organization.teams | default([]) }}"
   loop_control:
     loop_var: quay_team
 
 - name: Manage Repositories
   include_tasks: manage_repository.yml
-  loop: "{{ quay_organization.repos }}"
+  loop: "{{ quay_organization.repos | default([]) }}"
   loop_control:
     loop_var: quay_repository

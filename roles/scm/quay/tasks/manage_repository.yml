@@ -58,5 +58,5 @@
     status_code: 200
     headers:
       Authorization: "{{ auth_header }}"
-  loop: "{{ quay_repository.permissions }}"  
+  loop: "{{ quay_repository.permissions | default([]) }}"
 
