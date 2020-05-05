@@ -12,8 +12,3 @@ rhsm_repos:
  - "rhel-7-fast-datapath-rpms"
  - "rhel-server-rhscl-7-rpms"
  - "rhel-7-server-ansible-2.6-rpms"
-
-# Using Red Hat Satellite:
-#rhsm_server_hostname: 'sat-2.etl.rht-labs.com'
-#rhsm_org_id: 'Emerging_Tech_Lab'
-#rhsm_activationkey: 'rhel-7-openshift'
