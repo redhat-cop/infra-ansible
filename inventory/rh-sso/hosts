@@ -1,0 +1,10 @@
+
+[osp-provisioner]
+localhost
+
+[osp_instances:children]
+
+[at1-rh-sso]
+
+[rhsm_hosts:children]
+at1-rh-sso

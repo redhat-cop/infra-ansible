@@ -1,0 +1,11 @@
+---
+
+pkg_update: true
+hosting_infrastructure: openstack
+
+# Uncomment the following to use RHSM username, password and optionally pool:
+rhsm_username: "{{ lookup('env', 'RHSM_USER' )}}"
+rhsm_password: "{{ lookup('env', 'RHSM_PASSWD' )}}"
+# leave commented out if you want to `--auto-attach` a pool
+#rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"
+

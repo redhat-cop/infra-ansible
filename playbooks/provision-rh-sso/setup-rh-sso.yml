@@ -1,0 +1,8 @@
+---
+
+- hosts: at1-rh-sso
+  tasks:
+  - name: Install Red Hat Single Sign-On
+    yum:
+      name: "@rh-sso7"
+      state: present
