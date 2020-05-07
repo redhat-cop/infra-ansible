@@ -34,3 +34,6 @@
   - 'install'
     
 - import_playbook: setup-rh-sso.yml
+  tags:
+  - 'never'
+  - 'install'
