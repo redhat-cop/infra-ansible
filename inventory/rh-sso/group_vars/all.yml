@@ -3,9 +3,13 @@
 pkg_update: true
 hosting_infrastructure: openstack
 
-# Uncomment the following to use RHSM username, password and optionally pool:
+# Subscription Management Details
+rhsm_register: True
+rhsm_repos:
+  - "rhel-7-server-rpms"
+  - "rh-sso-7.4-for-rhel-7-server-rpms"
+  - "jb-eap-7.3-for-rhel-7-server-rpms"
+
 rhsm_username: "{{ lookup('env', 'RHSM_USER' )}}"
 rhsm_password: "{{ lookup('env', 'RHSM_PASSWD' )}}"
-# leave commented out if you want to `--auto-attach` a pool
-#rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"
-
+rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"

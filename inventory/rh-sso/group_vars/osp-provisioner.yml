@@ -99,7 +99,7 @@ osp_security_groups:
 osp_instances:
 - name: "at1-rh-sso"
   meta:
-    group: at1-rh-sso
+    group: rh-sso-hosts
   image: "rhel-server-7.7-1-x86_64"
   key_name: "openstack_key"
   flavor: "m1.medium"

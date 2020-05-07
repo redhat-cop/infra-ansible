@@ -1,0 +1,7 @@
+---
+
+ansible_user: cloud-user
+ansible_become: True
+
+list_of_packages_to_install:
+    - "@rh-sso7"

@@ -4,7 +4,7 @@ localhost
 
 [osp_instances:children]
 
-[at1-rh-sso]
+[rh-sso-hosts]
 
 [rhsm_hosts:children]
-at1-rh-sso
+rh-sso-hosts
