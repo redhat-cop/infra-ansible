@@ -104,10 +104,10 @@ def generateCSR(cn, c, st, l, o, ou, email, sans):
     for san in sans:
         sans_list.append("DNS: {0}".format(san))
 
-    sans_list = ", ".join(sans_list)
+    sans_list = ", ".join(sans_list).encode()
 
     if sans_list:
-        x509_extensions.append(crypto.X509Extension("subjectAltName", False, sans_list))
+        x509_extensions.append(crypto.X509Extension("subjectAltName".encode(), False, sans_list))
 
     csr.add_extensions(x509_extensions)
 
