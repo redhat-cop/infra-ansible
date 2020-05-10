@@ -39,6 +39,11 @@
   when:
     - key_files|length > 0 
 
+- name: Ensure target directory exists for archived files
+  file:
+    path: "/var/named/key-archive"
+    state: directory
+
 - name: Generate keys for nsupdate
   command: >
     /sbin/dnssec-keygen
@@ -54,11 +59,6 @@
   register: dnssec_keygen_command_output
 
 - block:
-  - name: Ensure target directory exists for archived files
-    file:
-      path: "/var/named/key-archive"
-      state: directory
-
   - name: Gather keys for nsupdate
     shell: "grep Key: /var/named/key-archive/{{ item.stdout }}.private | cut -d ' ' -f 2"
     register: nsupdate_keys_captured
