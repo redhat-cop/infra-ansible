@@ -4,8 +4,8 @@
   vars:
     named_views: "{{ dns_data.views }}"
   template:
-    src: domain-keys.j2
-    dest: /etc/named/named.conf.domain-keys
+    src: list-tsig-keys.j2
+    dest: /etc/named/named.conf.tsig-keys
     owner: "{{ bind_user }}"
     group: "{{ bind_group }}"
     mode: 0660
@@ -17,11 +17,14 @@
 
 - name: Setup key files for nsupdate
   template:
-    src: domain-key.j2
-    dest: /var/named/{{ item.item.name }}.key
+    src: tsig-key.j2
+    dest: /var/named/{{ item.key }}.key
     owner: "{{ bind_user }}"
     group: "{{ bind_group }}"
     mode: 0660
-  with_items:
-    - "{{ hostvars[ansible_play_hosts | first].nsupdate_keys_captured.results }}"
+  vars:
+    key_content: "{{ item.value }}"
+  loop: "{{ hostvars[ansible_play_hosts | first].nsupdate_keys | dict2items }}"
+  when:
+    - key_content.changed
   notify: restart named
