@@ -1,0 +1,5 @@
+---
+# tasks file for Red Hat SSO
+
+- import_tasks: 'setup-rh-sso.yml'
+- import_tasks: 'configure-rh-sso.yml'
