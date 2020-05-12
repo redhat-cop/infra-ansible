@@ -1,8 +1,6 @@
 ---
 
 - hosts: rh-sso-hosts
-  pre_tasks:
-    - import_tasks: deploy-rh-sso.yml
   roles:
     - role: config-rh-sso
 

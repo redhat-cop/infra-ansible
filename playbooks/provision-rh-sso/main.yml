@@ -33,7 +33,7 @@
   - 'never'
   - 'install'
     
-- import_playbook: setup-rh-sso.yml
+- import_playbook: deploy-rh-sso.yml
   tags:
   - 'never'
   - 'install'
