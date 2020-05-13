@@ -1,28 +1,23 @@
 ---
-
-- name: Deploy Red Hat Single Sign-On
-  hosts: rh-sso-hosts
+- name: 'Deploy Red Hat Single Sign-On'
   roles:
     - role: ../roles/config-packages
 
-- name: Update bind addresses
-  hosts: rh-sso-hosts
-  tasks:
-    - replace:
-        path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
-        regexp: '127.0.0.1'
-        replace: "{{ ansible_facts['default_ipv4']['address'] }}"
+- name: 'Update SSO bind addresses'
+  replace:
+    path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
+    regexp: '127.0.0.1'
+    replace: "{{ ansible_facts['default_ipv4']['address'] }}"
 
-- name: Add a default keycloak user
-  hosts: rh-sso-hosts
-  tasks:
-    - shell: "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh --user admin --password test123"
-      args:
-        executable: "/bin/bash"
+- name: 'Add a default SSO administration user'
+  shell: >
+    "{{ add_user_keycloak }}"
+    --user "{{ default_sso_user }}"
+    --password "{{ default_sso_pass }}"
+  args:
+    executable: "/bin/bash"
 
-- name: Start RH SSO in Standalone mode
-  hosts: rh-sso-hosts
-  tasks:
-    - service:
-        name: rh-sso7
-        state: restarted
+- name: 'Start Red Hat SSO in Standalone mode'
+  service:
+    name: rh-sso7
+    state: restarted

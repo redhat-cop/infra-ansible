@@ -1,0 +1,44 @@
+---
+
+- name: Testing keycloak group module
+  hosts: rh-sso-hosts
+  tasks:
+  - name: Creating a Custom Realm
+    keycloak_group:
+      name: my-new-kc-group
+      realm: MyCustomRealm
+      state: present
+      auth_client_id: admin-cli
+      auth_keycloak_url: http://10.9.51.153:8080/auth/
+      auth_realm: master
+      auth_username: admin
+      auth_password: test123
+    delegate_to: localhost
+
+- name: Creating sample Realm
+  hosts: rh-sso-hosts
+  tasks:
+    - name: Create or update Keycloak client (minimal example)
+      local_action:
+        module: keycloak_client
+        auth_client_id: admin-cli
+        auth_keycloak_url: http://10.9.51.153:8080/auth
+        auth_realm: master
+        auth_username: admin
+        auth_password: test123
+        client_id: test
+        state: present
+
+- name: Create or update Keycloak client template (minimal)
+  hosts: rh-sso-hosts
+  tasks:
+    - name: Create 
+      local_action:
+        module: keycloak_clienttemplate
+        auth_client_id: admin-cli
+        auth_keycloak_url: http://10.9.51.153:8080/auth
+        auth_realm: master
+        auth_username: admin
+        auth_password: test123
+        realm: master
+        name: this_is_a_test

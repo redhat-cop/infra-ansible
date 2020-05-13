@@ -32,8 +32,15 @@
   tags:
   - 'never'
   - 'install'
-    
-- import_playbook: deploy-rh-sso.yml
+
+- hosts: rh-sso-hosts
+  roles:
+  - role: config-rh-sso
   tags:
   - 'never'
   - 'install'
+    
+#- import_playbook: deploy-rh-sso.yml
+#  tags:
+#  - 'never'
+#  - 'install'

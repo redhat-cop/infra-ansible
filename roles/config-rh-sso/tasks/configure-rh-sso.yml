@@ -1,77 +1,28 @@
 ---
 
-# - name: Testing keycloak group module
-#   hosts: rh-sso-hosts
-#   tasks:
-#   - name: Creating a Custom Realm
-#     keycloak_group:
-#       name: my-new-kc-group
-#       realm: MyCustomRealm
-#       state: present
-#       auth_client_id: admin-cli
-#       auth_keycloak_url: http://10.9.51.153:8080/auth/
-#       auth_realm: master
-#       auth_username: admin
-#       auth_password: test123
-#     delegate_to: localhost
+- name: "Requesting Access Token"
+  uri:
+    url: "http://10.9.51.153:8080/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ default_sso_user }}"
+      password: "{{ default_sso_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+  register: rh_sso_token
 
-# - name: Creating sample Realm
-#   hosts: rh-sso-hosts
-#   tasks:
-#     - name: Create or update Keycloak client (minimal example)
-#       local_action:
-#         module: keycloak_client
-#         auth_client_id: admin-cli
-#         auth_keycloak_url: http://10.9.51.153:8080/auth
-#         auth_realm: master
-#         auth_username: admin
-#         auth_password: test123
-#         client_id: test
-#         state: present
-
-# - name: Create or update Keycloak client template (minimal)
-#   hosts: rh-sso-hosts
-#   tasks:
-#     - name: Create 
-#       local_action:
-#         module: keycloak_clienttemplate
-#         auth_client_id: admin-cli
-#         auth_keycloak_url: http://10.9.51.153:8080/auth
-#         auth_realm: master
-#         auth_username: admin
-#         auth_password: test123
-#         realm: master
-#         name: this_is_a_test
-
-- name: "Create Token for service Red Hat Single Sign-On"
-  hosts: rh-sso-hosts
-  tasks:
-    - name: "Requesting Access Token"
-      uri:
-        url: "http://10.9.51.153:8080/auth/realms/master/protocol/openid-connect/token"
-        method: POST
-        body_format: form-urlencoded
-        body:
-          username: "admin"
-          password: "test123"
-          grant_type: "password"
-          client_id: "admin-cli"
-      register: rh_sso_token
-
-- name: "Create a Sample Realm"
-  hosts: rh-sso-hosts
-  tasks:
-    - name: "Create Realm for service Red Hat Single Sign-On"
-      uri:
-        url: "http://10.9.51.153:8080/auth/admin/realms"
-        method: POST
-        src: "realm.json"
-        remote_src: "no"
-        status_code:
-         - 201
-        headers:
-          Content-type: "application/json"
-          Accept: "application/json"
-          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-      register: rh_sso_realm_create
+- name: "Create Realm for service Red Hat Single Sign-On"
+  uri:
+    url: "http://10.9.51.153:8080/auth/admin/realms"
+    method: POST
+    src: "realm.json"
+    remote_src: "no"
+    status_code:
+     - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  register: rh_sso_realm_create
 

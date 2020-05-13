@@ -2,5 +2,5 @@
 
 - hosts: rh-sso-hosts
   roles:
-    - role: config-rh-sso
+  - role: config-rh-sso
 
