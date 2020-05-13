@@ -3,5 +3,8 @@
 ansible_user: cloud-user
 ansible_become: True
 
-list_of_packages_to_install:
-    - "@rh-sso7"
+list_of_packages_to_install: "@rh-sso7"
+
+add_user_keycloak: "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh"
+default_sso_user: example_user
+default_sso_pass: example_pass
