@@ -1,13 +1,13 @@
 ---
 - name: 'Deploy Red Hat Single Sign-On'
-  roles:
-    - role: ../roles/config-packages
+  import_role:
+    name: ../roles/config-packages
 
 - name: 'Update SSO bind addresses'
   replace:
     path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
     regexp: '127.0.0.1'
-    replace: "{{ ansible_facts['default_ipv4']['address'] }}"
+    replace: "{{ server_ip }}"
 
 - name: 'Add a default SSO administration user'
   shell: >

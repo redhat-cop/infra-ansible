@@ -6,8 +6,8 @@
     method: POST
     body_format: form-urlencoded
     body:
-      username: "{{ default_sso_user }}"
-      password: "{{ default_sso_pass }}"
+      username: "{{ sso_admin_user }}"
+      password: "{{ sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
   register: rh_sso_token
@@ -25,4 +25,3 @@
       Accept: "application/json"
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
   register: rh_sso_realm_create
-
