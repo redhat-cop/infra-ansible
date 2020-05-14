@@ -10,6 +10,7 @@ rhsm_repos:
   - "rh-sso-7.4-for-rhel-7-server-rpms"
   - "jb-eap-7.3-for-rhel-7-server-rpms"
 
+# Subscription Management Registration Details
 rhsm_username: "{{ lookup('env', 'RHSM_USER' )}}"
 rhsm_password: "{{ lookup('env', 'RHSM_PASSWD' )}}"
 rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"
