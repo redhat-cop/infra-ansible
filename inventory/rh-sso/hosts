@@ -3,6 +3,7 @@
 localhost
 
 [osp_instances:children]
+rh-sso-hosts
 
 [rh-sso-hosts]
 

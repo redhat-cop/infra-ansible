@@ -1,6 +1,0 @@
----
-# vars file for Red Hat SSO
-
-standalone_path: '/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh'
-sso_default_user: admin
-sso_default_password: password

@@ -12,8 +12,8 @@
 - name: 'Add a default SSO administration user'
   shell: >
     "{{ add_user_keycloak }}"
-    --user "{{ default_sso_user }}"
-    --password "{{ default_sso_pass }}"
+    --user "{{ sso_admin_user }}"
+    --password "{{ sso_admin_pass }}"
   args:
     executable: "/bin/bash"
 
