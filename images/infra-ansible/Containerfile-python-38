@@ -1,16 +1,17 @@
 FROM registry.access.redhat.com/ubi8/python-38
 
 ENV OC_CLIENT_MIRROR https://mirror.openshift.com/pub/openshift-v3/clients/3.11.115/linux/oc.tar.gz
+ENV PIP_DEFAULT_TIMEOUT 100
 ENV INSTALL_PKGS "git vim"
-ENV WORK_DIR /infra-ansible
+ENV WORK_DIR /opt/app-root
 ENV HOME ${WORK_DIR}
 
 USER root
 
 WORKDIR ${WORK_DIR}
 
-COPY . ${WORK_DIR}
 COPY /root /
+COPY requirements.txt ${WORK_DIR}
 
 RUN yum -y install --disableplugin=subscription-manager $INSTALL_PKGS && \
     curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf - && \
@@ -19,7 +20,10 @@ RUN yum -y install --disableplugin=subscription-manager $INSTALL_PKGS && \
     mkdir -pv /etc/ansible && \
     echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
     chmod g+w /etc/passwd && \
-    pip3 install -r requirements.txt
+    mkdir -pv ${WORK_DIR}/.ansible/tmp && \
+    chmod g+x ${WORK_DIR}/.ansible/tmp && \
+    chown -R default:root ${WORK_DIR} && \
+    pip3 install -r requirements-38.txt
 
 USER ${USER_UID}
 
