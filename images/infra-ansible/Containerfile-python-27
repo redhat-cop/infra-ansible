@@ -15,7 +15,6 @@ COPY /root /
 
 RUN yum -y remove $UNINSTALL_PKGS && \
     yum update -y && \
-    yum search python | grep pip && \
     yum -y install --disableplugin=subscription-manager $INSTALL_PKGS && \
     curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf - && \
     yum --disableplugin=subscription-manager clean all && \
@@ -23,7 +22,7 @@ RUN yum -y remove $UNINSTALL_PKGS && \
     mkdir -pv /etc/ansible && \
     echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
     chmod g+w /etc/passwd && \
-    bash -c "pip install -r requirements.txt"
+    bash -c "pip install --default-timeout=100 -r requirements-27.txt"
 
 USER ${USER_UID}
 
