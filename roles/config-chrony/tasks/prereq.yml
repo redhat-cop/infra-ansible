@@ -1,0 +1,23 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name: '{{ config_chrony_packages }}'
+    state: installed
+
+- name: 'Start firewalld'
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ config_chrony_services }}"
+
+- name: 'Open Firewall for NTP/Chrony use'
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  loop: "{{ config_chrony_firewall_services }}"
+
+
