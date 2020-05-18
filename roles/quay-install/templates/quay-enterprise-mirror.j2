@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{QUAY_NAMESPACE}}
+  name: {{QUAY_MIRROR_APP_NAME}}
+  labels:
+    quay-enterprise-component: mirror-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      quay-enterprise-component: mirror-app
+  template:
+    metadata:
+    namespace: {{QUAY_NAMESPACE}}
+    labels:
+      quay-enterprise-component: mirror-app
+  spec:
+    containers:
+      - name: {{QUAY_MIRROR_APP_NAME}}
+        image: {{QUAY_IMAGE}}
+        ports:
+          - containerPort: {{QUAY_MIRROR_APP_PORT}}
+            command: ["/quay-registry/quay-entrypoint.sh"]
+            args: ["repomirror"]
+    imagePullSecrets:
+      - name: {{QUAY_IMAGE_PULL_SECRET}}

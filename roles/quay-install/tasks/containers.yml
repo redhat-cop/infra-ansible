@@ -1,0 +1,66 @@
+---
+# Create mysql container.
+- name: "Create a mysql container"
+  shell: |
+          docker run \
+          --detach \
+          --restart=always \
+          --env MYSQL_ROOT_PASSWORD="{{MYSQL_ROOT_PASSWORD}}" \
+          --env MYSQL_USER="{{MYSQL_USER}}" \
+          --env MYSQL_PASSWORD="{{MYSQL_PASSWORD}}" \
+          --env MYSQL_DATABASE="{{MYSQL_DATABASE}}" \
+          --name "{{MYSQL_CONTAINER_NAME}}" \
+          --net=host \
+          --publish 3306:3306 \
+          -v /var/lib/mysql:/var/lib/mysql/data:Z \
+          "{{ MYSQL_CONTAINER_IMAGE }}"
+  ignore_errors: yes
+
+# Check if mysql is running
+- name: "Wait for mysql port 3306 to become open on the host"
+  wait_for:
+    host: "{{ ansible_default_ipv4.address }}"
+    port: 3306
+    delay: 5
+
+# Create Redis Container
+- name: "Create a redis container"
+  shell: |
+          docker run -d --restart=always -p 6379:6379 \
+          --net=host \
+          -v /var/lib/redis:/var/lib/redis/data:Z \
+          "{{ REDIS_CONTAINER_IMAGE }}"
+  ignore_errors: yes
+
+- name: "Wait for Redis port 6379 to become open on the host"
+  wait_for:
+    host: "{{ ansible_default_ipv4.address }}"
+    port: 6379
+    delay: 5
+
+- name: "Start Quay container."
+  shell: |
+          docker run --restart=always -p 443:8443 -p 80:8080 \
+          --net=host \
+          -v /mnt/quay/config:/conf/stack:Z \
+          -v /mnt/quay/storage:/datastorage:Z \
+          -d quay.io/redhat/quay:v3.1.0
+  when: QUAY_CONFIG != 'yes'
+  ignore_errors: yes
+   
+  # parameter is not supported when run with --net=host
+  # https://docs.docker.com/engine/reference/commandline/run/
+  #  --sysctl net.core.somaxconn=4096 \
+
+- name: "Configure Quay."
+  shell: |
+          docker run --net=host -p 8443:8443 -d quay.io/redhat/quay:v3.1.0 config {{ QUAY_PASSWORD }}
+  when: QUAY_CONFIG == 'yes'
+  ignore_errors: yes
+
+- name: "Wait for Quay port 8443 to become open on the host"
+  wait_for:
+    host: "{{ ansible_default_ipv4.address }}"
+    port: 8443
+    delay: 5
+

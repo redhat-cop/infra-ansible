@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: {{POSTGRES_DC_NAME}}
+ namespace: {{QUAY_NAMESPACE}}
+spec:
+ replicas: 1
+ template:
+  metadata:
+   labels:
+    app: postgres
+  spec:
+   containers:
+    - name: postgres
+      image: {{POSTGRES_IMAGE}}
+      imagePullPolicy: "IfNotPresent"
+      ports:
+       - containerPort: {{POSTGRES_PORT}}
+      env:
+       - name: POSTGRESQL_USER
+         value: {{POSTGRES_DBUSER}}
+       - name: POSTGRESQL_DATABASE
+         value: {{POSTGRES_DBNAME}}
+       - name: POSTGRESQL_PASSWORD
+         value: {{POSTGRES_DBPASSWORD}}
+      volumeMounts:
+       - mountPath: /var/lib/pgsql/data
+         name: postgredb
+      serviceAccount: {{POSTGRES_SA}}
+      serviceAccountName: {{POSTGRES_SA}}
+   volumes:
+    - name: postgredb
+      persistentVolumeClaim:
+      claimName: {{POSTGRES_PVC_NAME}}

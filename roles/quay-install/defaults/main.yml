@@ -1,0 +1,148 @@
+---
+# default values for role
+#
+
+# Mysql variables
+MYSQL_CONTAINER_NAME: mysql
+MYSQL_DATABASE: enterpriseregistrydb
+MYSQL_PASSWORD: quaydbpass
+MYSQL_USER: quayuser
+MYSQL_ROOT_PASSWORD: rootpass
+MYSQL_CONTAINER_IMAGE: "registry.access.redhat.com/rhscl/mysql-57-rhel7"
+MYSQL_HOSTNAME: postgres
+
+# Redis variables
+REDIS_APP_NAME: quay-enterprise-redis
+REDIS_SERVICE_NAME: quay-enterprise-redis
+REDIS_APP_PORT: 6379
+REDIS_CONTAINER_NAME: redis
+REDIS_CONTAINER_IMAGE: "registry.access.redhat.com/rhscl/redis-32-rhel7"
+REDIS_HOSTNAME: quay01
+
+# Ports required for Quay.
+rh_ports:
+  - "8443/tcp"
+  - "80/tcp"
+  - "443/tcp"
+
+# Packages required for Quay
+rh_basepkgs:
+  - mariadb
+  - telnet
+
+# Openshift Deployment
+# Quay Shared Variables 
+QUAY_DEPLOYTYPE: "docker" # accepted values are docker and openshift
+
+QUAY_WORKING_PATH: /tmp
+QUAY_DEPLOY_USER: root
+QUAY_DEPLOY_GROUP: root
+QUAY_DEPLOYMENT_TEMPLATES:
+ - clair-config
+ - clair-deployment
+ - clair-service
+ - config
+ - db-pvc
+ - postgres-clair-deployment
+ - postgres-clair-service
+ - postgres-clair-storage
+ - postgres-deployment
+ - postgres-service
+ - quay-enterprise-app-rc
+ - quay-enterprise-app-route
+ - quay-enterprise-config-route
+ - quay-enterprise-config-secret
+ - quay-enterprise-config-service-clusterip
+ - quay-enterprise-config
+ - quay-enterprise-mirror
+ - quay-enterprise-namespace
+ - quay-enterprise-redhat-quay-pull-secret
+ - quay-enterprise-redis
+ - quay-enterprise-redis-service
+ - quay-enterprise-service-clusterip
+ - quay-servicetoken-role-binding-k8s1-6
+ - quay-servicetoken-role-k8s1-6
+ - quay-storageclass
+
+QUAY_SUPERUSER: quaysuperuser
+QUAY_CONFIG: 'no'
+QUAY_PASSWORD: "superquaypass"
+
+QUAY_ENDPOINT_FQDN: quay-enterprise-clusterip
+QUAY_NAMESPACE: quay-enterprise
+QUAY_STORAGE_CLASS: quay-storageclass
+QUAY_IMAGE: quay.io/redhat/quay:v3.2.0
+QUAY_IMAGE_PULL_SECRET: redhat-quay-pull-secret
+QUAY_SECRET_NAME: quay-enterprise-secret
+QUAY_SERVICE_ACCOUNT: quay-enterprise-serviceaccount
+QUAY_ROLE_BINDING: quay-enterprise-secret-writer
+
+# QUAY storage variables
+QUAY_STORAGE_CLASS_NAME: quay-storageclass
+QUAY_STORAGE_TYPE: gp2
+QUAY_STORAGE_PROVISIONER: kubernetes.io/aws-ebs
+QUAY_STORAGE_POLICY: Delete
+
+
+# QUAY App Specific Variables
+QUAY_APP_NAME: quay-enterprise-app
+QUAY_VOLUME_NAME: configvolume
+QUAY_APP_PORT: 8443
+QUAY_SERVICE_PROTOCOL: TCP
+QUAY_SERVICE_PORT_NAME: https
+QUAY_SERVICE_PORT: 443
+QUAY_SERVICE_TARGET_PORT: 8443
+QUAY_SERVICE_NAME: quay-enterprise-clusterip
+QUAY_ROUTE_NAME: quay-enterprise
+QUAY_ROUTE_TERMINATION: passthrough
+
+# QUAY Config App Specific Variables
+QUAY_CONFIG_APP_NAME: quay-enterprise-config-app
+QUAY_CONFIG_IMAGE:  quay.io/redhat/quay:v3.2.0
+QUAY_CONFIG_ROUTE_NAME: quay-enterprise-config
+QUAY_CONFIG_ROUTE_TERMINATION: passthrough
+QUAY_CONFIG_SECRET_NAME: quay-enterprise-config-secret
+QUAY_CONFIG_SERVICE_NAME: quay-enterprise-config
+QUAY_CONFIG_SERVICE_PROTOCOL: TCP
+QUAY_CONFIG_SERVICE_PORT_NAME: https
+QUAY_CONFIG_SERVICE_PORT: 443
+QUAY_CONFIG_SERVICE_TARGET_PORT: 8443
+
+# QUAY Mirror App specific varables
+QUAY_MIRROR_APP_NAME: quay-enterprise-mirror
+QUAY_MIRROR_APP_PORT: 8443
+
+# Clair Variables
+CLAIR_DEPLOY: 'no'  # Options accepted are 'yes' and 'no'
+CLAIR_IMAGE: quay.io/redhat/clair-jwt:v3.0.4
+CLAIR_APP_NAME: clair-scanner
+CLAIR_SVC_NAME: clair-service
+CLAIR_DBNAME: clair
+CLAIR_DBUSER: clair 
+CLAIR_DBPASSWORD: test123 
+CLAIR_DBSSL: disable
+CLAIR_ENDPOINT_HOSTNAME: clair-service
+CLAIR_DB_PVC: postgres-clair-storage
+CLAIR_POSTGRES: postgres-clair
+CLAIR_POSTGRES_STORAGE_SIZE: 5Gi
+CLAIR_POSTGRES_PORT: 5432
+
+CLAIR_CERT_NAME: 'security_scanner'  ##Advise to not change this unless you absolutley have to.
+CLAIR_CERT_COUNTRYCODE: 'GB'
+CLAIR_CERT_STATE: 'London'
+CLAIR_CERT_LOCATION: 'London'
+CLAIR_CERT_ORG: 'Security Company'
+CLAIR_CERT_DEP: 'IT Department'
+CLAIR_CERT_DOMAIN: 'example.com'
+
+# Postgresql Varables 
+POSTGRES_DC_NAME: postgres
+POSTGRES_SVC_NAME: postgres
+POSTGRES_PVC_NAME: postgres-storage
+POSTGRES_STORAGE_SIZE: 5Gi
+POSTGRES_IMAGE: registry.access.redhat.com/rhscl/postgresql-10-rhel7:1-35
+POSTGRES_SA: postgres
+POSTGRES_DBUSER: quayuser
+POSTGRES_DBPASSWORD: quaypass
+POSTGRES_DBNAME: quay
+POSTGRES_PORT: 5432

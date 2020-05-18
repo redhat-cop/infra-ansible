@@ -1,0 +1,6 @@
+---
+
+- name: "Install Packages required role." 
+  yum:
+    name: "{{ rh_basepkgs }}"
+    state: present

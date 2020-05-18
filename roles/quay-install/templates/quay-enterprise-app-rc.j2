@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ namespace: {{QUAY_NAMESPACE}}
+ name: {{QUAY_APP_NAME}}
+ labels:
+    quay-enterprise-component: app
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   quay-enterprise-component: app
+ template:
+  metadata:
+   namespace: {{QUAY_NAMESPACE}}
+   labels:
+    quay-enterprise-component: app
+  spec:
+   volumes:
+    - name: {{QUAY_VOLUME_NAME}}
+      secret:
+       secretName: {{QUAY_SECRET_NAME}}
+   containers:
+    - name: {{QUAY_APP_NAME}}
+      image: {{QUAY_IMAGE}}
+      ports:
+       - containerPort: {{QUAY_APP_PORT}}
+      volumeMounts:
+       - name: {{QUAY_VOLUME_NAME}}
+         readOnly: false
+         mountPath: /conf/stack
+   imagePullSecrets:
+    - name: {{QUAY_IMAGE_PULL_SECRET}}

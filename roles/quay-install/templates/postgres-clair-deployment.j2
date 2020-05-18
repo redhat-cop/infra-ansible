@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: {{CLAIR_POSTGRES}}
+  name: {{CLAIR_POSTGRES}}
+  namespace: {{QUAY_NAMESPACE}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{CLAIR_POSTGRES}}
+  template:
+    metadata:
+      labels:
+        app: {{CLAIR_POSTGRES}}
+    spec:
+      containers:
+        - name: {{CLAIR_POSTGRES}}
+          image: {{POSTGRES_IMAGE}}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{CLAIR_POSTGRES_PORT}}
+              protocol: TCP
+          env:
+           - name: POSTGRESQL_USER
+             value: {{CLAIR_DBUSER}}
+           - name: POSTGRESQL_DATABASE
+             value: {{CLAIR_DBNAME}}
+           - name: POSTGRESQL_PASSWORD
+             value: {{CLAIR_DBPASSWORD}}
+          volumeMounts:
+            - mountPath: /var/lib/pgsql/data
+              name: postgredb
+          serviceAccount: {{POSTGRES_SA}}
+          serviceAccountName: {{POSTGRES_SA}}
+      volumes:
+       - name: postgredb
+         persistentVolumeClaim:
+         claimName: {{CLAIR_DB_PVC}}

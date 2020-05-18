@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ namespace: {{QUAY_NAMESPACE}}
+ name: {{REDIS_APP_NAME}}
+ labels:
+  quay-enterprise-component: redis
+spec:
+ replicas: 1 
+ selector:
+  matchLabels:
+   quay-enterprise-component: redis
+ template:
+  metadata:
+   labels:
+    quay-enterprise-component: redis
+  spec:
+   containers:
+    - name: redis-master
+      image: {{REDIS_CONTAINER_IMAGE}}
+      imagePullPolicy: "IfNotPresent"
+      ports:
+       - containerPort: {{REDIS_APP_PORT}}

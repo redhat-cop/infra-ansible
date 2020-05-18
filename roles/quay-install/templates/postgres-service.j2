@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{POSTGRES_SVC_NAME}}
+  namespace: {{QUAY_NAMESPACE}}
+  labels:
+    app: postgres
+spec:
+  type: NodePort
+  ports:
+  - name: postgres
+    port: {{POSTGRES_PORT}}
+  selector:
+    app: postgres

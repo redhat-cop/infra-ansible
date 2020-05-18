@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: {{QUAY_CONFIG_ROUTE_NAME}}
+  namespace: {{QUAY_NAMESPACE}}
+spec:
+  to:
+    kind: Service
+    name: {{QUAY_CONFIG_ROUTE_NAME}}
+  tls:
+    termination: {{QUAY_CONFIG_ROUTE_TERMINATION}}

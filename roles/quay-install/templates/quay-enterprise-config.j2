@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ namespace: {{QUAY_NAMESPACE}}
+ name: {{QUAY_CONFIG_APP_NAME}}
+ labels:
+  quay-enterprise-component: config-app
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   quay-enterprise-component: config-app
+ template:
+  metadata:
+   namespace: {{QUAY_NAMESPACE}}
+   labels:
+     quay-enterprise-component: config-app
+  spec:
+   containers:
+    - name: {{QUAY_CONFIG_APP_NAME}}
+      image: {{QUAY_CONFIG_IMAGE}}
+      ports:
+      - name: https
+        containerPort: 8443
+      command: ["/quay-registry/quay-entrypoint.sh"]
+      args: ["config", "secret"]
+   imagePullSecrets:
+     - name: {{QUAY_IMAGE_PULL_SECRET}}

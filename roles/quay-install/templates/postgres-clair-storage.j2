@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{CLAIR_DB_PVC}}
+  namespace: {{QUAY_NAMESPACE}}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{CLAIR_POSTGRES_STORAGE_SIZE}}
+  storageClassName: {{QUAY_STORAGE_CLASS_NAME}}

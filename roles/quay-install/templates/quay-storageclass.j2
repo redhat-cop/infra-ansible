@@ -1,0 +1,14 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{QUAY_STORAGE_CLASS_NAME}}
+provisioner: {{QUAY_STORAGE_PROVISIONER}}
+reclaimPolicy: {{QUAY_STORAGE_POLICY}}
+parameters:
+  type: {{QUAY_STORAGE_TYPE}}
+
+
+#if encrypted
+#encrypted: "true"
+#fsType: xfs (or other fs)
+#kmsKeyId:

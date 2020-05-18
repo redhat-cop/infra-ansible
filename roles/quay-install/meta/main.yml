@@ -1,0 +1,77 @@
+galaxy_info:
+  role_name: quay-install 
+  author: Ken Hitchcock
+  description: Install Quay
+  company: None
+
+  # If the issue tracker for your role is not on github, uncomment the
+  # next line and provide a value
+  # issue_tracker_url: http://example.com/issue/tracker
+
+  # Some suggested licenses:
+  # - BSD (default)
+  # - MIT
+  # - GPLv2
+  # - GPLv3
+  # - Apache
+  # - CC-BY
+  license: "license (MIT)"
+
+  min_ansible_version: 2.7
+
+  # Optionally specify the branch Galaxy will use when accessing the GitHub
+  # repo for this role. During role install, if no tags are available,
+  # Galaxy will use this branch. During import Galaxy will access files on
+  # this branch. If travis integration is cofigured, only notification for this
+  # branch will be accepted. Otherwise, in all cases, the repo's default branch
+  # (usually master) will be used.
+  #github_branch:
+
+  #
+  # Below are all platforms currently available. Just uncomment
+  # the ones that apply to your role. If you don't see your
+  # platform on this list, let us know and we'll get it added!
+  #
+  platforms:
+  #- name: Fedora
+  #  versions:
+  #  - all
+  #  - 27
+  #  - 28
+  #  - 29
+  #- name: Amazon
+  #  versions:
+  #  - all
+  #  - 2013.03
+  #  - 2013.09
+  #  - 2016.03
+  #  - 2016.09
+  #  - 2017.03
+  #  - 2017.09
+  #  - 2017.12
+  #  - Candidate
+  - name: EL
+    versions:
+  #  - all
+  #  - 5
+  #  - 6
+    - 7
+
+
+  galaxy_tags:
+    - cloud
+    - aws
+    - azure
+    - system
+    # List tags for your role here, one per line. A tag is
+    # a keyword that describes and categorizes the role.
+    # Users find roles by searching for tags. Be sure to
+    # remove the '[]' above if you add tags to this list.
+    #
+    # NOTE: A tag is limited to a single word comprised of
+    # alphanumeric characters. Maximum 20 tags per role.
+
+dependencies: []
+  # List your role dependencies here, one per line.
+  # Be sure to remove the '[]' above if you add dependencies
+  # to this list.

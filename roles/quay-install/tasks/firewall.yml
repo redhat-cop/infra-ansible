@@ -1,0 +1,9 @@
+---
+
+- name: "Open Firewall for Role." 
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items: "{{ rh_ports }}"

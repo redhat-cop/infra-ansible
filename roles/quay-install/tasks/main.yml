@@ -1,0 +1,26 @@
+---
+- block:
+    - name: "Packages required for Quay."
+      include_tasks: packages.yml
+      tags: [pkgs]
+
+    - name: "Pre requirements for Quay."
+      include_tasks: prereqs.yml
+      tags: [prereqs]
+
+    - name: "Open Firewall ports."
+      include_tasks: firewall.yml
+      tags: [firewall]
+
+    - name: "Create Containers for Quay."
+      include_tasks: containers.yml
+      tags: [containers]
+  become: true 
+  when: QUAY_DEPLOYTYPE == "docker"
+
+- block:
+    - name: "Packages required for Quay."
+      include_tasks: quay-openshift-deployment.yml
+      tags: [ocpdeploy]
+  become: true 
+  when: QUAY_DEPLOYTYPE == "openshift"

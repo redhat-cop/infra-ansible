@@ -1,0 +1,675 @@
+---
+- name: "Create working directory to run QUAY deployment files from."
+  file:
+    path: "{{QUAY_WORKING_PATH}}"
+    state: directory
+
+- name: "Copy templates to OpenShift control host or master."
+  template:
+    src: "templates/{{item}}.j2"
+    dest: "{{QUAY_WORKING_PATH}}/{{item}}.yaml"
+    owner: "{{QUAY_DEPLOY_USER}}"
+    group: "{{QUAY_DEPLOY_GROUP}}"
+    mode: '0644'
+  loop: "{{QUAY_DEPLOYMENT_TEMPLATES}}"
+
+- name: "Login to OpenShift cluster"
+  shell: | 
+         oc login -u system:admin
+
+# Check namespace exists, if not create it
+- name: "OpenShift Check if Project exists"
+  oc_obj:
+    state: list
+    kind: projects
+    name: "{{QUAY_NAMESPACE}}"
+  register: oc_projects
+
+- name: "Process namespace templates"
+  shell: | 
+         oc create -f quay-enterprise-namespace.yaml
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_projects.module_results is defined
+   - oc_projects.module_results.stderr is defined
+   - oc_projects.module_results.stderr.find("NotFound") != -1
+  
+# Check if config secret exits, if not create it.
+- name: "OpenShift Check if config secret exists"
+  oc_obj:
+    state: list
+    kind: secret
+    name: "{{QUAY_CONFIG_SECRET_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quayconfigsecret
+
+  #oc create secret generic quay-enterprise-config-secret --from-file=config.yaml -n quay-enterprise
+- name: "Process config secret templates"
+  shell: 
+    cmd: "oc create secret generic quay-enterprise-config-secret --from-file=config.yaml -n {{QUAY_NAMESPACE}}"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quayconfigsecret.module_results is defined
+   - oc_quayconfigsecret.module_results.stderr is defined
+   - oc_quayconfigsecret.module_results.stderr.find("NotFound") != -1
+
+# Check if generic secret exists, if not create it.
+# ---------------------------------------------------------------------
+# This is used for when we try to automate the configuration of Quay. 
+# At the moment the manual configuration is required.
+# ---------------------------------------------------------------------
+- name: "OpenShift Check if generic secret exists"
+  oc_obj:
+    state: list
+    kind: secret
+    name: "quay-enterprise-secret"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quaygensecret
+
+- name: "Create generic secret"
+  shell: 
+    cmd: "oc create secret generic quay-enterprise-secret -n {{QUAY_NAMESPACE}}"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quaygensecret.module_results is defined
+   - oc_quaygensecret.module_results.stderr is defined
+   - oc_quaygensecret.module_results.stderr.find("NotFound") != -1
+
+# Check if pull secret exists, if not create it.
+- name: "OpenShift Check if Pull secret exists"
+  oc_obj:
+    state: list
+    kind: secret
+    name: "{{QUAY_IMAGE_PULL_SECRET}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quaypullsecret
+
+- name: "Process quay pull secret templates"
+  shell:  
+    cmd: "oc create -f quay-enterprise-redhat-quay-pull-secret.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quaypullsecret.module_results is defined
+   - oc_quaypullsecret.module_results.stderr is defined
+   - oc_quaypullsecret.module_results.stderr.find("NotFound") != -1
+
+# Check if Storage class exists, if not create it.
+- name: "OpenShift Check if Storage class exists"
+  oc_obj:
+    state: list
+    kind: sc
+    name: "{{QUAY_STORAGE_CLASS_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quaysc
+
+- name: "Process storage class templates"
+  shell: 
+    cmd: "oc create -f quay-storageclass.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quaysc.module_results is defined
+   - oc_quaysc.module_results.stderr is defined
+   - oc_quaysc.module_results.stderr.find("NotFound") != -1
+
+# Check if pvc exists, if not create it.
+- name: "OpenShift Check if postgres pvc exists"
+  oc_obj:
+    state: list
+    kind: pvc
+    name: "{{POSTGRES_PVC_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quaypvc
+
+- name: "Process pvc templates"
+  shell: 
+    cmd: "oc create -f db-pvc.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quaypvc.module_results is defined
+   - oc_quaypvc.module_results.stderr is defined
+   - oc_quaypvc.module_results.stderr.find("NotFound") != -1
+
+# Check if postgresql deployment exists, if not create it.
+- name: "OpenShift Check if postgres deployment exists"
+  oc_obj:
+    state: list
+    kind: deployment
+    name: "{{POSTGRES_DC_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_postgresdc
+
+- name: "Process postgresql deployment templates"
+  shell:  
+    cmd: "oc create -f postgres-deployment.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_postgresdc.module_results is defined
+   - oc_postgresdc.module_results.stderr is defined
+   - oc_postgresdc.module_results.stderr.find("NotFound") != -1
+
+# Check if postgres service exists, if not create it.
+- name: "OpenShift Check if postgres service exists"
+  oc_obj:
+    state: list
+    kind: svc
+    name: "{{POSTGRES_SVC_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_postgressvc
+
+- name: "Process postgres service templates"
+  shell:
+    cmd: "oc create -f postgres-service.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_postgressvc.module_results is defined
+   - oc_postgressvc.module_results.stderr is defined
+   - oc_postgressvc.module_results.stderr.find("NotFound") != -1
+
+# Get postgresql pod name.
+- name: "OpenShift Check if postgres deployment exists"
+  shell:
+    cmd: "oc get pods -n {{QUAY_NAMESPACE}} | grep -v clair | grep postgres | awk '{print $1}'"
+  register: oc_postgrespodname
+  ignore_errors: true
+
+- name: "Need to wait for a minute so postgres pod can start."
+  pause:
+    minutes: 1
+
+- name: "Wait for Postgres pods to appear"
+  oc_obj:
+    state: list
+    kind: pod
+    name: "{{oc_postgrespodname.stdout}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: postgres_pods
+  until:
+  - postgres_pods.module_results is defined
+  - postgres_pods.module_results.results is defined
+  - postgres_pods.module_results.results | length > 0
+  retries: 60
+  delay: 5
+  ignore_errors: true
+
+# Run tweaks on postgresql pod for Quay deployment.
+- name: "Run Postgresql tweaks require for Quay deployment."
+  shell:
+    cmd: "oc exec -it {{oc_postgrespodname.stdout}} -n {{QUAY_NAMESPACE}} -- /bin/bash -c 'echo \"CREATE EXTENSION IF NOT EXISTS pg_trgm\" | /opt/rh/rh-postgresql10/root/usr/bin/psql -d quay'"
+  ignore_errors: true
+
+# Check if service account exists, if not create it.
+- name: "Check if postgres service account exists."
+  oc_obj:
+    state: list
+    kind: sa
+    name: "{{POSTGRES_SA}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_postgressa
+
+- name: "Create Postgres Service Account."
+  shell:
+    cmd: "oc create serviceaccount {{POSTGRES_SA}} -n {{QUAY_NAMESPACE}}"
+  ignore_errors: true
+  when: 
+   - oc_postgressa.module_results is defined
+   - oc_postgressa.module_results.stderr is defined
+   - oc_postgressa.module_results.stderr.find("NotFound") != -1
+
+# Need to revist this task, not idempotent. Only add the policy if the account was created in previous task, else it is skipped.
+# TODO
+- name: "Add anyuid to Postgres Service Account."
+  shell:
+    cmd: "oc adm policy add-scc-to-user anyuid -z system:serviceaccount:{{QUAY_NAMESPACE}}:{{POSTGRES_SA}}"
+  ignore_errors: true
+  when: 
+   - oc_postgressa.module_results is defined
+   - oc_postgressa.module_results.stderr is defined
+   - oc_postgressa.module_results.stderr.find("NotFound") != -1
+
+- name: "Add anyuid to default Service Account."
+  shell:
+    cmd: "oc adm policy add-scc-to-user anyuid -z system:serviceaccount:{{QUAY_NAMESPACE}}:default"
+  ignore_errors: true
+  when: 
+   - oc_postgressa.module_results is defined
+   - oc_postgressa.module_results.stderr is defined
+   - oc_postgressa.module_results.stderr.find("NotFound") != -1
+
+# Check if service token exists, if not create it.
+- name: "Check if role exists."
+  oc_obj:
+    state: list
+    kind: role
+    name: "{{QUAY_SERVICE_ACCOUNT}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_role
+
+- name: "Create role."
+  shell:
+    cmd: "oc create -f quay-servicetoken-role-k8s1-6.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_role.module_results is defined
+   - oc_role.module_results.stderr is defined
+   - oc_role.module_results.stderr.find("NotFound") != -1
+
+# Check if service token exists, if not create it.
+- name: "Check if role binding exists."
+  oc_obj:
+    state: list
+    kind: rolebinding
+    name: "{{QUAY_ROLE_BINDING}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_rolebinding
+
+- name: "Create role binding."
+  shell:
+    cmd: "oc create -f quay-servicetoken-role-binding-k8s1-6.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_rolebinding.module_results is defined
+   - oc_rolebinding.module_results.stderr is defined
+   - oc_rolebinding.module_results.stderr.find("NotFound") != -1
+
+# Check if redis deployment exists, if not create it.
+- name: "Check if redis deployment exists."
+  oc_obj:
+    state: list
+    kind: deployment
+    name: "{{REDIS_APP_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_redisdeployment
+
+- name: "Create redis deployment."
+  shell:
+    cmd: "oc create -f quay-enterprise-redis.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_redisdeployment.module_results is defined
+   - oc_redisdeployment.module_results.stderr is defined
+   - oc_redisdeployment.module_results.stderr.find("NotFound") != -1
+
+# TODO, add task to wait for pod to start.
+
+# Check if redis service exists, if not create it.
+- name: "OpenShift Check if redis service exists"
+  oc_obj:
+    state: list
+    kind: svc
+    name: "{{REDIS_SERVICE_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_redissvc
+
+- name: "Process redis service templates"
+  shell: 
+    cmd: "oc create -f quay-enterprise-redis-service.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_redissvc.module_results is defined
+   - oc_redissvc.module_results.stderr is defined
+   - oc_redissvc.module_results.stderr.find("NotFound") != -1
+
+# Check if quay enterprise config deployment exists, if not create it.
+- name: "Check if quay enterprise config deployment exists."
+  oc_obj:
+    state: list
+    kind: deployment
+    name: "{{QUAY_CONFIG_APP_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quayconfigdeployment
+
+- name: "Create quay enterprise config deployment."
+  shell:
+    cmd: "oc create -f quay-enterprise-config.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quayconfigdeployment.module_results is defined
+   - oc_quayconfigdeployment.module_results.stderr is defined
+   - oc_quayconfigdeployment.module_results.stderr.find("NotFound") != -1
+
+
+# Check if Quay Config service exists, if not create it.
+- name: "OpenShift Check if Quay config service exists"
+  oc_obj:
+    state: list
+    kind: svc
+    name: "{{QUAY_CONFIG_SERVICE_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quayconfigsvc
+
+- name: "Process Quay config service templates"
+  shell:
+    cmd: "oc create -f quay-enterprise-config-service-clusterip.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quayconfigsvc.module_results is defined
+   - oc_quayconfigsvc.module_results.stderr is defined
+   - oc_quayconfigsvc.module_results.stderr.find("NotFound") != -1
+
+# Check if Quay Config route exists, if not create it.
+- name: "OpenShift Check if Quay config route exists"
+  oc_obj:
+    state: list
+    kind: route
+    name: "{{QUAY_CONFIG_ROUTE_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quayconfigroute
+
+- name: "Process Quay config route templates"
+  shell:
+    cmd: "oc create -f quay-enterprise-config-route.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quayconfigroute.module_results is defined
+   - oc_quayconfigroute.module_results.stderr is defined
+   - oc_quayconfigroute.module_results.stderr.find("NotFound") != -1
+  
+# Check if Quay service exists, if not create it.
+- name: "OpenShift Check if Quay service exists"
+  oc_obj:
+    state: list
+    kind: svc
+    name: "{{QUAY_SERVICE_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quaysvc
+
+- name: "Process Quay service templates"
+  shell:
+    cmd: "oc create -f quay-enterprise-service-clusterip.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quaysvc.module_results is defined
+   - oc_quaysvc.module_results.stderr is defined
+   - oc_quaysvc.module_results.stderr.find("NotFound") != -1
+
+   # Check if Quay Config route exists, if not create it.
+- name: "OpenShift Check if Quay route exists"
+  oc_obj:
+    state: list
+    kind: route
+    name: "{{QUAY_ROUTE_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quayroute
+
+- name: "Process Quay route templates"
+  shell:
+    cmd: "oc create -f quay-enterprise-app-route.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quayroute.module_results is defined
+   - oc_quayroute.module_results.stderr is defined
+   - oc_quayroute.module_results.stderr.find("NotFound") != -1
+
+# Check if quay enterprise deployment exists, if not create it.
+- name: "Check if quay enterprise deployment exists."
+  oc_obj:
+    state: list
+    kind: deployment
+    name: "{{QUAY_APP_NAME}}"
+    namespace: "{{QUAY_NAMESPACE}}"
+  register: oc_quaydeployment
+
+- name: "Create quay enterprise deployment."
+  shell:
+    cmd: "oc create -f quay-enterprise-app-rc.yaml"
+  args:
+    chdir: "{{QUAY_WORKING_PATH}}"
+  ignore_errors: true
+  when: 
+   - oc_quaydeployment.module_results is defined
+   - oc_quaydeployment.module_results.stderr is defined
+   - oc_quaydeployment.module_results.stderr.find("NotFound") != -1
+
+
+# Clair Deployment commands 
+- name: "Clair deployment if enabled."
+  block:
+    # Check if pvc exists, if not create it.
+    - name: "OpenShift Check if Clair pvc exists"
+      oc_obj:
+        state: list
+        kind: pvc
+        name: "{{CLAIR_DB_PVC}}"
+        namespace: "{{QUAY_NAMESPACE}}"
+      register: oc_clairpvc
+
+    - name: "Process Clair pvc template."
+      shell: 
+        cmd: "oc create -f postgres-clair-storage.yaml"
+      args:
+        chdir: "{{QUAY_WORKING_PATH}}"
+      ignore_errors: true
+      when: 
+       - oc_clairpvc.module_results is defined
+       - oc_clairpvc.module_results.stderr is defined
+       - oc_clairpvc.module_results.stderr.find("NotFound") != -1
+
+    # Check if Clair Postgres exists, if not create it 
+    - name: "Check if quay enterprise deployment exists."
+      oc_obj:
+        state: list
+        kind: deployment
+        name: "{{CLAIR_POSTGRES}}"
+        namespace: "{{QUAY_NAMESPACE}}"
+      register: oc_clairpostgresdeployment
+
+    - name: "Create quay enterprise deployment."
+      shell:
+        cmd: "oc create -f postgres-clair-deployment.yaml"
+      args:
+        chdir: "{{QUAY_WORKING_PATH}}"
+      ignore_errors: true
+      when: 
+       - oc_clairpostgresdeployment.module_results is defined
+       - oc_clairpostgresdeployment.module_results.stderr is defined
+       - oc_clairpostgresdeployment.module_results.stderr.find("NotFound") != -1
+
+    # Check if Quay service exists, if not create it.
+    - name: "Check if postgres clair service exists."
+      oc_obj:
+        state: list
+        kind: svc
+        name: "{{CLAIR_POSTGRES}}"
+        namespace: "{{QUAY_NAMESPACE}}"
+      register: oc_postgresclairsvc
+      
+    - name: "Process Quay service templates"
+      shell:
+        cmd: "oc create -f postgres-clair-service.yaml"
+      args:
+        chdir: "{{QUAY_WORKING_PATH}}"
+      ignore_errors: true
+      when: 
+       - oc_postgresclairsvc.module_results is defined
+       - oc_postgresclairsvc.module_results.stderr is defined
+       - oc_postgresclairsvc.module_results.stderr.find("NotFound") != -1
+    
+    # These tasks require python dependancies, 
+    # in a disconnected environment it may not be possible, for this reason its not been tested.
+    #- name: "Generate root CA private key"
+    #  openssl_privatekey:
+    #    path: /tmp/ca-key.pem
+    #  register: key_fp
+
+    #- openssl_csr:
+    #    path: /tmp/ca.csr
+    #    privatekey_path: /tmp/ca-key.pem
+    #    common_name: "MyCA"
+    #    basic_constraints:
+    #      - CA:TRUE
+    #    basic_constraints_critical: yes
+    #    key_usage:
+    #      - keyCertSign
+    #      - digitalSignature
+    #    key_usage_critical: yes
+    
+    #- openssl_certificate:
+    #    path: /tmp/ca.crt
+    #    privatekey_path: /tmp/ca-key.pem
+    #    csr_path: /tmp/ca.csr
+    #    provider: selfsigned
+    
+    - name: "Check if Clair certs were already created."
+      stat: 
+         path: "{{QUAY_WORKING_PATH}}/{{CLAIR_CERT_NAME}}.pem"
+      register: claircert
+
+    - name: "Create Clair certs."
+      shell:
+        cmd: 'openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout {{CLAIR_CERT_NAME}}-key.pem -out {{CLAIR_CERT_NAME}}.pem -subj "/C={{CLAIR_CERT_COUNTRYCODE}}/ST={{CLAIR_CERT_STATE}}/L={{CLAIR_CERT_LOCATION}}/O={{CLAIR_CERT_ORG}}/OU={{CLAIR_CERT_DEP}}/CN={{CLAIR_CERT_DOMAIN}}"'
+      args:
+        chdir: "{{QUAY_WORKING_PATH}}"
+      ignore_errors: true
+      when: 
+        - "claircert.stat.exists == false"
+
+ #   - name: "Create Clair config secret."
+ #     shell:
+ #       cmd: "oc create secret generic clair-scanner-config-secret --from-file=clair-config.yaml --from-file=security_scanner.pem"
+ #     args:
+ #       chdir: "{{QUAY_WORKING_PATH}}"
+ #     ignore_errors: true
+ # Check if Quay service exists, if not create it.
+    - name: "Check if clair secret exists."
+      oc_obj:
+        state: list
+        kind: secret
+        name: "clair-scanner-config-secret"
+        namespace: "{{QUAY_NAMESPACE}}"
+      register: oc_clairsecret
+      
+    - name: "Process Quay service templates"
+      shell:
+        cmd: "oc create secret generic clair-scanner-config-secret --from-file=clair-config.yaml --from-file={{CLAIR_CERT_NAME}}.pem"
+      args:
+        chdir: "{{QUAY_WORKING_PATH}}"
+      ignore_errors: true
+      when: 
+       - oc_clairsecret.module_results is defined
+       - oc_clairsecret.module_results.stderr is defined
+       - oc_clairsecret.module_results.stderr.find("NotFound") != -1
+
+    # Check if Quay service exists, if not create it.
+    - name: "Check if clair service exists."
+      oc_obj:
+        state: list
+        kind: svc
+        name: "{{CLAIR_SVC_NAME}}"
+        namespace: "{{QUAY_NAMESPACE}}"
+      register: oc_clairsvc
+      
+    - name: "Process Clair service templates"
+      shell:
+        cmd: "oc create -f clair-service.yaml"
+      args:
+        chdir: "{{QUAY_WORKING_PATH}}"
+      ignore_errors: true
+      when: 
+       - oc_clairsvc.module_results is defined
+       - oc_clairsvc.module_results.stderr is defined
+       - oc_clairsvc.module_results.stderr.find("NotFound") != -1
+
+    # Check if Clair deployment exists, if not create it.
+    - name: "Check if clair deployment exists."
+      oc_obj:
+        state: list
+        kind: deployment
+        name: "{{CLAIR_APP_NAME}}"
+        namespace: "{{QUAY_NAMESPACE}}"
+      register: oc_clairdeployment
+
+    - name: "Create Clair deployment."
+      shell:
+        cmd: "oc create -f clair-deployment.yaml"
+      args:
+        chdir: "{{QUAY_WORKING_PATH}}"
+      ignore_errors: true
+      when: 
+       - oc_clairdeployment.module_results is defined
+       - oc_clairdeployment.module_results.stderr is defined
+       - oc_clairdeployment.module_results.stderr.find("NotFound") != -1
+
+  when: "CLAIR_DEPLOY == 'yes'"
+
+
+# Commands to deploy Quay (key) into OpenShift
+# oc login -u system:admin
+# oc create -f quay-enterprise-namespace.yaml
+# oc create -f quay-enterprise-config-secret.yaml
+# oc create -f quay-enterprise-redhat-quay-pull-secret.yaml
+# oc create -f quay-storageclass.yaml
+# oc create -f db-pvc.yaml
+# oc create -f postgres-deployment.yaml
+# oc create -f postgres-service.yaml
+# oc exec -it postgres-xxxxxxxxxx-xxxxx -n quay-enterprise -- /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS pg_trgm" | /opt/rh/rh-postgresql10/root/usr/bin/psql -d quay'
+# oc create serviceaccount postgres -n quay-enterprise
+# oc adm policy add-scc-to-user anyuid -z system:serviceaccount:quay-enterprise:postgres 
+# oc create -f quay-servicetoken-role-k8s1-6.yaml
+# oc create -f quay-servicetoken-role-binding-k8s1-6.yaml
+# oc adm policy add-scc-to-user anyuid system:serviceaccount:quay-enterprise:default
+# oc create -f quay-enterprise-redis.yaml
+# oc create -f quay-enterprise-config.yaml
+# oc create -f quay-enterprise-config-service-clusterip.yaml
+# oc create -f quay-enterprise-config-route.yaml
+# oc create -f quay-enterprise-service-clusterip.yaml
+# oc create -f quay-enterprise-app-route.yaml
+# oc create -f quay-enterprise-app-rc.yaml
+#
+# At this stage QUAY has to be configured by the webconsole, at the end of the conf you have the option to populate the configuration.
+# If that fails you need to do the next step.
+# -------------------------------------------------
+# | ONLY if manual configuration is required run  |
+# -------------------------------------------------
+# oc create secret generic quay-enterprise-secret -n quay-enterprise \
+# --from-file=config.yaml=/path/to/config.yaml \
+# --from-file=ssl.key=/path/to/ssl.key \
+# --from-file=ssl.cert=/path/to/ssl.cert
+
+# Clair Deployment commands 
+# oc create -f postgres-clair-storage.yaml
+# oc create -f postgres-clair-deployment.yaml
+# oc create -f postgres-clair-service.yaml
+
+# oc create secret generic clair-scanner-config-secret \
+# --from-file=config.yaml=/path/to/clair-config.yaml \
+# --from-file=security_scanner.pem=/path/to/security_scanner.pem
+# oc create -f clair-service.yaml
+# oc create -f clair-deployment.yaml
+
+# If you want to enable mirroring in the Quay cluster.
+# As of Quay 3.2 this was still tech preview.
+# oc create -f quay-enterprise-mirror.yaml

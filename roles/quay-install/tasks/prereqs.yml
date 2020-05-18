@@ -1,0 +1,36 @@
+---
+
+# Mysql prereqs
+- name: "Create mysql directory if it does not exist"
+  file:
+    path: /var/lib/mysql
+    state: directory
+    mode: '0777'
+
+
+# redis prereqs
+- name: "Create redis directory if it does not exist"
+  file:
+    path: /var/lib/redis
+    state: directory
+    mode: '0777'
+
+
+# Quay prereqs
+- name: "Create Quay config directory if it do not exist."
+  file:
+    path: /mnt/quay/config
+    state: directory
+
+- name: "Create Quay storage directory if it do not exist."
+  file:
+    path: /mnt/quay/storage
+    state: directory
+
+- name: "Copy Quay configuration template."
+  template:
+    src: templates/config.j2
+    dest: /mnt/quay/config/config.yaml
+    owner: root
+    group: root
+    mode: '0644'
