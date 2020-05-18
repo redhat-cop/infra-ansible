@@ -14,14 +14,10 @@ Variables
 
 Defaults file has example of variables that can be used. There is only one variable you should need to specify.
 
-```
-# Variables to set.
-=======
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
 |**chrony_allow_subnet**|  required to allow your network subnet to access the ntp service | no | N/A |
 
-=======
 
 Example Playbook
 ----------------
@@ -42,5 +38,5 @@ Apache License 2.0
 
 Author Information
 ------------------
-=======
+
 Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.

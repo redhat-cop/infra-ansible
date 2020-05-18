@@ -25,12 +25,12 @@ Defaults file has example of variables that can be used. It is advisable to crea
 Example Playbook
 ----------------
 ```
-- name: 'Configure bonding on the infrastructure hosts'
-  hosts: infra_hosts
-  roles:
-    - config_bonding
-  tags: 
-    - configure_infra_hosts
+    - name: 'Configure bonding on the infrastructure hosts'
+      hosts: infra_hosts
+      roles:
+        - role: config_bonding
+      tags: 
+       - configure_infra_hosts
 ```
 
 Example Inventory
@@ -68,8 +68,6 @@ License
 -------
 Apache License 2.0
 
-
 Author Information
 ------------------
-
 Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.
