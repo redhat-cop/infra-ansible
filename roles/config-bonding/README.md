@@ -24,6 +24,7 @@ Defaults file has example of variables that can be used. It is advisable to crea
 
 Example Playbook
 ----------------
+
 ```
     - name: 'Configure bonding on the infrastructure hosts'
       hosts: infra_hosts
