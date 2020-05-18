@@ -1,0 +1,33 @@
+---
+
+- name: "Set realm facts for realm: {{ item.name }}"
+  set_fact:
+    realm_id: "{{ item.id | default(item.name) }}"
+    realm_name: "{{ item.name }}"
+    realm_displayName: "{{ item.displayName | default(item.name) }}"
+    realm_enabled: "{{ item.enabled | default(true) }}"
+    realm_sslRequired: "{{ item.sslRequired | default('external') }}"
+    realm_registrationAllowed: "{{ item.registrationAllowed | default(true) }}"
+    realm_emailLogin: "{{ item.emailLogin | default(true) }}"
+    realm_dupsAllowed: "{{ item.dupsAllowed | default(false) }}"
+    realm_resetPwd: "{{ item.resetPwd | default(false) }}"
+    realm_editUname: "{{ item.editUname | default(false) }}"
+    realm_bruteForceProtected: "{{ item.bruteForceProtected | default(true) }}"
+- name: "Retrieve template for realm: {{ item.name }}"
+  set_fact:
+    realm: "{{ lookup('template', 'realm.json.j2') }}"
+#TODO: This is where we need to add some logic to ensure that the realm is created/looks as we expected
+- name: "Unset realm facts for realm: {{ item.name }} are cleared before additional runs"
+  set_fact:
+    realm_id: ""
+    realm_name: ""
+    realm_displayName: ""
+    realm_enabled: ""
+    realm_sslRequired: ""
+    realm_registrationAllowed: ""
+    realm_emailLogin: ""
+    realm_dupsAllowed: ""
+    realm_resetPwd: ""
+    realm_editUname: ""
+    realm_bruteForceProtected: ""
+
