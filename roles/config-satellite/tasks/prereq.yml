@@ -2,15 +2,12 @@
 
 - name: 'Install required packages'
   package:
-    name: '{{ config_chrony_packages }}'
+    name: '{{ item }}'
     state: installed
-<<<<<<< HEAD:roles/config-satellite/tasks/prereq.yml
   with_items:
   - satellite
   - firewalld
   - python-firewall
-=======
->>>>>>> Fixed readme issues and syntax configuration where requested.:roles/config-chrony/tasks/prereq.yml
 
 - name: 'Ensure firewalld is running'
   service:
