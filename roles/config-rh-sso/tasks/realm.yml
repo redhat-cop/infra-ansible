@@ -13,10 +13,23 @@
     realm_resetPwd: "{{ item.resetPwd | default(false) }}"
     realm_editUname: "{{ item.editUname | default(false) }}"
     realm_bruteForceProtected: "{{ item.bruteForceProtected | default(true) }}"
+
 - name: "Retrieve template for realm: {{ item.name }}"
   set_fact:
     realm: "{{ lookup('template', 'realm.json.j2') }}"
-#TODO: This is where we need to add some logic to ensure that the realm is created/looks as we expected
+
+- name: "Create Realm for service Red Hat Single Sign-On"
+  uri:
+    url: "http://10.9.51.153:8080/auth/admin/realms"
+    method: POST
+    body: "{{ realm }}"
+    body_format: json
+    status_code:
+     - 201
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  register: rh_sso_realm_create
+
 - name: "Unset realm facts for realm: {{ item.name }} are cleared before additional runs"
   set_fact:
     realm_id: ""

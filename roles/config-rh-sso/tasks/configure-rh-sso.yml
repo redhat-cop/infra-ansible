@@ -11,15 +11,3 @@
       grant_type: "password"
       client_id: "admin-cli"
   register: rh_sso_token
-
-- name: "Create Realm for service Red Hat Single Sign-On"
-  uri:
-    url: "http://10.9.51.153:8080/auth/admin/realms"
-    method: POST
-    body: "{{ lookup('template', '../templates/realm.json.j2') }}"
-    body_format: json
-    status_code:
-     - 201
-    headers:
-      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-  register: rh_sso_realm_create
