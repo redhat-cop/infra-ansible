@@ -1,0 +1,18 @@
+---
+
+realms:
+  - name: my-awesome-realm
+    id: my-awesome-realm
+    displayName: "My Awesome Realm"
+    enabled: true
+    sslRequired: "external"
+    registrationAllowed: true 
+    emailLogin: true,
+    dupsAllowed: false,
+    resetPwd: false,
+    editUname: false,
+    bruteForceProtected: true
+  - name: a-simpler-realm
+    id: simple-realm
+    displayName: "Simple Times"
+    enabled: false

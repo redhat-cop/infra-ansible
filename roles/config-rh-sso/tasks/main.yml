@@ -4,3 +4,6 @@
 - import_tasks: 'prereq.yml'
 - import_tasks: 'setup-rh-sso.yml'
 - import_tasks: 'configure-rh-sso.yml'
+- import_tasks: 'realm.yml'
+  with_items:
+    - "{{ realms }}"
