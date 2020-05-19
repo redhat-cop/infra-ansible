@@ -12,3 +12,20 @@ sso_admin_user: admin
 sso_admin_pass: mypa55ss
 
 server_ip: "{{ ansible_facts['default_ipv4']['address'] }}"
+
+realms:
+  - name: my-awesome-realm
+    id: my-awesome-realm
+    displayName: "My Awesome Realm"
+    enabled: true
+    sslRequired: "external"
+    registrationAllowed: true
+    emailLogin: true,
+    dupsAllowed: false,
+    resetPwd: false,
+    editUname: false,
+    bruteForceProtected: true
+  - name: a-simpler-realm
+    id: simple-realm
+    displayName: "Simple Times"
+    enabled: false
