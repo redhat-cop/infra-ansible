@@ -7,20 +7,42 @@
     - "{{ dns_data.views }}"
     - zones
 
-- name: Get existing key files
-  shell: 'ls -1 K{{ item.name }}*.key | sed -ne "s/K\({{ item.name }}\).*.key/\1/p"'
-  args:
-    chdir: /var/named/
-  register: key_files
-  ignore_errors: yes
-  with_items:
-    - "{{ dns_views }}"
-
-- name: Build list of existing key files
+- name: Initialize dictionary for nsupdate keys
   set_fact:
-    existing_key_files: "{{ existing_key_files | default([]) + [ item.stdout ] }}"
-  with_items:
-    - "{{ key_files.results }}"
+    nsupdate_keys: {}
+
+- name: Get existing key files
+  find:
+    paths: /var/named
+    patterns: '*.key'
+  register: key_files
+
+- block:
+  - slurp:
+      src: "{{ item.path }}"
+    register: keyfilescontent
+    with_items:
+      - "{{ key_files.files }}"
+
+  - set_fact:
+      nsupdate_keys: "{{ nsupdate_keys | \
+             combine( \
+               item['content'] | b64decode | \
+                 replace('\n', '') | \
+                 regex_replace('^key (\\S+).+?algorithm (\\S+);.+?secret \"(.+?)\";.*',
+                               '{ \"\\1\" : { \"changed\": false, \"key_algorithm\": \"\\2\", \"key_secret\": \"\\3\" }}') | \
+                 from_json \
+              )}}"
+    with_items:
+    - "{{ keyfilescontent.results }}"
+
+  when:
+    - key_files|length > 0 
+
+- name: Ensure target directory exists for archived files
+  file:
+    path: "/var/named/key-archive"
+    state: directory
 
 - name: Generate keys for nsupdate
   command: >
@@ -29,35 +51,46 @@
       -b {{ dnssec_keygen_size }}
       -n USER
       -r /dev/urandom
-      -K /var/named {{ item.name }}
+      -K /var/named/key-archive {{ item.name }}
   with_items:
     - "{{ dns_views }}"
   when:
-    - item not in existing_key_files
+    - item.name not in nsupdate_keys
+  register: dnssec_keygen_command_output
 
-- name: Gather keys for nsupdate
-  shell: "grep Key: /var/named/K{{ item.name }}*.private | cut -d ' ' -f 2"
-  register: nsupdate_keys_captured
-  with_items:
-    - "{{ dns_views }}"
-
-- name: Move .private and .key files to the 'archive' 
-  block:
-  - file:
-      path: "/var/named/key-archive"
-      state: directory
-  - shell: "mv /var/named/K{{ item.name }}*.{private,key} /var/named/key-archive/"
+- block:
+  - name: Gather keys for nsupdate
+    shell: "grep Key: /var/named/key-archive/{{ item.stdout }}.private | cut -d ' ' -f 2"
+    register: nsupdate_keys_captured
     with_items:
-      - "{{ dns_views }}"
+      - "{{ dnssec_keygen_command_output.results }}"
+    when:
+      - item.changed
 
-# Build the dict with the proper keys, i.e.:
-#    private-view.example.com:
-#      algorithm: HMAC-MD5
-#      secret: SKqKNdpfk7llKxZ57bbxUnUDobaaJp9t8CjXLJPl+fRI5mPcSBuxTAyvJPa6Y9R7vUg9DwCy/6WTpgLNqnV4Hg==
-#    public-view.example.com:
-#      algorithm: HMAC-MD5
-#      secret: kVE2bVTgZjrdJipxPhID8BEZmbHD8cExlVPR+zbFpW6la8kL5wpXiwOh8q5AAosXQI5t95UXwq3Inx8QT58duw==
-- name: Set nsupdate_keys fact
-  set_fact:
-    nsupdate_keys: "{{ nsupdate_keys | default({}) | combine({ item.item.name : { 'key_algorithm': ( dnssec_keygen_algorithm ), 'key_secret': item.stdout } }) }}"
-  with_items: "{{ nsupdate_keys_captured.results }}"
+  # Build the dict with the proper keys, i.e.:
+  #    private-view.example.com:
+  #      algorithm: HMAC-MD5
+  #      secret: SKqKNdpfk7llKxZ57bbxUnUDobaaJp9t8CjXLJPl+fRI5mPcSBuxTAyvJPa6Y9R7vUg9DwCy/6WTpgLNqnV4Hg==
+  #    public-view.example.com:
+  #      algorithm: HMAC-MD5
+  #      secret: kVE2bVTgZjrdJipxPhID8BEZmbHD8cExlVPR+zbFpW6la8kL5wpXiwOh8q5AAosXQI5t95UXwq3Inx8QT58duw==
+  - name: Set nsupdate_keys fact
+    set_fact:
+      nsupdate_keys: "{{ nsupdate_keys | \
+                         combine({ \
+                                   item.item.item.name : \
+                                   { \
+                                     'changed': true, \
+                                     'key_algorithm': dnssec_keygen_algorithm, \
+                                     'key_secret': item.stdout \
+                                   } \
+                                 }) \
+                      }}"
+    with_items:
+      - "{{ nsupdate_keys_captured.results }}"
+    when:
+      - item.changed
+
+  when:
+    - dnssec_keygen_command_output.changed
+
