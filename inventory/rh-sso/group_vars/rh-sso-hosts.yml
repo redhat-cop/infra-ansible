@@ -20,10 +20,10 @@ realms:
     enabled: true
     sslRequired: "external"
     registrationAllowed: true
-    emailLogin: true,
-    dupsAllowed: false,
-    resetPwd: false,
-    editUname: false,
+    emailLogin: true
+    dupsAllowed: false
+    resetPwd: false
+    editUname: false
     bruteForceProtected: true
   - name: a-simpler-realm
     id: simple-realm
