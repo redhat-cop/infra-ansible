@@ -1,13 +1,10 @@
 ### infra-ansible container image specs
 
-potential base images:
+base image:
 
-ubi8/python-38
-ubi8/python-36
 ubi8/minimal
-ubi7/python-36
 
-pypi packages:
+general list of python packages required to run infra-ansible:
 
 ```
 ansible
@@ -36,5 +33,3 @@ selinux
 Other packages:
 
 - httpd-tools (htpasswd)
-- python3-devel
-

@@ -1,4 +1,0 @@
-# Make the plugin behave like the default behavior of the old script
-plugin: openstack
-expand_hostvars: yes
-fail_on_errors: yes
