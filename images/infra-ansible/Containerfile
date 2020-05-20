@@ -1,20 +1,20 @@
-FROM registry.redhat.io/ubi8-minimal:latest
+FROM registry.redhat.io/ubi8-minimal:8.2
 
 LABEL MAINTAINTERS="Red Hat Services"
 
 ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.115/linux/oc.tar.gz \
+    POETRY_VIRTUALENVS_CREATE=false \
     USER_ID=1001 \
     APP_ROOT=/opt/app-root \
     HOME=/opt/app-root/src \
-    PATH=/opt/app-root/src/bin:$PATH \
     INSTALL_PKGS=" \
       vim \
       git \
       tar \
       gzip \
       httpd-tools \
-      python2-pip \
       python2-devel \
+      python2-pip \
       python2-setuptools \
       gcc"
 
@@ -22,20 +22,23 @@ USER root
 
 WORKDIR ${APP_ROOT}
 
-COPY . ${WORK_DIR}
-COPY /root /
-
 RUN microdnf install --nodocs ${INSTALL_PKGS} && \
     mkdir -p ${APP_ROOT}/bin && \
+    mkdir -p ${HOME}/.poetry/bin && \
     curl $OC_CLIENT_MIRROR | tar -C ${APP_ROOT}/bin/ -xzf - && \
     ln -s /usr/bin/python2 /usr/bin/python && \
-    pip2 install --upgrade pip && \
-    pip2 install --no-cache-dir --requirement requirements.txt && \
+    ln -s /usr/bin/pip2 /usr/bin/pip && \
+    pip install poetry
+
+COPY pyproject.toml poetry.lock ${WORK_DIR}/
+
+RUN poetry install --no-interaction && \
     chmod -R +w ${APP_ROOT} && \
     chmod -R g=u ${APP_ROOT}
 
-USER ${USER_ID}
+COPY /root /
 
+USER ${USER_ID}
 WORKDIR ${HOME}
 ENTRYPOINT ["/usr/local/bin/run"]
-CMD ["sleep", "infinity"]
+CMD ["poetry", "run"]

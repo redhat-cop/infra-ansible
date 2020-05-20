@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "infra-ansible"
+version = "1.0.15"
+description = "Dependecy installer for infra-ansible playbook runs."
+authors = ["Paul Barfuss <pbarfuss@redhat.com>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^2.7"
+ansible = "2.7.4"
+boto = "2.49.0"
+boto3 = "1.12.17"
+botocore = "1.15.17"
+configparser = "4.0.2"
+eventlet = "0.20.0"
+Jinja2 = "2.11.2"
+openstacksdk = "0.42.0"
+os-client-config = "1.28.0"
+passlib = "1.7.2"
+Paste = "3.4.0"
+python-ceilometerclient = "2.9.0"
+python-cinderclient = "6.0.0"
+python-dateutil = "2.8.1"
+python-glanceclient = "3.0.0"
+python-heatclient = "1.18.0"
+python-keystoneclient = "3.22.0"
+python-mistralclient = "4.0.0"
+python-neutronclient = "7.1.0"
+python-novaclient = "16.0.0"
+python-openstackclient = "5.0.0"
+python-swiftclient = "3.9.0"
+python-troveclient = "3.2.0"
+shade = "1.33.0"
+six = "1.14.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
