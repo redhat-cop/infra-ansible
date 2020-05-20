@@ -2,7 +2,7 @@
   "id": "{{ realm_id | default(realm_name) }}",
   "realm": "{{ realm_name }}",
   "displayName": "{{ realm_displayName }}",
-  "enabled": {{ realm_enabled | default(true) }},
+  "enabled": "{{ realm_enabled | default(true) }}",
   "sslRequired": "{{ realm_sslRequired | default('something-that-makes-sense') }}",
   "registrationAllowed": "{{ realm_registrationAllowed | default(true) }}",
   "loginWithEmailAllowed": "{{ realm_emailLogin | default(true) }}",

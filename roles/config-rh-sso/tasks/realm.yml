@@ -16,7 +16,7 @@
 
 - name: "Retrieve template for realm: {{ item.name }}"
   set_fact:
-    realm: "{{ lookup('template', 'realm.json.j2') }}"
+    realm: "{{ lookup('template', 'realm.json.j2') | to_json }}"
 
 - name: "Create Realm for service Red Hat Single Sign-On"
   uri:
