@@ -1,0 +1,18 @@
+#!/bin/bash
+
+USER_ID=$(id -u)
+GROUP_ID=$(id -g)
+
+# Check if user already exists
+ADD_USER=$(grep $USER_ID /etc/passwd | wc -l)
+
+if [ $ADD_USER -eq 0 ];then
+  echo "User $USER_ID does not exists. Adding the user to /etc/passwd..."
+  if [ x"$USER_ID" != x"0" -a x"$USER_ID" != x"997" ]; then
+    echo "default:x:${USER_ID}:${GROUP_ID}:Default User:${HOME}:/sbin/nologin" >> /etc/passwd
+  fi
+else
+  echo "User $USER_ID already exists"
+fi
+
+exec "$@"

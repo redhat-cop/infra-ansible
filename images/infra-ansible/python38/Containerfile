@@ -23,7 +23,7 @@ RUN yum -y install --disableplugin=subscription-manager $INSTALL_PKGS && \
     mkdir -pv ${WORK_DIR}/.ansible/tmp && \
     chmod g+x ${WORK_DIR}/.ansible/tmp && \
     chown -R default:root ${WORK_DIR} && \
-    pip3 install -r requirements-38.txt
+    pip3 install --no-cache -r requirements.txt
 
 USER ${USER_UID}
 
