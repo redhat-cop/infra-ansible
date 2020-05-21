@@ -1,15 +1,20 @@
-IMAGE_NAME = localhost/infra-ansible
+IMAGE_NAME = infra-ansible
 IMAGE_TAG = python27
 
 .PHONY: build
 build:
-		podman build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+		docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
-.PHONY: test
-test:
-		podman build -t ${IMAGE_NAME}-candidate:${IMAGE_TAG} .
-		IMAGE_NAME=${IMAGE_NAME}-candidate:${IMAGE_TAG} test/run
+.PHONE: run
+run:
+		docker run -u `id -u` \
+			-v ${HOME}/.ssh/:/opt/app-root/src/.ssh:z \
+			-v ${HOME}/src/:/tmp/src:z \
+			-v ${HOME}/.config/openstack/:/opt/app-root/src/.config/openstack/:z \
+			-v /etc/pki:/etc/pki:ro \
+			-it ${IMAGE_NAME}:${IMAGE_TAG} bash
+
 
 .PHONY: push
 push:
-		podman push ${IMAGE_NAME}:${IMAGE_TAG}
+		docker push ${IMAGE_NAME}:${IMAGE_TAG}
