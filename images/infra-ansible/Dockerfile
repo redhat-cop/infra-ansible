@@ -1,4 +1,4 @@
-FROM registry.redhat.io/ubi8-minimal:8.2
+FROM registry.redhat.io/ubi8:8.2
 
 LABEL MAINTAINTERS="Red Hat Services"
 
@@ -8,21 +8,20 @@ ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.
     USER_ID=1001 \
     APP_ROOT=/opt/app-root \
     HOME=/opt/app-root/src \
+    WORK_DIR=/opt/app-root/src \
     INSTALL_PKGS=" \
-      vim \
+      gcc \
       git \
-      tar \
-      gzip \
+      java-1.8.0-openjdk-headless \
       httpd-tools \
+      iproute \
+      openssl \
       python2-devel \
       python2-pip \
       python2-setuptools \
-      python3-devel \
-      python3-pip \
-      python3-setuptools \
-      gcc"
+      vim"
 
-RUN microdnf install --nodocs ${INSTALL_PKGS} && \
+RUN yum install -y --nodocs ${INSTALL_PKGS} && \
     curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf - && \
     ln -s /usr/bin/python2 /usr/bin/python && \
     ln -s /usr/bin/pip2 /usr/bin/pip
@@ -33,10 +32,11 @@ RUN pip install -r /tmp/requirements.txt
 
 COPY root /
 
+WORKDIR ${HOME}
+
 RUN /usr/local/bin/user_setup
 
 USER ${USER_ID}
 
-WORKDIR ${HOME}
 ENTRYPOINT ["/usr/local/bin/run"]
 CMD ["sleep", "infinity"]
