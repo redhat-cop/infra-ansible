@@ -3,7 +3,7 @@ IMAGE_TAG = python27
 
 .PHONY: build
 build:
-		docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+		docker build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
 .PHONE: run
 run:

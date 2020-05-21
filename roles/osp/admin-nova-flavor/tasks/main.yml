@@ -1,9 +1,9 @@
 ---
 
-- name: "Install prereq software"
-  package:
-    name: 'python2-shade'
-    state: present
+- name: Check for Python shade module
+  python_requirements_info:
+    dependencies:
+    - shade
 
 - name: "Create the flavor"
   os_nova_flavor:

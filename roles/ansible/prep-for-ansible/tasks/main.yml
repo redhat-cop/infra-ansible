@@ -11,4 +11,3 @@
   when:
   - facts is failed
 
-
