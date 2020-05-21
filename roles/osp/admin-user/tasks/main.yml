@@ -3,7 +3,7 @@
 - name: Check for Python shade module
   python_requirements_info:
     dependencies:
-    - shade
+      - shade
 
 - name: "Create the User Accounts"
   os_user:
@@ -12,11 +12,11 @@
     password: "{{ item.password }}"
     name: "{{ item.name }}"
   with_items:
-  - "{{ osp_users | default([]) }}"
+    - "{{ osp_users | default([]) }}"
 
 - name: "Grant access to accounts"
   include_tasks: "roles.yml"
   with_items:
-  - "{{ osp_users | default([]) }}"
+    - "{{ osp_users | default([]) }}"
   loop_control:
     loop_var: user
