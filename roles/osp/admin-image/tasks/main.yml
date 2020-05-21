@@ -13,4 +13,4 @@
     is_public: "{{ item.is_public | default(omit) }}"
     name: "{{ item.name }}"
   with_items:
-  - "{{ osp_images | default([]) }}"
+    - "{{ osp_images | default([]) }}"

@@ -23,4 +23,4 @@
     userdata: "{{ item.userdata | default(omit) }}"
   register: os_servers
   with_items:
-  - "{{ osp_instances | default([]) }}"
+    - "{{ osp_instances | default([]) }}"

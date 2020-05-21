@@ -13,4 +13,4 @@
     disk: "{{ item.disk }}"
     name: "{{ item.name }}"
   with_items:
-  - "{{ osp_custom_flavors | default([]) }}"
+    - "{{ osp_custom_flavors | default([]) }}"
