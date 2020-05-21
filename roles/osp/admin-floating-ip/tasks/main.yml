@@ -3,7 +3,7 @@
 - name: Check for Python shade module
   python_requirements_info:
     dependencies:
-    - shade
+      - shade
 
 - name: "Create the floating ip"
   os_floating_ip:

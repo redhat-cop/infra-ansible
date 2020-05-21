@@ -3,7 +3,7 @@
 - name: Check for Python shade module
   python_requirements_info:
     dependencies:
-    - shade
+      - shade
 
 - name: "Create the flavor"
   os_nova_flavor:
@@ -13,4 +13,4 @@
     disk: "{{ item.disk }}"
     name: "{{ item.name }}"
   with_items:
-  - "{{ osp_custom_flavors | default([]) }}"
+    - "{{ osp_custom_flavors | default([]) }}"
