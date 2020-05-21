@@ -14,8 +14,8 @@ osp_subnets:
   allocation_pool_start: "192.168.16.2"
   allocation_pool_end: "192.168.16.254"
   dns_nameservers:
-  - "10.9.48.31"
-  - "10.9.48.32"
+  - "1.1.1.1"
+  - "1.0.0.1"
 
 osp_routers:
 - name: "my-router"
@@ -52,11 +52,11 @@ osp_security_groups:
     remote_ip_prefix: 0.0.0.0/0
 
 osp_instances:
-- name: "at1-rh-sso"
+- name: "my-rh-sso.example.com"
   meta:
     group: rh-sso-hosts
   image: "rhel-server-7.7-1-x86_64"
-  key_name: "etl_rsa"
+  key_name: "mykeyname"
   flavor: "m1.medium"
   network: "my-network"
   security_groups:

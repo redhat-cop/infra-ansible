@@ -20,7 +20,7 @@
 
 - name: "Create Realm for service Red Hat Single Sign-On"
   uri:
-    url: "http://10.9.51.153:8080/auth/admin/realms"
+    url: "http://{{ server_ip }}:8080/auth/admin/realms"
     method: POST
     body: "{{ realm }}"
     body_format: json
@@ -43,4 +43,5 @@
     realm_resetPwd: ""
     realm_editUname: ""
     realm_bruteForceProtected: ""
+    realm: ""
 
