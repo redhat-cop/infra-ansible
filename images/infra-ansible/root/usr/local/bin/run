@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -x
 
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
