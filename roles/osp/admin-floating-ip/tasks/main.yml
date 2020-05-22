@@ -1,9 +1,9 @@
 ---
 
-- name: "Install prereq software"
-  package:
-    name: 'python2-shade'
-    state: present
+- name: Check for Python shade module
+  python_requirements_facts:
+    dependencies:
+      - shade
 
 - name: "Create the floating ip"
   os_floating_ip:
