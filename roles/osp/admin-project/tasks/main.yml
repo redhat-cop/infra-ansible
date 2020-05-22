@@ -1,7 +1,7 @@
 ---
 
 - name: Check for Python shade module
-  python_requirements_info:
+  python_requirements_facts:
     dependencies:
       - shade
 
