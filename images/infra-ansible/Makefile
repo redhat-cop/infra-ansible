@@ -1,19 +1,27 @@
 IMAGE_NAME = infra-ansible
 IMAGE_TAG = python27
+cmd = bash
+CONTAINTER_HOME = /opt/app-root/src
+GIT_HOME = ${HOME}/src
+UID != id -u
+GID != id -g
 
 .PHONY: build
 build:
-		docker build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} .
+		podman build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
 .PHONE: run
 run:
-		docker run -u `id -u` \
-			-v ${HOME}/.ssh/:/opt/app-root/src/.ssh:z \
-			-v ${HOME}/src/:/tmp/src:z \
-			-v ${HOME}/.config/openstack/:/opt/app-root/src/.config/openstack/:z \
-			-v /etc/pki:/etc/pki:ro \
-			-it ${IMAGE_NAME}:${IMAGE_TAG} bash
-
+		podman run \
+			--userns=keep-id \
+			--network host \
+			--volume ${HOME}/.ssh:${CONTAINTER_HOME}/.ssh:z \
+			--volume ${GIT_HOME}:/tmp/src:z \
+			--volume ${HOME}/.config/openstack/:${CONTAINER_HOME}/.config/openstack/:z \
+			--volume /etc/pki/ca-trust/source/anchors/:/etc/pki/ca-trust/source/anchors/ \
+			--interactive \
+			--tty \
+			${IMAGE_NAME}:${IMAGE_TAG} ${cmd}
 
 .PHONY: push
 push:
