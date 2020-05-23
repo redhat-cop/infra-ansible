@@ -10,7 +10,7 @@ GID != id -g
 build:
 		podman build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
-.PHONE: run
+.PHONY: run
 run:
 		podman run \
 			--userns=keep-id \
