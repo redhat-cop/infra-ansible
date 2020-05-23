@@ -7,4 +7,6 @@ quay_api_token: ""
 
 quay_validate_certs: true
 
+quay_prune: false
+
 orgs: []
