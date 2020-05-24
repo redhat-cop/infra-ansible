@@ -1,0 +1,30 @@
+FROM registry.fedoraproject.org/fedora:31
+
+LABEL com.github.containers.toolbox="true" \
+      com.github.debarshiray.toolbox="true" \
+      usage="This image is meant to be used with the toolbox command" \
+      maintainer="Red Hat Communities of Practice"
+
+ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.115/linux/oc.tar.gz
+
+RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf
+RUN dnf -y swap coreutils-single coreutils-full
+
+COPY missing-docs /
+RUN dnf -y reinstall $(<missing-docs)
+RUN rm /missing-docs
+
+COPY extra-packages /
+RUN dnf -y install $(<extra-packages)
+RUN rm /extra-packages
+
+COPY requirements.txt /
+RUN pip2 install -r /requirements.txt
+RUN rm /requirements.txt
+
+RUN dnf clean all
+RUN curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf -
+
+COPY root/etc/ansible /etc/ansible
+
+CMD /bin/sh

@@ -1,5 +1,5 @@
 IMAGE_NAME = infra-ansible
-IMAGE_TAG = python27
+IMAGE_TAG = 1.0.15
 cmd = bash
 CONTAINER_HOME = /opt/app-root/src
 GIT_HOME = ${HOME}/src
@@ -9,6 +9,18 @@ GID != id -g
 .PHONY: build
 build:
 		podman build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} .
+
+.PHONY: build-toolbox
+build-toolbox:
+		podman build --network host -t ${IMAGE_NAME}-toolbox:${IMAGE_TAG} -f Containerfile .
+
+.PHONY: create-toolbox
+create-toolbox:
+		toolbox create -i ${IMAGE_NAME}-toolbox:${IMAGE_TAG} -c ${IMAGE_NAME}-toolbox
+
+.PHONY: enter-toolbox
+enter-toolbox:
+		toolbox enter --container infra-ansible-toolbox
 
 .PHONY: run
 run:
