@@ -18,9 +18,18 @@
   set_fact:
     realm: "{{ lookup('template', 'realm.json.j2') | to_json }}"
 
+- name: "Validate existing Realms"
+  uri:
+    url: "http://10.9.51.153:8080/auth/admin/realms/{{ item.name }}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  register: existing_realms
+  ignore_errors: true
+
 - name: "Create Realm for service Red Hat Single Sign-On"
   uri:
-    url: "http://{{ server_ip }}:8080/auth/admin/realms"
+    url: "http://10.9.51.153:8080/auth/admin/realms"
     method: POST
     body: "{{ realm }}"
     body_format: json
@@ -29,6 +38,7 @@
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
   register: rh_sso_realm_create
+  when: existing_realms.status != 200
 
 - name: "Unset realm facts for realm: {{ item.name }} are cleared before additional runs"
   set_fact:
