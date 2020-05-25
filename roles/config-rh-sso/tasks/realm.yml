@@ -20,7 +20,7 @@
 
 - name: "Validate existing Realms"
   uri:
-    url: "http://10.9.51.153:8080/auth/admin/realms/{{ item.name }}"
+    url: "http://{{ external_ip }}:8080/auth/admin/realms/{{ item.name }}"
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
@@ -29,7 +29,7 @@
 
 - name: "Create Realm for service Red Hat Single Sign-On"
   uri:
-    url: "http://10.9.51.153:8080/auth/admin/realms"
+    url: "http://{{ external_ip }}:8080/auth/admin/realms"
     method: POST
     body: "{{ realm }}"
     body_format: json

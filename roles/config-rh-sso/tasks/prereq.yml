@@ -6,7 +6,6 @@
   with_items:
   - firewalld
   - python-firewall
-# notify: 'enable and start firewall services'
 
 - name: 'Start firewalld service'
   service:
@@ -23,3 +22,13 @@
   with_items:
   - 8080/tcp
   - 9990/tcp
+
+- name: 'Register service public IPv4'
+  os_server_facts:
+    server: at1*
+  register: external_ip.ansible_facts.openstack_servers[0].public_v4
+  delegate_to: localhost
+
+- name: 'Filter public IPv4 from server_facts'
+  set_fact:
+    external_ip: "{{ ansible_facts.openstack_servers[0].public_v4 }}"

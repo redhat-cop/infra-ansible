@@ -2,7 +2,7 @@
 
 - name: "Requesting Access Token"
   uri:
-    url: "http://{{ server_ip }}:8080/auth/realms/master/protocol/openid-connect/token"
+    url: "http://{{ external_ip }}:8080/auth/realms/master/protocol/openid-connect/token"
     method: POST
     body_format: form-urlencoded
     body:
