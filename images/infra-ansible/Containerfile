@@ -20,7 +20,7 @@ RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf && \
     rm /extra-packages && \
     dnf clean all && \
     ln -sf /usr/bin/pip2 /usr/bin/pip && \
-    ln -sf /usr/bin/python2.7/usr/bin/python && \
+    ln -sf /usr/bin/python2.7 /usr/bin/python && \
     pip install -r /requirements.txt && \
     rm /requirements.txt && \
     curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf -
