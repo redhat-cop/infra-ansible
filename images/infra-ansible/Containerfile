@@ -5,26 +5,24 @@ LABEL com.github.containers.toolbox="true" \
       usage="This image is meant to be used with the toolbox command" \
       maintainer="Red Hat Communities of Practice"
 
-ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.115/linux/oc.tar.gz
-
-RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf
-RUN dnf -y swap coreutils-single coreutils-full
+ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.219/linux/oc.tar.gz
 
 COPY missing-docs /
-RUN dnf -y reinstall $(<missing-docs)
-RUN rm /missing-docs
-
 COPY extra-packages /
-RUN dnf -y install $(<extra-packages)
-RUN rm /extra-packages
-
 COPY requirements.txt /
-RUN pip2 install -r /requirements.txt
-RUN rm /requirements.txt
-
-RUN dnf clean all
-RUN curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf -
-
 COPY root/etc/ansible /etc/ansible
+
+RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf && \
+    dnf -y swap coreutils-single coreutils-full && \
+    dnf -y reinstall $(<missing-docs) && \
+    rm /missing-docs && \
+    dnf -y install $(<extra-packages) && \
+    rm /extra-packages && \
+    dnf clean all && \
+    ln -sf /usr/bin/pip2 /usr/bin/pip && \
+    ln -sf /usr/bin/python2.7/usr/bin/python && \
+    pip install -r /requirements.txt && \
+    rm /requirements.txt && \
+    curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf -
 
 CMD /bin/sh
