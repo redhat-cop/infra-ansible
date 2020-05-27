@@ -22,6 +22,8 @@ Role Variables
 |:---------|:------------|:---------|:---------|
 |quay_host| Location of the Quay endpoint | no | `https://quay.io` |
 |quay_api_token| Quay API OAuth Token | yes | |
+|quay_validate_certs| Validate API Certificates | no | `true` |
+|quay_prune| Remove Quay org resources not defined in the inventory | `false` |
 |orgs| List of Quay organizations | yes | |
 
 A full list of supported variables can be found in the [test inventory](tests/inventory/group_vars/all.yml)
