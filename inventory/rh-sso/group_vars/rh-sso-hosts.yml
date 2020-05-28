@@ -5,13 +5,9 @@ ansible_become: True
 
 list_of_packages_to_install:
   - "@rh-sso7"
-  - "firewalld"
 
-add_user_keycloak: "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh"
 sso_admin_user: admin
 sso_admin_pass: mypa55ss
-
-server_ip: "{{ ansible_facts['default_ipv4']['address'] }}"
 
 realms:
   - name: my-awesome-realm

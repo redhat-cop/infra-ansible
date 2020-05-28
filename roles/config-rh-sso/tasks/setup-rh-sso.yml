@@ -7,11 +7,11 @@
   replace:
     path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
     regexp: '127.0.0.1'
-    replace: "{{ server_ip }}"
+    replace: '0.0.0.0'
 
 - name: 'Add a default SSO administration user'
   shell: >
-    "{{ add_user_keycloak }}"
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh"
     --user "{{ sso_admin_user }}"
     --password "{{ sso_admin_pass }}"
   args:
@@ -21,3 +21,7 @@
   service:
     name: rh-sso7
     state: restarted
+
+- name: 'Waiting for SSO service to load'
+  pause:
+    seconds: '30'
