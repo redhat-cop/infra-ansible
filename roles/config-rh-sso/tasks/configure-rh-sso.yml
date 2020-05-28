@@ -1,32 +1,8 @@
 ---
 
-- name: 'Register service public IPv4'
-  os_server_facts:
-    server: at1-rh-sso
-  register: rh_sso_host
-  delegate_to: localhost
-
-- name: 'Filter public IPv4 from server_facts'
+- name: "Retrieve template for realm: {{ realm.name }}"
   set_fact:
-    rh_sso_host: "{{ rh_sso_host.ansible_facts.openstack_servers[0].public_v4 }}"
-
-- name: "Set realm facts for realm: {{ item.name }}"
-  set_fact:
-    realm_id: "{{ item.id | default(item.name) }}"
-    realm_name: "{{ item.name }}"
-    realm_displayName: "{{ item.displayName | default(item.name) }}"
-    realm_enabled: "{{ item.enabled | default(true) }}"
-    realm_sslRequired: "{{ item.sslRequired | default('external') }}"
-    realm_registrationAllowed: "{{ item.registrationAllowed | default(true) }}"
-    realm_emailLogin: "{{ item.emailLogin | default(true) }}"
-    realm_dupsAllowed: "{{ item.dupsAllowed | default(false) }}"
-    realm_resetPwd: "{{ item.resetPwd | default(false) }}"
-    realm_editUname: "{{ item.editUname | default(false) }}"
-    realm_bruteForceProtected: "{{ item.bruteForceProtected | default(true) }}"
-
-- name: "Retrieve template for realm: {{ item.name }}"
-  set_fact:
-    realm: "{{ lookup('template', 'realm.json.j2') | to_json }}"
+    realm_json: "{{ lookup('template', 'realm.json.j2') | to_json }}"
 
 - name: "Requesting Access Token"
   uri:
@@ -44,25 +20,9 @@
   uri:
     url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms"
     method: POST
-    body: "{{ realm }}"
+    body: "{{ realm_json }}"
     body_format: json
     status_code: 201, 409
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
   register: rh_sso_realm_create
-
-- name: "Unset realm facts for realm: {{ item.name }} are cleared before additional runs"
-  set_fact:
-    realm_id: ""
-    realm_name: ""
-    realm_displayName: ""
-    realm_enabled: ""
-    realm_sslRequired: ""
-    realm_registrationAllowed: ""
-    realm_emailLogin: ""
-    realm_dupsAllowed: ""
-    realm_resetPwd: ""
-    realm_editUname: ""
-    realm_bruteForceProtected: ""
-    realm: ""
-
