@@ -5,14 +5,12 @@ LABEL com.github.containers.toolbox="true" \
       usage="This image is intended to be used with the toolbox command" \
       maintainer="Red Hat Communities of Practice"
 
-ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.219/linux/oc.tar.gz \
-		PIP_NO_PYTHON_VERSION_WARNING=true
+ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.219/linux/oc.tar.gz
 
 COPY requirements.txt extra-packages missing-docs /
 COPY root/etc/ansible /etc/ansible
 
 RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf && \
-    dnf -y swap coreutils-single coreutils-full && \
     dnf -y reinstall $(<missing-docs) && \
     rm /missing-docs && \
     dnf -y install $(<extra-packages) && \
