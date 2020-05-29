@@ -1,0 +1,8 @@
+gcc
+git
+java-1.8.0-openjdk-headless
+httpd-tools
+openssl
+python2-devel
+python2-pip
+python2-setuptools
