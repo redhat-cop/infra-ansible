@@ -1,26 +1,4 @@
 ansible==2.7.4
-<<<<<<< HEAD
-boto
-boto3
-botocore
-Paste>=2.0.2
-eventlet!=0.18.3,!=0.20.1,<0.21.0,>=0.18.2
-openstacksdk
-python-ceilometerclient
-python-cinderclient
-python-glanceclient
-python-heatclient
-python-keystoneclient
-python-mistralclient
-python-neutronclient
-python-novaclient
-python-openstackclient
-python-swiftclient
-python-troveclient
-passlib
-shade
-selinux
-=======
 appdirs==1.4.3
 attrs==19.3.0
 Babel==2.8.0
@@ -121,4 +99,3 @@ wcwidth==0.1.8
 wrapt==1.12.1
 xmltodict==0.12.0
 zipp==1.2.0
->>>>>>> 8db3db1308e69cc26b7925928be1aa4436277102

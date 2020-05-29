@@ -1,8 +1,13 @@
 #!/bin/bash
+<<<<<<< HEAD
+=======
+set -e
+>>>>>>> 8db3db1308e69cc26b7925928be1aa4436277102
 
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 
+<<<<<<< HEAD
 # Check if user already exists
 ADD_USER=$(grep $USER_ID /etc/passwd | wc -l)
 
@@ -13,6 +18,14 @@ if [ $ADD_USER -eq 0 ];then
   fi
 else
   echo "User $USER_ID already exists"
+=======
+# Patch /etc/passwd file with the current user info.
+# The current user's entry must be correctly defined in this file in order for
+# the `ssh` command to work within the created container.
+
+if ! whoami &>/dev/null; then
+  echo "${USER:-default}:x:${USER_ID}:${GROUP_ID}:Default User:$HOME:/sbin/nologin" >> /etc/passwd
+>>>>>>> 8db3db1308e69cc26b7925928be1aa4436277102
 fi
 
 exec "$@"

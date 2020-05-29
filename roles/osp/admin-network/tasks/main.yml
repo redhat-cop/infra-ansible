@@ -1,9 +1,9 @@
 ---
 
-- name: "Install prereq software"
-  package:
-    name: 'python2-shade'
-    state: present
+- name: Check for Python shade module
+  python_requirements_facts:
+    dependencies:
+      - shade
 
 - import_tasks: "manage-networks.yml"
 
