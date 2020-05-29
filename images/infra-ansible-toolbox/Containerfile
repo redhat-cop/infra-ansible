@@ -5,7 +5,8 @@ LABEL com.github.containers.toolbox="true" \
       usage="This image is intended to be used with the toolbox command" \
       maintainer="Red Hat Communities of Practice"
 
-ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.219/linux/oc.tar.gz
+ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.219/linux/oc.tar.gz \
+		PIP_NO_PYTHON_VERSION_WARNING=true
 
 COPY requirements.txt extra-packages missing-docs /
 COPY root/etc/ansible /etc/ansible

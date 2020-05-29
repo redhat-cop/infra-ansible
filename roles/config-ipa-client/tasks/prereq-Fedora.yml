@@ -8,4 +8,8 @@
   - ipa-client
   - libsss_sudo
   - sssd-nfs-idmap
-  - libselinux-python
+
+- name: Check for Python selinux module
+  python_requirements_facts:
+    dependencies:
+      - selinux
