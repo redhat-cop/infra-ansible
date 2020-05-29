@@ -1,6 +1,7 @@
 FROM registry.redhat.io/ubi8:8.2
 
-LABEL MAINTAINTERS="Red Hat Services"
+LABEL maintainers="Red Hat Communities of Practice" \
+      usage="This image is meant to be used with the 'docker run'"
 
 USER root
 
@@ -9,26 +10,19 @@ ENV OC_CLIENT_MIRROR=https://mirror.openshift.com/pub/openshift-v3/clients/3.11.
     APP_ROOT=/opt/app-root \
     HOME=/opt/app-root/src \
     WORK_DIR=/opt/app-root/src \
-    INSTALL_PKGS=" \
-      gcc \
-      git \
-      java-1.8.0-openjdk-headless \
-      httpd-tools \
-      iproute \
-      openssl \
-      python2-devel \
-      python2-pip \
-      python2-setuptools \
-      vim"
+    PIP_NO_PYTHON_VERSION_WARNING=true
 
-RUN yum install -y --nodocs ${INSTALL_PKGS} && \
+COPY install-packages .
+COPY requirements.txt .
+
+RUN echo "enabled=0" >> /etc/yum/pluginconf.d/subscription-manager.conf && \
+		yum install -y --nodocs $(<install-packages) && \
+    rm /install-packages && \
     curl $OC_CLIENT_MIRROR | tar -C /usr/local/bin/ -xzf - && \
     ln -s /usr/bin/python2 /usr/bin/python && \
-    ln -s /usr/bin/pip2 /usr/bin/pip
-
-COPY requirements.txt /tmp
-
-RUN pip install -r /tmp/requirements.txt
+    ln -s /usr/bin/pip2 /usr/bin/pip && \
+    pip install -r requirements.txt && \
+    rm requirements.txt
 
 COPY root /
 
