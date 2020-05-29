@@ -1,0 +1,27 @@
+---
+
+ansible_user: cloud-user
+ansible_become: True
+
+list_of_packages_to_install:
+  - "@rh-sso7"
+
+sso_admin_user: admin
+sso_admin_pass: mypa55ss
+
+realms:
+  - name: my-awesome-realm
+    id: my-awesome-realm
+    displayName: "My Awesome Realm"
+    enabled: true
+    sslRequired: "external"
+    registrationAllowed: true
+    emailLogin: true
+    dupsAllowed: false
+    resetPwd: false
+    editUname: false
+    bruteForceProtected: true
+  - name: a-simpler-realm
+    id: simple-realm
+    displayName: "Simple Times"
+    enabled: false

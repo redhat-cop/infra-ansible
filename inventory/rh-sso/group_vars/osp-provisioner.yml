@@ -1,0 +1,66 @@
+---
+
+ansible_become: false
+
+osp_networks:
+- name: "my-network"
+  description: "My Network"
+
+osp_subnets:
+- name: "my-subnet"
+  network_name: "my-network"
+  cidr: "192.168.16.0/24"
+  gateway_ip: "192.168.16.1"
+  allocation_pool_start: "192.168.16.2"
+  allocation_pool_end: "192.168.16.254"
+  dns_nameservers:
+  - "1.1.1.1"
+  - "1.0.0.1"
+
+osp_routers:
+- name: "my-router"
+  external_gateway: "external"
+  subnet: "my-subnet"
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "sso-sec-group"
+  description: "My sso Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 8080
+    port_range_max: 8080
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 9990
+    port_range_max: 9990
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+
+osp_instances:
+- name: "my-rh-sso.example.com"
+  meta:
+    group: rh-sso-hosts
+  image: "rhel-server-7.7-1-x86_64"
+  key_name: "mykeyname"
+  flavor: "m1.medium"
+  network: "my-network"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - sso-sec-group
+
