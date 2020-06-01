@@ -1,0 +1,23 @@
+---
+- name: 'Pre-Req: Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - firewalld
+  - python-firewall
+
+- name: 'Start firewalld service'
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: 'Pre-Req: Open Firewall for Red Hat SSO'
+  firewalld:
+    port: '{{ item }}'
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+  - "{{ rh_sso_port_list }}"

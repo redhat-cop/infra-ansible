@@ -1,0 +1,7 @@
+---
+
+rh_sso_host: "{{ ansible_facts.default_ipv4.address }}"
+rh_sso_port: 8080
+rh_sso_port_list:
+  - 8080/tcp
+  - 9990/tcp
