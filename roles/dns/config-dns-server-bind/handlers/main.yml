@@ -1,4 +1,4 @@
 ---
 
 - name: restart named
-  import_tasks: restart_named.yml
+  include_tasks: restart_named.yml

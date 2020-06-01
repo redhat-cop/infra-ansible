@@ -40,6 +40,24 @@
       Authorization: "{{ auth_header }}"
   when: quay_organization_exists.status == 200
 
+- name: Get Quay Organization
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: current_quay_org
+
+- name: List Organization Robots
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots"
+    validate_certs: "{{ quay_validate_certs }}"
+    status_code:
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: org_robots
+
 - name: Manage Robots
   include_tasks: manage_robot.yml
   loop: "{{ quay_organization.robots | default([]) }}"
@@ -52,8 +70,66 @@
   loop_control:
     loop_var: quay_team
 
+- name: List Repositories
+  uri:
+    url: "{{ quay_api_base }}/repository?namespace={{ quay_organization.name }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 200
+      - 404
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: org_repositories
+
+
 - name: Manage Repositories
   include_tasks: manage_repository.yml
   loop: "{{ quay_organization.repos | default([]) }}"
   loop_control:
     loop_var: quay_repository
+
+- name: Prune Organization
+  block:
+    - name: Delete Extra Robot Accounts
+      uri:
+        url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots/{{ item.name.split('+')[1] }}"
+        method: DELETE
+        validate_certs: "{{ quay_validate_certs }}"
+        status_code:
+          - 204
+        headers:
+          Authorization: "{{ auth_header }}"
+      loop: "{{ org_robots.json.robots }}"
+      when: "item.name.split('+')[1] not in quay_organization.robots |  map(attribute='name') | list"
+
+    - name: "Warn on Max Repositories Found"
+      debug:
+        msg: "Warning: Repositories Found: {{ org_repositories.json.repositories | length }}. Purging Only Supported on Organizations with <= 100 Repositories"
+      when: org_repositories.json.repositories | length > 100
+
+    - name: Delete Extra Repositories
+      uri:
+        url: "{{ quay_api_base }}/repository/{{ quay_organization.name }}/{{ item.name }}"
+        method: DELETE
+        validate_certs: "{{ quay_validate_certs }}"
+        status_code:
+          - 204
+        headers:
+          Authorization: "{{ auth_header }}"
+      loop: "{{ org_repositories.json.repositories }}"
+      when: "item.name not in quay_organization.repos |  map(attribute='name') | list"
+
+    - name: Delete Extra Teams
+      uri:
+        url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ item.key }}"
+        method: DELETE
+        validate_certs: "{{ quay_validate_certs }}"
+        status_code:
+          - 204
+        headers:
+          Authorization: "{{ auth_header }}"
+      loop: "{{ current_quay_org.json.teams | dict2items }}"
+      when: "item.key not in quay_organization.teams |  map(attribute='name') | list"
+
+  when: quay_prune|bool
