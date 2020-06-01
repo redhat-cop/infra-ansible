@@ -64,7 +64,7 @@ toolbox enter --container ${IMAGE_NAME}
 
 ### Using the infra-ansible-toolbox
 
-Your $HOME directory will be mounted in the container and your user will be you! You will appear to have elevated *sudo* permissions in the toolbox, however the root user in the container will have the same permissions as the user you used to enter. This will allow you to install a one-off package if needed without needing actual root priveleges on your system!
+Your $HOME directory will be mounted in the container and your user will be you! You will appear to have elevated *sudo* permissions in the toolbox; howerver the root user in the container will have the same permissions as the user you used to enter. This will allow you to install a one-off package if needed without needing actual root priveleges on your system! If you break something in your container, simply run the **cleanup** steps below to stop and remove the toolbox. Otherwise, your container will persist as a running podman container you can connect to any time with `toolbox enter`
 
 ### Cleanup
 
