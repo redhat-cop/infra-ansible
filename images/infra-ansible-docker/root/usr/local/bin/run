@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+if ! whoami &>/dev/null; then
+  echo "${USER:-default}:x:$(id -u):$(id -g):Default User:$HOME:/sbin/nologin" >> /etc/passwd
+fi
+
+exec "$@"
