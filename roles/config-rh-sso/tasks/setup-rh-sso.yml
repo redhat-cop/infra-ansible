@@ -1,0 +1,27 @@
+---
+- name: 'Deploy Red Hat Single Sign-On'
+  import_role:
+    name: ../roles/config-packages
+
+- name: 'Update SSO bind addresses'
+  replace:
+    path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
+
+- name: 'Add a default SSO administration user'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh"
+    --user "{{ sso_admin_user }}"
+    --password "{{ sso_admin_pass }}"
+  args:
+    executable: "/bin/bash"
+
+- name: 'Start Red Hat SSO in Standalone mode'
+  service:
+    name: rh-sso7
+    state: restarted
+
+- name: 'Waiting for SSO service to load'
+  pause:
+    seconds: '30'

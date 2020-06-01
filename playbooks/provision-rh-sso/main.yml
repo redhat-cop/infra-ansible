@@ -1,0 +1,38 @@
+---
+
+- import_playbook: ../prep.yml
+  when:
+  - rhsm_register|default(False)
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../osp/manage-user-network.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../osp/provision-osp-instance.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../rhsm.yml
+  tags:
+  - 'never'
+  - 'install'
+
+- hosts: rh-sso-hosts
+  roles:
+  - role: update-host
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: deploy-rh-sso.yml
+  tags:
+  - 'always'
