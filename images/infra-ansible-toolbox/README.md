@@ -12,7 +12,9 @@ The infra-ansible-toolbox container is a built on the [Toolbox](https://github.c
 
 On that note there are also some pitfalls to avoid. Ensure your user is a local user and not a network user as you will likely run into issues with user namespace mapping. When a user authenticates through a network-based identity management system, they will not automatically have the required entries in /etc/subuid and /etc/subgid for user namespace mapping.
 
-RPM-based packages (such as httpd-tools and pandoc) are defined and installed from [extra-packages](./extra-packages) and Python dependencies are found in [requirements.txt](./requirements.txt)
+### Dependencies for infra-ansible-toolbox
+
+Toolbox is based on Fedora and comes out-of-the-box with some standard Linux [tools](https://github.com/containers/toolbox#image-requirements). Additional RPM-based packages (such as httpd-tools and pandoc) are defined and installed from [extra-packages](./extra-packages) and Python dependencies are found in [requirements.txt](./requirements.txt)
 
 ## Usage
 
@@ -30,21 +32,9 @@ Build the container:
 
 ```bash
 buildah bud -t ${IMAGE_NAME}:${IMAGE_TAG} -f Containerfile .
-
-To build the image with podman in your local machine, first set some variables:
-
-```bash
-export IMAGE_NAME=infra-ansible-toolbox
-export IMAGE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 ```
 
-Build the container image with Podman:
-
-```bash
-podman build -t ${IMAGE_NAME}:${IMAGE_TAG} -f Containerfile .
-```
-
-You will need the toolbox CLI tool as noted above to create and enter the infra-ansible-toolbox container
+You will need the `toolbox` CLI tool as noted above to create and enter the infra-ansible-toolbox container
 
 ### Create and enter toolbox
 
