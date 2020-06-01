@@ -22,7 +22,6 @@ The goal is to create a development environment with all of the dependencies req
 
 RPM-based packages (such as httpd-tools and pandoc) are defined and installed from [extra-packages](./extra-packages) and Python dependencies are found in [requirements.txt](./requirements.txt)
 
-<<<<<<< HEAD
 ## Usage
 
 ### Build base image
@@ -51,7 +50,6 @@ Build the container image with Podman:
 
 ```bash
 podman build -t ${IMAGE_NAME}:${IMAGE_TAG} -f Containerfile .
->>>>>>> 1ac5c3f... updated readme for toolbox
 ```
 
 You will need the toolbox CLI tool as noted above to create and enter the infra-ansible-toolbox container
@@ -91,7 +89,7 @@ Your $HOME directory will be mounted in the container and your user will be you!
 ### Cleanup
 
 In order to uninstall or reset the image, you will need to first stop the container, then you can remove the toolbox image. **Be careful when using the `toolbox reset` command as it will perform a `podman system reset` which will affect your other non-toolbox containers, images and volumes.**
-=======
+
 ```bash
 toolbox create --image ${IMAGE_NAME}:${IMAGE_TAG} --container ${IMAGE_NAME}
 toolbox enter --container ${IMAGE_NAME}

@@ -8,4 +8,4 @@
   - ipa-client
   - libsss_sudo
   - sssd-nfs-idmap
-  - libselinux-python	
+  - libselinux-python
