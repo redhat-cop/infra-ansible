@@ -1,0 +1,54 @@
+---
+
+- name: "Set facts"
+  set_fact:
+    rh_sso_host: "192.168.16.3"
+    rh_sso_port: 8080
+    rh_sso_port_list:
+      - 8080/tcp
+      - 9990/tcp
+
+- name: "Requesting Access Token"
+  uri:
+    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ sso_admin_user }}"
+      password: "{{ sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+  register: rh_sso_token
+
+- name: "Retrieve user to delete"
+  uri:
+    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/users"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  register: user_to_delete
+
+#- name: "Filter user ID to delete"
+#  set_fact:
+#    user_id: "{{ item.id }}"
+#  with_items: "{{ user_to_delete.json | json_query(user_filter) }}"
+#  vars:
+#    user_filter: "[? username=='{{ sso_user.username }}'].{id:id}"
+
+# Red Hat SSO uses the 'username' as the unique value
+- name: "Filter user ID to delete"
+  set_fact:
+    user_id: "{{ user_to_delete.json | json_query(user_filter) }}"
+  vars:
+    user_filter: "[? username=='{{ sso_user.username }}'].{id:id}"
+  when: user_to_delete
+
+- name: "Delete user"
+  uri:
+    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/users/{{ user_id[0].id }}"
+#   url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/users/{{ user_id }}"
+    method: DELETE
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  when: user_id

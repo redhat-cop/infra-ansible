@@ -1,0 +1,9 @@
+{
+    "username": "{{ sso_user.username | mandatory }}",
+    "firstName": "{{ sso_user.firstName }}",
+    "lastName": "{{ sso_user.lastName }}",
+    "email": "{{ sso_user.email }}",
+    "enabled": {{ sso_user.enabled | default(true) }},
+    "emailVerified": {{ sso_user.emailVerified | default(false) }},
+    "groups": {{ sso_user.group_list }}
+}

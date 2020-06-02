@@ -1,0 +1,10 @@
+sso_user_params:
+  - username: test1
+    firstName: john
+    lastName: doe
+    email: something@smth
+    enabled: true
+    emailVerified: false
+    group_list: ["testgrp"]
+  - username: test2
+  - username: testuser6
