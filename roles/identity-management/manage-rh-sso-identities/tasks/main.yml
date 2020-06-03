@@ -9,3 +9,4 @@
   loop: "{{ sso_user_params }}"
   loop_control:
     loop_var: sso_user
+  import_tasks: update_users.yml
