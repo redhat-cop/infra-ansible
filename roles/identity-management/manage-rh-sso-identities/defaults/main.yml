@@ -1,10 +1,9 @@
+# Username must be lowercase
 sso_user_params:
-  - username: test1
-    firstName: john
-    lastName: doe
-    email: something@smth
+  - username: testuser
+    firstName: mark1
+    lastName: knopfler1
+    email: none
     enabled: true
     emailVerified: false
     group_list: ["testgrp"]
-  - username: test2
-  - username: testuser6
