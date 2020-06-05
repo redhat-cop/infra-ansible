@@ -1,9 +1,7 @@
-# Username must be lowercase
-sso_user_params:
-  - username: testuser
-    firstName: mark1
-    lastName: knopfler1
-    email: none
-    enabled: true
-    emailVerified: false
-    group_list: ["testgrp"]
+---
+
+rh_sso_host: "192.168.16.3"
+rh_sso_port: 8080
+rh_sso_port_list:
+  - 8080/tcp
+  - 9990/tcp
