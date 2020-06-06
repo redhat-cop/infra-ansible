@@ -84,7 +84,7 @@
         - 204
         headers:
           Authorization: "{{ auth_header }}"
-      loop: "{{ org_repositories_permissions_teams.json.permissions | dict2items }}"
+      loop: "{{ (org_repositories_permissions_teams.json.permissions | default({})) | dict2items }}"
       when: (quay_repository.permissions | default([])) | selectattr('name', 'equalto', item.key) | list |  length == 0
     - name: Delete Extra Permissions User
       uri:
@@ -95,6 +95,6 @@
         - 204
         headers:
           Authorization: "{{ auth_header }}"
-      loop: "{{ org_repositories_permissions_users.json.permissions | dict2items }}"
+      loop: "{{ (org_repositories_permissions_users.json.permissions | default({})) | dict2items }}"
       when: (quay_repository.permissions | default([])) | selectattr('name', 'equalto', item.value.name.split('+')[1] if item.value.is_robot else item.value.name) | list |  length == 0
   when: quay_prune|bool
