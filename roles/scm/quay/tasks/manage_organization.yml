@@ -130,6 +130,6 @@
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ current_quay_org.json.teams | dict2items }}"
-      when: "item.key not in quay_organization.teams |  map(attribute='name') | list"
+      when: "item.key not in quay_organization.teams |  map(attribute='name') | list and item.key is not in ['owners']"
 
   when: quay_prune|bool
