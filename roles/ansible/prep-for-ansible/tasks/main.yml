@@ -9,14 +9,12 @@
 - name: "Install dnf and selinux modules to allow for Ansible operation on legacy python2 systems"
   raw: dnf -y install python-dnf libselinux-python
   when:
-  when:
     - facts is failed and
       ansible_python_version is defined and
       ansible_python_version is version('3', '<')
 
 - name: "Install dnf and selinux modules to allow for Ansible operation on python3 systems"
   raw: dnf -y install python3-dnf python3-libselinux
-  when:
   when:
     - facts is failed and
       ansible_python_version is defined and
