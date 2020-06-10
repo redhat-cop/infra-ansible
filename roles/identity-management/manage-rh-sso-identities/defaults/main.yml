@@ -1,7 +1,0 @@
----
-
-rh_sso_host: "192.168.16.3"
-rh_sso_port: 8080
-rh_sso_port_list:
-  - 8080/tcp
-  - 9990/tcp

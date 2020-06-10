@@ -1,8 +1,8 @@
 {
-    "username": "{{ sso_user.username | mandatory }}",
-    "firstName": "{{ sso_user.firstName | default('') }}",
-    "lastName": "{{ sso_user.lastName | default('') }}",
-    "email": "{{ sso_user.email | default('') }}",
-    "enabled": {{ sso_user.enabled | default(true) }},
-    "emailVerified": {{ sso_user.emailVerified | default(false) }},
+    "username": "{{ user_data.user_name | mandatory }}",
+    "firstName": "{{ user_data.first_name | default('') }}",
+    "lastName": "{{ user_data.last_name | default('') }}",
+    "email": "{{ user_data.email | default('') }}",
+    "enabled": {{ user_data.enabled | default(true) }},
+    "emailVerified": {{ user_data.email_verified | default(false) }},
 }
