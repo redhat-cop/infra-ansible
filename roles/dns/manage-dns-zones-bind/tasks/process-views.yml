@@ -17,6 +17,7 @@
     - "{{ dns_data.views }}"
   loop_control:
     loop_var: "view"
+    index_var: "view_idx"
 
 - name: Assemble the final view configuration
   assemble:
