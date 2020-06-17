@@ -18,6 +18,7 @@ Role Variables
 |**email**|The user's email address. It must be unique|no|N/A|
 |**enabled**|Whether the user is active or not. Inactive users can't login|no|True|
 |**email_verified**|Whether the user confirmed its email address|no|False|
+|**user_groups**|A list of groups the user belongs to|no|N/A|
 
 In addition to the above mentioned variables, the role also requires an `identity` dictionary with a list of users and groups as documented in the [identity-management README](../README.md).
 

@@ -6,7 +6,13 @@ identities:
   users:
     - user_name: example
       first_name: Example
-      last_name: User
+      last_name: atrodrig
       email: example@user
       enabled: true
       email_verified: yes
+      user_groups:
+        - example-group-1
+        - example-group-2
+
+  groups:
+    - group_name: example-group-1
