@@ -46,7 +46,7 @@
   - name: Assemble the complete view file
     assemble:
       src: "{{ dns_zone_temp_config_dir }}/{{ view.name }}"
-      dest: "{{ dns_zone_temp_config_dir }}/view/{{ view.name }}.cfg"
+      dest: "{{ dns_zone_temp_config_dir }}/view/{{ view_idx }}-{{ view.name }}.cfg"
   when:
     - processed_zones|bool == True
     - view.state|default('present') == 'present'
