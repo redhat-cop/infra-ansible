@@ -6,6 +6,8 @@
   with_subelements:
     - "{{ dns_data.views }}"
     - zones
+  when:
+   - item.1.type is undefined or (item.1.type is defined and item.1.type != "forward")
 
 - name: Initialize dictionary for nsupdate keys
   set_fact:
@@ -13,7 +15,7 @@
 
 - name: Get existing key files
   find:
-    paths: /var/named
+    paths: "{{ runtime_config_location }}"
     patterns: '*.key'
   register: key_files
 
@@ -41,7 +43,7 @@
 
 - name: Ensure target directory exists for archived files
   file:
-    path: "/var/named/key-archive"
+    path: "{{ runtime_config_location }}/key-archive"
     state: directory
 
 - name: Generate keys for nsupdate
@@ -51,7 +53,7 @@
       -b {{ dnssec_keygen_size }}
       -n USER
       -r /dev/urandom
-      -K /var/named/key-archive {{ item.name }}
+      -K {{ runtime_config_location }}/key-archive {{ item.name }}
   with_items:
     - "{{ dns_views }}"
   when:
@@ -60,7 +62,7 @@
 
 - block:
   - name: Gather keys for nsupdate
-    shell: "grep Key: /var/named/key-archive/{{ item.stdout }}.private | cut -d ' ' -f 2"
+    shell: "grep Key: {{ runtime_config_location }}/key-archive/{{ item.stdout }}.private | cut -d ' ' -f 2"
     register: nsupdate_keys_captured
     with_items:
       - "{{ dnssec_keygen_command_output.results }}"

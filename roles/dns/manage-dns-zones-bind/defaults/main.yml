@@ -7,6 +7,9 @@ default_ttl: 300
 bind_user: named
 bind_group: named
 
+runtime_config_location: "/var/named"
+zone_files_location: "{{ runtime_config_location }}/static"
+
 default_recursion: false
 dnssec_keygen_size: 256
 dnssec_keygen_algorithm: HMAC-SHA256
