@@ -13,6 +13,3 @@ identities:
       user_groups:
         - example-group-1
         - example-group-2
-
-  groups:
-    - group_name: example-group-1
