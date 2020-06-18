@@ -9,7 +9,7 @@ Role Variables
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**id_mgmt_sso_host**|The hostname/ip used to conmect to for RH SSO management|yes|N/A|
+|**rh_sso_host**|The hostname/ip used to conmect to for RH SSO management|yes|N/A|
 |**sso_admin_user**|The RH SSO admin user with proper permissions to administer identities|yes|N/A|
 |**sso_admin_pass**|The RH SSO admin password for the above mentioned admin user|yes|N/A|
 |**user_name**|The username used by the user to authenticate|yes|N/A|
