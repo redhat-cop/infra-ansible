@@ -31,6 +31,18 @@ identities:
 
   profiles:
     - profile_name: aws-profile-na-1
+      policies:
+        - policy_name: CustomManagedPolicy
+          policy_description: "Describe your custom managed policy"
+          policy:
+            Version: '2012-10-17'
+            Statement:
+              - Action: s3:Get*
+                Effect: Allow
+                Resource: "*"
+              - Action: sns:Publish
+                Effect: Allow
+                Resource: "*"
       groups:
         - group_name: "view-group"
           managed_policy_arn:
@@ -43,6 +55,9 @@ identities:
             - "arn:aws:iam::aws:policy/AdministratorAccess"
           members:
             - admin-user
+	- group_name: "custom-group"
+	  managed_policy_arn:
+	    - "CustomManagedPolicy"
     - profile_name: aws-profile-emea-2
       groups:
         - group_name: "view-group"

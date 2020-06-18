@@ -1,0 +1,15 @@
+---
+
+- name: Processes custom managed IAM policies
+  iam_managed_policy:
+    policy_name: "{{ policy_data.policy_name }}"
+    state: absent
+    profile: "{{ profile_data.profile_name }}"
+  loop: "{{ profile_data.policies }}"
+  loop_control:
+    loop_var: policy_data
+  when:
+    - profile_data.policies|length > 0
+    - policy_data.targets is undefined or 'aws' in identities.targets
+    - policy_data.state is defined
+    - policy_data.state == 'absent'
