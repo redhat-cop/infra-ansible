@@ -1,7 +1,8 @@
 {% for view in named_views %}
 {% for zone in view.zones %}
 {% if ((view.state is undefined or (view.state is defined and view.state != "absent")) and
-       (zone.state is undefined or (zone.state is defined and zone.state != "absent"))) %}
+       (zone.state is undefined or (zone.state is defined and zone.state != "absent")) and
+       (zone.type is undefined or (zone.type is defined and zone.type != "forward"))) %}
 include "{{ view.name }}-{{ zone.dns_domain }}.key";
 {% endif %}
 {% endfor %}

@@ -20,3 +20,8 @@
 - name: Store away the temporary configuration files directory name
   set_fact:
     dns_zone_temp_config_dir: "{{ dns_zone_tempdir.path }}"
+
+- name: Obtain current state of services
+  service_facts:
+  register: service_facts
+
