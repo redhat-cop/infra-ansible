@@ -27,14 +27,12 @@ If you don't have access to the server hosting Red Hat Single Sign-On, update th
 Using Tags
 ----------
 
-This role currently supports the usage of four different tags:
+This role currently supports the usage of two different tags:
 
-- create-user: Specify this tag to create one or more users
-- delete-user: Specify this tag to delete one or more users
-- create-group: Specify this tag to create one or more groups
-- delete-group: Specify this tag to delete one or more groups
+- **create-user:** Specify this tag to create one or more users
+- **delete-user:** Specify this tag to delete one or more users
 
-All of tags will act upon the values defined in the `identity-hosts.yml` file.
+Both tags will act upon the values defined in the `identity-hosts.yml` file.
 
 
 License
