@@ -8,5 +8,4 @@
   when:
     - identities.targets is undefined or 'rh-sso' in identities.targets
   tags:
-    - create-user
-    - delete-user
+    - always

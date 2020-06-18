@@ -6,7 +6,7 @@ identities:
   users:
     - user_name: example
       first_name: Example
-      last_name: atrodrig
+      last_name: User
       email: example@user
       enabled: true
       email_verified: yes
