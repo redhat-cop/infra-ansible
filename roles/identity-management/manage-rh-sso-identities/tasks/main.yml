@@ -5,5 +5,8 @@
   loop: "{{ identities.users }}"
   loop_control:
     loop_var: user_data
+  loop: "{{ identities.groups }}"
+  loop_control:
+    loop_var: group_data
   when:
     - identities.targets is undefined or 'rh-sso' in identities.targets
