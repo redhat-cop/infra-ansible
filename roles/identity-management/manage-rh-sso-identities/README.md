@@ -24,6 +24,19 @@ In addition to the above mentioned variables, the role also requires an `identit
 
 If you don't have access to the server hosting Red Hat Single Sign-On, update the `identity-hosts` entry in the hosts file to use localhost, and move the variables from `identity-hosts.yml` to `all.yml`.
 
+Using Tags
+----------
+
+This role currently supports the usage of four different tags:
+
+- create-user: Specify this tag to create one or more users
+- delete-user: Specify this tag to delete one or more users
+- create-group: Specify this tag to create one or more groups
+- delete-group: Specify this tag to delete one or more groups
+
+All of tags will act upon the values defined in the `identity-hosts.yml` file.
+
+
 License
 -------
 
