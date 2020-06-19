@@ -1,0 +1,9 @@
+---
+# tasks file for Red Hat SSO
+
+- import_tasks: 'prereq.yml'
+- import_tasks: 'setup-rh-sso.yml'
+- include_tasks: 'configure-rh-sso.yml'
+  loop: "{{ realms }}"
+  loop_control:
+    loop_var: realm

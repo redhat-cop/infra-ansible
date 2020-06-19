@@ -1,17 +1,8 @@
 ---
 
-- name: Check if repository exists
-  uri:
-    url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}"
-    validate_certs: "{{ quay_validate_certs }}"
-    body_format: json
-    status_code:
-      - 200
-      - 404
-    headers:
-      Authorization: "{{ auth_header }}"
-  register: quay_repository_exists
-
+- name: Set if repository currently exists
+  set_fact:
+    org_repository_exists: "{{ quay_repository.name in org_repositories.json.repositories | map(attribute='name') | list }}"
 
 - name: Create Quay Repository
   uri:
@@ -28,7 +19,7 @@
     status_code: 201
     headers:
       Authorization: "{{ auth_header }}"
-  when: quay_repository_exists.status == 404
+  when: not org_repository_exists|bool
 
 - name: Update Quay Repository
   uri:
@@ -45,7 +36,7 @@
     status_code: 200
     headers:
       Authorization: "{{ auth_header }}"
-  when: quay_repository_exists.status == 200
+  when: org_repository_exists|bool
 
 - name: Manage Permissions
   uri:
@@ -60,3 +51,50 @@
       Authorization: "{{ auth_header }}"
   loop: "{{ quay_repository.permissions | default([]) }}"
 
+- name: Delete Extra Permissions
+  block:
+    - name: List Repository Team Permissions
+      uri:
+        url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/team/"
+        validate_certs: "{{ quay_validate_certs }}"
+        body_format: json
+        status_code:
+          - 200
+          - 404
+        headers:
+          Authorization: "{{ auth_header }}"
+      register: org_repositories_permissions_teams
+    - name: List Repository User Permissions
+      uri:
+        url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/user/"
+        validate_certs: "{{ quay_validate_certs }}"
+        body_format: json
+        status_code:
+          - 200
+          - 404
+        headers:
+          Authorization: "{{ auth_header }}"
+      register: org_repositories_permissions_users
+    - name: Delete Extra Permissions Team
+      uri:
+        url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/team/{{ item.key }}"
+        method: DELETE
+        validate_certs: "{{ quay_validate_certs }}"
+        status_code:
+        - 204
+        headers:
+          Authorization: "{{ auth_header }}"
+      loop: "{{ (org_repositories_permissions_teams.json.permissions | default({})) | dict2items }}"
+      when: (quay_repository.permissions | default([])) | selectattr('name', 'equalto', item.key) | list |  length == 0
+    - name: Delete Extra Permissions User
+      uri:
+        url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/user/{{ item.value.name }}"
+        method: DELETE
+        validate_certs: "{{ quay_validate_certs }}"
+        status_code:
+        - 204
+        headers:
+          Authorization: "{{ auth_header }}"
+      loop: "{{ (org_repositories_permissions_users.json.permissions | default({})) | dict2items }}"
+      when: (quay_repository.permissions | default([])) | selectattr('name', 'equalto', item.value.name.split('+')[1] if item.value.is_robot else item.value.name) | list |  length == 0
+  when: quay_prune|bool

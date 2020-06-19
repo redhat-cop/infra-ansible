@@ -22,16 +22,16 @@ Defaults file has example of variables that can be used. It is advisable to crea
 |**mgmt_net_dns1**| Management dns server | yes | N/A |
 |**mgmt_net_dns2**| Management dns server | yes | N/A |
 
-
 Example Playbook
 ----------------
+
 ```
-- name: 'Configure bonding on the infrastructure hosts'
-  hosts: infra_hosts
-  roles:
-    - config_bonding
-  tags: 
-    - configure_infra_hosts
+    - name: 'Configure bonding on the infrastructure hosts'
+      hosts: infra_hosts
+      roles:
+        - role: config_bonding
+      tags: 
+       - configure_infra_hosts
 ```
 
 Example Inventory
@@ -47,7 +47,6 @@ inventory/group_vars/ha-nodes.yml
 
 ```
 ---
-
 bonds:
 - device: bond0.mgmt
   bonding_opts: 'mode=4 miimon=100'
@@ -68,10 +67,8 @@ bonds:
 
 License
 -------
-
 Apache License 2.0
 
 Author Information
 ------------------
-
 Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.
