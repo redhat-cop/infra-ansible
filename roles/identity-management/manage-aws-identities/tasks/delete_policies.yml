@@ -4,12 +4,18 @@
   iam_managed_policy:
     policy_name: "{{ policy_data.policy_name }}"
     state: absent
-    profile: "{{ profile_data.profile_name }}"
-  loop: "{{ profile_data.policies }}"
+    profile: "{{ identities.profile_name }}"
+  loop: "{{ identities.policies }}"
   loop_control:
     loop_var: policy_data
+
   when:
-    - profile_data.policies|length > 0
+    - identities.policies|length > 0
     - policy_data.targets is undefined or 'aws' in identities.targets
     - policy_data.state is defined
     - policy_data.state == 'absent'
+
+  tags:
+    - delete
+    - policies
+
