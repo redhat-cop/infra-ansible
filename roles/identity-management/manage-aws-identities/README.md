@@ -9,15 +9,42 @@ The email address is not related to the AWS IAM User but will be used to send a 
 
 https://{{ aws_profile }}.signin.aws.amazon.com/console
 
+Example Hosts File
+------------------
+
+The data has been structured to allow for a separation of multiple AWS accounts mapped to Ansible Host Vars and users created in [identity hosts] will maintain their separate user data when the [mail-host] notifications kick off. Just remember to set `ansible_connection: local` for these two groups since you will not be able to use `localhost` as your host and maintain data isolation.
+
+```ini
+[identity-hosts]
+aws-profile-na-1
+aws-profile-na-2
+aws-profile-apac-1
+aws-profile-emea-1
+aws-profile-latam-1
+
+[mail-host]
+aws-profile-na-1
+aws-profile-na-2
+aws-profile-apac-1
+aws-profile-emea-1
+aws-profile-latam-1
+```
+
 Role Variables
 --------------
+
+The following would represent a single account as an Ansible host (e.g., `host_vars/aws-profile-na-1.yml`)
 
 ```yaml
 ---
 
+ansible_connection: local
+
 identities:
   targets:
     - aws
+
+  profile_name: aws-profile-na-1
 
   users:
     - user_name: admin-user
@@ -29,8 +56,6 @@ identities:
       last_name: Last
       email: "read-only@example.com"
 
-  profiles:
-    - profile_name: aws-profile-na-1
       policies:
         - policy_name: CustomManagedPolicy
           policy_description: "Describe your custom managed policy"
@@ -43,34 +68,21 @@ identities:
               - Action: sns:Publish
                 Effect: Allow
                 Resource: "*"
-      groups:
-        - group_name: "view-group"
-          managed_policy_arn:
-            - "arn:aws:iam::aws:policy/ReadOnlyAccess"
-            - "arn:aws:iam::aws:policy/IAMUserChangePassword"
-          members:
-          - read-only-user
-        - group_name: "admin-group"
-          managed_policy_arn:
-            - "arn:aws:iam::aws:policy/AdministratorAccess"
-          members:
-            - admin-user
-	- group_name: "custom-group"
-	  managed_policy_arn:
-	    - "CustomManagedPolicy"
-    - profile_name: aws-profile-emea-2
-      groups:
-        - group_name: "view-group"
-          managed_policy_arn:
-            - "arn:aws:iam::aws:policy/ReadOnlyAccess"
-            - "arn:aws:iam::aws:policy/IAMUserChangePassword"
-          members:
-          - read-only-user
-        - group_name: "admin-group"
-          managed_policy_arn:
-            - "arn:aws:iam::aws:policy/AdministratorAccess"
-          members:
-          - admin-user
+  groups:
+    - group_name: "view-group"
+      managed_policy_arn:
+        - "arn:aws:iam::aws:policy/ReadOnlyAccess"
+        - "arn:aws:iam::aws:policy/IAMUserChangePassword"
+      members:
+      - read-only-user
+    - group_name: "admin-group"
+      managed_policy_arn:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+      members:
+        - admin-user
+    - group_name: "custom-group"
+      managed_policy_arn:
+        - "CustomManagedPolicy"
 ```
 
 Variable Descriptions
