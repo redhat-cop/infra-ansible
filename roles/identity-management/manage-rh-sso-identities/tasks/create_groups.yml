@@ -9,7 +9,7 @@
 
 - name: "Get existing groups"
   uri:
-    url: "http://{{ id_mgmt_sso_host }}:{{ id_mgmt_sso_port }}/auth/admin/realms/master/groups"
+    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/groups"
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
@@ -23,7 +23,7 @@
 
 - name: "Create group"
   uri:
-    url: "http://{{ id_mgmt_sso_host }}:{{ id_mgmt_sso_port }}/auth/admin/realms/master/groups"
+    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/groups"
     method: POST
     body: "{{ sso_group_json }}" 
     body_format: json
@@ -36,7 +36,7 @@
 
 - name: "Update group"
   uri:
-    url: "http://{{ id_mgmt_sso_host }}:{{ id_mgmt_sso_port }}/auth/admin/realms/master/groups/{{ group_id[0].id }}"
+    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/groups/{{ group_id[0].id }}"
     method: PUT
     body: "{{ sso_group_json }}" 
     body_format: json
