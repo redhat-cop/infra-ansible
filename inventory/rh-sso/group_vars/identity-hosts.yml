@@ -10,3 +10,9 @@ identities:
       email: example@user
       enabled: true
       email_verified: yes
+      user_groups:
+        - group-01
+        - group-02
+
+  groups:
+    - group_name: example
