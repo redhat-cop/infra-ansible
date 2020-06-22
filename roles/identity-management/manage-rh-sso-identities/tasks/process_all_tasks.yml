@@ -8,7 +8,7 @@
       tags: delete-user
     - import_tasks: create_groups.yml
       tags: create-group
-#   - import_tasks: delete_groups.yml
-#     tags: delete_groups
+    - import_tasks: delete_groups.yml
+      tags: delete-group
   when:
     - identities.targets is undefined or 'rh-sso' in identities.targets

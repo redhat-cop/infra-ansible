@@ -5,10 +5,19 @@
   loop: "{{ identities.users }}"
   loop_control:
     loop_var: user_data
+  when:
+    - identities.targets is undefined or 'rh-sso' in identities.targets
+  tags:
+    - create-user
+    - delete-user
+
+- name: Process all tasks
+  include_tasks: process_all_tasks.yml
   loop: "{{ identities.groups }}"
   loop_control:
     loop_var: group_data
   when:
     - identities.targets is undefined or 'rh-sso' in identities.targets
   tags:
-    - always
+    - create-group
+    - delete-group

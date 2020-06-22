@@ -12,7 +12,6 @@ identities:
       email_verified: yes
       user_groups:
         - group-01
-        - group-02
 
   groups:
-    - group_name: example
+    - group_name: group-01
