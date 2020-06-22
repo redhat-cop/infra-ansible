@@ -10,3 +10,5 @@
     loop_var: group_data
   when:
     - identities.targets is undefined or 'rh-sso' in identities.targets
+  tags:
+    - always
