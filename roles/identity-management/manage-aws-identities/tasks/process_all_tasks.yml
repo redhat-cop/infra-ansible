@@ -1,9 +1,0 @@
----
-- name: Process AWS Identities if target is specified
-  block:
-    - include_tasks: create_users.yml
-    - include_tasks: create_groups.yml
-    - include_tasks: delete_users.yml
-    - include_tasks: delete_groups.yml
-  when:
-    - identities.targets is undefined or 'aws' in identities.targets
