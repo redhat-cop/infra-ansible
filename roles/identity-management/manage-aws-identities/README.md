@@ -1,5 +1,5 @@
 Manage AWS Identities (users/groups)
-==========================================
+====================================
 
 An Ansible role that manages AWS identities - users and groups for multiple AWS profiles.
 
@@ -56,25 +56,26 @@ identities:
       last_name: Last
       email: "read-only@example.com"
 
-      policies:
-        - policy_name: CustomManagedPolicy
-          policy_description: "Describe your custom managed policy"
-          policy:
-            Version: '2012-10-17'
-            Statement:
-              - Action: s3:Get*
-                Effect: Allow
-                Resource: "*"
-              - Action: sns:Publish
-                Effect: Allow
-                Resource: "*"
+  policies:
+    - policy_name: CustomManagedPolicy
+      policy_description: "Describe your custom managed policy"
+      policy:
+        Version: '2012-10-17'
+        Statement:
+          - Action: s3:Get*
+            Effect: Allow
+            Resource: "*"
+          - Action: sns:Publish
+            Effect: Allow
+            Resource: "*"
+
   groups:
     - group_name: "view-group"
       managed_policy_arn:
         - "arn:aws:iam::aws:policy/ReadOnlyAccess"
         - "arn:aws:iam::aws:policy/IAMUserChangePassword"
       members:
-      - read-only-user
+        - read-only-user
     - group_name: "admin-group"
       managed_policy_arn:
         - "arn:aws:iam::aws:policy/AdministratorAccess"
