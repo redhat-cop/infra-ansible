@@ -1,3 +1,4 @@
 ---
 
-- import_tasks: libvirt.yml
+- include: packages.yml
+- include: services.yml
