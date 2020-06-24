@@ -49,7 +49,7 @@ This role currently supports the usage of two different tags:
 - **create-user:** Specify this tag to create one or more users
 - **delete-user:** Specify this tag to delete one or more users
 
-Both tags will act upon the values defined in the `identity-hosts.yml` file.
+Both tags will act upon the value specified in the `username` variable defined in the `identity-hosts.yml` file.
 
 
 License
