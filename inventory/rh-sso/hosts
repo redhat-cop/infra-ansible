@@ -9,3 +9,6 @@ rh-sso-hosts
 
 [rhsm_hosts:children]
 rh-sso-hosts
+
+[identity-hosts:children]
+rh-sso-hosts

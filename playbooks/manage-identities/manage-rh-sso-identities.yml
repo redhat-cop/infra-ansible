@@ -1,0 +1,7 @@
+---
+
+- name: Manage Red Hat SSO Identities (users/groups)
+  hosts: identity-hosts
+  gather_facts: no
+  roles:
+    - role: identity-management/manage-rh-sso-identities

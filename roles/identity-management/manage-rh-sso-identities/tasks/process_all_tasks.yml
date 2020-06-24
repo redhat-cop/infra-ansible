@@ -1,0 +1,10 @@
+---
+
+- name: Process Red Hat SSO Identities
+  block:
+    - import_tasks: create_user.yml
+      tags: create-user
+    - import_tasks: delete_user.yml
+      tags: delete-user
+  when:
+    - identities.targets is undefined or 'rh-sso' in identities.targets
