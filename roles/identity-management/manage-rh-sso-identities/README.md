@@ -7,11 +7,11 @@ An ansible role that manages Red Hat Single Sign-On identities - users and group
 Role Variables                                                                                                        
 --------------
 
-```yaml                                                    
+The following would represent a single account in a Red Hat Single Sign-On instance (e.g. `group_vars/identity-hosts.yml`
+
+```yaml
 ---                                                        
 
-The following would represent a single account in a Red Hat Single Sign-On instance (e.g. `group_vars/identity-hosts.yml`
-                                                           
 identities:
   targets:
     - rh-sso
@@ -23,7 +23,7 @@ identities:
       email: user@example.com
       enabled: true
       email_verified: yes
-
+```
 
 Variable Descriptions
 ---------------------
