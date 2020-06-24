@@ -23,6 +23,9 @@ identities:
       email: user@example.com
       enabled: true
       email_verified: yes
+
+  groups:
+    - group_name: group-01
 ```
 
 Variable Descriptions
@@ -47,8 +50,30 @@ This role currently supports the usage of two different tags:
 
 - **create-user:** Specify this tag to create one or more users
 - **delete-user:** Specify this tag to delete one or more users
+- **create-group:** Specify this tag to create one or more groups
+- **delete-group:** Specify this tag to delete one or more groups
 
-Both tags will act upon the value specified in the `username` variable defined in the `identity-hosts.yml` file.
+All tags will act upon the values defined in the mandatory variables from the `identity-hosts.yml` file.
+
+
+Requirements
+------------
+
+There are a few requirements for this role to function correctly. Please, make sure you read the information below before running the automation.
+
+01. When creating a user, you may omit the `user_groups` variable, however, if it's specified, the group must exist.
+02. When creating a user, although the e-mail address is optional, if specified, it must be unique.
+03. When creating a user, make sure the username is unique, otherwise, the user will be **updated** with the information from `identity-hosts.yml` file.
+
+
+Execution Example
+-----------------
+
+To create a user, run:
+- `ansible-playbook playbooks/manage-identities/manage-rh-sso-identities.yml -i inventory/rh-sso/ --tags="create-user"`
+
+To create a group, run:
+- `ansible-playbook playbooks/manage-identities/manage-rh-sso-identities.yml -i inventory/rh-sso/ --tags="create-group"`
 
 
 License
