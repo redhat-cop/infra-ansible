@@ -12,6 +12,7 @@ identities:
   targets:
     - idm
     - atlassian
+    - rh-sso
 
   users:
     - user_name: gdownie
