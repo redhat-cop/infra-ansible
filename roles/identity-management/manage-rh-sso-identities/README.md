@@ -71,10 +71,10 @@ Execution Example
 -----------------
 
 To create a user, run:
-- ansible-playbook playbooks/manage-identities/manage-rh-sso-identities.yml -i inventory/rh-sso/ --tags="create-user"
+- `ansible-playbook playbooks/manage-identities/manage-rh-sso-identities.yml -i inventory/rh-sso/ --tags="create-user"`
 
 To create a group, run:
-- ansible-playbook playbooks/manage-identities/manage-rh-sso-identities.yml -i inventory/rh-sso/ --tags="create-group"
+- `ansible-playbook playbooks/manage-identities/manage-rh-sso-identities.yml -i inventory/rh-sso/ --tags="create-group"`
 
 
 License
