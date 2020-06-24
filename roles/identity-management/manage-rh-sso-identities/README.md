@@ -32,7 +32,7 @@ Variable Descriptions
 |:--------:|:-----------:|:--------:|:--------:|
 |**targets**|Target environment, (e.g., RH SSO, AWS IAM, IdM, etc)|yes|N/A|
 |**rh_sso_host**|The hostname/ip used to connect to for RH SSO management|yes|N/A|
-|**rh_sso_port**|The port that RH SSO instance listens to |yes|8080|
+|**rh_sso_port**|The port that RH SSO instance listens to |no|8080|
 |**sso_admin_user**|The RH SSO admin user with proper permissions to administer identities|yes|N/A|
 |**sso_admin_pass**|The RH SSO admin password for the above mentioned admin user|yes|N/A|
 
