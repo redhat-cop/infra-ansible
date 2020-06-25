@@ -3,11 +3,47 @@
   import_role:
     name: ../roles/config-packages
 
-- name: 'Update SSO bind addresses'
-  replace:
-    path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
-    regexp: '127.0.0.1'
-    replace: '0.0.0.0'
+- name: 'Update Red Hat SSO management/public interface IP address'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/interface=management:write-attribute(name=inet-address,value="${jboss.bind.address:0.0.0.0}")'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/interface=public:write-attribute(name=inet-address,value="${jboss.bind.address:0.0.0.0}")'
+  args:
+    executable: "/bin/bash"
+
+- name: 'Create a keystore to store SSL certificates'
+  java_keystore:
+    name: example
+    certificate: "{{lookup('file', 'path/to/the/file.cer') }}"
+    private_key: "{{lookup('file', 'path/to/the/file.key') }}"
+    password: "{{ sso_keystore_pass }}"
+    dest: /etc/security/keystore.jks
+
+- name: 'Add a new SSL based security-realm'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/core-service=management/security-realm=UndertowRealm:add()'
+  args:
+    executable: "/bin/bash"
+  ignore_errors: yes
+
+- name: 'Configure security-realm to use the keystore'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path=/etc/security/keystore.jks, keystore-password="{{ sso_keystore_pass }}")'
+  args:
+    executable: "/bin/bash"
+  ignore_errors: yes
+
+- name: 'Point the https-listener to the security-realm'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=security-realm, value=UndertowRealm)'
+  args:
+    executable: "/bin/bash"
+  ignore_errors: yes
 
 - name: 'Add a default SSO administration user'
   shell: >
@@ -16,6 +52,7 @@
     --password "{{ sso_admin_pass }}"
   args:
     executable: "/bin/bash"
+  ignore_errors: yes
 
 - name: 'Start Red Hat SSO in Standalone mode'
   service:
@@ -24,4 +61,4 @@
 
 - name: 'Waiting for SSO service to load'
   pause:
-    seconds: '30'
+    seconds: '10'

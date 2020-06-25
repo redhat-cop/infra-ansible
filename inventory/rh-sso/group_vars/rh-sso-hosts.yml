@@ -8,6 +8,7 @@ list_of_packages_to_install:
 
 sso_admin_user: admin
 sso_admin_pass: mypa55ss
+sso_keystore_pass: changeit
 
 realms:
   - name: my-awesome-realm
