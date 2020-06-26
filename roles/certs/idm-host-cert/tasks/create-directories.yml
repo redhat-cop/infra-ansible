@@ -1,0 +1,11 @@
+---
+
+- file:
+    path: "{{ target_cert_files.host_cert | dirname }}"
+    recurse: yes
+- file:
+    path: "{{ target_cert_files.fullchain | dirname }}"
+    recurse: yes
+- file:
+    path: "{{ target_cert_files.intermediate_ca | dirname }}"
+    recurse: yes

@@ -2,7 +2,7 @@
 
 - name: "Update newline characters in CSR content"
   set_fact:
-    lcl_csr: "{{ csr_content|replace('\n', '\\n') }}"
+    lcl_csr: "{{ csr_content_output.csr|replace('\n', '\\n') }}"
 
 - name: "Create Certificate for host"
   uri:

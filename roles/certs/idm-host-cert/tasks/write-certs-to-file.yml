@@ -1,25 +1,23 @@
 ---
 
-- name: "Set certificate fact"
-  set_fact:
-    certificate: "{{ host_cert.json.result.result.certificate }}"
-
 - name: "Write the Host Specific Certificate to a file"
+  vars:
+    cert_file_content: "{{ host_cert.json.result.result.certificate }}"
+    cert_file_type: "CERTIFICATE"
   template:
     src: cert.j2
-    dest: "{{ target_host_cert_file }}"
+    dest: "{{ target_cert_files.host_cert }}"
   when:
-  - target_host_cert_file is defined
-  - target_host_cert_file|trim != ''
-
-- name: "Set certificate fact"
-  set_fact:
-    certificate: "{{ ca_cert.json.result.result.certificate }}"
+  - target_cert_files.host_cert is defined
+  - target_cert_files.host_cert|trim != ''
 
 - name: "Write the CA Certificate to a file"
+  vars:
+    cert_file_content: "{{ ca_cert.json.result.result.certificate }}"
+    cert_file_type: "CERTIFICATE"
   template:
     src: cert.j2
-    dest: "{{ target_ca_cert_file }}"
+    dest: "{{ target_cert_files.intermediate_ca }}"
   when:
-  - target_ca_cert_file is defined
-  - target_ca_cert_file|trim != ''
+  - target_cert_files.intermediate_ca is defined
+  - target_cert_files.intermediate_ca|trim != ''
