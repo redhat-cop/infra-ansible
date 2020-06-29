@@ -1,12 +1,12 @@
 ---
 
-- name: "Retrieve template for realm: {{ realm.name }}"
+- name: "Retrieve template for realm: {{ realm_data.realm_name }}"
   set_fact:
     realm_json: "{{ lookup('template', 'realm.json.j2') | to_json }}"
 
 - name: "Requesting Access Token"
   uri:
-    url: "https://127.0.0.1:8443/auth/realms/master/protocol/openid-connect/token"
+    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
     method: POST
     body_format: form-urlencoded
     body:
@@ -14,15 +14,17 @@
       password: "{{ sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
+    validate_certs: "{{ ssl_cert_validation | default(yes) }}"
   register: rh_sso_token
 
 - name: "Create Realm for service Red Hat Single Sign-On"
   uri:
-    url: "https://127.0.0.1:8443/auth/admin/realms"
+    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms"
     method: POST
     body: "{{ realm_json }}"
     body_format: json
     status_code: 201, 409
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ ssl_cert_validation | default(yes) }}"
   register: rh_sso_realm_create

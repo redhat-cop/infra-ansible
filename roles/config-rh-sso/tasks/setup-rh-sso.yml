@@ -15,11 +15,11 @@
 
 - name: 'Create a keystore to store SSL certificates'
   java_keystore:
-    name: example
+    name: "{{ sso_keystore_name }}"
     certificate: "{{lookup('file', 'path/to/the/file.cer') }}"
     private_key: "{{lookup('file', 'path/to/the/file.key') }}"
     password: "{{ sso_keystore_pass }}"
-    dest: /etc/security/keystore.jks
+    dest: "{{ sso_keystore_path }}"
 
 - name: 'Add a new SSL based security-realm'
   shell: >
@@ -27,15 +27,20 @@
     --command='/core-service=management/security-realm=UndertowRealm:add()'
   args:
     executable: "/bin/bash"
-  ignore_errors: yes
+  register: process_undertowrealm
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
 
 - name: 'Configure security-realm to use the keystore'
   shell: >
     "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path=/etc/security/keystore.jks, keystore-password="{{ sso_keystore_pass }}")'
+    --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path="{{ sso_keystore_path }}", keystore-password="{{ sso_keystore_pass }}")'
   args:
     executable: "/bin/bash"
-  ignore_errors: yes
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
 
 - name: 'Point the https-listener to the security-realm'
   shell: >
@@ -43,7 +48,9 @@
     --command='/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=security-realm, value=UndertowRealm)'
   args:
     executable: "/bin/bash"
-  ignore_errors: yes
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
 
 - name: 'Add a default SSO administration user'
   shell: >
@@ -52,7 +59,6 @@
     --password "{{ sso_admin_pass }}"
   args:
     executable: "/bin/bash"
-  ignore_errors: yes
 
 - name: 'Start Red Hat SSO in Standalone mode'
   service:

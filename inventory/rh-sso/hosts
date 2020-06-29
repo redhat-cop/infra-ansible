@@ -12,3 +12,6 @@ rh-sso-hosts
 
 [identity-hosts:children]
 rh-sso-hosts
+
+[cert-host:children]
+rh-sso-hosts
