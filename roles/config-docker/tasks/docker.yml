@@ -1,12 +1,35 @@
 ---
-- name: "Install additional packages for Docker"
-  package:
-    name: "{{ item }}"
+- name: "Remove old versions of Docker"
+  dnf:
+    name: 
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-selinux
+      - docker-engine-selinux
+      - docker-engine
+    state: absent
+
+- name: "Enable Docker repository"
+  yum_repository:
+    name: docker-ce-stable
+    description: "Docker CE Stable - x86_64"
+    file: docker-ce.repo
+    baseurl: "https://download.docker.com/linux/fedora/$releasever/$basearch/stable"
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/fedora/gpg
+
+- name: "Install docker package(s)"
+  dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
     state: latest
-  with_items:
-  - docker
-  notify: 
-  - restart docker
 
 - name: "Enable docker"
   service:
@@ -31,3 +54,4 @@
     name: "{{ docker_username }}"
     groups: docker
     append: yes
+
