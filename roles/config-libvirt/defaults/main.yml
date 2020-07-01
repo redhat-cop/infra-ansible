@@ -2,7 +2,11 @@
 # defaults file to use to default variables 
 
 
+<<<<<<< HEAD
 libvirtenable: true
+=======
+libvirtenable: yes
+>>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
 
 base_packages:
   - libguestfs-tools
@@ -10,6 +14,7 @@ base_packages:
   - qemu-kvm 
   - libvirt 
   - libvirt-python 
+<<<<<<< HEAD
   - bridge-utils
 
 service_name: "libvirtd"
@@ -17,3 +22,11 @@ service_name: "libvirtd"
 virt_manager_install: true 
 
 virt_manager_package: virt-manager
+=======
+
+service_name: "libvirtd"
+
+virt_manager_install: yes
+
+virt_manager_package: virt-manager
+>>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.

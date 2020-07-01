@@ -1,7 +1,12 @@
 ---
 
+<<<<<<< HEAD
 - name: "Install Packages"
   import: packages.yml
 
 - name: "Enable services"
   import: services.yml
+=======
+- include: packages.yml
+- include: services.yml
+>>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.

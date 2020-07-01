@@ -8,4 +8,8 @@
   yum: 
     name: "{{ virt_manager_package }}"
     state: present
+<<<<<<< HEAD
   when: virt_manager_install  
+=======
+  when: virt_manager_install == 'yes'
+>>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
