@@ -1,0 +1,11 @@
+---
+- name: Install packages
+  yum:
+    name: "{{ base_packages }}"
+    state: present
+
+- name: "Install Virt-Manager"
+  yum: 
+    name: "{{ virt_manager_package }}"
+    state: present
+  when: virt_manager_install == 'yes'
