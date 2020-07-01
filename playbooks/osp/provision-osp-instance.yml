@@ -37,6 +37,7 @@
 
 - name: "Workaround for .novalocal"
   hosts: osp_instances
+  become: true
   tasks:
   - name: "Eliminate the .novalocal at the end of the FQDN"
     hostname:
