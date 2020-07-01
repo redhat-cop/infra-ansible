@@ -8,7 +8,7 @@ list_of_packages_to_install:
 
 sso_admin_user: admin
 sso_admin_pass: mypa55ss
-sso_keystore_name: atrodrig
+sso_keystore_name: default
 sso_keystore_pass: changeit
 sso_keystore_path: "/etc/security/keystore.jks"
 
