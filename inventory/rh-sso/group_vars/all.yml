@@ -16,6 +16,6 @@ rhsm_password: "{{ lookup('env', 'RHSM_PASSWD' )}}"
 rhsm_pool: "{{ lookup('env', 'RHSM_POOL' )}}"
 
 # Red Hat Single Sign-On Instance
-rh_sso_host: "192.168.16.3"
-rh_sso_port: 8443
+#rh_sso_host: rh-sso.example.com
+#rh_sso_port: 4444
 ssl_cert_validation: "no"

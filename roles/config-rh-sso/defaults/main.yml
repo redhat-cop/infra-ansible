@@ -1,6 +1,6 @@
 ---
 
-rh_sso_host: "127.0.0.1"
+rh_sso_host: "{{ ansible_default_ipv4.address }}"
 rh_sso_port: 8443
 rh_sso_port_list:
   - 8443/tcp
