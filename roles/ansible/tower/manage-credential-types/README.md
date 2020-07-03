@@ -12,6 +12,10 @@ A running Ansible Tower with admin permission level access.
 
 The variables used to maintain the Credential Types must be defined in the Ansible Inventory using the `ansible_tower.credential_types` dictionary as explained below.
 
+| Variable | Description | Required | Defaults |
+|:---------|:------------|:---------|:---------|
+|**default_ansible_tower_url**| Ansible Tower url | yes | |
+|**default_ansible_tower_admin_username**| Ansible tower username | yes |
 
 **_Note:_** Credential Types configuration will **only** happen if the `ansible_tower.credential_types` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
