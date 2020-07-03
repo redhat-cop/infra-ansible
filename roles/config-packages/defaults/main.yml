@@ -1,7 +1,13 @@
 ---
 
+<<<<<<< HEAD
 yumpreferred: false
 
 list_of_packages_to_install:
   - screen
   - tmux
+=======
+list_of_packages_to_install:
+  - screen
+  - tmux
+>>>>>>> Updated install task to use yum instead of package module. Updated README file and added a conditional to use RED HAT as the distro for the install. Can be updated in future to reflect more distos.
