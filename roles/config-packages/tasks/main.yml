@@ -1,10 +1,14 @@
 ---
 
 - import_tasks: rhelpackages.yml
+<<<<<<< HEAD
   when:
     - yumpreferred
     - ansible_distribution == "RedHat"
 
 - import_tasks: packages.yml
   when: not yumpreferred
+=======
+  when: ansible_distribution == "RedHat"
+>>>>>>> Updated install task to use yum instead of package module. Updated README file and added a conditional to use RED HAT as the distro for the install. Can be updated in future to reflect more distos.
 

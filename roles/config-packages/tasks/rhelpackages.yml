@@ -1,6 +1,10 @@
 ---
 
+<<<<<<< HEAD
 - name: 'Install additional Software packages/tools using yum.'
+=======
+- name: 'Install additional Software packages/tools'
+>>>>>>> Updated install task to use yum instead of package module. Updated README file and added a conditional to use RED HAT as the distro for the install. Can be updated in future to reflect more distos.
   yum:
     name: '{{ list_of_packages_to_install }}'
     state: latest
