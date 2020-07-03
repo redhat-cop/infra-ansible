@@ -1,0 +1,5 @@
+---
+
+list_of_packages_to_install:
+  - screen
+  - tmux
