@@ -15,6 +15,7 @@ base_packages:
   - libvirt 
   - libvirt-python 
 <<<<<<< HEAD
+<<<<<<< HEAD
   - bridge-utils
 
 service_name: "libvirtd"
@@ -23,6 +24,9 @@ virt_manager_install: true
 
 virt_manager_package: virt-manager
 =======
+=======
+  - bridge-utils
+>>>>>>> Added the bridge-utils package to be installed. Useful when users want to use bridge networking.
 
 service_name: "libvirtd"
 
