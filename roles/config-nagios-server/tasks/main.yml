@@ -1,5 +1,6 @@
 ---
 
+<<<<<<< HEAD
 - name: Setup hostgroup directories
   file:
     path: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}
@@ -43,4 +44,22 @@
   service:
     name: nagios
     state: restarted
+=======
+- name: "Install Nagios"
+  block:
+    - import_tasks: rhelpackages.yml
+      when: ansible_distribution == "RedHat"
+
+      # Different distro install steps to be added. Will only work with RHEL at this stage.
+
+    - import_tasks: nagiosinstall.yml
+
+  when: install_nagios == "yes"
+  become: true
+
+- import_tasks: configuration.yml
+
+
+
+>>>>>>> Added ability to install Nagios from source.
 
