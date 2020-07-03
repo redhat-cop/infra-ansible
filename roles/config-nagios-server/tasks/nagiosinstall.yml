@@ -1,0 +1,127 @@
+---
+
+- name: "Download Nagios Version - {{nagios_download_name}}"
+  get_url:
+    url: "{{nagios_download_url}}/{{nagios_download_name}}"
+    dest: "{{nagios_download_dir}}/{{nagios_download_name}}"
+    mode: '0440'
+
+- name: "Extract {{nagios_download_name}}"
+  unarchive:
+    src: "{{nagios_download_dir}}/{{nagios_download_name}}"
+    dest: "{{nagios_download_dir}}/"
+    remote_src: yes
+
+- name: "Running ./configure for Nagios build from source"
+  command: '"{{ item }}"'
+  args:
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+  with_items:
+     - ./configure
+
+- name: Run 'install' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+    target: all
+  
+- name: Run 'install-groups-users' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+    target: install-groups-users
+
+- name: "Add the user nagios with a primary group of 'apache'"
+  user:
+    name: nagios
+    group: apache
+
+- name: Run make 'install' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+    target: install
+
+- name: Run 'install-daemoninit' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+    target: install-daemoninit
+
+- name: Run 'install-commandmode' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+    target: install-commandmode
+
+- name: Run 'install-config' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+    target: install-config
+
+- name: Run 'install-webconf' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+    target: install-webconf
+
+- name: "Open firewall ports required."
+  firewalld:
+    zone: public
+    port: 80/tcp
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+- name: "Running ./configure for Nagios build from source"
+  command: 'htpasswd -b -c /usr/local/nagios/etc/htpasswd.users "{{nagios_user}}" "{{nagios_password}}"'
+  args:
+    chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
+
+- name: enable service httpd and ensure it is not masked
+  systemd:
+    name: httpd
+    state: started
+    enabled: yes
+    masked: no
+
+- name: "Download Nagios Version - {{nagios_plugins_archive}}"
+  get_url:
+    url: "{{nagios_plugins_url}}/{{nagios_plugins_archive}}"
+    dest: "{{nagios_download_dir}}/{{nagios_plugins_archive}}"
+    mode: '0440'
+
+- name: "Extract {{nagios_download_name}}"
+  unarchive:
+    src: "{{nagios_download_dir}}/{{nagios_plugins_archive}}"
+    dest: "{{nagios_download_dir}}/"
+    remote_src: yes
+
+- name: "Running ./configure for Nagios build from source"
+  command: '"{{ item }}"'
+  args:
+    chdir: "{{nagios_download_dir}}/{{nagios_plugins_extracted_dir}}"
+  with_items:
+     - ./tools/setup
+     - ./configure
+
+- name: "Build the default target"
+  make:
+    chdir: "{{nagios_download_dir}}/{{nagios_plugins_extracted_dir}}"
+
+- name: Run 'install' target
+  make: 
+    chdir: "{{nagios_download_dir}}/{{nagios_plugins_extracted_dir}}"
+    target: install
+  
+- name: "Start and enable service nagios.service"
+  systemd:
+    name: nagios
+    state: started
+    enabled: yes
+
+- name: "Create a /etc/nagios/ directory if it does not exist"
+  file:
+    path: "/etc/nagios/"
+    state: directory
+    mode: '0755'
+
+- name: "Copy nagios.cfg to /etc/nagios"
+  copy:
+    src: "/usr/local/nagios/etc/nagios.cfg"
+    dest: "/etc/nagios/nagios.cfg"
+    remote_src: yes
