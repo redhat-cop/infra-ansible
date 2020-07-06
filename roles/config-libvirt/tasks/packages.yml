@@ -9,7 +9,11 @@
     name: "{{ virt_manager_package }}"
     state: present
 <<<<<<< HEAD
+<<<<<<< HEAD
   when: virt_manager_install  
 =======
   when: virt_manager_install == 'yes'
 >>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
+=======
+  when: virt_manager_install  
+>>>>>>> Fixed boolean variables and correctly changed include tasks to import.

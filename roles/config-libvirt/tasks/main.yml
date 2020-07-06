@@ -1,6 +1,7 @@
 ---
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 - name: "Install Packages"
   import: packages.yml
 
@@ -10,3 +11,7 @@
 - include: packages.yml
 - include: services.yml
 >>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
+=======
+- import: packages.yml
+- import: services.yml
+>>>>>>> Fixed boolean variables and correctly changed include tasks to import.

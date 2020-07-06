@@ -6,7 +6,11 @@
     state: started
     enabled: yes
 <<<<<<< HEAD
+<<<<<<< HEAD
   when: libvirtenable  
 =======
   when: libvirtenable == yes
 >>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
+=======
+  when: libvirtenable  
+>>>>>>> Fixed boolean variables and correctly changed include tasks to import.

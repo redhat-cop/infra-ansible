@@ -3,10 +3,14 @@
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 libvirtenable: true
 =======
 libvirtenable: yes
 >>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
+=======
+libvirtenable: true
+>>>>>>> Fixed boolean variables and correctly changed include tasks to import.
 
 base_packages:
   - libguestfs-tools
@@ -21,6 +25,7 @@ base_packages:
 service_name: "libvirtd"
 
 virt_manager_install: true 
+<<<<<<< HEAD
 
 virt_manager_package: virt-manager
 =======
@@ -34,3 +39,7 @@ virt_manager_install: yes
 
 virt_manager_package: virt-manager
 >>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
+=======
+
+virt_manager_package: virt-manager
+>>>>>>> Fixed boolean variables and correctly changed include tasks to import.
