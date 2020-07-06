@@ -2,7 +2,7 @@
 # defaults file to use to default variables 
 
 
-libvirtenable: yes
+libvirtenable: true
 
 base_packages:
   - libguestfs-tools
@@ -14,6 +14,6 @@ base_packages:
 
 service_name: "libvirtd"
 
-virt_manager_install: yes
+virt_manager_install: true 
 
 virt_manager_package: virt-manager

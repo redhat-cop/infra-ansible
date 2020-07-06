@@ -1,4 +1,4 @@
 ---
 
-- include: packages.yml
-- include: services.yml
+- import: packages.yml
+- import: services.yml
