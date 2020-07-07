@@ -34,17 +34,6 @@
   become: True
   roles:
   - role: ansible/prep-for-ansible
-<<<<<<< HEAD
-
-- name: "Workaround for .novalocal"
-  hosts: osp_instances
-  become: true
-||||||| constructed merge base
-
-- name: "Workaround for .novalocal"
-  hosts: osp_instances
-=======
->>>>>>> CHANGE provision-osp-instance.yml to include all roles/tasks which need elevated privileges
   tasks:
   - name: "Eliminate the .novalocal at the end of the FQDN"
     hostname:
