@@ -6,7 +6,7 @@
       iam_user:
         name: "{{ user_data.user_name }}"
         state: present
-        profile: "{{ identities.profile_name }}"
+        profile: "{{ identities.profile_name | default(omit) }}"
       register: aws_user_list
       loop: "{{ identities.users }}"
       loop_control:
@@ -20,7 +20,7 @@
         list_of_users: []
     - name: "Create password generation dataset"
       set_fact:
-        list_of_users: "{{ list_of_users + [ aws_data.user_data|combine(aws_data|set_user_flags, {'aws_profile': identities.profile_name}) ] }}"
+        list_of_users: "{{ list_of_users + [ aws_data.user_data|combine(aws_data|set_user_flags, {'aws_profile': identities.profile_name|default('')}) ] }}"
       with_items:
         - "{{ aws_user_list.results }}"
       loop_control:

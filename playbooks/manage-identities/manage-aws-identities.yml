@@ -7,8 +7,3 @@
     - role: identity-management/manage-aws-identities
     - role: identity-management/manage-user-password
     - role: identity-management/manage-aws-user-password
-
-- name: "Notify users"
-  import_playbook: ../notifications/email-notify-users.yml
-  vars:
-    users: "{{ identities.users }}"

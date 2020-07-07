@@ -7,7 +7,7 @@
     policy: "{{ policy_data.policy|from_yaml }}"
     make_default: "{{ policy_data.make_default|default(omit) }}"
     only_version: "{{ policy_data.only_version|default(omit) }}"
-    profile: "{{ identities.profile_name }}"
+    profile: "{{ identities.profile_name | default(omit) }}"
     state: present
   loop: "{{ identities.policies }}"
   loop_control:
