@@ -4,7 +4,7 @@
   iam_managed_policy:
     policy_name: "{{ policy_data.policy_name }}"
     state: absent
-    profile: "{{ identities.profile_name }}"
+    profile: "{{ identities.profile_name | default(omit) }}"
   loop: "{{ identities.policies }}"
   loop_control:
     loop_var: policy_data

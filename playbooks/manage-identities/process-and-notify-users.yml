@@ -6,8 +6,8 @@
   roles:
     - identity-management/populate-users
 
-- name: "Manage the identities in IPA/IdM"
-  import_playbook: manage-idm-identities.yml
+- name: "Manage the identities first"
+  import_playbook: manage-identities.yml
 
 - name: "Notify users"
   import_playbook: ../notifications/email-notify-users.yml
