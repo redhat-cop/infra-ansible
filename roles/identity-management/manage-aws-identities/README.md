@@ -51,6 +51,8 @@ identities:
       first_name: First
       last_name: Last
       email: "admin@example.com"
+      access_key_state: create
+      key_count: 2
     - user_name: read-only-user
       first_name: First
       last_name: Last
