@@ -1,5 +1,10 @@
 ---
 
 - import_tasks: rhelpackages.yml
-  when: ansible_distribution == "RedHat"
+  when: 
+    - yumpreferred 
+    - ansible_distribution == "RedHat"
+
+- import_tasks: packages.yml
+  when: not yumpreferred
 
