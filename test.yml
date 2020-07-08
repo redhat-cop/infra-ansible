@@ -1,8 +1,0 @@
----
-- hosts: localhost
-  vars:
-    ver: 3.6.4-2
-  tasks:
-    - debug:
-        msg: "true"
-      when: (ver == 'latest') or (ver is version('3.7', '>='))
