@@ -4,3 +4,4 @@
   package:
     name: "{{ list_of_packages_to_install }}"
     state: installed
+
