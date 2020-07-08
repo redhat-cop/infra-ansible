@@ -10,6 +10,7 @@
     loop_var: policy_data
 
   when:
+    - identities.policies is defined
     - identities.policies|length > 0
     - policy_data.targets is undefined or 'aws' in identities.targets
     - policy_data.state is defined
