@@ -7,3 +7,7 @@
   loop: "{{ realms }}"
   loop_control:
     loop_var: realm
+- include_tasks: 'add_role.yml'
+  loop: "{{ roles }}"
+  loop_control:
+    loop_var: role_data

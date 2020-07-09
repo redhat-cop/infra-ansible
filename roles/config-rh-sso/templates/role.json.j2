@@ -1,0 +1,10 @@
+{
+  "id": "{{ role_data.role_id }}",
+  "name": "{{ role_data.role_name }}"
+  "description": "{{ role_data.role_description }}",
+  "attributes": "{{ role_data.role_attributes }}",
+  "clientRole": "{{ role_data.role_clientRole }}",
+  "composite": "{{ role_data.role_composite | default(false)}}",
+  "composites": "{{ role_data.role_composites }}",
+  "containerId": "{{ role_data.role_containerId }}",
+}

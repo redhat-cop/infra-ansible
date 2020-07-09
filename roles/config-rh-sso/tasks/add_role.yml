@@ -1,0 +1,52 @@
+---
+
+- name: "Retrieve template for role: {{ role_data.role_name }}"
+  set_fact:
+    role_json: "{{ lookup('template', 'role.json.j2') | to_json }}"
+
+- name: "Requesting Access Token"
+  uri:
+    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ sso_admin_user }}"
+      password: "{{ sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    validate_certs: no
+  register: rh_sso_token
+
+- name: "Retrieve client parameters to be processed"
+  uri:
+    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/clients?clientId={{ role_data.role_name }}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: no
+  register: get_client
+
+- debug:
+    var: get_client
+
+- name: "Identify client ID"
+  set_fact:
+   client_id: "{{ get_client.json | json_query(get_client_id) }}"
+  vars:
+    get_client_id: "[0].id"
+
+- debug:
+    var: client_id
+
+- name: "Create Role for service Red Hat Single Sign-On"
+  uri:
+    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/clients/{{ client_id }}/roles"
+    method: POST
+    body: "{{ role_json }}"
+    body_format: json
+    status_code: 201, 409
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: no
+  register: rh_sso_realm_create
+

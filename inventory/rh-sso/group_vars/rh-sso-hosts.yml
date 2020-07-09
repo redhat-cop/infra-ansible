@@ -25,3 +25,13 @@ realms:
     id: simple-realm
     displayName: "Simple Times"
     enabled: false
+
+roles:
+  - role_id: "atrodrig-role-2"
+    role_name: "test"
+    role_description: "example of role via api calls"
+    role_attributes: ""
+    role_clientRole: ""
+    role_composite: ""
+    role_composites: ""
+    role_containerId: ""
