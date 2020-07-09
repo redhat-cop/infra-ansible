@@ -5,3 +5,11 @@ rh_sso_port: 8080
 rh_sso_port_list:
   - 8080/tcp
   - 9990/tcp
+
+client_vars:
+  authenticator_type_opts:
+    - client-secret
+    - client-jwt
+  protocol_opts:
+    - openid-connect
+    - saml

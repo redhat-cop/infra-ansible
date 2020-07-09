@@ -7,3 +7,7 @@
   loop: "{{ realms }}"
   loop_control:
     loop_var: realm
+- include_tasks: 'manage-clients.yml'
+  loop: "{{ clients }}"
+  loop_control:
+    loop_var: client
