@@ -8,20 +8,24 @@ list_of_packages_to_install:
 
 sso_admin_user: admin
 sso_admin_pass: mypa55ss
+rh_sso_protocol: https
+rh_sso_keystore_name: default
+rh_sso_keystore_pass: changeit
+rh_sso_keystore_path: "/etc/security/keystore.jks"
 
 realms:
-  - name: my-awesome-realm
-    id: my-awesome-realm
-    displayName: "My Awesome Realm"
-    enabled: true
-    sslRequired: "external"
-    registrationAllowed: true
-    emailLogin: true
-    dupsAllowed: false
-    resetPwd: false
-    editUname: false
-    bruteForceProtected: true
-  - name: a-simpler-realm
-    id: simple-realm
-    displayName: "Simple Times"
-    enabled: false
+  - realm_name: my-awesome-realm
+    realm_id: my-awesome-realm
+    realm_displayName: "My Awesome Realm"
+    realm_enabled: true
+    realm_sslRequired: "external"
+    realm_registrationAllowed: true
+    realm_emailLogin: true
+    realm_dupsAllowed: false
+    realm_resetPwd: false
+    realm_editUname: false
+    realm_bruteForceProtected: true
+  - realm_name: a-simpler-realm
+    realm_id: simple-realm
+    realm_displayName: "Simple Times"
+    realm_enabled: false

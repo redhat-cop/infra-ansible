@@ -3,11 +3,69 @@
   import_role:
     name: ../roles/config-packages
 
-- name: 'Update SSO bind addresses'
-  replace:
-    path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
-    regexp: '127.0.0.1'
-    replace: '0.0.0.0'
+- name: 'Start Red Hat SSO in Standalone mode'
+  service:
+    name: rh-sso7
+    state: restarted
+
+- name: 'Waiting for SSO service to load'
+  pause:
+    seconds: '30'
+
+- name: 'Update Red Hat SSO management interface IP address'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/interface=management:write-attribute(name=inet-address,value="${jboss.bind.address.management:0.0.0.0}")'
+  args:
+    executable: "/bin/bash"
+
+- name: 'Update Red hat SSO public interface IP address'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/interface=public:write-attribute(name=inet-address,value="${jboss.bind.address:0.0.0.0}")'
+  args:
+    executable: "/bin/bash"
+
+- name: 'Create a keystore to store SSL certificates'
+  java_keystore:
+    name: "{{ rh_sso_keystore_name }}"
+    certificate: "{{lookup('file', '../path/to/file.cer') }}"
+    private_key: "{{lookup('file', '../path/to/file.key') }}"
+    password: "{{ rh_sso_keystore_pass }}"
+    dest: "{{ rh_sso_keystore_path }}"
+
+- name: 'Add a new SSL based security-realm'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/core-service=management/security-realm=UndertowRealm:add()'
+  args:
+    executable: "/bin/bash"
+  register: process_undertowrealm
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
+
+- name: 'Configure security-realm to use the keystore'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path="{{ rh_sso_keystore_path }}", keystore-password="{{ rh_sso_keystore_pass }}")'
+  args:
+    executable: "/bin/bash"
+  register: process_undertowrealm
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
+
+- name: 'Point the https-listener to the security-realm'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=security-realm, value=UndertowRealm)'
+  args:
+    executable: "/bin/bash"
+  register: process_undertowrealm
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
 
 - name: 'Add a default SSO administration user'
   shell: >
@@ -17,11 +75,11 @@
   args:
     executable: "/bin/bash"
 
-- name: 'Start Red Hat SSO in Standalone mode'
+- name: 'Restart Red Hat SSO service to apply changes'
   service:
     name: rh-sso7
     state: restarted
 
 - name: 'Waiting for SSO service to load'
   pause:
-    seconds: '30'
+    seconds: '10'
