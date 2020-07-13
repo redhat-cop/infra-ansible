@@ -2,7 +2,6 @@
 install_nagios: "no"
 
 nagios_download_dir: /tmp
-nagios_version: 4.4.5
 nagios_download_name: "nagios-{{nagios_version}}.tar.gz"
 nagios_download_url: https://github.com/NagiosEnterprises/nagioscore/archive
 nagios_extracted_dir: "nagioscore-nagios-{{nagios_version}}"
@@ -13,8 +12,8 @@ nagios_epel_repo_url: https://dl.fedoraproject.org/pub/epel
 nagios_epel_repo_rpm: epel-release-latest-7.noarch.rpm
 
 nagios_plugins_url: "https://github.com/nagios-plugins/nagios-plugins/archive"
-nagios_plugins_archive: "release-2.2.1.tar.gz"
-nagios_plugin_version: 2.2.1
+nagios_plugins_archive: "release-{{nagios_plugin_version}}.tar.gz"
+
 nagios_plugin_download_name: "nagios-plugins-release-{{nagios_plugin_version}}"
 nagios_plugins_extracted_dir: "nagios-plugins-release-{{nagios_plugin_version}}"
 
