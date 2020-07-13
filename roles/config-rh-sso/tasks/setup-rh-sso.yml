@@ -51,6 +51,7 @@
     --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path="{{ sso_keystore_path }}", keystore-password="{{ sso_keystore_pass }}")'
   args:
     executable: "/bin/bash"
+  register: process_undertowrealm
   failed_when:
     - process_undertowrealm.rc == 1
     - "'WFLYCTL0212' not in process_undertowrealm.stdout"
@@ -61,6 +62,7 @@
     --command='/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=security-realm, value=UndertowRealm)'
   args:
     executable: "/bin/bash"
+  register: process_undertowrealm
   failed_when:
     - process_undertowrealm.rc == 1
     - "'WFLYCTL0212' not in process_undertowrealm.stdout"
