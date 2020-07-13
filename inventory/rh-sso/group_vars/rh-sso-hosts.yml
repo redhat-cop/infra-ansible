@@ -6,12 +6,12 @@ ansible_become: True
 list_of_packages_to_install:
   - "@rh-sso7"
 
-sso_protocol: https
 sso_admin_user: admin
 sso_admin_pass: mypa55ss
-sso_keystore_name: default
-sso_keystore_pass: changeit
-sso_keystore_path: "/etc/security/keystore.jks"
+rh_sso_protocol: https
+rh_sso_keystore_name: default
+rh_sso_keystore_pass: changeit
+rh_sso_keystore_path: "/etc/security/keystore.jks"
 
 realms:
   - realm_name: my-awesome-realm
