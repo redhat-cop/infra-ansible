@@ -28,11 +28,11 @@
 
 - name: 'Create a keystore to store SSL certificates'
   java_keystore:
-    name: "{{ sso_keystore_name }}"
+    name: "{{ rh_sso_keystore_name }}"
     certificate: "{{lookup('file', '../path/to/file.cer') }}"
     private_key: "{{lookup('file', '../path/to/file.key') }}"
-    password: "{{ sso_keystore_pass }}"
-    dest: "{{ sso_keystore_path }}"
+    password: "{{ rh_sso_keystore_pass }}"
+    dest: "{{ rh_sso_keystore_path }}"
 
 - name: 'Add a new SSL based security-realm'
   shell: >
@@ -48,7 +48,7 @@
 - name: 'Configure security-realm to use the keystore'
   shell: >
     "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path="{{ sso_keystore_path }}", keystore-password="{{ sso_keystore_pass }}")'
+    --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path="{{ rh_sso_keystore_path }}", keystore-password="{{ rh_sso_keystore_pass }}")'
   args:
     executable: "/bin/bash"
   register: process_undertowrealm
