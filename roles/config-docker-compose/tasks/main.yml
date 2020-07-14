@@ -1,14 +1,12 @@
 ---
 
 - name: "Make sure dependencies are met"
-  vars: 
-    docker_install: True
   include_role:
     name: config-docker
   when:
-  - docker_compose_install|default(False)
+    - docker_compose_install|default(false)
 
 - name: "Install, configure and enable Docker-compose"
   import_tasks: docker-compose.yml
   when:
-  - docker_compose_install|default(False)
+    - docker_compose_install|default(false)
