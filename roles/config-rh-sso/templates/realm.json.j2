@@ -1,14 +1,14 @@
 {
-  "id": "{{ realm.id | default(realm.name) }}",
-  "realm": "{{ realm.name }}",
-  "displayName": "{{ realm.displayName }}",
-  "enabled": "{{ realm.enabled | default(true) }}",
-  "sslRequired": "{{ realm.sslRequired | default('external') }}",
-  "registrationAllowed": "{{ realm.registrationAllowed | default(true) }}",
-  "loginWithEmailAllowed": "{{ realm.emailLogin | default(true) }}",
-  "duplicateEmailsAllowed": "{{ realm.dupsAllowed | default(false) }}",
-  "resetPasswordAllowed": "{{ realm.resetPwd | default(false) }}",
-  "editUsernameAllowed": "{{ realm.editUname | default(false) }}",
-  "bruteForceProtected": "{{ realm.bruteForceProtected | default(true) }}"
+  "id": "{{ realm_data.realm_id | default(realm_data.realm_name) }}",
+  "realm": "{{ realm_data.realm_name }}",
+  "displayName": "{{ realm_data.realm_displayName }}",
+  "enabled": "{{ realm_data.realm_enabled | default(true) }}",
+  "sslRequired": "{{ realm_data.realm_sslRequired | default('external') }}",
+  "registrationAllowed": "{{ realm_data.realm_registrationAllowed | default(true) }}",
+  "loginWithEmailAllowed": "{{ realm_data.realm_emailLogin | default(true) }}",
+  "duplicateEmailsAllowed": "{{ realm_data.realm_dupsAllowed | default(false) }}",
+  "resetPasswordAllowed": "{{ realm_data.realm_resetPwd | default(false) }}",
+  "editUsernameAllowed": "{{ realm_data.realm_editUname | default(false) }}",
+  "bruteForceProtected": "{{ realm_data.realm_bruteForceProtected | default(true) }}"
 }
 

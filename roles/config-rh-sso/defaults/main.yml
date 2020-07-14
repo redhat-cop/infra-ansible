@@ -1,9 +1,10 @@
 ---
 
-rh_sso_host: "{{ ansible_facts.default_ipv4.address }}"
-rh_sso_port: 8080
+rh_sso_host: "{{ ansible_default_ipv4.address }}"
+rh_sso_protocol: https
+rh_sso_port: 8443
 rh_sso_port_list:
-  - 8080/tcp
+  - 8443/tcp
   - 9990/tcp
 
 client_vars:
@@ -13,3 +14,7 @@ client_vars:
   protocol_opts:
     - openid-connect
     - saml
+
+rh_sso_keystore_name: default
+rh_sso_keystore_pass: changeit
+rh_sso_keystore_path: "/etc/security/keystore.jks"

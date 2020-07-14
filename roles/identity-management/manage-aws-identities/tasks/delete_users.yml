@@ -5,7 +5,7 @@
     name: "{{ user_data.user_name }}"
     state: absent
     groups: ""
-    profile: "{{ identities.profile_name }}"
+    profile: "{{ identities.profile_name | default(omit) }}"
   loop: "{{ identities.users }}"
   loop_control:
     loop_var: user_data
