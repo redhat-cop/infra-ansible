@@ -33,8 +33,7 @@ ansible_tower:
       id: "<REPLACE WITH CORRESPONDING CREDENTIAL TYPE ID>"
 ```
 
-A more detailed explanation of the variables required for this role can be found in the parent README.md found at the link below.
-https://github.com/redhat-cop/infra-ansible/tree/master/roles/ansible/tower#example-inventory
+Also check the [README one level up](../README.md#example-inventory) for additional details of an example inventory.  
 
 ## Example Playbook
 
