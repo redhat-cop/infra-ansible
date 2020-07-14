@@ -8,6 +8,6 @@
   loop_control:
     loop_var: realm
 - include_tasks: 'manage-clients.yml'
-  loop: "{{ clients }}"
+  loop: "{{ clients | default([]) }}"
   loop_control:
     loop_var: client

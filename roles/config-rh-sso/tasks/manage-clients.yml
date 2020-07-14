@@ -2,7 +2,7 @@
 
 - name: Check for valid client_authenticator_type value
   set_fact:
-    invalid: "{{ '' if (client.client_authenticator_type | default('')) in client_vars.authenticator_type_opts else 'client_authenticator_type' }}"
+    invalid_field: "{{ '' if (client.client_authenticator_type | default('')) in client_vars.authenticator_type_opts else 'client_authenticator_type' }}"
   when:
     - client.client_authenticator_type is defined
 
@@ -11,12 +11,12 @@
     msg: "Skipping creation of client: {{ client.name }} due to invalid client_authenticator_type value."
   ignore_errors: yes
   when:
-    - invalid is defined
-    - invalid == "client_authenticator_type"
+    - invalid_field is defined
+    - invalid_field == "client_authenticator_type"
 
 - name: Check for valid protocol value
   set_fact:
-    invalid: "{{ '' if (client.protocol | default('')) in client_vars.protocol_opts else 'protocol' }}"
+    invalid_field: "{{ '' if (client.protocol | default('')) in client_vars.protocol_opts else 'protocol' }}"
   when:
     - client.protocol is defined
 
@@ -25,8 +25,8 @@
     msg: "Skipping creation of client: {{ client.name }} due to invalid protocol value."
   ignore_errors: yes
   when:
-    - invalid is defined
-    - invalid == "protocol"
+    - invalid_field is defined
+    - invalid_field == "protocol"
 
 - name: Set secret value if using client-secret authentication
   set_fact:
@@ -76,4 +76,4 @@
     attributes: "{{ client.attributes | default(omit) }}"
     public_client: "{{ client.public_access | default(false) }}"
   when:
-    - invalid == ""
+    - invalid_field|trim == ""
