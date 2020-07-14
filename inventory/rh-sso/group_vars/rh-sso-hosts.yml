@@ -29,3 +29,11 @@ realms:
     realm_id: simple-realm
     realm_displayName: "Simple Times"
     realm_enabled: false
+
+roles:
+  - role_name: atrodrig-1
+    role_description: "Example of role created via an API call"
+#   role_attributes:
+#     - key1: value
+    role_clientRole: false
+    role_composite: false

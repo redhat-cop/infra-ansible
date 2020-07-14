@@ -3,8 +3,14 @@
 
 - import_tasks: 'prereq.yml'
 - import_tasks: 'setup-rh-sso.yml'
+
 - include_tasks: 'create_realm.yml'
   loop: "{{ realms }}"
   loop_control:
     loop_var: realm_data
   tags: create-realm
+
+- include_tasks: 'add_role.yml'
+  loop: "{{ roles }}"
+  loop_control:
+    loop_var: role_data
