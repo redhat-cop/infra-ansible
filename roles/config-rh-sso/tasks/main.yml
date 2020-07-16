@@ -1,9 +1,13 @@
 ---
 # tasks file for Red Hat SSO
 
-- import_tasks: 'prereq.yml'
-- import_tasks: 'setup-rh-sso.yml'
-- include_tasks: 'configure-rh-sso.yml'
-  loop: "{{ realms }}"
+#- import_tasks: 'prereq.yml'
+#- import_tasks: 'setup-rh-sso.yml'
+#- include_tasks: 'configure-rh-sso.yml'
+#  loop: "{{ realms }}"
+#  loop_control:
+#    loop_var: realm
+- include_tasks: 'configure-id-provider.yml'
+  loop: "{{ id_providers }}"
   loop_control:
-    loop_var: realm
+    loop_var: id_provider
