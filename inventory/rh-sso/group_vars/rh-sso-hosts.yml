@@ -31,7 +31,8 @@ realms:
     realm_enabled: false
 
 roles:
-  - role_name: sample-role
+  - role_targetRealm: master
+    role_name: sample-role
     role_description: "Example of role created via an API call"
 #   role_attributes:
 #     - key1: value

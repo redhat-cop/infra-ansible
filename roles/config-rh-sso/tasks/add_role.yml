@@ -19,7 +19,7 @@
 
 - name: "Create Role for service Red Hat Single Sign-On"
   uri:
-    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/roles"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ role_data.role_targetRealm }}/roles"
     method: POST
     body: "{{ role_json }}"
     body_format: json

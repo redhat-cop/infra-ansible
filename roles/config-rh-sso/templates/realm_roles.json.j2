@@ -1,6 +1,6 @@
 {
   "id": "{{ role_data.role_id | default(omit) }}",
-  "name": "{{ role_data.role_name }}",
+  "name": "{{ role_data.role_name | mandatory}}",
   "description": "{{ role_data.role_description | default('') }}",
   "attributes": "{{ role_data.role_attributes | default(omit) }}",
   "clientRole": "{{ role_data.role_clientRole | default(false) }}",
