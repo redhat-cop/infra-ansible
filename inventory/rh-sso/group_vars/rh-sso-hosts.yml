@@ -34,7 +34,10 @@ roles:
   - role_targetRealm: master
     role_name: sample-role
     role_description: "Example of role created via an API call"
-#   role_attributes:
-#     - key1: value
+    role_attributes:
+      key1:
+        - value
+      key2:
+        - value2
     role_clientRole: false
     role_composite: false
