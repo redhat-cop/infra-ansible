@@ -35,7 +35,9 @@
   - target_cert_files.intermediate_ca|trim != ''
 
 - name: "Create Fullchain Cert if requested"
-  shell: cat {{ target_cert_files.host_cert }} {{ target_cert_files.intermediate_ca }} > {{ target_cert_files.fullchain }}
+  copy:
+    dest: "{{ target_cert_files.fullchain }}"
+    content: "{{ lookup('file', target_cert_files.host_cert) + '\n' + lookup('file', target_cert_files.intermediate_ca) + '\n' }}"
   when:
   - target_cert_files.host_cert is defined
   - target_cert_files.host_cert|trim != ''
