@@ -31,13 +31,31 @@ realms:
     realm_enabled: false
 
 roles:
-  - role_targetRealm: master
-    role_name: sample-role
-    role_description: "Example of role created via an API call"
-    role_attributes:
+  - targetRealm: master
+    name: sample-role
+    description: "Example of role created via an API call"
+    attributes:
       key1:
         - value
       key2:
         - value2
-    role_clientRole: false
-    role_composite: false
+    clientRole: false
+    composite: false
+
+id_providers:
+  - targetRealm: master
+    alias: google
+    displayName: google-test-1
+    providerId: google
+    enabled: true
+    internalId: google
+    linkOnly: false
+    firstBrokerLoginFlowAlias: first broker login
+    postBrokerLoginFlowAlias: browser
+    storeToken: false
+    addReadTokenRoleOnCreate: false
+    trustEmail: false
+    config:
+      clientSecret: test
+      clientId: google
+      useJwksUrl: true
