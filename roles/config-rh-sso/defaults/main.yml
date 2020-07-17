@@ -7,6 +7,14 @@ rh_sso_port_list:
   - 8443/tcp
   - 9990/tcp
 
+client_vars:
+  authenticator_type_opts:
+    - client-secret
+    - client-jwt
+  protocol_opts:
+    - openid-connect
+    - saml
+
 rh_sso_keystore_name: default
 rh_sso_keystore_pass: changeit
 rh_sso_keystore_path: "/etc/security/keystore.jks"

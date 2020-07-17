@@ -9,7 +9,10 @@
   loop_control:
     loop_var: realm_data
   tags: create-realm
-
+- include_tasks: 'manage-clients.yml'
+  loop: "{{ clients | default([]) }}"
+  loop_control:
+    loop_var: client
 - include_tasks: 'add_role.yml'
   loop: "{{ roles }}"
   loop_control:

@@ -14,21 +14,52 @@ rh_sso_keystore_pass: changeit
 rh_sso_keystore_path: "/etc/security/keystore.jks"
 
 realms:
-  - realm_name: my-awesome-realm
-    realm_id: my-awesome-realm
-    realm_displayName: "My Awesome Realm"
-    realm_enabled: true
-    realm_sslRequired: "external"
-    realm_registrationAllowed: true
-    realm_emailLogin: true
-    realm_dupsAllowed: false
-    realm_resetPwd: false
-    realm_editUname: false
-    realm_bruteForceProtected: true
-  - realm_name: a-simpler-realm
-    realm_id: simple-realm
-    realm_displayName: "Simple Times"
-    realm_enabled: false
+  - name: my-awesome-realm
+    id: my-awesome-realm
+    displayName: "My Awesome Realm"
+    enabled: true
+    sslRequired: "external"
+    registrationAllowed: true
+    emailLogin: true
+    dupsAllowed: false
+    resetPwd: false
+    editUname: false
+    bruteForceProtected: true
+  - name: a-simpler-realm
+    id: simple-realm
+    displayName: "Simple Times"
+    enabled: false
+
+clients:
+  - auth_url: "https://my-sso.example.com"
+    name: "my-super-fun-client"
+    enabled: true
+    auth_client_id: "admin-client"
+    auth_realm: "master"
+    auth_username: "admin"
+    auth_password: "password123"
+    consent_required: false
+    public_access: true
+    standard_flow: true
+    implicit_flow: true
+    direct_access_grants: true
+    realm: "my-awesome-realm"
+    protocol: "openid-connect"
+    redirect_uris:
+      - "*"
+    web_origins:
+      - "+"
+    protocol_mappers:
+      - config:
+          claim.name: "my-claim-name"
+          id.token.claim: true
+          userinfo.token.claim: true
+          access.token.claim: true
+          multivalued: true
+        name: my-claim-name
+        consentRequired: false
+        protocolMapper: "oidc-usermodel-realm-role-mapper"
+        protocol: openid-connect
 
 roles:
   - targetRealm: master
