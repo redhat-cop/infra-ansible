@@ -29,3 +29,15 @@ realms:
     realm_id: simple-realm
     realm_displayName: "Simple Times"
     realm_enabled: false
+
+roles:
+  - targetRealm: master
+    name: sample-role
+    description: "Example of role created via an API call"
+    attributes:
+      key1:
+        - value
+      key2:
+        - value2
+    clientRole: false
+    composite: false
