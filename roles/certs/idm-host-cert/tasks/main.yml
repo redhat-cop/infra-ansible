@@ -8,6 +8,8 @@
 
 - import_tasks: "retrieve-ca-cert.yml"
 
+- import_tasks: "create-directories.yml"
+
 - import_tasks: "write-certs-to-file.yml"
 
 - import_tasks: "print-certs.yml"
