@@ -76,4 +76,4 @@
     attributes: "{{ client.attributes | default(omit) }}"
     public_client: "{{ client.public_access | default(false) }}"
   when:
-    - invalid_field|trim == ""
+    - invalid_field is undefined or invalid_field|trim == ""
