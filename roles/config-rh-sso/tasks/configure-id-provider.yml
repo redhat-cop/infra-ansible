@@ -6,7 +6,7 @@
 
 - name: "Requesting Access Token"
   uri:
-    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
     method: POST
     body_format: form-urlencoded
     body:
@@ -19,7 +19,7 @@
 
 - name: "Create Identity Provider for Red Hat Single Sign-On"
   uri:
-    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/identity-provider/instances"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ id_provider.targetRealm }}/identity-provider/instances"
     method: POST
     body: "{{ id_provider_json }}"
     body_format: json
@@ -27,4 +27,4 @@
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
     validate_certs: no
-  register: rh_sso_realm_create
+  register: rh_sso_idp_create
