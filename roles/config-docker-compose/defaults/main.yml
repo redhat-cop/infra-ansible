@@ -1,6 +1,6 @@
 ---
-docker_install: true
-docker_compose_install: true
+docker_install: false
+docker_compose_install: false
 
 docker_compose_packages:
   - docker-compose

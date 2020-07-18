@@ -17,8 +17,8 @@ Defaults file has example of variables that can be used.
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
 |**docker_compose_packages**|  Packages required for docker compose. | yes | in defaults file |
-|**docker_install**| Should docker be installed | true | true |
-|**docker_compose_install**| Should docker compose be installed |true | true |
+|**docker_install**| Should docker be installed | true | false |
+|**docker_compose_install**| Should docker compose be installed |true | false |
 
 
 Dependencies
@@ -38,7 +38,8 @@ Example Inventory
 ----------------
 
 ```
-docker_install: True
+docker_install: true
+docker_compose_install: true
 docker_username: bob
 ```
 
