@@ -42,6 +42,9 @@ identities:
         - gdownie
         - lcohen
         - rhawkins
+      childgroups:
+        - ops
+        - devs
     - name: "test-group2"
       members:
         - rhawkins
