@@ -20,7 +20,7 @@ Variables
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**ipa_client_install** | Used to set if IPA client will be installed | yes | true |
+|**ipa_client_install** | Used to set if IPA client will be installed | yes | false |
 |**main_user**| The name of the primary user | yes | no default |
 |**admin_group**| The name of the administration group you wish to use | yes | no default |
 |**move_local_user_home**|  Use if you wish to change local users home | yes | false |
@@ -34,7 +34,7 @@ Example Inventory
 ``` yaml
 [all:vars]
 
-ipa_client_install=yes
+ipa_client_install=true
 ipa_domain=test.example.com
 ipa_automount_location=userhome
 ipa_username=testuser
