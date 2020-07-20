@@ -2,7 +2,7 @@
 
 - name: "Request Red Hat SSO REST API Access Token"
   uri:
-    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
     method: POST
     body_format: form-urlencoded
     body:
@@ -14,7 +14,7 @@
 
 - name: "Get Existing Authentication Flows For realm: {{ af.realm }}"
   uri:
-    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows"
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
@@ -32,7 +32,7 @@
 
 - name: "Create Authentication Flow: {{ af.name }} in realm: {{ af.realm }}"
   uri:
-    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows"
     method: POST
     body: "{{ auth_flow_json }}"
     body_format: json
@@ -50,7 +50,7 @@
 
 - name: "Get Executions for Authentication Flow: {{ af.name }}"
   uri:
-    url: "https://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows/{{ af.name }}/executions"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows/{{ af.name }}/executions"
     method: GET    
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
