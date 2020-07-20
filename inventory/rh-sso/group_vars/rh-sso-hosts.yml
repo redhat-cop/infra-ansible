@@ -28,7 +28,22 @@ realms:
   - name: a-simpler-realm
     id: simple-realm
     displayName: "Simple Times"
-    enabled: false
+    enabled: true
+
+auth_flows:
+  - name: "myfirstbroker"
+    realm: "a-simpler-realm"
+    builtin: false
+    topLevel: true
+    executions:
+      - provider: "idp-create-user-if-unique"
+        requirement: "ALTERNATIVE"
+        index: 0
+        name: "create-unique-user"
+      - provider: "docker-http-basic-authenticator"
+        requirement: "DISABLED"
+        index: 10
+        name: "docker"
 
 clients:
   - auth_url: "https://my-sso.example.com"

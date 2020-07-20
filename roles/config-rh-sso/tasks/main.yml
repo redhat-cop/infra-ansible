@@ -21,3 +21,7 @@
   loop: "{{ id_providers | default([]) }}"
   loop_control:
     loop_var: id_provider
+- include_tasks: 'manage-auth-flow.yml'
+  loop: "{{ auth_flows | default([]) }}"
+  loop_control:
+    loop_var: af
