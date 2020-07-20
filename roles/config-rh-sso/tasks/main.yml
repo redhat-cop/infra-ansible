@@ -3,11 +3,25 @@
 
 - import_tasks: 'prereq.yml'
 - import_tasks: 'setup-rh-sso.yml'
-- include_tasks: 'configure-rh-sso.yml'
+
+- include_tasks: 'create_realm.yml'
   loop: "{{ realms }}"
   loop_control:
-    loop_var: realm
+    loop_var: realm_data
+  tags: create-realm
+- include_tasks: 'manage-clients.yml'
+  loop: "{{ clients | default([]) }}"
+  loop_control:
+    loop_var: client
+- include_tasks: 'add_role.yml'
+  loop: "{{ roles }}"
+  loop_control:
+    loop_var: role_data
+- include_tasks: 'configure-id-provider.yml'
+  loop: "{{ id_providers | default([]) }}"
+  loop_control:
+    loop_var: id_provider
 - include_tasks: 'manage-auth-flow.yml'
-  loop: "{{ auth_flows }}"
+  loop: "{{ auth_flows | default([]) }}"
   loop_control:
     loop_var: af
