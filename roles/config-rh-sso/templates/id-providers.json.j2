@@ -1,0 +1,15 @@
+{
+  "alias": "{{ id_provider.alias | default(id_provider.providerId) }}",
+  "config": {{ id_provider.config | default(omit) }},
+  "displayName": "{{ id_provider.displayName | mandatory }}",
+  "enabled": "{{ id_provider.enabled | default(true) }}",
+  "internalId": "{{ id_provider.internalId | default(omit) }}",
+  "linkOnly": "{{ id_provider.linkOnly | default(false) }}",
+  "firstBrokerLoginFlowAlias": "{{ id_provider.firstBrokerLoginFlowAlias | default('first broker login')}}",
+  "postBrokerLoginFlowAlias": "{{ id_provider.postBrokerLoginFlowAlias | default('') }}",
+  "providerId": "{{ id_provider.providerId | mandatory }}",
+  "storeToken": "{{ id_provider.storeToken | default(false) }}",
+  "addReadTokenRoleOnCreate": "{{ id_provider.addReadTokenRoleOnCreate |default(false) }}",
+  "trustEmail": "{{ id_provider.trustEmail | default(false) }}"
+}
+

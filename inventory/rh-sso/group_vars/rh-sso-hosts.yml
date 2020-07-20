@@ -72,3 +72,21 @@ roles:
         - value2
     clientRole: false
     composite: false
+
+id_providers:
+  - targetRealm: master
+    alias: google
+    displayName: google-test-1
+    providerId: google
+    enabled: true
+    internalId: google
+    linkOnly: false
+    firstBrokerLoginFlowAlias: first broker login
+    postBrokerLoginFlowAlias: browser
+    storeToken: false
+    addReadTokenRoleOnCreate: false
+    trustEmail: false
+    config:
+      clientSecret: test
+      clientId: google
+      useJwksUrl: true
