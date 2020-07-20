@@ -4,6 +4,8 @@ extends: default
 rules:
   line-length: disable
   colons: disable
+  document-start:
+    level: error
   indentation:
     level: warning
     indent-sequences: consistent
