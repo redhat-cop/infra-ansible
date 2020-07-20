@@ -7,7 +7,7 @@ rules:
   document-start:
     level: error
   indentation:
-    level: warning
+    level: error
     indent-sequences: consistent
   truthy:
     allowed-values:
