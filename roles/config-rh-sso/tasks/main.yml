@@ -1,8 +1,8 @@
 ---
 # tasks file for Red Hat SSO
 
-- import_tasks: 'prereq.yml'
-- import_tasks: 'setup-rh-sso.yml'
+#- import_tasks: 'prereq.yml'
+#- import_tasks: 'setup-rh-sso.yml'
 
 - include_tasks: 'create_realm.yml'
   loop: "{{ realms }}"
@@ -13,8 +13,8 @@
   loop: "{{ clients | default([]) }}"
   loop_control:
     loop_var: client
-- include_tasks: 'add_role.yml'
-  loop: "{{ roles }}"
+- include_tasks: 'manage-roles.yml'
+  loop: "{{ roles | default([]) }}"
   loop_control:
     loop_var: role_data
 - include_tasks: 'configure-id-provider.yml'
