@@ -1,6 +1,6 @@
 - name: "Request Red Hat SSO REST API Access Token"
   uri:
-    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }h/auth/realms/master/protocol/openid-connect/token"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
     method: POST
     body_format: form-urlencoded
     body:
