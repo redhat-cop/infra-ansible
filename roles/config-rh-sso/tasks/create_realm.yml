@@ -1,6 +1,6 @@
 ---
 
-- name: "Retrieve template for realm: {{ realm_data.realm_name }}"
+- name: "Retrieve template for realm: {{ realm_data.name }}"
   set_fact:
     realm_json: "{{ lookup('template', 'realm.json.j2') | to_json }}"
 
