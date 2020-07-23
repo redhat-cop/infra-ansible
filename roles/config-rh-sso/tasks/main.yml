@@ -9,10 +9,6 @@
   loop_control:
     loop_var: realm_data
   tags: create-realm
-- include_tasks: 'manage-clients.yml'
-  loop: "{{ clients | default([]) }}"
-  loop_control:
-    loop_var: client
 - include_tasks: 'manage-roles.yml'
   loop: "{{ roles | default([]) }}"
   loop_control:
@@ -21,6 +17,10 @@
   loop: "{{ auth_flows | default([]) }}"
   loop_control:
     loop_var: af
+- include_tasks: 'manage-clients.yml'
+  loop: "{{ clients | default([]) }}"
+  loop_control:
+    loop_var: client
 - include_tasks: 'manage-id-provider.yml'
   loop: "{{ id_providers | default([]) }}"
   loop_control:
