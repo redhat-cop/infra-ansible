@@ -18,6 +18,7 @@ rules:
     level: error
   empty-lines:
     level: warning
+    max-end: 1
   hyphens:
     level: warning
   indentation:
