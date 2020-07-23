@@ -44,6 +44,12 @@ auth_flows:
         requirement: "DISABLED"
         index: 10
         name: "docker"
+      - provider: "identity-provider-redirector"
+        requirement: "ALTERNATIVE"
+        index: 11
+        name: "my-sso"
+        config:
+          defaultProvider: "google"
 
 clients:
   - auth_url: "https://my-sso.example.com"
@@ -75,6 +81,8 @@ clients:
         consentRequired: false
         protocolMapper: "oidc-usermodel-realm-role-mapper"
         protocol: openid-connect
+    authflow_overrides:
+      browser: "myfirstbroker"
 
 roles:
   - targetRealm: master
