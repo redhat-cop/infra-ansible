@@ -50,6 +50,7 @@
         method: POST
         body:
           alias: "{{ af_exec.name }}"
+          config: "{{ af_exec.config | default({}) }}"
         body_format: json
         status_code: 201
         headers:

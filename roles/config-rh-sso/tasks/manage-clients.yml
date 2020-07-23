@@ -75,5 +75,51 @@
     protocol_mappers: "{{ client.protocol_mappers | default(omit) }}"
     attributes: "{{ client.attributes | default(omit) }}"
     public_client: "{{ client.public_access | default(false) }}"
+  register: rh_sso_client
   when:
     - invalid_field is undefined or invalid_field|trim == ""
+
+- name: "Get Authentication Flows For Realm: {{ client.realm }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ client.realm }}/authentication/flows"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  register: client_flows
+  when:
+  - invalid_field is undefined or invalid_field|trim == ""
+  - client.authflow_overrides is defined
+
+- name: "Get Authetication Flow ID for Browser Override: {{ client.authflow_overrides.browser }}"
+  set_fact:
+    browser_override: "{{ client_flows.json | json_query(query) }}"
+  vars:
+    query: "[?alias=='{{ client.authflow_overrides.browser }}'].id"
+  when:
+  - client.authflow_overrides.browser is defined
+  - invalid_field is undefined or invalid_field|trim == ""
+
+- name: "Get Authentication Flow ID For Direct Grant Override: {{ client.authflow_overrides.direct_grant }}"
+  set_fact:
+    direct_override: "{{ client_flows.json | json_query(query) }}"
+  vars:
+    query: "[?alias=='{{ client.authflow_overrides.direct_grant }}'].id"
+  when:
+  - client.authflow_overrides.direct_grant is defined
+  - invalid_field is undefined or invalid_field|trim == ""
+
+- name: "Configure Auth Flow Overrides for client: {{ client.name }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ client.realm }}/clients/{{ rh_sso_client.end_state.id }}"
+    method: PUT
+    body:
+      authenticationFlowBindingOverrides:
+        browser: "{{ browser_override | first }}"
+    body_format: json
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+  when:
+  - invalid_field is undefined or invalid_field|trim == ""
+  - client.authflow_overrides is defined
