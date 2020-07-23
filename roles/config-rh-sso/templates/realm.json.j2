@@ -1,7 +1,7 @@
 {
   "id": "{{ realm_data.id | default(realm_data.name) }}",
-  "realm": "{{ realm_data.name }}",
-  "displayName": "{{ realm_data.displayName }}",
+  "realm": "{{ realm_data.name | mandatory }}",
+  "displayName": "{{ realm_data.displayName | default(realm_data.name) }}",
   "enabled": "{{ realm_data.enabled | default(true) }}",
   "sslRequired": "{{ realm_data.sslRequired | default('external') }}",
   "registrationAllowed": "{{ realm_data.registrationAllowed | default(true) }}",
