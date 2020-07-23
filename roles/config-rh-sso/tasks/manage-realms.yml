@@ -23,6 +23,7 @@
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   register: rh_sso_realms
 
 - name: "Check If Realm {{ realm_data.name }} exists"
