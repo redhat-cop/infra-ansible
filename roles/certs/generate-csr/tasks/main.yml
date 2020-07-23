@@ -26,9 +26,9 @@
         content: "{{ csr_content_output.csr }}"
         dest: "{{ target_cert_files.csr }}"
   when:
-  - target_cert_files is defined
-  - target_cert_files.csr is defined
-  - target_cert_files.csr|trim != ''
+    - target_cert_files is defined
+    - target_cert_files.csr is defined
+    - target_cert_files.csr|trim != ''
 
 - name: "Write the Certificate/CSR Private key to a file"
   block:
@@ -39,6 +39,6 @@
         content: "{{ csr_content_output.key }}"
         dest: "{{ target_cert_files.key }}"
   when:
-  - target_cert_files is defined
-  - target_cert_files.key is defined
-  - target_cert_files.key|trim != ''
+    - target_cert_files is defined
+    - target_cert_files.key is defined
+    - target_cert_files.key|trim != ''

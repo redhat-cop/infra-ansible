@@ -1,13 +1,13 @@
 ---
-# defaults file to use to default variables 
 
 # Default dictionary of bonds if none specified
+
 bonds:
 - device: bond0.mgmt
   bonding_opts: 'mode=4 miimon=100'
-  slaves: 
-  - device: eth0
-  - device: eth1
+  slaves:
+    - device: eth0
+    - device: eth1
   ipaddr: '{{ mgmt_net_ip }}'
   netmask: '{{ mgmt_net_netmask }}'
   gateway: '{{ mgmt_net_gateway }}'
@@ -16,5 +16,6 @@ bonds:
 - device: bond1.vms
   bonding_opts: 'mode=4 miimon=100'
   slaves:
-  - device: eth2
-  - device: eth3
+    - device: eth2
+    - device: eth3
+
