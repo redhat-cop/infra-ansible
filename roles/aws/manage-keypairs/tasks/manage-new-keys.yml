@@ -15,7 +15,7 @@
     - fail:
         msg: "User does not have access to {{ item.key_location }}"
       when:
-        - not st.stat.writeable 
+        - not st.stat.writeable
 
     - name: "Create keypair: {{ item.name }}"
       ec2_key:

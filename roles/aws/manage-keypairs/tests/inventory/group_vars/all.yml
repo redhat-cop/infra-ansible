@@ -12,4 +12,4 @@ aws_keypairs:
   - name: user-new-2
     key_location: /tmp
     key_name: my-key-for-project-x
- 
+
