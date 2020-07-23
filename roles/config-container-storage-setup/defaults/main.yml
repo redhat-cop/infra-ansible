@@ -8,4 +8,4 @@ container_root_lv_name: dockerlv
 container_root_lv_mount_path: /var/lib/docker
 
 config_file_dest: /etc/sysconfig/docker-storage-setup
- 
+

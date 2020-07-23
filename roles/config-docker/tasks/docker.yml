@@ -6,7 +6,7 @@
     state: latest
   with_items:
     - docker
-  notify: 
+  notify:
     - restart docker
 
 - name: "Enable docker"
@@ -25,7 +25,7 @@
     name: docker
     state: present
   notify:
-  - restart docker
+    - restart docker
 
 - name: "Add username to the docker group"
   user:
