@@ -1,8 +1,8 @@
 ---
 
-- name: "Retrieve template for realm: {{ realm_data.realm_name }}"
+- name: "Retrieve template for Identity Provider"
   set_fact:
-    realm_json: "{{ lookup('template', 'realm.json.j2') | to_json }}"
+    id_provider_json: "{{ lookup('template', 'id-providers.json.j2') | to_json }}"
 
 - name: "Requesting Access Token"
   uri:
@@ -17,14 +17,14 @@
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   register: rh_sso_token
 
-- name: "Create Realm for service Red Hat Single Sign-On"
+- name: "Create Identity Provider for Red Hat Single Sign-On"
   uri:
-    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ id_provider.targetRealm }}/identity-provider/instances"
     method: POST
-    body: "{{ realm_json }}"
+    body: "{{ id_provider_json }}"
     body_format: json
     status_code: 201, 409
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
-  register: rh_sso_realm_create
+  register: rh_sso_idp_create

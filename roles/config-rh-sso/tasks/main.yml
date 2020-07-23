@@ -4,8 +4,8 @@
 - import_tasks: 'prereq.yml'
 - import_tasks: 'setup-rh-sso.yml'
 
-- include_tasks: 'create_realm.yml'
-  loop: "{{ realms }}"
+- include_tasks: 'manage-realms.yml'
+  loop: "{{ realms | default([]) }}"
   loop_control:
     loop_var: realm_data
   tags: create-realm
@@ -21,7 +21,7 @@
   loop: "{{ clients | default([]) }}"
   loop_control:
     loop_var: client
-- include_tasks: 'configure-id-provider.yml'
+- include_tasks: 'manage-id-provider.yml'
   loop: "{{ id_providers | default([]) }}"
   loop_control:
     loop_var: id_provider

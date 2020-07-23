@@ -10,6 +10,7 @@
       password: "{{ sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   register: rh_sso_token
 
 - name: "Get Existing Authentication Flows For realm: {{ af.realm }}"
@@ -18,6 +19,7 @@
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   register: rh_sso_flows
 
 - name: "Check If Authentication Flow: {{ af.name }} exists"
@@ -39,6 +41,7 @@
     status_code: 201
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   when:
     - af_check[0] is not defined
 
@@ -54,6 +57,7 @@
     method: GET    
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   register: rh_sso_exec
 
 - name: "Ensure Execution Flows Exist"
