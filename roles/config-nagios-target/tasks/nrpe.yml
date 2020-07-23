@@ -53,7 +53,7 @@
   set_fact:
     firewall_port: 5666
     firewall_protocol: "tcp"
- 
+
 - name: Update the firewall configuration
   import_tasks: firewall.yml
 
