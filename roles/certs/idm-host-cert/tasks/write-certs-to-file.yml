@@ -14,8 +14,8 @@
         regexp: '^$'
         state: absent
   when:
-  - target_cert_files.host_cert is defined
-  - target_cert_files.host_cert|trim != ''
+    - target_cert_files.host_cert is defined
+    - target_cert_files.host_cert|trim != ''
 
 - block:
     - name: "Write the CA Certificate to a file"
@@ -31,17 +31,17 @@
         regexp: '^$'
         state: absent
   when:
-  - target_cert_files.intermediate_ca is defined
-  - target_cert_files.intermediate_ca|trim != ''
+    - target_cert_files.intermediate_ca is defined
+    - target_cert_files.intermediate_ca|trim != ''
 
 - name: "Create Fullchain Cert if requested"
   copy:
     dest: "{{ target_cert_files.fullchain }}"
     content: "{{ lookup('file', target_cert_files.host_cert) + '\n' + lookup('file', target_cert_files.intermediate_ca) + '\n' }}"
   when:
-  - target_cert_files.host_cert is defined
-  - target_cert_files.host_cert|trim != ''
-  - target_cert_files.intermediate_ca is defined
-  - target_cert_files.intermediate_ca|trim != ''
-  - target_cert_files.fullchain is defined
-  - target_cert_files.fullchain|trim != ''
+    - target_cert_files.host_cert is defined
+    - target_cert_files.host_cert|trim != ''
+    - target_cert_files.intermediate_ca is defined
+    - target_cert_files.intermediate_ca|trim != ''
+    - target_cert_files.fullchain is defined
+    - target_cert_files.fullchain|trim != ''

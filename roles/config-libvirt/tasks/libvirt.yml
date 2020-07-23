@@ -7,7 +7,7 @@
 
 - name: "Ensure libvirt is running"
   service:
-    name: libvirtd 
+    name: libvirtd
     state: started
-    enabled: yes 
+    enabled: yes
 

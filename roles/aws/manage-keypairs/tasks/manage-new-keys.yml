@@ -2,36 +2,36 @@
 
 - name: Manage New Keypair
   block:
-  - name: "Check access to : {{ item.key_location }}"
-    stat:
-      path: "{{ item.key_location }}"
-    register: st
+    - name: "Check access to : {{ item.key_location }}"
+      stat:
+        path: "{{ item.key_location }}"
+      register: st
 
-  - name: "View {{ item.key_location }} attributes"
-    debug:
-      msg: "{{ st }}"
-      verbosity: 3
+    - name: "View {{ item.key_location }} attributes"
+      debug:
+        msg: "{{ st }}"
+        verbosity: 3
 
-  - fail:
-      msg: "User does not have access to {{ item.key_location }}"
-    when: 
-    - not st.stat.writeable 
+    - fail:
+        msg: "User does not have access to {{ item.key_location }}"
+      when:
+        - not st.stat.writeable
 
-  - name: "Create keypair: {{ item.name }}"
-    ec2_key:
-      name: "{{ item.name }}"
-      aws_access_key: "{{ item.access_key | default(aws_key) }}"
-      aws_secret_key: "{{ item.access_secret | default(aws_secret) }}"
-      aws_region: "{{ item.region | default(aws_region) }}"
-      force: "{{ item.force | default(false) }}"
-    register: ec2_key
+    - name: "Create keypair: {{ item.name }}"
+      ec2_key:
+        name: "{{ item.name }}"
+        aws_access_key: "{{ item.access_key | default(aws_key) }}"
+        aws_secret_key: "{{ item.access_secret | default(aws_secret) }}"
+        aws_region: "{{ item.region | default(aws_region) }}"
+        force: "{{ item.force | default(false) }}"
+      register: ec2_key
 
-  - name: "View key content"
-    debug:
-      msg: "{{ ec2_key }}"
-      verbosity: 2
+    - name: "View key content"
+      debug:
+        msg: "{{ ec2_key }}"
+        verbosity: 2
 
-  - name: "Write key to: {{ item.key_location }}"
-    copy:
-      content: "{{ ec2_key.key.private_key }}"
-      dest: "{{ item.key_location }}/{{item.key_name | default(item.name)}}"
+    - name: "Write key to: {{ item.key_location }}"
+      copy:
+        content: "{{ ec2_key.key.private_key }}"
+        dest: "{{ item.key_location }}/{{item.key_name | default(item.name)}}"

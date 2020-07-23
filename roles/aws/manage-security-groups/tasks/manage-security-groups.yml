@@ -1,32 +1,34 @@
+---
+
 - name: "Manage Security Groups"
   block:
-  - name: "Gather facts for vpc: {{item.vpc_name}}"
-    ec2_vpc_net_facts:
-      aws_region: "{{ aws_region }}"
-      aws_access_key: "{{ aws_key }}"
-      aws_secret_key: "{{ aws_secret }}"
-      filters:
-        "tag:Name": "{{ item.vpc_name }}"
-    register: vpc
-    delegate_to: localhost
+    - name: "Gather facts for vpc: {{item.vpc_name}}"
+      ec2_vpc_net_facts:
+        aws_region: "{{ aws_region }}"
+        aws_access_key: "{{ aws_key }}"
+        aws_secret_key: "{{ aws_secret }}"
+        filters:
+          "tag:Name": "{{ item.vpc_name }}"
+      register: vpc
+      delegate_to: localhost
 
-  - name: "Get id for vpc: {{item.vpc_name}}"
-    set_fact:
-      vpc_id: "{{ vpc | json_query('vpcs[*].vpc_id') | first }}"
+    - name: "Get id for vpc: {{item.vpc_name}}"
+      set_fact:
+        vpc_id: "{{ vpc | json_query('vpcs[*].vpc_id') | first }}"
 
-  - name: "Create security group: {{ item.name }}"
-    ec2_group:
-      name: "{{ item.name }}"
-      aws_access_key: "{{ aws_key }}"
-      aws_secret_key: "{{ aws_secret }}"
-      region: "{{ aws_region }}"
-      description: "{{ item.description | default(omit) }}"
-      purge_rules: "{{ item.purge_incoming_rules | default(true) }}"
-      purge_rules_egress: "{{ item.purge_outgoing_rules | default(true) }}"
-      purge_tags: "{{ item.purge_tags | default(true) }}"
-      rules: "{{ item.incoming_rules | default(omit) }}"
-      rules_egress: "{{ item.outgoing_rules | default(omit) }}"
-      state: "{{ item.state | default('present') }}"
-      tags: "{{ item.tags | default(omit) }}"
-      vpc_id: "{{ vpc_id }}"
+    - name: "Create security group: {{ item.name }}"
+      ec2_group:
+        name: "{{ item.name }}"
+        aws_access_key: "{{ aws_key }}"
+        aws_secret_key: "{{ aws_secret }}"
+        region: "{{ aws_region }}"
+        description: "{{ item.description | default(omit) }}"
+        purge_rules: "{{ item.purge_incoming_rules | default(true) }}"
+        purge_rules_egress: "{{ item.purge_outgoing_rules | default(true) }}"
+        purge_tags: "{{ item.purge_tags | default(true) }}"
+        rules: "{{ item.incoming_rules | default(omit) }}"
+        rules_egress: "{{ item.outgoing_rules | default(omit) }}"
+        state: "{{ item.state | default('present') }}"
+        tags: "{{ item.tags | default(omit) }}"
+        vpc_id: "{{ vpc_id }}"
 

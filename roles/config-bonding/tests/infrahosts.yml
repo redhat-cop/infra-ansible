@@ -3,6 +3,7 @@
 - name: 'Configure bonding on the infrastructure hosts'
   hosts: infra_hosts
   roles:
-  - role: config_bonding
-  tags: 
-  - configure_infra_hosts
+    - role: config_bonding
+  tags:
+    - configure_infra_hosts
+

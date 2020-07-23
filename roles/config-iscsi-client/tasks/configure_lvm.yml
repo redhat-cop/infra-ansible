@@ -5,7 +5,7 @@
   register: lsscsi
 
 - name: "Detect the multipath device id based on physical device"
-  shell: 'multipath -l {{ lsscsi.stdout_lines[0] }} | sed -ne "s/\([^ ]*\).*{{ iscsi_brand }}.*/\1/p"' 
+  shell: 'multipath -l {{ lsscsi.stdout_lines[0] }} | sed -ne "s/\([^ ]*\).*{{ iscsi_brand }}.*/\1/p"'
   register: multipath_id
 
 - name: "Setup and create PV & VG"
@@ -15,38 +15,39 @@
     force: yes
 
 - name: "Setup LV"
-  lvol: 
+  lvol:
     vg: "{{ disk.vg }}"
     lv: "{{ disk.lv }}"
     force: yes
     size: "100%VG"
-  when: 
-  - disk.lv is defined
-  - disk.lv|trim != ''
+  when:
+    - disk.lv is defined
+    - disk.lv|trim != ''
 
 - name: "Create file system on share"
   filesystem:
     fstype: xfs
     dev: "/dev/mapper/{{ disk.vg }}-{{ disk.lv }}"
-  when: 
-  - disk.lv is defined
-  - disk.lv|trim != ''
+  when:
+    - disk.lv is defined
+    - disk.lv|trim != ''
 
-- name: "Ensure the base dir for the mount point exists" 
+- name: "Ensure the base dir for the mount point exists"
   file:
     path: "{{ disk.mount_path|dirname }}"
     state: directory
-  when: 
-  - disk.mount_path is defined
-  - disk.mount_path|trim != ''
+  when:
+    - disk.mount_path is defined
+    - disk.mount_path|trim != ''
 
 - name: "Mount the share"
   mount:
     src: "/dev/mapper/{{ disk.vg }}-{{ disk.lv }}"
     path: "{{ disk.mount_path }}"
     opts: _netdev
-    fstype: xfs 
+    fstype: xfs
     state: mounted
-  when: 
-  - disk.mount_path is defined
-  - disk.mount_path|trim != ''
+  when:
+    - disk.mount_path is defined
+    - disk.mount_path|trim != ''
+

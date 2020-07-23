@@ -5,22 +5,22 @@ tower_admin_username: 'admin'
 tower_admin_password: "mypassword"
 
 ansible_tower_credential_types:
-- name: "CredType1"
-  description: "My Credential Type 1"
-  fields:
-  - type: "string"
-    id: "CUSTOM_ID1"
-    label: "My Custom ID 1"
-    secret: "false"
-  - type: "string"
-    id: "CUSTOM_ID2"
-    label: "My Custom ID 2"
-    secret: "true"
-  required:
-  - id: "CUSTOM_ID1"
-  - id: "CUSTOM_ID2"
-  injectors_extra_vars:
-    - name: "MY_EXTRA_VAR1"
-      id: "CUSTOM_ID1"
-    - name: "MY_EXTRA_VAR2"
-      id: "CUSTOM_ID2" 
+  - name: "CredType1"
+    description: "My Credential Type 1"
+    fields:
+      - type: "string"
+        id: "CUSTOM_ID1"
+        label: "My Custom ID 1"
+        secret: "false"
+      - type: "string"
+        id: "CUSTOM_ID2"
+        label: "My Custom ID 2"
+        secret: "true"
+    required:
+      - id: "CUSTOM_ID1"
+      - id: "CUSTOM_ID2"
+    injectors_extra_vars:
+      - name: "MY_EXTRA_VAR1"
+        id: "CUSTOM_ID1"
+      - name: "MY_EXTRA_VAR2"
+        id: "CUSTOM_ID2"

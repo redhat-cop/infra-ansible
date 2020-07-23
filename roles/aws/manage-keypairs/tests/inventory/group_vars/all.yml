@@ -5,11 +5,11 @@ aws_key: "my-key"
 aws_secret: "my-secret"
 
 aws_keypairs:
-- name: user-test
-  public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+OYTTqEUNkuiSQnz2jDnv3RPP/U8T38qAncHYEo4ZKRG0jsvUZAYK57IJgj5846xYdXxLfujDtyew/MsPT2E6/2Z21ySBQzEHyLJoTGEVq3aLrIVkbLb8D1AHUkBewfdCjP1E9C+er6p063BssDV4xW6r7lDYw7Lw4evDQ1EAsaXC1gyhdcFAIFbNf3giAlG89hf99kgskb60fUz35bhkN1bzIfHMAK2azMyLwF/ZnpU+GHFEKt2NUtAEVhjfbdCAJKq9pCEbBclAsuzptsdsk8Gmz3BkLJaIPXVq6ORU9umDYCNvcHgNCuutNan3FVy1anm39svFe50yMh1Ke9CF user@localhost"
-- name: user-new
-  key_location: /tmp
-- name: user-new-2
-  key_location: /tmp
-  key_name: my-key-for-project-x
-    
+  - name: user-test
+    public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+OYTTqEUNkuiSQnz2jDnv3RPP/U8T38qAncHYEo4ZKRG0jsvUZAYK57IJgj5846xYdXxLfujDtyew/MsPT2E6/2Z21ySBQzEHyLJoTGEVq3aLrIVkbLb8D1AHUkBewfdCjP1E9C+er6p063BssDV4xW6r7lDYw7Lw4evDQ1EAsaXC1gyhdcFAIFbNf3giAlG89hf99kgskb60fUz35bhkN1bzIfHMAK2azMyLwF/ZnpU+GHFEKt2NUtAEVhjfbdCAJKq9pCEbBclAsuzptsdsk8Gmz3BkLJaIPXVq6ORU9umDYCNvcHgNCuutNan3FVy1anm39svFe50yMh1Ke9CF user@localhost"
+  - name: user-new
+    key_location: /tmp
+  - name: user-new-2
+    key_location: /tmp
+    key_name: my-key-for-project-x
+

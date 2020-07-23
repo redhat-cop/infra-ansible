@@ -22,7 +22,7 @@
     - "{{ clair_host_proxy_port }}"
     - "{{ clair_host_api_port }}"
   notify:
-  - restart firewalld
+    - restart firewalld
 
 - name: Open iptables Clair firewall port for future sessions
   lineinfile:

@@ -8,7 +8,7 @@ ansible_connection: local
 ansible_tower:
   url: "https://mytower.example.com"
   admin_password: "admin01"
-  containerized: false 
+  containerized: false
   ldap:
     ca_cert: "{{ inventory_dir }}/../files/ca.crt"
     uri: "ldaps://idm.test.example.com:636"
