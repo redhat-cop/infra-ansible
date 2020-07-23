@@ -18,12 +18,14 @@ rules:
     level: error
   empty-lines:
     level: warning
+    max-end: 1
   hyphens:
     level: warning
   indentation:
     level: error
     indent-sequences: consistent
   line-length:
+    max: 120
     level: warning
     allow-non-breakable-inline-mappings: true
   truthy: disable
