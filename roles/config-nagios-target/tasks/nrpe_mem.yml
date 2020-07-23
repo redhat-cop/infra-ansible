@@ -1,7 +1,7 @@
 ---
 
 - name: Copy in additional Nagios Memory plugins
-  copy: 
+  copy:
     src: plugins/check_mem
     dest: /usr/lib64/nagios/plugins/check_mem
     owner: root
@@ -9,7 +9,7 @@
     mode: 0755
 
 - name: Copy nrpe.d Memory configuration files
-  copy: 
+  copy:
     src: nrpe.d/check_mem.cfg
     dest: /etc/nrpe.d/check_mem.cfg
     owner: root

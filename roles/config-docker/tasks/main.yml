@@ -12,5 +12,5 @@
     - name: "Configure docker mtu"
       import_tasks: mtu.yml
   when:
-  - docker_install|default(False)
+    - docker_install|default(False)
 
