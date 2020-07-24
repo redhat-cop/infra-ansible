@@ -7,7 +7,7 @@
   register: copy_sub
 
 - name: "Upload manifest if new or updated file provided"
-  command: > 
+  command: >
     hammer 
       -u "{{ satellite_username }}"
       -p "{{ satellite_password }}"

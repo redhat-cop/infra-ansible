@@ -81,7 +81,7 @@
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
         status_code:
-        - 204
+          - 204
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ (org_repositories_permissions_teams.json.permissions | default({})) | dict2items }}"
@@ -92,9 +92,10 @@
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
         status_code:
-        - 204
+          - 204
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ (org_repositories_permissions_users.json.permissions | default({})) | dict2items }}"
       when: (quay_repository.permissions | default([])) | selectattr('name', 'equalto', item.value.name.split('+')[1] if item.value.is_robot else item.value.name) | list |  length == 0
   when: quay_prune|bool
+

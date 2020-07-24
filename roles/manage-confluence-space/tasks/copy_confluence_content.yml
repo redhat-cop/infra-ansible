@@ -11,13 +11,14 @@
   register: content_json
 
 - name: Map ancestor ids if any
-  set_fact: 
+  set_fact:
     content_ancestors: "{{ content_json.json.ancestors | map(attribute='id') | list | map('extract', id_mapping) | list }}"
 
 - name: Pick only the last ancestor
   set_fact:
     content_ancestors: "{{ [-1] | map('extract', content_ancestors) | list }}"
-  when: content_ancestors|length > 0
+  when:
+    - content_ancestors|length > 0
 
 - name: Get the current page version
   uri:
@@ -58,8 +59,9 @@
       register: homepage_content_json
 
     - set_fact:
-       id_mapping: "{{ id_mapping|combine({ content_json.json.id : { 'id' : homepage_content_json.json.id }}) }}"
-  when: content_json.json.id == source_homepage_id
+        id_mapping: "{{ id_mapping|combine({ content_json.json.id : { 'id' : homepage_content_json.json.id }}) }}"
+  when:
+    - content_json.json.id == source_homepage_id
 
 - name: set payload for create contect
   set_fact:
@@ -77,7 +79,8 @@
 - name: if page is child add ancestors
   set_fact:
     payload: "{{ payload | combine( {'ancestors': content_ancestors} )}}"
-  when: content_json.json.ancestors|length > 1
+  when:
+    - content_json.json.ancestors|length > 1
 
 - name: Create Content at Destination Site
   uri:
@@ -95,3 +98,4 @@
 - name: Append New id to old id mapping
   set_fact:
     id_mapping: "{{ id_mapping|combine({ content_json.json.id : { 'id' : new_content_json.json.id }}) }}"
+

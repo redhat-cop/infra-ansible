@@ -1,6 +1,7 @@
 ---
+
 - name: "Update authorized keys for user: {{ user_name|default(ansible_user) }}"
-  authorized_key: 
+  authorized_key:
     user: "{{ user_name|default(ansible_user) }}"
     exclusive: "{{ reset_keyfile|default('no') }}"
     key: "{{ key_url }}"
