@@ -12,23 +12,23 @@
 # Test the SSH Key access by running a remote command on machine
 #
 
-- name: "Testing authorized ssh keyfile" 
+- name: "Testing authorized ssh keyfile"
   hosts: all
   tasks:
-  - name: "Test authorized key for {{ user_name }} on {{ ansible_host }}"
-    raw: "ssh -v -i id_rsa_user1 {{ user_name }}@{{ ansible_host }} /bin/true"
-    delegate_to: localhost
-    register: result
-    become: False
-    changed_when: False
-    failed_when:
-      result.rc != 0
+    - name: "Test authorized key for {{ user_name }} on {{ ansible_host }}"
+      raw: "ssh -v -i id_rsa_user1 {{ user_name }}@{{ ansible_host }} /bin/true"
+      delegate_to: localhost
+      register: result
+      become: False
+      changed_when: False
+      failed_when:
+        result.rc != 0
 
-  - name: "Test password for {{ user_name }} on {{ ansible_host }}"
-    raw: "sshpass -p \"{{ clear_text_password }}\" ssh {{ user_name }}@{{ansible_host }} /bin/true"
-    delegate_to: localhost
-    become: False
-    register: result
-    changed_when: False
-    failed_when:
-      result.rc != 0
+    - name: "Test password for {{ user_name }} on {{ ansible_host }}"
+      raw: "sshpass -p \"{{ clear_text_password }}\" ssh {{ user_name }}@{{ansible_host }} /bin/true"
+      delegate_to: localhost
+      become: False
+      register: result
+      changed_when: False
+      failed_when:
+        result.rc != 0

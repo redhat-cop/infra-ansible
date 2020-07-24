@@ -11,3 +11,4 @@ default_branch_restrictions:
 
 build_branch_restriction:
   - { kind: "require_passing_builds_to_merge", users: [], groups: [], pattern: "master", value: 1 }
+

@@ -1,21 +1,21 @@
 ---
-  - name: "generate a random local directory in /tmp"
-    tempfile:
-      path: '{{ dhcp_config_temp_dir }}'
-      state: directory
-      prefix: dhcp
-    register: dhcp_config_dir
-    notify: dhcp-config cleanup temp
+- name: "generate a random local directory in /tmp"
+  tempfile:
+    path: '{{ dhcp_config_temp_dir }}'
+    state: directory
+    prefix: dhcp
+  register: dhcp_config_dir
+  notify: dhcp-config cleanup temp
 
-  - name: 'Add Read/Execute permissions on directory'
-    file:
-      path: '{{ dhcp_config_dir.path }}'
-      mode: 0755
-      state: directory
+- name: 'Add Read/Execute permissions on directory'
+  file:
+    path: '{{ dhcp_config_dir.path }}'
+    mode: 0755
+    state: directory
 
-  - name: "Generate local dhcpd.conf file"
-    template:
-      src: dhcp_conf.j2
-      dest: '{{ dhcp_config_dir.path }}/{{ dhcp_config_temp_file }}'
-    notify: dhcp-config cleanup temp
+- name: "Generate local dhcpd.conf file"
+  template:
+    src: dhcp_conf.j2
+    dest: '{{ dhcp_config_dir.path }}/{{ dhcp_config_temp_file }}'
+  notify: dhcp-config cleanup temp
 

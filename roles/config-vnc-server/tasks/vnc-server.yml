@@ -5,9 +5,9 @@
     name: "{{ item }}"
     state: installed
   with_items:
-  - tigervnc-server
-  - policycoreutils-python-utils
-  - checkpolicy
+    - tigervnc-server
+    - policycoreutils-python-utils
+    - checkpolicy
 
 - name: "Ensure .vnc dir exists"
   file:
@@ -31,44 +31,44 @@
     mode: 0600
 
 - name: "Add the xstartup (gnome) configuration to the main user"
-  copy :
+  copy:
     src: xstartup-gnome
     dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
     force: no
     owner: "{{ main_user }}"
     mode: 0755
   when:
-  - gnome_install|default(False)
+    - gnome_install|default(False)
 
 - name: "Add the xstartup (XFCE) configuration to the main user"
-  copy :
+  copy:
     src: xstartup-xfce
     dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
     force: no
     owner: "{{ main_user }}"
     mode: 0755
   when:
-  - xfce_install|default(False)
+    - xfce_install|default(False)
 
 - name: "Add the xstartup (LXDE) configuration to the main user"
-  copy :
+  copy:
     src: xstartup-lxde
     dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
     force: no
     owner: "{{ main_user }}"
     mode: 0755
   when:
-  - lxde_install|default(False)
+    - lxde_install|default(False)
 
 - name: "Add the xstartup (MATE) configuration to the main user"
-  copy :
+  copy:
     src: xstartup-mate
     dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
     force: no
     owner: "{{ main_user }}"
     mode: 0755
   when:
-  - mate_install|default(False)
+    - mate_install|default(False)
 
 - name: "Copy VNC service file into place"
   copy:
@@ -82,8 +82,8 @@
     regexp: "{{ item.0 }}"
     replace: "{{ item.1 }}"
   with_together:
-  - ['<USER>', '/home/' ]
-  - [ "{{ main_user }}", "{{ vnc_home_dir }}/" ]
+    - ['<USER>', '/home/' ]
+    - [ "{{ main_user }}", "{{ vnc_home_dir }}/" ]
 
 - name: "Reload systemctl daemon"
   command: systemctl daemon-reload
@@ -107,3 +107,4 @@
     name: "vncserver-{{ main_user }}@:1"
     enabled: yes
     state: started
+

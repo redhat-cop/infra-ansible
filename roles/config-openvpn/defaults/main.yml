@@ -1,6 +1,6 @@
 ---
 
 # Default OpenVPN RPM to be installed
-# NOTE: this is the CentOS flavor 
+# NOTE: this is the CentOS flavor
 default_openvpn_rpm: http://swupdate.openvpn.org/as/openvpn-as-2.1.9-CentOS7.x86_64.rpm
 

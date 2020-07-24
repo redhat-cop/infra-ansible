@@ -1,7 +1,7 @@
 ---
 
 - name: "Create activation key"
-  command: > 
+  command: >
     hammer
       -u "{{ satellite_username }}"
       -p "{{ satellite_password }}"
@@ -11,8 +11,8 @@
       --organization "{{ satellite_organization }}"
   register: chk_ak
   failed_when:
-  - chk_ak.rc != 65
-  - chk_ak.rc != 0
+    - chk_ak.rc != 65
+    - chk_ak.rc != 0
 
 - name: "Add subs to activation key"
   command: >
@@ -24,17 +24,17 @@
        --subscription-id "{{ item.ID }}"
        --organization "{{ satellite_organization }}"
   when:
-  - (activation_key.type is defined and
-     item.Type == activation_key.type and
-     item.Name == activation_key.subscription) or
-    (activation_key.type is undefined and 
-     item.Name == activation_key.subscription)
+    - (activation_key.type is defined and
+       item.Type == activation_key.type and
+       item.Name == activation_key.subscription) or
+      (activation_key.type is undefined and
+       item.Name == activation_key.subscription)
   with_items:
-  - "{{ subids.stdout | from_yaml }}"
+    - "{{ subids.stdout | from_yaml }}"
   register: ak_chk
   failed_when:
-  - ak_chk.rc != 128
-  - ak_chk.rc != 0
+    - ak_chk.rc != 128
+    - ak_chk.rc != 0
 
 - name: "Turn off autoattach on activation key(s)"
   command: >
