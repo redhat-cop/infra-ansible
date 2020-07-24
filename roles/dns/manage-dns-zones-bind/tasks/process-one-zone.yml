@@ -28,7 +28,7 @@
       notify: restart named
       when:
         - zone.type|default('master') != 'forward'
-    
+
     - name: Prepare the zone config content
       vars:
         zone_type: "{{ zone.type | default('master') }}"

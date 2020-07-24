@@ -18,7 +18,7 @@
 # Test the SSH Key access by running a remote command on machine
 #
 
-- name: "Testing authorized ssh keyfile" 
+- name: "Testing authorized ssh keyfile"
   hosts: all
   tasks:
     - name: "Test authorized key for {{ user_name }} on {{ ansible_host }}"

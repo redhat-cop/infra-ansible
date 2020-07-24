@@ -8,7 +8,7 @@
 
 - name: Include Container Credentials
   include_tasks: container_credentials.yml
-  when: 
+  when:
     - quay_registry_server | trim != ""
     - quay_registry_auth | trim != "" or quay_registry_email | trim != ""
 

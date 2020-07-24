@@ -38,7 +38,7 @@
       with_items:
         - "{{ keyfilescontent.results }}"
   when:
-    - key_files|length > 0 
+    - key_files|length > 0
 
 - name: Ensure target directory exists for archived files
   file:

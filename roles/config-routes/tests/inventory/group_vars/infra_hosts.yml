@@ -5,7 +5,7 @@ routes:
   entries:
   - address: 192.168.10.0
     netmask: 255.255.255.0
-    gateway: 192.168.1.1 
+    gateway: 192.168.1.1
   - address: 192.168.11.0
     netmask: 255.255.255.0
     gateway: 192.168.1.1

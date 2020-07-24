@@ -104,7 +104,7 @@
         quay_ssl_cert_file_to_use: "{{ quay_ssl_local_tmp_dir }}/ssl.cert"
         quay_ssl_key_file_to_use: "{{ quay_ssl_local_tmp_dir }}/ssl.key"
   when:
-    - quay_ssl_enable|bool 
+    - quay_ssl_enable|bool
     - quay_ssl_key_file is not defined or quay_ssl_key_file|trim == "" or quay_ssl_cert_file is not defined or quay_ssl_cert_file|trim == ""
 
 - name: Copy SSL Certificates

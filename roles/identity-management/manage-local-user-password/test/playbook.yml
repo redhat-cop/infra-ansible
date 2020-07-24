@@ -18,7 +18,7 @@
 # Test the password access by running a remote command on machine
 #
 
-- name: "Test password update" 
+- name: "Test password update"
   hosts: all
   tasks:
     - name: "Test password for {{ user_name }} on {{ ansible_host }}"

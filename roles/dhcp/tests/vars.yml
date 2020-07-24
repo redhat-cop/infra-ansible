@@ -51,30 +51,30 @@ dhcp_group_entries:
   - group:
     title: '# Test group 1'
     hosts:
-    - desc: '# Blade #1 - interface "ens1f0"'
-      name: node1
-      hw_addr: 00:0a:f7:57:e1:f0
-      ip_addr: 192.168.11.121
-      fqdn: node1.example.com
+      - desc: '# Blade #1 - interface "ens1f0"'
+        name: node1
+        hw_addr: 00:0a:f7:57:e1:f0
+        ip_addr: 192.168.11.121
+        fqdn: node1.example.com
 
-    - desc: '# Blade #2 - interface "ens1f0"'
-      name: node2
-      hw_addr: 00:0a:f7:57:dd:80
-      ip_addr: 192.168.11.122
-      fqdn: node4.example.com
+      - desc: '# Blade #2 - interface "ens1f0"'
+        name: node2
+        hw_addr: 00:0a:f7:57:dd:80
+        ip_addr: 192.168.11.122
+        fqdn: node4.example.com
 
   - group:
     title: '#Test group 2 '
     hosts:
-    - desc: '# Blade #3 - interface "ens1f0"'
-      name: node3
-      hw_addr: 00:0a:f7:57:dd:80
-      ip_addr: 192.168.11.123
-      fqdn: node5.example.com
+      - desc: '# Blade #3 - interface "ens1f0"'
+        name: node3
+        hw_addr: 00:0a:f7:57:dd:80
+        ip_addr: 192.168.11.123
+        fqdn: node5.example.com
 
-    - desc: '# Blade #4 - interface "ens1f0"'
-      name: node4
-      hw_addr: 00:0a:f7:57:de:54
-      ip_addr: 192.168.11.124
-      fqdn: node6.example.com
+      - desc: '# Blade #4 - interface "ens1f0"'
+        name: node4
+        hw_addr: 00:0a:f7:57:de:54
+        ip_addr: 192.168.11.124
+        fqdn: node6.example.com
 

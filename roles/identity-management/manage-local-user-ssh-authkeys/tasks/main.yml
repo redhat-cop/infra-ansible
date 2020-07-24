@@ -2,8 +2,7 @@
 
 - import_tasks: 'authorizedkeys.yml'
   when:
-  - user_name is defined
-  - key_url is defined
-  - key_url|trim != ""
-
+    - user_name is defined
+    - key_url is defined
+    - key_url|trim != ""
 
