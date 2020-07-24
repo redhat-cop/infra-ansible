@@ -75,9 +75,23 @@
     protocol_mappers: "{{ client.protocol_mappers | default(omit) }}"
     attributes: "{{ client.attributes | default(omit) }}"
     public_client: "{{ client.public_access | default(false) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}" 
   register: rh_sso_client
   when:
     - invalid_field is undefined or invalid_field|trim == ""
+
+- name: "Requesting Access Token"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ sso_admin_user }}"
+      password: "{{ sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+  register: rh_sso_token
 
 - name: "Get Authentication Flows For Realm: {{ client.realm }}"
   uri:
@@ -124,3 +138,4 @@
   when:
   - invalid_field is undefined or invalid_field|trim == ""
   - client.authflow_overrides is defined
+  - browser_override|length > 0
