@@ -30,7 +30,7 @@
     - virt_install_commands|length > 0
 
 - name: 'Wait for VMs creation to complete'
-  async_status: 
+  async_status:
     jid: "{{ item.ansible_job_id }}"
   register: vm_jobs
   until: vm_jobs.finished
