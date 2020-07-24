@@ -21,5 +21,3 @@
   when:
     - multipathconf.changed
 
-
-

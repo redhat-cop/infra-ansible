@@ -11,7 +11,7 @@
 - name: "Copy in necessary PXE files for regular BIOS use"
   copy:
     src: "{{ item }}"
-    dest:  "{{ tftpserver_root_dir }}/{{ item | basename }}"
+    dest: "{{ tftpserver_root_dir }}/{{ item | basename }}"
     remote_src: True
   with_items:
   - "/usr/share/syslinux/pxelinux.0"
