@@ -81,7 +81,7 @@
 
     - name: Fetch Self Signed SSL Certifictes
       fetch:
-        src:  "{{ item.src }}"
+        src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         flat: true
         fail_on_missing: yes
