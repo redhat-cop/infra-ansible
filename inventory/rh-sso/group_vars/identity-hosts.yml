@@ -1,3 +1,5 @@
+---
+
 # User management variables
 identities:
   targets:
@@ -31,3 +33,4 @@ identities:
       members:
         - example1
     - name: "writer"
+

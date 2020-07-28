@@ -7,7 +7,7 @@
     - client.client_authenticator_type is defined
 
 - name: "Invalid client_authenticator_type"
-  fail: 
+  fail:
     msg: "Skipping creation of client: {{ client.name }} due to invalid client_authenticator_type value."
   ignore_errors: yes
   when:
@@ -30,8 +30,8 @@
 
 - name: Set secret value if using client-secret authentication
   set_fact:
-    secret: "{{ client.client_auth_secret }}" 
-  when: 
+    secret: "{{ client.client_auth_secret }}"
+  when:
     - client.client_auth_secret is defined
     - client.client_authenticator_type is defined
     - client.client_authenticator_type != 'client-secret')
@@ -70,12 +70,12 @@
     use_template_config: "{{ client.use_template | default(false) }}"
     use_template_scope: "{{ client.use_template_scope | default(false) }}"
     use_template_mappers: "{{ client.use_template_mappers | default(false) }}"
-    surrogate_auth_required: "{{ client.surrogate_auth_req | default(false) }}" 
+    surrogate_auth_required: "{{ client.surrogate_auth_req | default(false) }}"
     default_roles: "{{ client.default_roles | default(omit)}}"
     protocol_mappers: "{{ client.protocol_mappers | default(omit) }}"
     attributes: "{{ client.attributes | default(omit) }}"
     public_client: "{{ client.public_access | default(false) }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}" 
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   register: rh_sso_client
   when:
     - invalid_field is undefined or invalid_field|trim == ""
@@ -102,8 +102,8 @@
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   register: client_flows
   when:
-  - invalid_field is undefined or invalid_field|trim == ""
-  - client.authflow_overrides is defined
+    - invalid_field is undefined or invalid_field|trim == ""
+    - client.authflow_overrides is defined
 
 - name: "Get Authetication Flow ID for Browser Override: {{ client.authflow_overrides.browser }}"
   set_fact:
@@ -111,8 +111,8 @@
   vars:
     query: "[?alias=='{{ client.authflow_overrides.browser }}'].id"
   when:
-  - client.authflow_overrides.browser is defined
-  - invalid_field is undefined or invalid_field|trim == ""
+    - client.authflow_overrides.browser is defined
+    - invalid_field is undefined or invalid_field|trim == ""
 
 - name: "Get Authentication Flow ID For Direct Grant Override: {{ client.authflow_overrides.direct_grant }}"
   set_fact:
@@ -120,8 +120,8 @@
   vars:
     query: "[?alias=='{{ client.authflow_overrides.direct_grant }}'].id"
   when:
-  - client.authflow_overrides.direct_grant is defined
-  - invalid_field is undefined or invalid_field|trim == ""
+    - client.authflow_overrides.direct_grant is defined
+    - invalid_field is undefined or invalid_field|trim == ""
 
 - name: "Configure Auth Flow Overrides for client: {{ client.name }}"
   uri:
@@ -136,6 +136,7 @@
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
   when:
-  - invalid_field is undefined or invalid_field|trim == ""
-  - client.authflow_overrides is defined
-  - browser_override|length > 0
+    - invalid_field is undefined or invalid_field|trim == ""
+    - client.authflow_overrides is defined
+    - browser_override|length > 0
+
