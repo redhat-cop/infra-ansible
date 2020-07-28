@@ -13,7 +13,7 @@ ansible_user: centos
 #rhsm_repos:
 #- "rhel-7-server-rpms"
 
-#####  
+#####
 # Uncomment this and fill in the proper values to use Red Hat Satellite
 #
 #rhsm_server_hostname: 'sat-6.example.com'
@@ -22,7 +22,7 @@ ansible_user: centos
 
 #####
 # Uncomment the following to use RHSM username, password and optionally pool:
-# - make sure to set the RHSM_* environment variables 
+# - make sure to set the RHSM_* environment variables
 # - or, just supply these while running the playbook with Ansible "extra-vars"
 #
 #rhsm_username: "{{ lookup('env', 'RHSM_USER' )}}"
@@ -32,66 +32,66 @@ ansible_user: centos
 
 
 osp_networks:
-- name: "ansible-tower-network"
-  description: "Ansible Tower Network"
+  - name: "ansible-tower-network"
+    description: "Ansible Tower Network"
 
 osp_subnets:
-- name: "ansible-tower-subnet"
-  network_name: "ansible-tower-network"
-  cidr: "192.168.16.0/24"
-  gateway_ip: "192.168.16.1"
-  allocation_pool_start: "192.168.16.2"
-  allocation_pool_end: "192.168.16.254"
-  dns_nameservers:
-  - "8.8.8.8"
-  - "8.8.4.4"
+  - name: "ansible-tower-subnet"
+    network_name: "ansible-tower-network"
+    cidr: "192.168.16.0/24"
+    gateway_ip: "192.168.16.1"
+    allocation_pool_start: "192.168.16.2"
+    allocation_pool_end: "192.168.16.254"
+    dns_nameservers:
+      - "8.8.8.8"
+      - "8.8.4.4"
 
 osp_routers:
-- name: "ansible-tower-router"
-  external_gateway: "external"
-  subnet: "ansible-tower-subnet"
+  - name: "ansible-tower-router"
+    external_gateway: "external"
+    subnet: "ansible-tower-subnet"
 
 osp_security_groups:
-- name: "ssh-sec-group"
-  description: "My SSH Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 22
-    port_range_max: 22
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
-- name: "icmp-sec-group"
-  description: "ICMP Security Group"
-  rules:
-  - protocol: icmp
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
-- name: "www-sec-group"
-  description: "My WWW Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 80
-    port_range_max: 80
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
-  - protocol: tcp
-    port_range_min: 443
-    port_range_max: 443
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+  - name: "ssh-sec-group"
+    description: "My SSH Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "icmp-sec-group"
+    description: "ICMP Security Group"
+    rules:
+      - protocol: icmp
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "www-sec-group"
+    description: "My WWW Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 80
+        port_range_max: 80
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 443
+        port_range_max: 443
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
 
 osp_instances:
-- name: "ansible-tower"
-  meta:
-    group: ansible-tower
-  image: "CentOS-7-x86_64"
-  key_name: "my-keypair"
-  flavor: "m1.large"
-  network: "ansible-tower-network"
-  security_groups:
-  - ssh-sec-group
-  - icmp-sec-group
-  - www-sec-group
+  - name: "ansible-tower"
+    meta:
+      group: ansible-tower
+    image: "CentOS-7-x86_64"
+    key_name: "my-keypair"
+    flavor: "m1.large"
+    network: "ansible-tower-network"
+    security_groups:
+      - ssh-sec-group
+      - icmp-sec-group
+      - www-sec-group
 
 ansible_tower:
   url: "https://{{ hostvars[groups['ansible-tower'] | first].ansible_host }}"
@@ -103,17 +103,17 @@ ansible_tower:
     rabbitmq:
       password: "rabbitmqpassword01"
   projects:
-  - name: "infra-ansible"
-    description: "Infra Ansible Test"
-    scm_type: "git"
-    scm_url: "https://github.com/redhat-cop/infra-ansible.git"
-    scm_branch: "master"
-    organization: "Default"
+    - name: "infra-ansible"
+      description: "Infra Ansible Test"
+      scm_type: "git"
+      scm_url: "https://github.com/redhat-cop/infra-ansible.git"
+      scm_branch: "master"
+      organization: "Default"
   job_templates:
-  - name: "IdM Integration"
-    description: "Job Template for IdM integrations"
-    inventory: "Default"
-    project: "infra-ansible"
-    playbook: "playbooks/identity.yml"
-    credential: "Default"
+    - name: "IdM Integration"
+      description: "Job Template for IdM integrations"
+      inventory: "Default"
+      project: "infra-ansible"
+      playbook: "playbooks/identity.yml"
+      credential: "Default"
 
