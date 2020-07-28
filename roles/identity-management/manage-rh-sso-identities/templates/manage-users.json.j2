@@ -5,5 +5,5 @@
     "email": "{{ user_data.email | default('') }}",
     "enabled": {{ user_data.enabled | default(true) }},
     "emailVerified": {{ user_data.email_verified | default(false) }},
-    "groups": {{ user_data.user_groups | default ('') }}
+    "groups": {{ user_groups | to_json }},
 }
