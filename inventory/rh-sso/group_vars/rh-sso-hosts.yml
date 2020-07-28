@@ -6,8 +6,8 @@ ansible_become: True
 list_of_packages_to_install:
   - "@rh-sso7"
 
-sso_admin_user: admin
-sso_admin_pass: mypa55ss
+rh_sso_admin_user: admin
+rh_sso_admin_pass: mypa55ss
 rh_sso_protocol: https
 rh_sso_keystore_name: default
 rh_sso_keystore_pass: changeit
