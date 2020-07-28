@@ -5,7 +5,7 @@
     existing_keys: []
     new_keys: []
 
-- name: Get existing keys 
+- name: Get existing keys
   set_fact:
     existing_keys: "{{ existing_keys }} + [ {{ item }} ]"
   with_items: "{{ aws_keypairs | json_query('[?public_key!=null]') }}"
@@ -24,3 +24,4 @@
   debug:
     msg: "{{ new_keys }}"
     verbosity: 2
+

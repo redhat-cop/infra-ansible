@@ -9,9 +9,9 @@
   - "{{ tftpserver_root_dir }}/pxelinux.cfg"
 
 - name: "Copy in necessary PXE files for regular BIOS use"
-  copy: 
+  copy:
     src: "{{ item }}"
-    dest:  "{{ tftpserver_root_dir }}/{{ item | basename }}"
+    dest: "{{ tftpserver_root_dir }}/{{ item | basename }}"
     remote_src: True
   with_items:
   - "/usr/share/syslinux/pxelinux.0"
@@ -24,7 +24,7 @@
   shell: "cp -r {{ uefi_source }}/* {{ tftpserver_root_dir }}/pxelinux"
 
 - name: "Workaround for buggy UEFI requiring lowercase"
-  copy: 
+  copy:
     src: "{{ tftpserver_root_dir }}/pxelinux/BOOTX64.EFI"
     dest: "{{ tftpserver_root_dir }}/pxelinux/bootx64.efi"
     remote_src: True

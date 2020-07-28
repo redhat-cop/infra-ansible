@@ -1,6 +1,5 @@
 ---
 
-
 - name: Configure Minishift Remote Machine
   hosts: minishift_remote
   tasks:
@@ -11,3 +10,4 @@
     - name: Setup Remote Machine to Host Minishift
       import_role:
         name: config-minishift-remote
+

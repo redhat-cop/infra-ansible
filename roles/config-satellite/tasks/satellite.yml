@@ -1,8 +1,8 @@
 ---
 
 - name: "Install Satellite with default parameters"
-  command: > 
-    satellite-installer 
+  command: >
+    satellite-installer
       --scenario satellite
       --foreman-initial-organization "{{ satellite_organization }}"
       --foreman-initial-location "{{ satellite_location }}"

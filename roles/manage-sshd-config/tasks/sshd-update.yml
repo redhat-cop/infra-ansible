@@ -1,5 +1,6 @@
 ---
-- name: "Update sshd_config with provided values" 
+
+- name: "Update sshd_config with provided values"
   lineinfile:
     path: /etc/ssh/sshd_config
     backup: yes

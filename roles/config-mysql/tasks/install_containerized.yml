@@ -3,25 +3,29 @@
 - name: Generate Random DB Username
   set_fact:
     mysql_username: "{{ lookup('password', '/dev/null length=5 chars=ascii_letters') | lower }}"
-  when: mysql_username is undefined or mysql_username|trim == ""
+  when:
+    - mysql_username is undefined or mysql_username|trim == ""
   run_once: True
 
 - name: Generate Random DB Admin Username
   set_fact:
     mysql_root_username: "root"
-  when: mysql_root_username is undefined or mysql_root_username|trim == ""
+  when:
+    - mysql_root_username is undefined or mysql_root_username|trim == ""
   run_once: True
 
 - name: Generate Random DB Password
   set_fact:
     mysql_password: "{{ lookup('password', '/dev/null length=10 chars=ascii_letters,digits,hexdigits') }}"
-  when: mysql_password is undefined or mysql_password|trim == ""
+  when:
+    - mysql_password is undefined or mysql_password|trim == ""
   run_once: True
 
 - name: Generate Random Admin DB Password
   set_fact:
     mysql_root_password: "{{ lookup('password', '/dev/null length=10 chars=ascii_letters,digits,hexdigits') }}"
-  when: mysql_root_password is undefined or mysql_root_password|trim == ""
+  when:
+    - mysql_root_password is undefined or mysql_root_password|trim == ""
   run_once: True
 
 - name: Configure Storage Directory
@@ -46,3 +50,4 @@
 
 - name: Include firewall tasks
   include_tasks: firewall.yml
+

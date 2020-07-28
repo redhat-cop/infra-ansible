@@ -2,4 +2,5 @@
 
 - hosts: tower
   roles:
-  - role: ansible/tower/manage-credential-types
+    - role: ansible/tower/manage-credential-types
+

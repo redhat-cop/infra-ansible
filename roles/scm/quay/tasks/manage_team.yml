@@ -39,9 +39,10 @@
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
         status_code:
-        - 204
+          - 204
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ quay_team_members.json.members }}"
       when: (quay_team.members | default([])) | selectattr('name', 'equalto', item.name.split('+')[1] if item.is_robot else item.name) | list |  length == 0
   when: quay_prune|bool
+

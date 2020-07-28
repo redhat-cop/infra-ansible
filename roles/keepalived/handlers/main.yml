@@ -10,10 +10,11 @@
     enabled: yes
     state: started
   with_items:
-  - keepalived
+    - keepalived
 
 
 - name: 'restart keepalived'
   service:
-    name: keepalived 
+    name: keepalived
     state: restarted
+

@@ -32,7 +32,7 @@
       register: token
     - name: Create Superuser
       uri:
-        url:  "{{ quay_http_protocol }}://{{ quay_server_hostname }}/api/v1/superuser/config/createsuperuser?_csrf_token={{ token.stdout | urlencode }}"
+        url: "{{ quay_http_protocol }}://{{ quay_server_hostname }}/api/v1/superuser/config/createsuperuser?_csrf_token={{ token.stdout | urlencode }}"
         validate_certs: no
         method: POST
         body_format: json

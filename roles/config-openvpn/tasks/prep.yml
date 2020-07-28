@@ -12,11 +12,11 @@
 - name: 'Ensure firewalld is running'
   service:
     name: firewalld
-    state: started 
+    state: started
     enabled: yes
 
 - name: 'Open Firewall for OpenVPN use'
-  firewalld: 
+  firewalld:
     port: "{{ item }}"
     permanent: yes
     state: enabled

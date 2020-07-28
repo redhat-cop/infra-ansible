@@ -17,7 +17,7 @@
     group: root
     mode: g+rw
     path: "{{ clair_config_dir }}"
-  
+
 - name: Configure Trusted SSL
   block:
     - name: Check if Trusted SSL file exists
@@ -27,12 +27,12 @@
       register: trusted_ssl_exists
       changed_when: False
       delegate_to: localhost
-    
+
     - name: Fail if SSL source file does not exist
       fail:
         msg: "Could not locate SSL trust certificate"
       when: trusted_ssl_exists.stat.exists == false
-  
+
     - name: Copy SSL Certificate
       copy:
         src: "{{ clair_ssl_trust_src_file }}"

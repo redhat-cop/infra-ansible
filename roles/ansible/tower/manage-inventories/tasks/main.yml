@@ -17,7 +17,7 @@
       rest_password: "{{ ansible_tower.admin_password }}"
       api_uri: "/api/v2/organizations/"
     register: existing_organizations_output
-  
+
   - name: "Get the existing projects"
     rest_get:
       host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"

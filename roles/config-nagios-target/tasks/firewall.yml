@@ -7,16 +7,18 @@
   changed_when: false
 
 - name: Open port in firewalld (if enabled)
-  when: firewalld_status.rc == 0
+  when:
+    - firewalld_status.rc == 0
   firewalld:
     port: "{{firewall_port}}/{{firewall_protocol}}"
     permanent: true
     state: enabled
   notify:
-  - restart firewalld
+    - restart firewalld
 
-- name: Ensure iptables is correctly configured 
-  when: firewalld_status.rc != 0
+- name: Ensure iptables is correctly configured
+  when:
+    - firewalld_status.rc != 0
   lineinfile:
     insertafter: "^-A INPUT .* --dport 22 .* ACCEPT"
     state: present
@@ -24,4 +26,4 @@
     regexp: "^-A INPUT .* --dport {{firewall_port}} .* ACCEPT"
     line: "-A INPUT -p {{firewall_protocol}} -m state --state NEW -m {{firewall_protocol}} --dport {{firewall_port}} -j ACCEPT"
   notify:
-  - restart iptables
+    - restart iptables

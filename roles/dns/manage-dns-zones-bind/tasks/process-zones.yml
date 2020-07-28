@@ -33,20 +33,20 @@
     loop_var: "zone"
 
 - block:
-  - name: Prepare the view post-zones content
-    vars:
-      view_forwarders: "{{ view.default_forwarders | default(['127.0.0.1']) }}"
-    template:
-      src: view-config-2.j2
-      dest: "{{ dns_zone_temp_config_dir }}/{{ view.name }}/0003-{{ view.name }}.cfg"
-      owner: "{{ bind_user }}"
-      group: "{{ bind_group }}"
-      mode: 0660
+    - name: Prepare the view post-zones content
+      vars:
+        view_forwarders: "{{ view.default_forwarders | default(['127.0.0.1']) }}"
+      template:
+        src: view-config-2.j2
+        dest: "{{ dns_zone_temp_config_dir }}/{{ view.name }}/0003-{{ view.name }}.cfg"
+        owner: "{{ bind_user }}"
+        group: "{{ bind_group }}"
+        mode: 0660
 
-  - name: Assemble the complete view file
-    assemble:
-      src: "{{ dns_zone_temp_config_dir }}/{{ view.name }}"
-      dest: "{{ dns_zone_temp_config_dir }}/view/{{ view_idx }}-{{ view.name }}.cfg"
+    - name: Assemble the complete view file
+      assemble:
+        src: "{{ dns_zone_temp_config_dir }}/{{ view.name }}"
+        dest: "{{ dns_zone_temp_config_dir }}/view/{{ view_idx }}-{{ view.name }}.cfg"
   when:
     - processed_zones|bool == True
     - view.state|default('present') == 'present'
