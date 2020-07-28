@@ -6,8 +6,12 @@ ansible_become: True
 list_of_packages_to_install:
   - "@rh-sso7"
 
-sso_admin_user: admin
-sso_admin_pass: mypa55ss
+rh_sso_admin_user: admin
+rh_sso_admin_pass: mypa55ss
+rh_sso_protocol: https
+rh_sso_keystore_name: default
+rh_sso_keystore_pass: changeit
+rh_sso_keystore_path: "/etc/security/keystore.jks"
 
 realms:
   - name: my-awesome-realm
@@ -24,4 +28,88 @@ realms:
   - name: a-simpler-realm
     id: simple-realm
     displayName: "Simple Times"
-    enabled: false
+    enabled: true
+
+auth_flows:
+  - name: "myfirstbroker"
+    realm: "a-simpler-realm"
+    builtin: false
+    topLevel: true
+    executions:
+      - provider: "idp-create-user-if-unique"
+        requirement: "ALTERNATIVE"
+        index: 0
+        name: "create-unique-user"
+      - provider: "docker-http-basic-authenticator"
+        requirement: "DISABLED"
+        index: 10
+        name: "docker"
+      - provider: "identity-provider-redirector"
+        requirement: "ALTERNATIVE"
+        index: 11
+        name: "my-sso"
+        config:
+          defaultProvider: "google"
+
+clients:
+  - auth_url: "https://my-sso.example.com"
+    name: "my-super-fun-client"
+    enabled: true
+    auth_client_id: "admin-client"
+    auth_realm: "master"
+    auth_username: "admin"
+    auth_password: "password123"
+    consent_required: false
+    public_access: true
+    standard_flow: true
+    implicit_flow: true
+    direct_access_grants: true
+    realm: "my-awesome-realm"
+    protocol: "openid-connect"
+    redirect_uris:
+      - "*"
+    web_origins:
+      - "+"
+    protocol_mappers:
+      - config:
+          claim.name: "my-claim-name"
+          id.token.claim: true
+          userinfo.token.claim: true
+          access.token.claim: true
+          multivalued: true
+        name: my-claim-name
+        consentRequired: false
+        protocolMapper: "oidc-usermodel-realm-role-mapper"
+        protocol: openid-connect
+    authflow_overrides:
+      browser: "myfirstbroker"
+
+roles:
+  - targetRealm: master
+    name: sample-role
+    description: "Example of role created via an API call"
+    attributes:
+      key1:
+        - value
+      key2:
+        - value2
+    clientRole: false
+    composite: false
+
+id_providers:
+  - targetRealm: master
+    alias: google
+    displayName: google-test-1
+    providerId: google
+    enabled: true
+    internalId: google
+    linkOnly: false
+    firstBrokerLoginFlowAlias: first broker login
+    postBrokerLoginFlowAlias: browser
+    storeToken: false
+    addReadTokenRoleOnCreate: false
+    trustEmail: false
+    config:
+      clientSecret: test
+      clientId: google
+      useJwksUrl: true

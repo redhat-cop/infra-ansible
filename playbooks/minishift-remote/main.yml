@@ -2,7 +2,7 @@
 
 - import_playbook: ../prep.yml
   when:
-  - rhsm_register|default(False)
+    - rhsm_register|default(False)
 
 - import_playbook: ../osp/manage-user-network.yml
   when:
@@ -26,7 +26,7 @@
 - hosts: minishift_remote
   tasks:
     - name: "Subscribe RHEL based instances"
-      include_role: 
+      include_role:
         name: rhsm
       vars:
         rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
@@ -35,3 +35,4 @@
         - rhsm_register|default(False)
 
 - import_playbook: configure-minishift-remote.yml
+

@@ -1,16 +1,16 @@
 ---
 
 - block:
-  - name: Configure cgroups v1
-    import_tasks: kernel_cgroups_v1.yml
-    when:
-    - kernel_cgroups_v1|default(False)
+    - name: Configure cgroups v1
+      import_tasks: kernel_cgroups_v1.yml
+      when:
+        - kernel_cgroups_v1|default(False)
 
-  - name: "Install, configure and enable Docker"
-    import_tasks: docker.yml
-  
-  - name: "Configure docker mtu"
-    import_tasks: mtu.yml
-  when: 
-  - docker_install|default(False)
+    - name: "Install, configure and enable Docker"
+      import_tasks: docker.yml
+
+    - name: "Configure docker mtu"
+      import_tasks: mtu.yml
+  when:
+    - docker_install|default(False)
 

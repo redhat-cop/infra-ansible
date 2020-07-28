@@ -1,6 +1,6 @@
 ---
 
-- name: "Set Docker MTU based on parameters" 
+- name: "Set Docker MTU based on parameters"
   set_fact:
     new_mtu: "{{ ansible_facts[external_interface].mtu - mtu_offset|int }}"
 
@@ -13,18 +13,18 @@
   register: mtu_config_exists
 
 - block:
-  - name: "Update file based on mtu_diff - mtu_offset"
-    replace:
-      path: "{{ docker_network_file }}"
-      regexp: '^DOCKER_NETWORK_OPTIONS="\s*(.*(?=--mtu=\d+))(--mtu=\d+)\s*(.*)"$|^DOCKER_NETWORK_OPTIONS="(.*)"$'
-      replace: 'DOCKER_NETWORK_OPTIONS="\1 --mtu={{ new_mtu }} \3\4"'
-    when:
-    - mtu_config_exists.found
-  - name: "Add line if it wasn't updated above"
-    lineinfile:
-      path: "{{ docker_network_file }}"
-      line: 'DOCKER_NETWORK_OPTIONS="--mtu={{ new_mtu }}"'
-    when:
-    - not mtu_config_exists.found
+    - name: "Update file based on mtu_diff - mtu_offset"
+      replace:
+        path: "{{ docker_network_file }}"
+        regexp: '^DOCKER_NETWORK_OPTIONS="\s*(.*(?=--mtu=\d+))(--mtu=\d+)\s*(.*)"$|^DOCKER_NETWORK_OPTIONS="(.*)"$'
+        replace: 'DOCKER_NETWORK_OPTIONS="\1 --mtu={{ new_mtu }} \3\4"'
+      when:
+        - mtu_config_exists.found
+    - name: "Add line if it wasn't updated above"
+      lineinfile:
+        path: "{{ docker_network_file }}"
+        line: 'DOCKER_NETWORK_OPTIONS="--mtu={{ new_mtu }}"'
+      when:
+        - not mtu_config_exists.found
   when:
-  - new_mtu != ansible_facts[docker_interface].mtu
+    - new_mtu != ansible_facts[docker_interface].mtu

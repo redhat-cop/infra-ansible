@@ -41,16 +41,16 @@
           username: "{{ haproxy_stats_username | default('admin') }}"
           password: "{{ haproxy_stats_password | default('admin') }}"
         frontends:
-        - lb_name: quay_http
-          lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
-          lb_host_port: 80
-        - lb_name: quay_https
-          lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
-          lb_host_port: 443
-        - lb_name: redis
-          lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
-          lb_host_port: 6379
-          lb_ssl_enabled: True
+          - lb_name: quay_http
+            lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+            lb_host_port: 80
+          - lb_name: quay_https
+            lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+            lb_host_port: 443
+          - lb_name: redis
+            lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+            lb_host_port: 6379
+            lb_ssl_enabled: True
       lb_backend_template: "{{ playbook_dir }}/templates/haproxy_backend.cfg.j2"
 
 - name: Install and Configure Database for Quay

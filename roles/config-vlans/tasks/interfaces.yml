@@ -2,7 +2,7 @@
 
 - name: "Configure VLAN interfaces"
   template:
-    src: vlan.j2 
+    src: vlan.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-{{ ifcfg.device }}
   with_items:
   - '{{ vlans }}'

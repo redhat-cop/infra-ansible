@@ -7,19 +7,20 @@ atlassian:
     jira_admin: "My_Jira_Admins"
     lead: "example_user"
     core_team: "My_Core_Team"
-    
+
     project:
       name: "Example Project"
       key: "EXAMP"
       description: "Description of Jira Project"
       category_name: "My Project Category"
       category_description: "Description of Project Category"
-    
+
     group:
       lead: "Example Team - A"
       team_member: "Example Team - B"
       viewer: "Example Team - C"
- 
+
     permission_scheme:
       name: "My-Project-Scheme"
       description: "Example Permission Scheme"
+

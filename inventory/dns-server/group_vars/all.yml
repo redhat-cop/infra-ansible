@@ -12,9 +12,9 @@ ansible_user: centos
 # Red Hat Repos to enable
 #
 #rhsm_repos:
-#- "rhel-7-server-rpms"
+#  - "rhel-7-server-rpms"
 
-#####  
+#####
 # Uncomment this and fill in the proper values to use Red Hat Satellite
 #
 #rhsm_server_hostname: 'sat-6.example.com'
@@ -23,7 +23,7 @@ ansible_user: centos
 
 #####
 # Uncomment the following to use RHSM username, password and optionally pool:
-# - make sure to set the RHSM_* environment variables 
+# - make sure to set the RHSM_* environment variables
 # - or, just supply these while running the playbook with Ansible "extra-vars"
 #
 #rhsm_username: "{{ lookup('env', 'RHSM_USER' )}}"
@@ -120,3 +120,4 @@ osp_instances:
       - ssh-sec-group
       - icmp-sec-group
       - dns-sec-group
+

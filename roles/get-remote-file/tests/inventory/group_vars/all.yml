@@ -4,9 +4,7 @@ rem_file_protocol: "https"
 rem_file_location: "example.com"
 rem_file_name: "ca.crt"
 
-
 file_destination_root: "{{ inventory_dir }}/../files"
 file_destination: "my-app/app-cert"
 file_name: "ca.crt"
-
 

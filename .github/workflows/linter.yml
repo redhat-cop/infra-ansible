@@ -1,0 +1,23 @@
+---
+
+name: Repo Linter
+
+on: [push, pull_request]
+
+jobs:
+  yaml_lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: yaml-lint
+      uses: ibiqlik/action-yamllint@v1.0.0
+      with:
+        # Path to custom configuration
+        config_file: .github/workflow-config/yamllint.yml
+        # Custom configuration (as YAML source)
+        # config_data: # optional
+        # Format for parsing output [parsable,standard,colored,auto]
+        # format: # optional, default is colored
+        # Return non-zero exit code on warnings as well as errors
+        # strict: # optional, default is false
+

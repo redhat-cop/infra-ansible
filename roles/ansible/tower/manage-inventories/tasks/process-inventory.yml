@@ -63,10 +63,11 @@
   - "{{ inventory.sources | default([])}}"
   loop_control:
     loop_var: source
-  when: inventory.sources is defined  
+  when: inventory.sources is defined
 
 - name: "Clear/Update facts"
   set_fact:
     org_id: ''
     inv_id: ''
     processed_inventories: "{{ processed_inventories + [ { 'name': inventory.name } ] }}"
+

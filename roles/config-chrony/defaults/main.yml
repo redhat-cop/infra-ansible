@@ -1,5 +1,4 @@
 ---
-# defaults file to use to default variables 
 
 config_chrony_services:
   - firewalld

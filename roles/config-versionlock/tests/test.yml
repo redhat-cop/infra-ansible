@@ -3,4 +3,4 @@
 - name: "Test versionlock of some packages"
   hosts: all
   roles:
-  - role: config-versionlock 
+    - role: config-versionlock
