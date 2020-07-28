@@ -1,3 +1,5 @@
+---
+
 # Need to verify that providerId is a valid value
 
 - name: "Request Red Hat SSO REST API Access Token"

@@ -1,6 +1,6 @@
 ---
 
-- name: "Set User Facts" 
+- name: "Set User Facts"
   set_fact:
     user_groups: []
     user_realm_roles: []
@@ -43,7 +43,7 @@
   uri:
     url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users"
     method: POST
-    body: "{{ sso_user_json }}" 
+    body: "{{ sso_user_json }}"
     body_format: json
     status_code: 201, 409
     headers:
@@ -67,7 +67,7 @@
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
   register: get_user
   when:
-  - user.status == 409
+    - user.status == 409
 
 - name: "Get Existing User ID"
   set_fact:
@@ -75,7 +75,7 @@
   vars:
     get_user_id: "[? username=='{{ user_data.user_name }}'].id"
   when:
-  - user.status == 409
+    - user.status == 409
 
 
 - name: "Update User: {{ user_data.user_name }}"
@@ -106,7 +106,7 @@
   vars:
     query: "[?name=='{{ item }}'].{id:id,name:name}"
   with_items: "{{ user_realm_roles }}"
- 
+
 - debug:
     msg: "{{ user_realm_role_ids }}"
 
@@ -114,7 +114,7 @@
   uri:
     url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ user_id }}/role-mappings/realm"
     method: POST
-    body: "{{ user_realm_role_ids }}" 
+    body: "{{ user_realm_role_ids }}"
     body_format: json
     status_code: 204
     headers:
