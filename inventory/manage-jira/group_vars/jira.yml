@@ -14,7 +14,7 @@ atlassian:
       description: "Description of Jira Project"
       category_name: "My Project Category"
       category_description: "Description of Project Category"
- 
+
     group:
       lead: "Example Team - A"
       team_member: "Example Team - B"
