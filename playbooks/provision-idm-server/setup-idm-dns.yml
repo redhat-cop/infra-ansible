@@ -11,8 +11,8 @@
           'reverse': { 'hostname': openstack.private_v4.split('.')[-1],
                         'target': inventory_hostname + '.'  }
         }, recursive=True) }}"
-    when:
-      - hosting_infrastructure == 'openstack'
+      when:
+        - hosting_infrastructure == 'openstack'
 
 - name: 'Copying dns_records from idm-server hosts'
   hosts: dns-server
