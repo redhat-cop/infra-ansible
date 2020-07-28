@@ -12,8 +12,6 @@ jobs:
     - name: yaml-lint
       uses: ibiqlik/action-yamllint@v1.0.0
       with:
-        # File(s) or Directory, separate by space if multiple files or folder are specified
-        file_or_dir: roles/* playbooks/* inventory/group_vars/* inventory/host_vars/*
         # Path to custom configuration
         config_file: .github/workflow-config/yamllint.yml
         # Custom configuration (as YAML source)
