@@ -1,14 +1,12 @@
 ---
+
 - hosts: dhcp
   become: yes
-
   vars_files:
-  -  vars.yml
-
-#  build a DHCP server and configured it
+    - vars.yml
   pre_tasks:
-  - debug:
-      msg: "Development Playbook to install a dhcp server and get it running"
-
+    - debug:
+        msg: "Development Playbook to install a dhcp server and get it running"
   roles:
-  - dhcp
+    - dhcp
+

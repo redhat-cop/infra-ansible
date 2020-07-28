@@ -1,0 +1,9 @@
+{
+  "alias": "{{ af.name | mandatory }}",
+  "builtIn": "{{ af.builtin | default(false)}}",
+  "description": "{{ af.description | default(af.name) }}",
+  "providerId": "{{ af.providerId | default('basic-flow') }}",
+  "topLevel": true,
+}
+
+

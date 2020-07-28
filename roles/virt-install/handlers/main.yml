@@ -7,7 +7,7 @@
   loop: "{{ mounted_iso | dict2items }}"
 
 - name: 'Remove authorized_keys'
-  file: 
+  file:
     path: "{{ default_http_dir }}/{{ virtinstall_authorized_keys | basename }}"
     state: absent
 

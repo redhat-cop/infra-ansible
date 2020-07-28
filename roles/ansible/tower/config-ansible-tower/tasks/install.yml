@@ -16,11 +16,13 @@
       exclude: "inventory"
     register: ansible_tower_download_fact
 
-  # The first file listed in the output of the unarchiving from downloading tower
-  # is the directory so set that as ansible_tower_dir
-  - name: "Set installation dir fact"
+  - name: "Set installation facts"
     set_fact:
+      # The first file listed in the output of the unarchiving from downloading tower
+      # is the directory so set that as ansible_tower_dir
       ansible_tower_dir: "{{ ansible_tower_download_fact.files.0 }}"
+      # Need to check if version 3.7 or later as we use different inventory values
+      ansible_tower_37_later: "{{ (ansible_tower_version is version(3.7, '>=')) or (ansible_tower_version == 'latest') }}"
 
   - name: "Set up the Ansible Tower inventory"
     template:

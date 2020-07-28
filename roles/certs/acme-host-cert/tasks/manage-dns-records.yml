@@ -1,9 +1,9 @@
 ---
 
 - block:
-  - name: "Manage dns TXT records to be validated by ACME ({{ dns_state }})"
-    set_fact:
-      certificate_dns_entries: "{{ certificate_dns_entries | default([]) +
+    - name: "Manage dns TXT records to be validated by ACME ({{ dns_state }})"
+      set_fact:
+        certificate_dns_entries: "{{ certificate_dns_entries | default([]) +
                                     [{
                                       'type': 'TXT',
                                       'ttl': '30',
@@ -12,15 +12,15 @@
                                       'value': item[1][0]
                                     }]
                                 }}"
-    loop: "{{ acme_certificate_output.challenge_data_dns | dictsort }}"
+      loop: "{{ acme_certificate_output.challenge_data_dns | dictsort }}"
 
-  - name: "Call 'manage-dns-records' to update DNS server(s)"
-    include_role:
-      name: "dns/manage-dns-records"
+    - name: "Call 'manage-dns-records' to update DNS server(s)"
+      include_role:
+        name: "dns/manage-dns-records"
 
-  - name: "Wait a time-period before proceeding"
-    pause:
-      seconds: "{{ dns_wait_seconds | default(5) }}"
+    - name: "Wait a time-period before proceeding"
+      pause:
+        seconds: "{{ dns_wait_seconds | default(5) }}"
   when:
     - acme_certificate_output.challenge_data_dns is defined
     - acme_certificate_output.challenge_data_dns.keys()|length > 0

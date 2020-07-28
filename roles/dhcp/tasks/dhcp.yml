@@ -1,4 +1,5 @@
 ---
+
 - name: 'Copy the dhcp config file to a temp location for validity checking'
   copy:
     src: '{{ dhcp_config_dir.path }}/{{ dhcp_config_temp_file }}'
@@ -22,7 +23,7 @@
     state: stopped
   with_items:
   - dhcpd
-  when: 
+  when:
   - dhcp_service_enabled|default(True) == False
 
 - name: 'Enable dhcp services'
@@ -32,5 +33,6 @@
     state: started
   with_items:
   - dhcpd
-  when: 
-  - dhcp_service_enabled|default(True) 
+  when:
+  - dhcp_service_enabled|default(True)
+

@@ -137,3 +137,4 @@
       scale {{ deployment_object }} {{ kubernetes_deployment_name }} --replicas=0
       oc -n {{ kubernetes_namespace }} \
       scale {{ deployment_object }} {{ kubernetes_deployment_name }} --replicas={{ kubernetes_deployment_replica_size }}
+

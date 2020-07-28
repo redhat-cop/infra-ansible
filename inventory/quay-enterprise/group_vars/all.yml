@@ -8,3 +8,4 @@ quay_registry_auth: ""
 
 # Recommended Settings
 quay_ssl_enable: True
+

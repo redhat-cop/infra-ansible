@@ -5,7 +5,7 @@
     name: "{{ group_data.group_name }}"
     managed_policy: "{{ group_data.managed_policy_arn|default(omit) }}"
     users: "{{ group_data.members|default(omit) }}"
-    profile: "{{ identities.profile_name }}"
+    profile: "{{ identities.profile_name | default(omit) }}"
     state: present
   loop: "{{ identities.groups }}"
   loop_control:

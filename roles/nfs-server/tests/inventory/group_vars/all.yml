@@ -1,12 +1,12 @@
 ---
 
 nfs_shares:
-- name: registry
-- name: metrics
-  nfs_owner: "root" 
-  nfs_group: "root"
-  nfs_mode: "0755"     
-  nfs_share_options: "ro"
-- name: logging
-- name: data
+  - name: registry
+  - name: metrics
+    nfs_owner: "root"
+    nfs_group: "root"
+    nfs_mode: "0755"
+    nfs_share_options: "ro"
+  - name: logging
+  - name: data
 

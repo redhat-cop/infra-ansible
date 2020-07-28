@@ -5,13 +5,13 @@
     name: '{{ item }}'
     state: installed
   with_items:
-  - keepalived
-  - libsemanage-python
+    - keepalived
+    - libsemanage-python
   notify: 'start and enable keepalived services'
 
 
 - name: 'Allow bind to the VIP'
-  lineinfile: 
+  lineinfile:
     path: /etc/sysctl.d/50-keepalived.conf
     regexp: '^net.ipv4.ip_nonlocal_bind.*'
     line: 'net.ipv4.ip_nonlocal_bind=1'

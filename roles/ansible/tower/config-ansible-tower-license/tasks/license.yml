@@ -8,8 +8,8 @@
     force_basic_auth: yes
     method: GET
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
-  register: status_output 
-  until: status_output.status == 200 
+  register: status_output
+  until: status_output.status == 200
   retries: 6
   delay: 5
 
@@ -26,3 +26,4 @@
       Content-Type: "application/json"
       Accept: "application/json"
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+
