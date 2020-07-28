@@ -8,4 +8,5 @@
     - import_tasks: keys.yml
     - import_tasks: print_keys.yml
   when:
-  - named_processing|bool == True
+    - named_processing|bool == True
+

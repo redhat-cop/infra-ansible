@@ -9,23 +9,23 @@ satellite_username: "admin"
 satellite_password: "admin01"
 
 satellite_repositories:
-- product: "Red Hat Enterprise Linux Server"
-  name: "Red Hat Enterprise Linux 7 Server (RPMs)"
-  release_version:
-  - "7.3"
-  - "7Server"
-  base_arch: "x86_64"
-- product: "Red Hat Enterprise Linux Server"
-  name: "Red Hat Enterprise Linux 7 Server - Extras (RPMs)"
-  release_version: []
-  base_arch: "x86_64"
+  - product: "Red Hat Enterprise Linux Server"
+    name: "Red Hat Enterprise Linux 7 Server (RPMs)"
+    release_version:
+      - "7.3"
+      - "7Server"
+    base_arch: "x86_64"
+  - product: "Red Hat Enterprise Linux Server"
+    name: "Red Hat Enterprise Linux 7 Server - Extras (RPMs)"
+    release_version: []
+    base_arch: "x86_64"
 
 satellite_sync_plan: "example-plan"
 
 
-# NOTE: Make sure to update the 'Your name  here' below with a matching 
-#       name for your subscription - i.e.: something that will match a "grep" 
+# NOTE: Make sure to update the 'Your name  here' below with a matching
+#       name for your subscription - i.e.: something that will match a "grep"
 satellite_activation_keys:
-  rhel-7-example
+  rhel-7-example:
     subscription: "Your name here"
 

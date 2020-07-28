@@ -70,8 +70,8 @@
 - name: 'Add a default SSO administration user'
   shell: >
     "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh"
-    --user "{{ sso_admin_user }}"
-    --password "{{ sso_admin_pass }}"
+    --user "{{ rh_sso_admin_user }}"
+    --password "{{ rh_sso_admin_pass }}"
   args:
     executable: "/bin/bash"
 

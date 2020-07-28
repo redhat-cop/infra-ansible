@@ -1,6 +1,6 @@
 ---
 
-# Starting with Fedora 28, the python interpreter needs to be Python3 
+# Starting with Fedora 28, the python interpreter needs to be Python3
 # for various packages to work - including prereq for firewalld
 ansible_python_interpreter: /usr/bin/python3
 

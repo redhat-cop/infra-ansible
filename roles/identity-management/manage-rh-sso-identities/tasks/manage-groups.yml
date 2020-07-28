@@ -9,9 +9,9 @@
 
 - name: "Create group"
   uri:
-    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/groups"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ group_data.realm | mandatory }}/groups"
     method: POST
-    body: "{{ sso_group_json }}" 
+    body: "{{ sso_group_json }}"
     body_format: json
     status_code: 201
     headers:
@@ -22,9 +22,9 @@
 
 - name: "Update group"
   uri:
-    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/groups/{{ group_id[0].id }}"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ group_data.realm | mandatory }}/groups/{{ group_id[0].id }}"
     method: PUT
-    body: "{{ sso_group_json }}" 
+    body: "{{ sso_group_json }}"
     body_format: json
     status_code: 201, 204
     headers:

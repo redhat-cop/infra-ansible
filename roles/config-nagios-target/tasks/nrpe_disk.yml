@@ -13,7 +13,7 @@
     line: "command[check_root_disk]=/usr/lib64/nagios/plugins/check_disk -w 20% -c 10% -p {{ item.device }}"
     state: present
   with_items:
-  - "{{ ansible_mounts }}"
-  when: item.mount == '/'
-
+    - "{{ ansible_mounts }}"
+  when:
+    - item.mount == '/'
 

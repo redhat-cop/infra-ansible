@@ -1,3 +1,4 @@
+---
 github_org_name: a-github-org
 github_api_username: aGithubUser
 github_api_password: !vault |
@@ -12,27 +13,28 @@ team:
   name: The Avengers
 
 repos:
-- repo_name: test-ci-cd
-  description: This is your first Repo
-  private_repo_bool: false
-  has_issues: true
-  has_projects: false
-  has_wiki: true
-  auto_init: false
-  deploy_key_location: "{{ lookup('file', './files/test-1.pub') }}"
-  deploy_key_read_only: yes
-  seed_repo_url: https://github.com/rht-labs/labs-ci-cd.git
-- repo_name: test-app
-  description: This is your first Repo
-  private_repo_bool: false
-  has_issues: true
-  has_projects: false
-  has_wiki: true
-  auto_init: false
-  deploy_key_location: "{{ lookup('file', './files/test-2.pub') }}"
-  deploy_key_read_only: yes
-  seed_repo_url: https://github.com/rht-labs/labs-ci-cd.git
+  - repo_name: test-ci-cd
+    description: This is your first Repo
+    private_repo_bool: false
+    has_issues: true
+    has_projects: false
+    has_wiki: true
+    auto_init: false
+    deploy_key_location: "{{ lookup('file', './files/test-1.pub') }}"
+    deploy_key_read_only: yes
+    seed_repo_url: https://github.com/rht-labs/labs-ci-cd.git
+  - repo_name: test-app
+    description: This is your first Repo
+    private_repo_bool: false
+    has_issues: true
+    has_projects: false
+    has_wiki: true
+    auto_init: false
+    deploy_key_location: "{{ lookup('file', './files/test-2.pub') }}"
+    deploy_key_read_only: yes
+    seed_repo_url: https://github.com/rht-labs/labs-ci-cd.git
 
 users:
-- '"aGithubUser"'
-- '"aGithubUser2"'
+  - '"aGithubUser"'
+  - '"aGithubUser2"'
+

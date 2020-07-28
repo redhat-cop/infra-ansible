@@ -1,3 +1,5 @@
+---
+
 default_permissions:
   admin:
     - "ADMINISTER_PROJECTS"

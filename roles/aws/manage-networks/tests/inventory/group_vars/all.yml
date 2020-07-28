@@ -5,18 +5,18 @@ aws_key: "my_aws_key"
 aws_secret: "my_aws_secret"
 
 aws_networks:
-- name: "my-test-vpc"
-  cidr_blocks:
-    - 10.10.0.0/16
-  tags:
-    hello: world
-    some: value
+  - name: "my-test-vpc"
+    cidr_blocks:
+      - 10.10.0.0/16
+    tags:
+      hello: world
+      some: value
 
 aws_subnets:
-- name: "my-subnet"
-  vpc_name: "my-test-vpc"
-  cidr_block: "10.10.1.16/28"
-  enable_public_ip: false
-  tags:
-    some: "set"
-    of: "tags"
+  - name: "my-subnet"
+    vpc_name: "my-test-vpc"
+    cidr_block: "10.10.1.16/28"
+    enable_public_ip: false
+    tags:
+      some: "set"
+      of: "tags"

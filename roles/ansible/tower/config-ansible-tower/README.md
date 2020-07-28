@@ -16,6 +16,8 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
+|ansible_tower_download_url|URL from which the Tower installer will be downloaded. If different version required, recommended to change `ansible_tower_version`|no|'https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz'|
+|ansible_tower_version|Version of Ansible Tower to install|no|'3.3.0-1'|
 |ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
 |ansible_tower.install.pg.host|PostgreSQL hostname to listen on|no|nothing ('')|
 |ansible_tower.install.pg.host|PostgreSQL port to listen on|no|nothing ('')|
@@ -31,12 +33,14 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 |ansible_tower.install.ssl_certificate.cert|Custom SSL certificate to use for Tower UI|no||
 |ansible_tower.install.ssl_certificate.key|Custom SSL key to use with above mentioned certificate for Tower UI|no||
 
+_Note that `ansible_tower.install.rabbitmq` is unused when `ansible_tower_version >= 3.7.0`._
+
 
 ## Example Inventory
 
 ```yaml
 ---
-
+ansible_tower_version: "3.6.4-1:
 ansible_tower:
   admin_password: 'admin'
   install:
@@ -59,7 +63,7 @@ ansible_tower:
 
 - hosts: tower
   roles:
-  - role: config-ansibletower
+  - role: config-ansible-tower
 ```
 
 

@@ -5,9 +5,9 @@
     name: '{{ item }}'
     state: installed
   with_items:
-  - satellite
-  - firewalld
-  - python-firewall
+    - satellite
+    - firewalld
+    - python-firewall
 
 - name: 'Ensure firewalld is running'
   service:
@@ -22,7 +22,7 @@
     state: enabled
     immediate: yes
   with_items:
-  - http
-  - https 
-  - ssh
+    - http
+    - https
+    - ssh
 

@@ -1,7 +1,7 @@
 ---
 
 - name: Copy in additional Nagios service plugin
-  copy: 
+  copy:
     src: plugins/check_service.sh
     dest: /usr/lib64/nagios/plugins/check_service.sh
     owner: root
@@ -9,7 +9,7 @@
     mode: 0755
 
 - name: Copy nrpe.d OpenShift node configuration files
-  copy: 
+  copy:
     src: nrpe.d/check_openshift_node.cfg
     dest: /etc/nrpe.d/check_openshift_node.cfg
     owner: root

@@ -16,8 +16,8 @@ None
 |clients.auth_client|OpenID Connect client_id to authenticate to the API with.|N|`admin-cli`|
 |clients.auth_url|URL for Keycloak instance. Defaults to instance that was created if your inventory creates an instance.|N|`https://rh-sso-host:443/auth`|
 |clients.auth_realm|Keycloak Realm Name. Defaults to the default keycloak realm.|N|`master`|
-|clients.auth_user|Keycloak user to authenticate with. Defaults to the admin user if specified.|N|`sso_admin_user`|
-|clients.auth_password|Password for keycloak user you wish to authenticate with.|N|`sso_admin_pass`|
+|clients.auth_user|Keycloak user to authenticate with. Defaults to the admin user if specified.|N|`rh_sso_admin_user`|
+|clients.auth_password|Password for keycloak user you wish to authenticate with.|N|`rh_sso_admin_pass`|
 |clients.state|Checks whether client should exist or not|N|`present`|
 |clients.realm|The name of the realm that you would like to create this client in.|N|`N/A`|
 |clients.name|The name of the client that you would like to create|Y|`N/A`|
@@ -50,7 +50,28 @@ None
 |clients.protocol_mappers|List of dicts defining protocol mappers for this client.|N|`N/A`|
 |clients.attributes|A dict of further attributes to use with this client.|N|`N/A`|
 
+## Authentication Flows
+
+| Variable | Description | Required | Defaults |
+|:---------|:------------|:---------|:---------|
+auth_flows.name | Name of the authentication flow | yes | N/A |
+auth_flows.realm | Name of the realm to create the flow in | yes | N/A |
+auth_flows.builtin | Whether this is a builtin authentication flow or not | no | false |
+auth_flows.topLevel | Whether this should be a top level or nested flow | no | true |
+auth_flows.description | Description of the authentication flow | no | `auth_flows.name` |
+auth_flows.providerId | The type of authentication flow to create | no | `basic-flow` |
+
+## Authentication Flow Executions
+
+| Variable | Description | Required | Defaults |
+|:---------|:------------|:---------|:---------|
+auth_flows.executions.provider | The type of execution to create. This comes from a very specific list (TBD) | yes | N/A |
+auth_flows.executions.requirement | The appropriate requirements (i.e. REQUIRED, ALTERNATIVE, etc.) for this execution. Varies between types of provider | no | N/A |
+auth_flows.executions.index | The order to place this execution in | no | 0 |
+auth_flows.executions.name | The name that you would like to refer to this execution as | no | N/A |
+
 ## Example Playbook
+
 ```
 - hosts: rh-sso-hosts
   become: yes

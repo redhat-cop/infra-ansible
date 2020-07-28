@@ -3,9 +3,9 @@
 - name: "Generate the ip line - if applicable"
   set_fact:
     ip_config: "{{ target_entry.ip }}::{{ target_entry.gateway }}:{{ target_entry.netmask }}::{{ target_entry.interface }}:none"
-  when: 
-  - target_entry.ip is defined
-  - target_entry.ip|trim != ''
+  when:
+    - target_entry.ip is defined
+    - target_entry.ip|trim != ''
 
 - name: "(re)set the pxe_entries"
   set_fact:
@@ -29,4 +29,5 @@
   file:
     src: "{{ target_file|basename }}"
     dest: "{{ target_file }}-"
-    state: link 
+    state: link
+

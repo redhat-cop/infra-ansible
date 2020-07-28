@@ -133,3 +133,4 @@
       when: "item.key not in quay_organization.teams |  map(attribute='name') | list"
 
   when: quay_prune|bool
+

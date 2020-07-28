@@ -20,4 +20,3 @@
     immediate: yes
   loop: "{{ config_chrony_firewall_services }}"
 
-

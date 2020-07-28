@@ -3,35 +3,38 @@
 - name: "Process users for AWS"
   block:
     - block:
-      - name: Create AWS user
-        iam_user:
-          name: "{{ user_data.user_name }}"
-          state: present
-          profile: "{{ identities.profile_name | default(omit) }}"
-        register: aws_user_list
-        loop: "{{ identities.users }}"
-        loop_control:
-          loop_var: user_data
-      - name: Add access keys for the users - if requested
-        iam:
-          iam_type: user
-          name: "{{ user_data.user_name }}"
-          state: update
-          profile: "{{ identities.profile_name | default(omit) }}"
-          access_key_state: "{{ user_data.access_key_state }}"
-          key_count: "{{ user_data.key_count | default(omit) }}"
-        loop: "{{ identities.users }}"
-        loop_control:
-          loop_var: user_data
-        when:
-          - user_data.access_key_state is defined
+        - name: Create AWS user
+          iam_user:
+            name: "{{ user_data.user_name }}"
+            state: present
+            profile: "{{ identities.profile_name | default(omit) }}"
+          register: aws_user_list
+          loop: "{{ identities.users }}"
+          loop_control:
+            loop_var: user_data
+
+        - name: Add access keys for the users - if requested
+          iam:
+            iam_type: user
+            name: "{{ user_data.user_name }}"
+            state: update
+            profile: "{{ identities.profile_name | default(omit) }}"
+            access_key_state: "{{ user_data.access_key_state }}"
+            key_count: "{{ user_data.key_count | default(omit) }}"
+          loop: "{{ identities.users }}"
+          loop_control:
+            loop_var: user_data
+          when:
+            - user_data.access_key_state is defined
       when:
         - identities.users|length > 0
         - user_data.targets is undefined or 'aws' in user_data.targets
         - user_data.state|default('present') == 'present'
+
     - name: "Make sure the list_of_users is empty to start with"
       set_fact:
         list_of_users: []
+
     - name: "Create password generation dataset"
       set_fact:
         list_of_users: "{{ list_of_users + [ aws_data.user_data|combine(aws_data|set_user_flags, {'aws_profile': identities.profile_name|default('')}) ] }}"
@@ -42,6 +45,7 @@
       when:
         - aws_user_list is defined
         - aws_user_list.results is defined
+
     - name: "Add processed users back to the 'identities' list"
       set_fact:
         identities: "{{ identities|combine({'users': list_of_users}) }}"

@@ -3,11 +3,14 @@
 - name: Validate Quay Hostname Provided
   fail:
     msg: "Quay Hostname Must Be Provided!"
-  when: quay_enterprise_hostname is undefined or quay_enterprise_hostname|trim == ""
+  when:
+    - quay_enterprise_hostname is undefined or quay_enterprise_hostname|trim == ""
 
 - name: Include Container Credentials
   include_tasks: container_credentials.yml
-  when: (quay_registry_server | trim != "") and ((quay_registry_auth | trim != "") or (quay_registry_email | trim != ""))
+  when:
+    - quay_registry_server | trim != ""
+    - quay_registry_auth | trim != "" or quay_registry_email | trim != ""
 
 - name: Configure Configuration Directory
   file:
@@ -16,7 +19,7 @@
     group: root
     mode: g+rw
     path: "{{ quay_builder_config_dir }}"
-  
+
 - name: Configure Trusted SSL
   block:
     - name: Check if Trusted SSL file exists
@@ -26,12 +29,13 @@
       register: trusted_ssl_exists
       changed_when: False
       delegate_to: localhost
-    
+
     - name: Fail if SSL source file does not exist
       fail:
         msg: "Could not locate SSL trust certificate"
-      when: trusted_ssl_exists.stat.exists == false
-  
+      when:
+        - trusted_ssl_exists.stat.exists == false
+
     - name: Copy SSL Certificate
       copy:
         src: "{{ quay_builder_ssl_trust_src_file }}"
@@ -40,7 +44,8 @@
         group: root
         mode: g+rw
       notify: Restart Quay Builder Service
-  when: quay_builder_ssl_trust_configure|bool
+  when:
+    - quay_builder_ssl_trust_configure|bool
 
 - name: Configure systemd environment files
   template:
@@ -53,3 +58,4 @@
     src: "quay-builder.service.j2"
     dest: "{{ systemd_service_dir}}/{{ quay_builder_service }}"
   notify: Restart Quay Builder Service
+

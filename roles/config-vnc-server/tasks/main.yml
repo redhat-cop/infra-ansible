@@ -2,11 +2,11 @@
 
 - name: "Prep for VNC server install"
   import_tasks: prereq.yml
-  when: 
-  - vnc_server_install|default(False)
+  when:
+    - vnc_server_install|default(False)
 
 - name: "Install, configure and enable VNC server"
   import_tasks: vnc-server.yml
-  when: 
-  - vnc_server_install|default(False)
+  when:
+    - vnc_server_install|default(False)
 
