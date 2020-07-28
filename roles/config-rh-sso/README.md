@@ -16,8 +16,8 @@ None
 |clients.auth_client|OpenID Connect client_id to authenticate to the API with.|N|`admin-cli`|
 |clients.auth_url|URL for Keycloak instance. Defaults to instance that was created if your inventory creates an instance.|N|`https://rh-sso-host:443/auth`|
 |clients.auth_realm|Keycloak Realm Name. Defaults to the default keycloak realm.|N|`master`|
-|clients.auth_user|Keycloak user to authenticate with. Defaults to the admin user if specified.|N|`sso_admin_user`|
-|clients.auth_password|Password for keycloak user you wish to authenticate with.|N|`sso_admin_pass`|
+|clients.auth_user|Keycloak user to authenticate with. Defaults to the admin user if specified.|N|`rh_sso_admin_user`|
+|clients.auth_password|Password for keycloak user you wish to authenticate with.|N|`rh_sso_admin_pass`|
 |clients.state|Checks whether client should exist or not|N|`present`|
 |clients.realm|The name of the realm that you would like to create this client in.|N|`N/A`|
 |clients.name|The name of the client that you would like to create|Y|`N/A`|
