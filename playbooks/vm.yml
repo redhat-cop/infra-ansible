@@ -3,23 +3,23 @@
 - name: 'Create VM on infra virtual hosts'
   hosts: infra_virt_hosts
   roles:
-  - role: virt-install
+    - role: virt-install
   tags:
-  - provision_infra_vms
-  
+    - provision_infra_vms
+
 - name: 'Check that the VM(s) are alive'
   hosts: infra_vms
   gather_facts: no
   tasks:
-  - name: 'Wait for VM(s) to come alive'
-    local_action: wait_for
-    args: 
-      host: "{{ ansible_host }}"
-      port: 22
-      delay: 30
-      timeout: 300
+    - name: 'Wait for VM(s) to come alive'
+      local_action: wait_for
+      args:
+        host: "{{ ansible_host }}"
+        port: 22
+        delay: 30
+        timeout: 300
   tags:
-  - vm_health_check
+    - vm_health_check
 
 - name: 'Subscribe the VMs to RHSM'
   hosts: infra_vms
@@ -27,13 +27,14 @@
     rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
     rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
   roles:
-  - role: rhsm
+    - role: rhsm
   tags:
-  - configure_rhsm
+    - configure_rhsm
 
 - name: 'Make sure the VM is running the latest'
   hosts: infra_vms
   roles:
-  - role: update-host
+    - role: update-host
   tags:
-  - update_host
+    - update_host
+

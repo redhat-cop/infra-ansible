@@ -1,3 +1,5 @@
+---
+
 # Need to verify that providerId is a valid value
 
 - name: "Request Red Hat SSO REST API Access Token"
@@ -54,7 +56,7 @@
 - name: "Get Executions for Authentication Flow: {{ af.name }}"
   uri:
     url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows/{{ af.name }}/executions"
-    method: GET    
+    method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
