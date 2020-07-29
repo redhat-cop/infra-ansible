@@ -10,7 +10,7 @@
       password: "{{ rh_sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: rh_sso_token
 
 - name: "Check if Execution: {{ af_exec.provider }} exists in Authentication Flow: {{ af.name }}"
@@ -33,7 +33,7 @@
         status_code: 201
         headers:
           Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-        validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
       register: exec_out
     - name: "Retrieve Template for Execution Flow"
       set_fact:
@@ -47,7 +47,7 @@
         status_code: 204
         headers:
           Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-        validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
       register: update_out
     - name: "Add config"
       uri:
@@ -60,7 +60,7 @@
         status_code: 201
         headers:
           Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-        validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   when:
     - exec_check[0] is not defined
 
