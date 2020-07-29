@@ -8,10 +8,14 @@ list_of_packages_to_install:
 
 rh_sso_admin_user: admin
 rh_sso_admin_pass: mypa55ss
+
 rh_sso_protocol: https
-rh_sso_keystore_name: default
-rh_sso_keystore_pass: changeit
-rh_sso_keystore_path: "/etc/security/keystore.jks"
+rh_sso_ssl:
+  cert: /the/path/to/my/cert.crt
+  key: /the/path/to/my/cert.key
+  keystore_name: default
+  keystore_pass: changeit
+  keystore_path: "/etc/security/keystore.jks"
 
 realms:
   - name: my-awesome-realm
