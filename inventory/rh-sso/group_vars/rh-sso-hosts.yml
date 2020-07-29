@@ -8,8 +8,8 @@ list_of_packages_to_install:
 
 rh_sso_admin_user: admin
 rh_sso_admin_pass: mypa55ss
-rh_sso_protocol: https
 
+rh_sso_protocol: https
 rh_sso_ssl:
   cert: /the/path/to/my/cert.crt
   key: /the/path/to/my/cert.key
