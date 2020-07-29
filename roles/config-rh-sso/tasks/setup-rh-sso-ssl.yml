@@ -8,7 +8,7 @@
 
 - name: 'Create a keystore to store SSL certificates'
   java_keystore:
-    name: "{{ rh_sso_ssl.keystore_name, default('default') }}"
+    name: "{{ rh_sso_ssl.keystore_name | default('default') }}"
     password: "{{ rh_sso_ssl.keystore_pass | default('changeit') }}"
     dest: "{{ rh_sso_ssl.keystore_path | default('/etc/security/keystore.jks') }}"
     certificate: "{{ lookup('file', rh_sso_ssl.cert) }}"
