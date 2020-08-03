@@ -1,6 +1,8 @@
 ---
 
 - name: "Make sure dependencies are met"
+  vars:
+    docker_install: True
   include_role:
     name: config-docker
   when:
