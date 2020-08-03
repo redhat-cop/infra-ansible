@@ -64,4 +64,58 @@
 =======
 - name: "Configure Nagios"
   import_tasks: configuration.yml
+<<<<<<< HEAD
+>>>>>>> Fixing lint issues
+=======
+
+- name: Setup hostgroup directories
+  file:
+    path: "/etc/nagios/objects/{{ ansible_hostname }}"
+    state: directory
+    mode: 0755
+  with_items: "{{groups['nagios-targets']}}"
+  register: something_changed
+
+- name: Setup common hostgroup configuration
+  template:
+    src: common.cfg.j2 
+    dest: "/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
+    owner: root
+    group: root
+    mode: 0644 
+  with_items: "{{groups['nagios-targets']}}"
+  register: something_changed
+
+- name: Setup the hosts in the hostgroup configuration
+  template:
+    src: host.cfg.j2 
+    dest: "/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
+    owner: root
+    group: root
+    mode: 0644 
+  with_items: "{{groups['nagios-targets']}}"
+  register: something_changed
+
+- name: Add common hostgroup configuration to master nagios configuration file
+  lineinfile:
+    dest: /etc/nagios/nagios.cfg
+    regexp: "^cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
+    line: "cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
+  with_items: "{{groups['nagios-targets']}}"
+  register: something_changed
+
+- name: Add host configuration to master nagios configuration file
+  lineinfile:
+    dest: /etc/nagios/nagios.cfg
+    regexp: "^cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
+    line: "cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
+  with_items: "{{groups['nagios-targets']}}"
+  register: something_changed
+
+- name: Restart nagios if required
+  debug:
+    msg: "Please restart Nagios service."
+  notify:
+     - Restart nagios
+  when: something_changed
 >>>>>>> Fixing lint issues
