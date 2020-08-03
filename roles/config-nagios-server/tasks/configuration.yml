@@ -9,7 +9,7 @@
   file:
     path: "/etc/nagios/objects/{{ ansible_hostname }}"
     state: directory
-    mode: 0755
+    mode: "0755"
   with_items: "{{groups['nagios-targets']}}"
   register: something_changed
 
@@ -17,9 +17,9 @@
   template:
     src: common.cfg.j2 
     dest: "/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
-    owner: root
-    group: root
-    mode: 0644 
+    owner: "root"
+    group: "root"
+    mode: "0644" 
   with_items: "{{groups['nagios-targets']}}"
   register: something_changed
 
@@ -27,9 +27,9 @@
   template:
     src: host.cfg.j2 
     dest: "/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
-    owner: root
-    group: root
-    mode: 0644 
+    owner: "root"
+    group: "root"
+    mode: "0644" 
   with_items: "{{groups['nagios-targets']}}"
   register: something_changed
 
