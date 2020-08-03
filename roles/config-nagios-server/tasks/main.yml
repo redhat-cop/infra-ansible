@@ -13,4 +13,5 @@
   when: install_nagios == "yes"
   become: true
 
-- import_tasks: configuration.yml
+- name: "Configure Nagios"
+  import_tasks: configuration.yml
