@@ -4,9 +4,9 @@
   include_role:
     name: config-docker
   when:
-    - docker_compose_install|default(false)
+    - docker_compose_install|default(False)
 
 - name: "Install, configure and enable Docker-compose"
   import_tasks: docker-compose.yml
   when:
-    - docker_compose_install|default(false)
+    - docker_compose_install|default(False)
