@@ -1,5 +1,4 @@
 ---
-
 # As per documentation SELinux needs to be disabled...
 # https://support.nagios.com/kb/article/nagios-core-installing-nagios-core-from-source-96.html#RHEL
 - name: Disable SELinux
