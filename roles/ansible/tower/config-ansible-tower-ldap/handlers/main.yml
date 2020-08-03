@@ -2,6 +2,7 @@
 
 - name: restart-tower
   service:
-    name:  supervisord
+    name: supervisord
     state: restarted
   become: True
+

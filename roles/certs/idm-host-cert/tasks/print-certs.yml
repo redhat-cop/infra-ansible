@@ -7,7 +7,7 @@
 
 - name: "Print Host Key - if requested"
   debug:
-    msg: "{{ csr_key }}"
+    msg: "{{ csr_content_output.key }}"
     verbosity: 2
 
 - name: "Print CA cert - if requested"

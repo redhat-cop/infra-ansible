@@ -1,6 +1,6 @@
 ---
 
 - include_tasks: iscsi.yml
-  when: 
-  - iscsi_target is defined
-  - iscsi_target|trim != ''
+  when:
+    - iscsi_target is defined
+    - iscsi_target|trim != ''

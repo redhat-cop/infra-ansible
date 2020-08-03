@@ -2,78 +2,79 @@
 
 # vars file for dhcp-config
 dhcp_host_entries:
-- host: test1
-  fqdn: test1.example.com
-  hw_addr: e0:07:1b:ec:fd:ec
-  ip_addr: 192.168.10.123
+  - host: test1
+    fqdn: test1.example.com
+    hw_addr: e0:07:1b:ec:fd:ec
+    ip_addr: 192.168.10.123
 
-- host: test2
-  fqdn: test2.example.com
-  hw_addr: e0:07:1b:fd:a5:70
-  ip_addr: 192.168.11.124
+  - host: test2
+    fqdn: test2.example.com
+    hw_addr: e0:07:1b:fd:a5:70
+    ip_addr: 192.168.11.124
 
 
 #
 # Define the subnet entries
 #
 dhcp_subnet_entries:
-- subnet: 192.168.11.0
-  range: 192.168.11.50 192.168.11.99
-  subnet_mask: 255.255.255.0
-  router: 192.168.11.1
-  broadcast: 192.168.11.255
-  dns: 8.8.8.8, 8.8.4.4
-  domain_search: example.com 
-  domain_name: example.com
-  next_server: 192.168.11.33
+  - subnet: 192.168.11.0
+    range: 192.168.11.50 192.168.11.99
+    subnet_mask: 255.255.255.0
+    router: 192.168.11.1
+    broadcast: 192.168.11.255
+    dns: 8.8.8.8, 8.8.4.4
+    domain_search: example.com
+    domain_name: example.com
+    next_server: 192.168.11.33
 
-- subnet: 192.168.12.0
-  range: 192.168.12.50 192.168.12.99
-  subnet_mask: 255.255.255.0
-  router: 192.168.12.1
-  broadcast: 192.168.12.255
-  dns: 8.8.8.8, 8.8.4.4
-  domain_search: example.com 
-  domain_name: example.com
-  next_server: 192.168.12.33
+  - subnet: 192.168.12.0
+    range: 192.168.12.50 192.168.12.99
+    subnet_mask: 255.255.255.0
+    router: 192.168.12.1
+    broadcast: 192.168.12.255
+    dns: 8.8.8.8, 8.8.4.4
+    domain_search: example.com
+    domain_name: example.com
+    next_server: 192.168.12.33
 
-- subnet: 192.168.100.0
-  range: 192.168.100.50 192.168.100.99
-  subnet_mask: 255.255.255.0
-  router: 192.168.100.1
-  broadcast: 192.168.100.255
-  dns: 8.8.8.8, 8.8.4.4
-  domain_search: example.com 
-  domain_name: example.com
-  next_server: 192.168.100.33
+  - subnet: 192.168.100.0
+    range: 192.168.100.50 192.168.100.99
+    subnet_mask: 255.255.255.0
+    router: 192.168.100.1
+    broadcast: 192.168.100.255
+    dns: 8.8.8.8, 8.8.4.4
+    domain_search: example.com
+    domain_name: example.com
+    next_server: 192.168.100.33
 
 dhcp_group_entries:
-- group:
-  title: '# Test group 1'
-  hosts:
-  - desc: '# Blade #1 - interface "ens1f0"'
-    name: node1
-    hw_addr: 00:0a:f7:57:e1:f0
-    ip_addr: 192.168.11.121
-    fqdn: node1.example.com
+  - group:
+    title: '# Test group 1'
+    hosts:
+      - desc: '# Blade #1 - interface "ens1f0"'
+        name: node1
+        hw_addr: 00:0a:f7:57:e1:f0
+        ip_addr: 192.168.11.121
+        fqdn: node1.example.com
 
-  - desc: '# Blade #2 - interface "ens1f0"'
-    name: node2
-    hw_addr: 00:0a:f7:57:dd:80
-    ip_addr: 192.168.11.122
-    fqdn: node4.example.com
+      - desc: '# Blade #2 - interface "ens1f0"'
+        name: node2
+        hw_addr: 00:0a:f7:57:dd:80
+        ip_addr: 192.168.11.122
+        fqdn: node4.example.com
 
-- group: 
-  title: '#Test group 2 '
-  hosts:
-  - desc: '# Blade #3 - interface "ens1f0"'
-    name: node3
-    hw_addr: 00:0a:f7:57:dd:80
-    ip_addr: 192.168.11.123
-    fqdn: node5.example.com
+  - group:
+    title: '#Test group 2 '
+    hosts:
+      - desc: '# Blade #3 - interface "ens1f0"'
+        name: node3
+        hw_addr: 00:0a:f7:57:dd:80
+        ip_addr: 192.168.11.123
+        fqdn: node5.example.com
 
-  - desc: '# Blade #4 - interface "ens1f0"'
-    name: node4
-    hw_addr: 00:0a:f7:57:de:54
-    ip_addr: 192.168.11.124
-    fqdn: node6.example.com
+      - desc: '# Blade #4 - interface "ens1f0"'
+        name: node4
+        hw_addr: 00:0a:f7:57:de:54
+        ip_addr: 192.168.11.124
+        fqdn: node6.example.com
+

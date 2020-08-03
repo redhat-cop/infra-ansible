@@ -10,4 +10,3 @@
 
   when:
     - identities.targets is undefined or 'aws' in identities.targets
-    - identities.profile_name|length > 0

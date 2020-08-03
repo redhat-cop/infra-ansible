@@ -13,3 +13,4 @@
     headers:
       Authorization: "{{ auth_header }}"
   when: quay_organization.name + '+' + quay_robot.name not in org_robots.json.robots |  map(attribute='name') | list
+

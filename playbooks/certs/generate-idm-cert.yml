@@ -1,0 +1,7 @@
+---
+
+- name: "Generate and store away the IdM based cert"
+  hosts: cert-host
+  roles:
+    - role: certs/generate-csr
+    - role: certs/idm-host-cert

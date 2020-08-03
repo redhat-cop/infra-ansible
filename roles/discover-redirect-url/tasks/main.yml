@@ -17,4 +17,4 @@
     url: "{{ url | final_url | regex_replace('\\/$','') }}"
 
 - set_fact:
-    {"{{ redirect_var_name }}" : "{{ url }}" }
+    {"{{ redirect_var_name }}": "{{ url }}" }

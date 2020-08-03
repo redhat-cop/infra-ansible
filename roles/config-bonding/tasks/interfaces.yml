@@ -1,6 +1,6 @@
 ---
 
-- name: "Check if bonding has been initiated" 
+- name: "Check if bonding has been initiated"
   stat:
     path: /proc/net/bonding
   register: proc_bonding
@@ -9,33 +9,33 @@
   command: ls -1 /proc/net/bonding
   register: existing_bonds
   when:
-  - proc_bonding.stat.isdir is defined
-  - proc_bonding.stat.isdir
+    - proc_bonding.stat.isdir is defined
+    - proc_bonding.stat.isdir
 
 - name: "Set fact for existing_bonds"
-  set_fact: 
+  set_fact:
     existing_bonds: "{{ existing_bonds.stdout_lines | default([]) }}"
 
 - name: "Configure bonding master interfaces"
   template:
-    src: bonding_master.j2 
+    src: bonding_master.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-{{ ifcfg.device }}
   with_items:
-  - '{{ bonds }}'
+    - '{{ bonds }}'
   loop_control:
     loop_var: ifcfg
   when:
-  - ifcfg.device not in existing_bonds
+    - ifcfg.device not in existing_bonds
 
 - name: "Configure bonding slave interfaces"
   template:
-    src: bonding_slave.j2 
+    src: bonding_slave.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-{{ ifcfg.1.device }}
   with_subelements:
-  - '{{ bonds }}'
-  - slaves
+    - '{{ bonds }}'
+    - slaves
   loop_control:
     loop_var: ifcfg
   when:
-  - ifcfg.0.device not in existing_bonds
+    - ifcfg.0.device not in existing_bonds
 

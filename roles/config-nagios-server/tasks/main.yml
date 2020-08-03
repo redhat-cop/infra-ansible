@@ -9,20 +9,20 @@
 
 - name: Setup common hostgroup configuration
   template:
-    src: common.cfg.j2 
+    src: common.cfg.j2
     dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/common.cfg
     owner: root
     group: root
-    mode: 0644 
+    mode: 0644
   with_items: "{{groups['nagios-targets']}}"
 
 - name: Setup the hosts in the hostgroup configuration
   template:
-    src: host.cfg.j2 
+    src: host.cfg.j2
     dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/{{hostvars[item]['inventory_hostname_short']}}.cfg
     owner: root
     group: root
-    mode: 0644 
+    mode: 0644
   with_items: "{{groups['nagios-targets']}}"
 
 - name: Add common hostgroup configuration to master nagios configuration file

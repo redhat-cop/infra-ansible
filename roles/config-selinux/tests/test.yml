@@ -3,4 +3,4 @@
 - name: "Test SELinux config"
   hosts: all
   roles:
-    - role: config-selinux 
+    - role: config-selinux

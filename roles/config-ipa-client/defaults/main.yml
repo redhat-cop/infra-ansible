@@ -3,3 +3,6 @@
 move_local_user_home: False
 new_local_home_dir: "/lclhome"
 temporary_username: "lcluser"
+
+ipa_client_install: false
+

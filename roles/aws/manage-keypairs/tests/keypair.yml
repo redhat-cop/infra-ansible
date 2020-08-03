@@ -1,3 +1,5 @@
+---
+
 - hosts: aws-provisioner
   roles:
-  - aws/manage-keypairs
+    - aws/manage-keypairs

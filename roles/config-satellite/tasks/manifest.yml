@@ -7,8 +7,8 @@
   register: copy_sub
 
 - name: "Upload manifest if new or updated file provided"
-  command: > 
-    hammer 
+  command: >
+    hammer
       -u "{{ satellite_username }}"
       -p "{{ satellite_password }}"
       subscription upload
@@ -16,5 +16,4 @@
       --organization "{{ satellite_organization }}"
   when:
     - copy_sub.changed
-
 

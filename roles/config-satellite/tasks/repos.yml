@@ -1,42 +1,42 @@
 ---
 
 - name: "Enable repositories (with release_version)"
-  command: > 
+  command: >
     hammer
       -u "{{ satellite_username }}"
       -p "{{ satellite_password }}"
-      repository-set enable 
+      repository-set enable
       --organization "{{ satellite_organization }}"
       --product "{{ item.0.product }}"
       --name "{{ item.0.name }}"
       --releasever "{{ item.1 }}"
       --basearch "{{ item.0.base_arch }}"
   with_subelements:
-  - "{{ satellite_repositories }}"
-  - release_version
+    - "{{ satellite_repositories }}"
+    - release_version
   register: enable_repos
   failed_when:
-  - enable_repos.rc != 70
-  - enable_repos.rc != 0
+    - enable_repos.rc != 70
+    - enable_repos.rc != 0
 
 - name: "Enable repositories (without release_version)"
-  command: > 
+  command: >
     hammer
       -u "{{ satellite_username }}"
       -p "{{ satellite_password }}"
-      repository-set enable 
+      repository-set enable
       --organization "{{ satellite_organization }}"
       --product "{{ item.product }}"
       --name "{{ item.name }}"
       --basearch "{{ item.base_arch }}"
   with_items:
-  - "{{ satellite_repositories }}"
+    - "{{ satellite_repositories }}"
   register: enable_repos
   failed_when:
-  - enable_repos.rc != 70
-  - enable_repos.rc != 0
-  when: 
-  - item.release_version|length == 0
+    - enable_repos.rc != 70
+    - enable_repos.rc != 0
+  when:
+    - item.release_version|length == 0
 
 - name: "Get Red Hat repo ids"
   shell: hammer -u "{{ satellite_username }}" -p "{{ satellite_password }}" repository list --organization "{{ satellite_organization }}" | grep "Red Hat" | awk '{print $1}'
@@ -54,7 +54,7 @@
   async: 1000
   poll: 0
   with_items:
-  - "{{ repoids.stdout.split('\n') }}"
+    - "{{ repoids.stdout.split('\n') }}"
 
 - name: "Get tomorrow (start-date for sync plan)"
   shell: echo "$(date -d tomorrow -I) 05:00:00"
@@ -73,8 +73,8 @@
       --sync-date "{{ sync_date.stdout }}"
   register: chk_plan
   failed_when:
-  - chk_plan.rc != 65
-  - chk_plan.rc != 0
+    - chk_plan.rc != 65
+    - chk_plan.rc != 0
 
 - name: "Add products to sync plan"
   command: >
@@ -85,6 +85,6 @@
       --name "{{ item.product }}"
       --sync-plan "{{ satellite_sync_plan }}"
       --organization "{{ satellite_organization }}"
-  with_items: 
-  - "{{ satellite_repositories }}"
+  with_items:
+    - "{{ satellite_repositories }}"
 

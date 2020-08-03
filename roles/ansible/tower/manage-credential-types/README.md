@@ -12,7 +12,6 @@ A running Ansible Tower with admin permission level access.
 
 The variables used to maintain the Credential Types must be defined in the Ansible Inventory using the `ansible_tower.credential_types` dictionary as explained below.
 
-
 **_Note:_** Credential Types configuration will **only** happen if the `ansible_tower.credential_types` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
 ## Example inventory
@@ -33,6 +32,8 @@ ansible_tower:
     - name: "<REPLACE WITH EXTRA VAR NAME>"
       id: "<REPLACE WITH CORRESPONDING CREDENTIAL TYPE ID>"
 ```
+
+Also check the [README one level up](../README.md#example-inventory) for additional details of an example inventory.  
 
 ## Example Playbook
 

@@ -1,7 +1,7 @@
 ---
 
 - name: "Retrieve the CA cert"
-  uri: 
+  uri:
     url: "https://{{ idm_fqdn }}/ipa/session/json"
     method: POST
     body: '{"method": "cert_show", "params":[["{{ retrieve_cert_serialnumber|default(1) }}"],{ "version": "{{ api_version }}" }],"id":0}'
@@ -19,5 +19,5 @@
   fail:
     msg: "ERROR: request failed with message: {{ ca_cert.json.error.message }}"
   when:
-  - ca_cert.json.error is defined
-  - ca_cert.json.error.message is defined
+    - ca_cert.json.error is defined
+    - ca_cert.json.error.message is defined

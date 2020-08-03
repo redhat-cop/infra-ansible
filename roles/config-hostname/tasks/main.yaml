@@ -1,7 +1,7 @@
 ---
 
 - block:
-  - import_tasks: prep.yml
-  - import_tasks: set-hostname.yml
+    - import_tasks: prep.yml
+    - import_tasks: set-hostname.yml
   become: True
 

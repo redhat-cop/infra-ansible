@@ -6,7 +6,7 @@
     pvs: "{{ item.storage_device }}"
 
 - name: "Setup LV"
-  lvol: 
+  lvol:
     vg: "{{ item.vg_name }}"
     lv: "{{ item.lv_name }}"
     size: "{{ item.lv_size | default(default_lv_size) }}"
@@ -16,7 +16,7 @@
     fstype: "{{ item.lv_fstype | default(lvm_fstype) }}"
     dev: "/dev/mapper/{{ item.vg_name }}-{{ item.lv_name }}"
 
-- name: "Ensure the mount dir exists" 
+- name: "Ensure the mount dir exists"
   file:
     path: "{{ item.mount_path }}"
     state: directory
