@@ -20,3 +20,4 @@
   loop_control:
     loop_var: docker_item
   when: (docker_install | bool) | default(false)
+

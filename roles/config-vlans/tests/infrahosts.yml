@@ -3,6 +3,6 @@
 - name: 'Configure VLANs on the infrastructure hosts'
   hosts: infra_hosts
   roles:
-  - role: config_vlans
-  tags: 
-  - configure_infra_hosts
+    - role: config_vlans
+  tags:
+    - configure_infra_hosts

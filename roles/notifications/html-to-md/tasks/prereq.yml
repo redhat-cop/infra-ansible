@@ -1,10 +1,9 @@
 ---
 
-
 - name: "Install additional packages"
   package:
     name: "{{ item }}"
     state: "{{ prereq_state | default('installed') }}"
   with_items:
-  - pandoc
-  
+    - pandoc
+

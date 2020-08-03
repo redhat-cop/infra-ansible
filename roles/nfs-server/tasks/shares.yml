@@ -7,21 +7,20 @@
 - name: "Create directories"
   file:
     path: "{{ nfs_share_basedir }}/{{ item.name }}"
-    state: directory 
-    owner: "{{ item.nfs_owner | default(default_nfs_owner) }}" 
+    state: directory
+    owner: "{{ item.nfs_owner | default(default_nfs_owner) }}"
     group: "{{ item.nfs_group | default(default_nfs_group) }}"
     mode: "{{ item.nfs_mode | default(default_nfs_mode) }}"
-  with_items: 
-  - "{{ nfs_shares }}"
+  with_items:
+    - "{{ nfs_shares }}"
 
 - name: "Update export file to share out the directory"
-  lineinfile: 
+  lineinfile:
     path: /etc/exports
     state: present
     regexp: "^{{ nfs_share_basedir }}/{{ item.name }}"
-    line: "{{ nfs_share_basedir }}/{{ item.name }} *({{ item.nfs_share_options | default(default_nfs_share_options) }})" 
-  with_items: 
-  - "{{ nfs_shares }}"
+    line: "{{ nfs_share_basedir }}/{{ item.name }} *({{ item.nfs_share_options | default(default_nfs_share_options) }})"
+  with_items:
+    - "{{ nfs_shares }}"
   notify: Reload NFS
-
 

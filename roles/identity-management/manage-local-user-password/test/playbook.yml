@@ -3,11 +3,11 @@
 - name: "Add a test user"
   hosts: all
   tasks:
-  - user:
-      name: "{{ user_name }}"
-      comment: "Test User"
-    when:
-      - user_name != "root"
+    - user:
+        name: "{{ user_name }}"
+        comment: "Test User"
+      when:
+        - user_name != "root"
 
 # Test the role to update the password
 - name: "Update {{ user_name }} password"
@@ -18,15 +18,14 @@
 # Test the password access by running a remote command on machine
 #
 
-- name: "Test password update" 
+- name: "Test password update"
   hosts: all
   tasks:
-
-  - name: "Test password for {{ user_name }} on {{ ansible_host }}"
-    raw: "sshpass -p \"{{ clear_text_password }}\" ssh {{ user_name }}@{{ansible_host }} /bin/true"
-    delegate_to: localhost
-    become: False
-    register: result
-    changed_when: False
-    failed_when:
-      result.rc != 0
+    - name: "Test password for {{ user_name }} on {{ ansible_host }}"
+      raw: "sshpass -p \"{{ clear_text_password }}\" ssh {{ user_name }}@{{ansible_host }} /bin/true"
+      delegate_to: localhost
+      become: False
+      register: result
+      changed_when: False
+      failed_when:
+        result.rc != 0

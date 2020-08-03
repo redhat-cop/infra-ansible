@@ -3,4 +3,5 @@
 - name: Testing RHSM functional for Satellite 6 integration
   hosts: test-sat6
   roles:
-  - role: rhsm 
+    - role: rhsm
+

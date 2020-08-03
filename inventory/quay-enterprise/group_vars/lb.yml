@@ -1,4 +1,5 @@
 ---
 
 ## HAProxy Configurations
-#haproxy_stats_enabled=True
+#haproxy_stats_enabled: True
+

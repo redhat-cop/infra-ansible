@@ -1,8 +1,9 @@
 ---
+
 - name: openshift_project should be defined
   assert:
     that:
-    - openshift_project is defined and openshift_project != ''
+      - openshift_project is defined and openshift_project != ''
     msg: "Set the value of 'openshift_project' in the inventory file."
 
 - name: openshift_user should be defined

@@ -1,10 +1,9 @@
 ---
 
-- name: "Mount the software repository" 
+- name: "Mount the software repository"
   mount:
     path: "{{ iso_repo_dir }}"
     src: "{{ iso_repo_nfs }}"
     fstype: nfs
     state: mounted
-
 

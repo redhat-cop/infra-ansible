@@ -2,5 +2,5 @@
 
 - name: "Install, configure and enable IPA/IdM integration"
   import_tasks: ipa.yml
-  when: 
-  - ipa_client_install|default(False)
+  when:
+    - ipa_client_install|default(False)

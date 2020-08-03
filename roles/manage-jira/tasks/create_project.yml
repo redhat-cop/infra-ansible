@@ -1,4 +1,5 @@
 ---
+
 - name: Create Jira Project
   uri:
     url: "{{ jira_url }}/rest/api/2/project"
@@ -20,8 +21,9 @@
              'assigneeType': 'PROJECT_LEAD',
              'avatarId': 10200,
              'permissionScheme': '{{ atlassian.jira.permission_scheme.id | default(default_permission_scheme_id) }}',
-             'notificationScheme': 10000, 
-             'categoryId': '{{ CategoryID }}' 
+             'notificationScheme': 10000,
+             'categoryId': '{{ CategoryID }}'
            }"
-    status_code: 201         
+    status_code: 201
   register: result
+

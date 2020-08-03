@@ -16,4 +16,3 @@ ansible_tower:
   secret_key: "mysecrettoken"
   rabbitmq_erlang_cookie: "secret"
 
-

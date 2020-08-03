@@ -1,20 +1,20 @@
---- 
+---
 
 osp_security_groups:
-- name: "ingress-sec-group"
-  description: "My ingress Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 1022
-    port_range_max: 1022
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-- name: "egress-sec-group"
-  description: "My egress Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 1122
-    port_range_max: 1122
-    direction: egress
-    remote_ip_prefix: 0.0.0.0/0
+  - name: "ingress-sec-group"
+    description: "My ingress Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 1022
+        port_range_max: 1022
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "egress-sec-group"
+    description: "My egress Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 1122
+        port_range_max: 1122
+        direction: egress
+        remote_ip_prefix: 0.0.0.0/0
 

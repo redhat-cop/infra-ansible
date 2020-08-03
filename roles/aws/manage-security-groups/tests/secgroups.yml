@@ -1,4 +1,6 @@
+---
+
 - hosts: aws-provisioner
   roles:
-  - aws/manage-networks
-  - aws/manage-security-groups
+    - aws/manage-networks
+    - aws/manage-security-groups

@@ -10,7 +10,7 @@
   vars:
     ipa_admin_user: admin
     ipa_admin_password: test123
-    ipa_host: idm.example.com 
+    ipa_host: idm.example.com
 
   roles:
     - manage-idm-identities

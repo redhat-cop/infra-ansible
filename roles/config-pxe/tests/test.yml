@@ -2,4 +2,4 @@
 
 - hosts: pxe-server
   roles:
-  - config-pxe 
+    - config-pxe

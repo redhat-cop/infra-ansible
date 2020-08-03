@@ -1,20 +1,20 @@
 ---
 
 - name: Ensure docker group exists
-  group: 
+  group:
     name: docker
     state: present
-  notify: 
-  - restart docker
+  notify:
+    - restart docker
 
 - name: Ensure the nrpe user belongs to the docker group
-  user: 
+  user:
     name: nrpe
     groups: docker
     append: yes
 
 - name: Copy in additional Nagios Docker plugin
-  copy: 
+  copy:
     src: plugins/check_docker_storage
     dest: /usr/lib64/nagios/plugins/check_docker_storage
     owner: root
@@ -22,7 +22,7 @@
     mode: 0755
 
 - name: Copy nrpe.d Docker configuration files
-  copy: 
+  copy:
     src: nrpe.d/check_docker.cfg
     dest: /etc/nrpe.d/check_docker.cfg
     owner: root

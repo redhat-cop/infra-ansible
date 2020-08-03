@@ -1,14 +1,12 @@
 ---
 
-- name: "Update newline characters in CSR content"
-  set_fact:
-    lcl_csr: "{{ csr_content|replace('\n', '\\n') }}"
-
 - name: "Create Certificate for host"
+  vars:
+    idm_csr: "{{ csr_content_output.csr|replace('\n', '\\n') }}"
   uri:
     url: "https://{{ idm_fqdn }}/ipa/session/json"
     method: POST
-    body: '{"method": "cert_request", "params":[["{{ lcl_csr }}"],{"principal": "host/{{ host_name }}@{{ host_realm }}", "request_type": "pkcs10", "add": False, "version": "{{ api_version }}" }],"id":0}'
+    body: '{"method": "cert_request", "params":[["{{ idm_csr }}"],{"principal": "host/{{ host_name }}@{{ host_realm }}", "request_type": "pkcs10", "add": False, "version": "{{ api_version }}" }],"id":0}'
     body_format: json
     validate_certs: no
     return_content: yes

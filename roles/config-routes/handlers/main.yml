@@ -2,5 +2,5 @@
 
 - name: "Notify about Network reload"
   debug:
-    msg: "Networking Static Routes altered - Network reload needed." 
+    msg: "Networking Static Routes altered - Network reload needed."
 

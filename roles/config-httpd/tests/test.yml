@@ -2,4 +2,4 @@
 
 - hosts: web-server
   roles:
-  - config-httpd 
+    - config-httpd

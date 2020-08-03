@@ -8,3 +8,4 @@
     os_ver: 7
   roles:
     - install-mongodb
+
