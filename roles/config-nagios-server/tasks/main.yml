@@ -1,17 +1,15 @@
 ---
 
+# Different distro install steps to be added. Will only work with RHEL at this stage.
+
 - name: "Install Nagios"
   block:
     - import_tasks: rhelpackages.yml
       when: ansible_distribution == "RedHat"
-
-      # Different distro install steps to be added. Will only work with RHEL at this stage.
-
     - import_tasks: nagiosinstall.yml
       when: 
         - nagios_version is defined
         - nagios_plugin_version is defined
-
   when: install_nagios == "yes"
   become: true
 
