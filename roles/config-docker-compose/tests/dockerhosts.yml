@@ -4,5 +4,5 @@
   hosts: docker_hosts
   roles:
     - role: config-docker-compose
-  tags: 
+  tags:
     - configure_docker_hosts
