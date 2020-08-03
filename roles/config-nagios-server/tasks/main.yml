@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 - name: Setup hostgroup directories
   file:
     path: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}
@@ -43,8 +44,9 @@
     name: nagios
     state: restarted
 
+=======
+>>>>>>> Fixing lint issues
 # Different distro install steps to be added. Will only work with RHEL at this stage.
-
 - name: "Install Nagios"
   block:
     - import_tasks: rhelpackages.yml
