@@ -1,4 +1,7 @@
 ---
 
-- import: packages.yml
-- import: services.yml
+- name: "Install Packages"
+  import: packages.yml
+
+- name: "Enable services"
+  import: services.yml
