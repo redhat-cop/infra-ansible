@@ -16,7 +16,3 @@
   become: true
 
 - import_tasks: configuration.yml
-
-
-
-
