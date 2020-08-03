@@ -65,6 +65,7 @@
 - name: "Configure Nagios"
   import_tasks: configuration.yml
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> Fixing lint issues
 =======
 
@@ -118,4 +119,6 @@
   notify:
      - Restart nagios
   when: something_changed
+>>>>>>> Fixing lint issues
+=======
 >>>>>>> Fixing lint issues
