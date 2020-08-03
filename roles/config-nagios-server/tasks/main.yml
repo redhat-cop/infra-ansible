@@ -1,7 +1,5 @@
 ---
-
 # Different distro install steps to be added. Will only work with RHEL at this stage.
-
 - name: "Install Nagios"
   block:
     - import_tasks: rhelpackages.yml
