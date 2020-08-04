@@ -4,7 +4,7 @@
   iam_group:
     name: "{{ group_data.group_name }}"
     state: absent
-    profile: "{{ identities.profile_name }}"
+    profile: "{{ identities.profile_name | default(omit) }}"
   loop: "{{ identities.groups }}"
   loop_control:
     loop_var: group_data

@@ -10,5 +10,8 @@ rh-sso-hosts
 [rhsm_hosts:children]
 rh-sso-hosts
 
-[identity-hosts:children]
+[identity-hosts]
+localhost
+
+[cert-host:children]
 rh-sso-hosts

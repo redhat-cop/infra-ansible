@@ -1,3 +1,5 @@
+---
+
 gitlab_api_private_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           33396164373338656334643933303237616561663430343438643934363635363765626432636466
@@ -10,13 +12,14 @@ group:
   name: a-gitlab-org
 
 projects:
-- repo_name: test-ci-cd
-  deploy_key_location: "{{ lookup('file', './files/test-1.pub') }}"
-  import_url: https://github.com/rht-labs/labs-ci-cd.git
-- repo_name: test-app
-  import_url: https://github.com/rht-labs/labs-ci-cd.git
-  deploy_key_location: "{{ lookup('file', './files/test-2.pub') }}"
+  - repo_name: test-ci-cd
+    deploy_key_location: "{{ lookup('file', './files/test-1.pub') }}"
+    import_url: https://github.com/rht-labs/labs-ci-cd.git
+  - repo_name: test-app
+    import_url: https://github.com/rht-labs/labs-ci-cd.git
+    deploy_key_location: "{{ lookup('file', './files/test-2.pub') }}"
 
 users:
-# ONLY NUMERICAL USER ID VALUES, DO NOT ADD YOURSELF, YOU ALREADY OWN THE GROUP
-- id: 9999999 #someRealGitlabUserId
+  # ONLY NUMERICAL USER ID VALUES, DO NOT ADD YOURSELF, YOU ALREADY OWN THE GROUP
+  - id: 9999999 #someRealGitlabUserId
+

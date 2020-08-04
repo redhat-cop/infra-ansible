@@ -27,3 +27,4 @@
 
 - name: Redeploy SonarQube
   command: "oc rollout latest --namespace={{ namespace }} {{ pod_prefix }}"
+

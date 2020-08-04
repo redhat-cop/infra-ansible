@@ -1,0 +1,13 @@
+---
+
+- name: "Get Red Hat SSO access token"
+  include_tasks: access-token.yml
+
+- name: "Delete group"
+  uri:
+    url: "http://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/master/groups/{{ group_id[0].id }}"
+    method: DELETE
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  when: group_id[0] is defined

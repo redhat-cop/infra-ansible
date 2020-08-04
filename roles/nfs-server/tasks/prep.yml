@@ -1,7 +1,7 @@
 ---
 
-- name: 'Ensure everything is up-to-date' 
-  package: 
+- name: 'Ensure everything is up-to-date'
+  package:
     name: '*'
     state: latest
 
@@ -10,32 +10,32 @@
     name: '{{ item }}'
     state: installed
   with_items:
-  - nfs-utils
-  - lvm2
-  - firewalld
-  - python-firewall
+    - nfs-utils
+    - lvm2
+    - firewalld
+    - python-firewall
 
 - name: 'Ensure firewalld is running'
   service:
     name: firewalld
-    state: started 
+    state: started
     enabled: yes
 
 - name: 'Ensure nfs-server is running'
   service:
     name: nfs-server
-    state: started 
+    state: started
     enabled: yes
 
 - name: 'Open Firewall for NFS use'
-  firewalld: 
+  firewalld:
     port: "{{ item }}"
     permanent: yes
     state: enabled
     immediate: yes
   with_items:
-  - 111/tcp
-  - 111/udp
-  - 2049/tcp
-  - 2049/udp
+    - 111/tcp
+    - 111/udp
+    - 2049/tcp
+    - 2049/udp
 

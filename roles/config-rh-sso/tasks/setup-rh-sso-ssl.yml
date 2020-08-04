@@ -1,0 +1,55 @@
+---
+
+- name: 'Error out if no certs provided when ssl mode is enabled'
+  fail:
+    msg: "Required parameters for SSL mode not supplied"
+  when:
+    - rh_sso_ssl is undefined or rh_sso_ssl.cert is undefined or rh_sso_ssl.key is undefined
+
+- name: 'Set keystore values to use'
+  set_fact:
+    ssl_keystore_name: "{{ rh_sso_ssl.keystore_name | default('default') }}"
+    ssl_keystore_path: "{{ rh_sso_ssl.keystore_path | default('/etc/security/keystore.jks') }}"
+    ssl_keystore_password: "{{ rh_sso_ssl.keystore_pass | default('changeit') }}"
+
+- name: 'Create a keystore to store SSL certificates'
+  java_keystore:
+    name: "{{ ssl_keystore_name }}"
+    dest: "{{ ssl_keystore_path }}"
+    password: "{{ ssl_keystore_password }}"
+    certificate: "{{ lookup('file', rh_sso_ssl.cert) }}"
+    private_key: "{{ lookup('file', rh_sso_ssl.key) }}"
+
+- name: 'Add a new SSL based security-realm'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/core-service=management/security-realm=UndertowRealm:add()'
+  args:
+    executable: "/bin/bash"
+  register: process_undertowrealm
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
+
+- name: 'Configure security-realm to use the keystore'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/core-service=management/security-realm=UndertowRealm/server-identity=ssl:add(keystore-path="{{ ssl_keystore_path }}", keystore-password="{{ ssl_keystore_password }}")'
+  args:
+    executable: "/bin/bash"
+  register: process_undertowrealm
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
+
+- name: 'Point the https-listener to the security-realm'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=security-realm, value=UndertowRealm)'
+  args:
+    executable: "/bin/bash"
+  register: process_undertowrealm
+  failed_when:
+    - process_undertowrealm.rc == 1
+    - "'WFLYCTL0212' not in process_undertowrealm.stdout"
+

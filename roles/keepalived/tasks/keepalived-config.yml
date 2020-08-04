@@ -6,4 +6,3 @@
     dest: '/etc/keepalived/keepalived.conf'
   notify: 'restart keepalived'
 
-  

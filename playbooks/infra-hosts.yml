@@ -6,29 +6,30 @@
     rhsm_username: "{{ hostvars['localhost'].rhsm_username|default(omit) }}"
     rhsm_password: "{{ hostvars['localhost'].rhsm_password|default(omit) }}"
   roles:
-  - role: rhsm
+    - role: rhsm
   tags:
-  - configure_rhsm
+    - configure_rhsm
 
 - name: 'Configure networking on the infrastructure hosts'
   hosts: infra_hosts
   roles:
-  - role: config-bonding
-  - role: config-vlans
-  - role: config-routes
-  tags: 
-  - configure_infra_hosts_networking
-  
+    - role: config-bonding
+    - role: config-vlans
+    - role: config-routes
+  tags:
+    - configure_infra_hosts_networking
+
 - name: 'Make sure the host is running the latest'
   hosts: infra_hosts
   roles:
-  - role: update-host
-  tags: 
-  - update_host
+    - role: update-host
+  tags:
+    - update_host
 
 - name: 'Setup iSCSI and MultiPathing - if applicable'
   hosts: infra_hosts
   roles:
-  - role: config-iscsi-client
+    - role: config-iscsi-client
   tags:
-  - configure_iscsi_client
+    - configure_iscsi_client
+

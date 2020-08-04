@@ -5,8 +5,7 @@
     name: "*"
     state: latest
   register: host_updated
-  when: 
-    - pkg_update|default(False) 
+  when:
+    - pkg_update|default(False)
   become: True
-
 

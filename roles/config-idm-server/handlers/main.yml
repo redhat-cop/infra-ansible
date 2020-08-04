@@ -1,14 +1,13 @@
 ---
-# handlers file for idm
 
-  - name: Ensure firewalld is running
-    service:
-      name: firewalld
-      state: started
-      enabled: yes
+- name: Ensure firewalld is running
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
 
-  - name: Ensure IdM is running at boot
-    service:
-      name: ipa
-      enabled: yes
+- name: Ensure IdM is running at boot
+  service:
+    name: ipa
+    enabled: yes
 

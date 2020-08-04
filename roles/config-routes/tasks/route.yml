@@ -2,7 +2,7 @@
 
 - name: "Configure route for the specific interface"
   template:
-    src: route.j2 
+    src: route.j2
     dest: /etc/sysconfig/network-scripts/route-{{ route.device }}
   with_items:
   - '{{ routes }}'

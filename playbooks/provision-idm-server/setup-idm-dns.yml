@@ -2,45 +2,45 @@
 
 - hosts: idm-server
   tasks:
-  - name: Set required ip address for forward dns
-    set_fact:
-      dns_records: "{{ dns_records|combine({
-        'view': inventory_hostname.split('.')[1:-1],
-        'forward': { 'ip': openstack.private_v4,
-                      'hostname': inventory_hostname.split('.')[0]  },
-        'reverse': { 'hostname': openstack.private_v4.split('.')[-1],
-                      'target': inventory_hostname + '.'  }
-      }, recursive=True) }}"
-    when:
-    - hosting_infrastructure == 'openstack'
+    - name: Set required ip address for forward dns
+      set_fact:
+        dns_records: "{{ dns_records|combine({
+          'view': inventory_hostname.split('.')[1:-1],
+          'forward': { 'ip': openstack.private_v4,
+                        'hostname': inventory_hostname.split('.')[0]  },
+          'reverse': { 'hostname': openstack.private_v4.split('.')[-1],
+                        'target': inventory_hostname + '.'  }
+        }, recursive=True) }}"
+      when:
+        - hosting_infrastructure == 'openstack'
 
 - name: 'Copying dns_records from idm-server hosts'
   hosts: dns-server
   tasks:
-   - set_fact:
-       dns_records: "{{ hostvars[groups['idm-server'][0]]['dns_records'] }}"
+    - set_fact:
+        dns_records: "{{ hostvars[groups['idm-server'][0]]['dns_records'] }}"
 
 - name: Add DNS records for IdM
   import_playbook: ../update-dns-records.yml
   vars:
     dns_records_add:
-    - view: "{{ dns_records.view }}"
-      zone: "{{ dns_records.reverse.zone }}"
-      server: "{{ dns_records.server }}"
-      key_name: "{{ dns_records.reverse.key_name }}"
-      key_secret: "{{ dns_records.reverse.key_secret }}"
-      key_algorithm: "{{ dns_records.reverse.key_algorithm }}"
-      entries:
-      - type: ptr
-        hostname: "{{ dns_records.reverse.hostname }}"
-        ip: "{{ dns_records.reverse.target }}"
-    - view: "{{ dns_records.view }}"
-      zone: "{{ dns_records.forward.zone }}"
-      server: "{{ dns_records.server }}"
-      key_name: "{{ dns_records.forward.key_name }}"
-      key_secret: "{{ dns_records.forward.key_secret }}"
-      key_algorithm: "{{ dns_records.forward.key_algorithm }}"
-      entries:
-      - type: A
-        hostname: "{{ dns_records.forward.hostname }}"
-        ip: "{{ dns_records.forward.ip }}"
+      - view: "{{ dns_records.view }}"
+        zone: "{{ dns_records.reverse.zone }}"
+        server: "{{ dns_records.server }}"
+        key_name: "{{ dns_records.reverse.key_name }}"
+        key_secret: "{{ dns_records.reverse.key_secret }}"
+        key_algorithm: "{{ dns_records.reverse.key_algorithm }}"
+        entries:
+          - type: ptr
+            hostname: "{{ dns_records.reverse.hostname }}"
+            ip: "{{ dns_records.reverse.target }}"
+      - view: "{{ dns_records.view }}"
+        zone: "{{ dns_records.forward.zone }}"
+        server: "{{ dns_records.server }}"
+        key_name: "{{ dns_records.forward.key_name }}"
+        key_secret: "{{ dns_records.forward.key_secret }}"
+        key_algorithm: "{{ dns_records.forward.key_algorithm }}"
+        entries:
+          - type: A
+            hostname: "{{ dns_records.forward.hostname }}"
+            ip: "{{ dns_records.forward.ip }}"

@@ -3,25 +3,25 @@
 ansible_tower:
   admin_password: "admin01"
   workflow_templates:
-  - name: "Workflow 1"
-    description: "My Workflow 1"
-    nodes:
-      - unified_job_template:
-          name: "Job1"
-        success_nodes:
-          - unified_job_template:
-              name: "Job2"
-          - unified_job_template:
-              name: "Job3"
-        failure_nodes:
-          - unified_job_template:
-              name: "Job4"
-          - unified_job_template:
-              name: "Job5"
-    permissions:
-      teams:
-        - name: team1
-          role: Execute
-      users:
-        - name: user1
-          role: Execute
+    - name: "Workflow 1"
+      description: "My Workflow 1"
+      nodes:
+        - unified_job_template:
+            name: "Job1"
+          success_nodes:
+            - unified_job_template:
+                name: "Job2"
+            - unified_job_template:
+                name: "Job3"
+          failure_nodes:
+            - unified_job_template:
+                name: "Job4"
+            - unified_job_template:
+                name: "Job5"
+      permissions:
+        teams:
+          - name: team1
+            role: Execute
+        users:
+          - name: user1
+            role: Execute
