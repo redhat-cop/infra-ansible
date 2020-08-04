@@ -6,7 +6,8 @@
 - name: 'Start Red Hat SSO in Standalone mode'
   service:
     name: rh-sso7
-    state: restarted
+    state: started
+    enabled: yes
 
 - name: 'Waiting for SSO service to load'
   pause:
