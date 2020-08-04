@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> Fixing lint issues
@@ -73,6 +74,8 @@
 >>>>>>> Fixing lint issues
 =======
 >>>>>>> Fixing lint issues
+=======
+>>>>>>> Rebased
 # Different distro install steps to be added. Will only work with RHEL at this stage.
 - name: "Install Nagios"
   block:
@@ -85,6 +88,7 @@
   when: install_nagios == "yes"
   become: true
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 - import_tasks: configuration.yml
 
@@ -149,3 +153,7 @@
 >>>>>>> Fixing lint issues
 =======
 >>>>>>> Fixing lint issues
+=======
+- name: "Configure Nagios"
+  import_tasks: configuration.yml
+>>>>>>> Rebased
