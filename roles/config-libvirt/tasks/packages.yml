@@ -10,6 +10,7 @@
     state: present
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   when: virt_manager_install  
 =======
   when: virt_manager_install == 'yes'
@@ -17,3 +18,6 @@
 =======
   when: virt_manager_install  
 >>>>>>> Fixed boolean variables and correctly changed include tasks to import.
+=======
+  when: virt_manager_install
+>>>>>>> Fixing linting issues
