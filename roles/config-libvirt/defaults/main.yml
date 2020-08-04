@@ -1,5 +1,5 @@
 ---
-# defaults file to use to default variables 
+# defaults file to use to default variables
 libvirtenable: true
 
 base_packages:
