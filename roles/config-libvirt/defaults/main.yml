@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 # defaults file to use to default variables 
 <<<<<<< HEAD
 
@@ -6,6 +7,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+>>>>>>> Fixing linting issues
+=======
+# defaults file to use to default variables
 >>>>>>> Fixing linting issues
 libvirtenable: true
 =======

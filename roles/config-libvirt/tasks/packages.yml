@@ -5,7 +5,7 @@
     state: present
 
 - name: "Install Virt-Manager"
-  yum: 
+  yum:
     name: "{{ virt_manager_package }}"
     state: present
 <<<<<<< HEAD
