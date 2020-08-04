@@ -8,4 +8,4 @@
   yum: 
     name: "{{ virt_manager_package }}"
     state: present
-  when: virt_manager_install  
+  when: virt_manager_install
