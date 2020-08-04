@@ -16,9 +16,9 @@ Defaults file has example of variables that can be used.
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**docker_compose_packages**|  Packages required for docker compose. | yes | in defaults file |
-|**docker_install**| Should docker be installed | true | false |
-|**docker_compose_install**| Should docker compose be installed |true | false |
+|**docker_compose_packages**|  Packages required for docker compose. | no | docker-compose |
+|**docker_install**| Should docker be installed | yes | false |
+|**docker_compose_install**| Should docker compose be installed |yes | false |
 
 
 Dependencies
@@ -42,7 +42,7 @@ docker_install: true
 docker_compose_install: true
 docker_username: bob
 ```
-
+NOTE: The variable docker_username is from the config-docker role.
 
 License
 -------
