@@ -85,7 +85,7 @@
     - import_tasks: rhelpackages.yml
       when: ansible_distribution == "RedHat"
     - import_tasks: nagiosinstall.yml
-      when: 
+      when:
         - nagios_version is defined
         - nagios_plugin_version is defined
   when: install_nagios == "yes"

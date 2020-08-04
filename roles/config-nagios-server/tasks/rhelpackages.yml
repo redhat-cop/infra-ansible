@@ -11,17 +11,17 @@
     state: present
 
 - name: Install pre-requisite packages
-  yum: 
+  yum:
     name: "{{ rhel_packages }}"
     state: latest
 
 - name: Install pre-requisite packages
-  yum: 
+  yum:
     name: "{{ rhel7_packages }}"
     state: latest
   when: ansible_distribution_major_version == '7'
 
 - name: Install pre-requisite epel packages
-  yum: 
+  yum:
     name: "{{ epel_packages }}"
     state: latest

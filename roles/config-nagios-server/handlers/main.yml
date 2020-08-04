@@ -4,5 +4,4 @@
   service:
     name: nagios
     state: restarted
-
   

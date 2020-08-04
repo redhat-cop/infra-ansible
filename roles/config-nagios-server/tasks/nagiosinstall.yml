@@ -17,15 +17,15 @@
   args:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
   with_items:
-     - ./configure
+    - ./configure
 
 - name: Run 'install' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
     target: all
-  
+
 - name: Run 'install-groups-users' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
     target: install-groups-users
 
@@ -35,27 +35,27 @@
     group: apache
 
 - name: Run make 'install' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
     target: install
 
 - name: Run 'install-daemoninit' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
     target: install-daemoninit
 
 - name: Run 'install-commandmode' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
     target: install-commandmode
 
 - name: Run 'install-config' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
     target: install-config
 
 - name: Run 'install-webconf' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_extracted_dir}}"
     target: install-webconf
 
@@ -96,18 +96,18 @@
   args:
     chdir: "{{nagios_download_dir}}/{{nagios_plugins_extracted_dir}}"
   with_items:
-     - ./tools/setup
-     - ./configure
+    - ./tools/setup
+    - ./configure
 
 - name: "Build the default target"
   make:
     chdir: "{{nagios_download_dir}}/{{nagios_plugins_extracted_dir}}"
 
 - name: Run 'install' target
-  make: 
+  make:
     chdir: "{{nagios_download_dir}}/{{nagios_plugins_extracted_dir}}"
     target: install
-  
+
 - name: "Start and enable service nagios.service"
   systemd:
     name: nagios

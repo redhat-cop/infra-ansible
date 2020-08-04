@@ -9,27 +9,27 @@
   file:
     path: "/etc/nagios/objects/{{ ansible_hostname }}"
     state: directory
-    mode: 0755
+    mode: "0755"
   with_items: "{{groups['nagios-targets']}}"
   register: something_changed
 
 - name: Setup common hostgroup configuration
   template:
-    src: common.cfg.j2 
+    src: common.cfg.j2
     dest: "/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
-    owner: root
-    group: root
-    mode: 0644 
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items: "{{groups['nagios-targets']}}"
   register: something_changed
 
 - name: Setup the hosts in the hostgroup configuration
   template:
-    src: host.cfg.j2 
+    src: host.cfg.j2
     dest: "/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
-    owner: root
-    group: root
-    mode: 0644 
+    owner: "root"
+    group: "root"
+    mode: "0644"
   with_items: "{{groups['nagios-targets']}}"
   register: something_changed
 
@@ -53,5 +53,5 @@
   debug:
     msg: "Please restart Nagios service."
   notify:
-     - Restart nagios
+    - Restart nagios
   when: something_changed

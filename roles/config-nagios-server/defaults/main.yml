@@ -21,24 +21,24 @@ nagios_rhel7_optional_repo: rhel-7-server-optional-rpms
 
 rhel_packages:
   - gcc
-  - glibc 
+  - glibc
   - glibc-common
-  - perl 
+  - perl
   - httpd
-  - php 
-  - wget 
-  - gd 
+  - php
+  - wget
+  - gd
   - gd-devel
   - make
-  - gettext 
-  - automake 
+  - gettext
+  - automake
   - autoconf
   - openssl-devel
   - net-snmp
   - net-snmp-utils
 
-rhel7_packages: 
-  - unzip 
+rhel7_packages:
+  - unzip
   - postfix
 
 epel_packages:
