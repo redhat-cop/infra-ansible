@@ -50,7 +50,7 @@
     - 'create-auth-flow'
     - 'manage-auth-flow'
 
-- include_tasks: 
+- include_tasks:
     file: 'manage-clients.yml'
     apply:
       tags:
