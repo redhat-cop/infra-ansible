@@ -41,8 +41,8 @@
     file: 'manage-auth-flow.yml'
     apply:
       tags:
-        - 'create-realm'
-        - 'manage-realm'
+        - 'create-auth-flow'
+        - 'manage-auth-flow'
   loop: "{{ auth_flows | default([]) }}"
   loop_control:
     loop_var: af
@@ -54,8 +54,8 @@
     file: 'manage-clients.yml'
     apply:
       tags:
-        - 'create-realm'
-        - 'manage-realm'
+        - 'create-clients'
+        - 'manage-clients'
   loop: "{{ clients | default([]) }}"
   loop_control:
     loop_var: client
@@ -67,8 +67,8 @@
     file: 'manage-id-provider.yml'
     apply:
       tags:
-        - 'create-realm'
-        - 'manage-realm'
+        - 'create-id-provider'
+        - 'manage-id-provider'
   loop: "{{ id_providers | default([]) }}"
   loop_control:
     loop_var: id_provider
