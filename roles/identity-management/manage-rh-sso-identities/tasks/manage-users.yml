@@ -28,11 +28,11 @@
     method: POST
     body_format: form-urlencoded
     body:
-      username: "{{ sso_admin_user }}"
-      password: "{{ sso_admin_pass }}"
+      username: "{{ rh_sso_admin_user }}"
+      password: "{{ rh_sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: rh_sso_token
 
 - name: "Retrieve template to create/update user"
@@ -50,7 +50,7 @@
       Content-type: "application/json"
       Accept: "application/json"
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: user
 
 - name: "Get New User ID"
@@ -77,7 +77,6 @@
   when:
     - user.status == 409
 
-
 - name: "Update User: {{ user_data.user_name }}"
   uri:
     url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ user_id }}"
@@ -87,7 +86,7 @@
     status_code: 204
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   when:
     - user.status == 409
 
@@ -97,7 +96,7 @@
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: realm_roles
 
 - name: "Get Realm Role IDs"
@@ -107,16 +106,13 @@
     query: "[?name=='{{ item }}'].{id:id,name:name}"
   with_items: "{{ user_realm_roles }}"
 
-- debug:
-    msg: "{{ user_realm_role_ids }}"
-
 - name: "Add Realm Role Mappings"
   uri:
-    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ user_id }}/role-mappings/realm"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ user_id }}/role-mappings/realm"
     method: POST
     body: "{{ user_realm_role_ids }}"
     body_format: json
     status_code: 204
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
