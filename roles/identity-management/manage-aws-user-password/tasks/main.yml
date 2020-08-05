@@ -18,3 +18,5 @@
         - user_data.aws_profile|length > 0
   when:
     - identities.users is defined
+    - identities.targets is undefined or 'aws' in identities.targets
+
