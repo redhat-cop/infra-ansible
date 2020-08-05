@@ -32,7 +32,7 @@
       password: "{{ rh_sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: rh_sso_token
 
 - name: "Retrieve template to create/update user"
@@ -50,7 +50,7 @@
       Content-type: "application/json"
       Accept: "application/json"
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: user
 
 - name: "Get New User ID"
@@ -87,7 +87,7 @@
     status_code: 204
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   when:
     - user.status == 409
 
@@ -97,7 +97,7 @@
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: realm_roles
 
 - name: "Get Realm Role IDs"
@@ -116,4 +116,4 @@
     status_code: 204
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
