@@ -16,7 +16,7 @@
 - name: Combine identities dict with merged user and group identities
   delegate_to: localhost
   set_fact:
-    identities: "{{ identities|default({}) | combine(merged_identities) }}"
+    identities: "{{ identities|default({}) | combine(merged_identities, recursive=True) }}"
 
 - name: "Display imported users values"
   debug:
