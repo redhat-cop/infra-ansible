@@ -1,0 +1,2 @@
+docker-packages-remove: docker,docker-engine,docker.io,containerd,runc
+docker-packages-install: docker-ce,docker-ce-cli,containerd.io
