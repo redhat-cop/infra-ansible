@@ -1,17 +1,7 @@
 ---
 - name: "Remove old versions of Docker"
   dnf:
-    name: 
-      - docker
-      - docker-client
-      - docker-client-latest
-      - docker-common
-      - docker-latest
-      - docker-latest-logrotate
-      - docker-logrotate
-      - docker-selinux
-      - docker-engine-selinux
-      - docker-engine
+    name: docker,docker-client,docker-client-latest,docker-common,docker-latest,docker-latest-logrotate,docker-logrotate,docker-selinux,docker-engine-selinux,docker-engine
     state: absent
 
 - name: "Enable Docker repository"
@@ -25,10 +15,7 @@
 
 - name: "Install docker package(s)"
   dnf:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+    name: docker-ce,docker-ce-cli,containerd.io
     state: latest
 
 - name: "Enable docker"
@@ -52,6 +39,5 @@
 - name: "Add username to the docker group" 
   user:
     name: "{{ docker_username }}"
-    groups: docker
+    groups: "docker"
     append: yes
-
