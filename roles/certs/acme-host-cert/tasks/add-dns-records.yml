@@ -1,13 +1,13 @@
 ---
 
 - block:
-    - name: "Manage dns TXT records to be validated by ACME ({{ dns_state }})"
+    - name: "Add DNS TXT records to be validated by ACME"
       set_fact:
         certificate_dns_entries: "{{ certificate_dns_entries | default([]) +
                                     [{
                                       'type': 'TXT',
                                       'ttl': '30',
-                                      'state': dns_state,
+                                      'state': 'present',
                                       'record': item.0,
                                       'value': item[1][0]
                                     }]
@@ -17,6 +17,19 @@
     - name: "Call 'manage-dns-records' to update DNS server(s)"
       include_role:
         name: "dns/manage-dns-records"
+
+    - name: "Add DNS records to clean-up dict to prepare for clean-up"
+      set_fact:
+        certificate_dns_cleanup: "{{ certificate_dns_cleanup | default([]) +
+                                    [{
+                                      'type': 'TXT',
+                                      'ttl': '30',
+                                      'state': 'absent',
+                                      'record': item.0,
+                                      'value': item[1][0]
+                                    }]
+                                }}"
+      loop: "{{ acme_certificate_output.challenge_data_dns | dictsort }}"
 
     - name: "Wait a time-period before proceeding"
       pause:
