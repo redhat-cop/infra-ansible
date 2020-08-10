@@ -30,7 +30,7 @@
 - name: "Add username to the Docker group"
   user:
     name: "{{ docker_username }}"
-    groups: "docker"
+    groups: docker
     append: yes
 
 - name: "Enable Docker"
