@@ -3,6 +3,6 @@
 - name: 'Configure IdM/IPA'
   hosts: idm-clients
   roles:
-  - role: config-ipa-client
-  tags: 
-  - configure_idm_client
+    - role: config-ipa-client
+  tags:
+    - configure_idm_client

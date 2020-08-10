@@ -11,5 +11,5 @@ Example Playbook
 ```yaml
   - hosts: dns-servers
     roles:
-    - role: dns
+    - role: manage-dns-records
 ```

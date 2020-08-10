@@ -3,85 +3,67 @@
 
 - name: "TEST 1: Change user's IdM Passwd when both set, provded changed"
   hosts: ipa
-
   vars_files:
     - vars/passwdfile1.json
-
   vars:
     ipa_admin_user: admin
     ipa_admin_password: test123
-    ipa_host: idm.example.com 
-  
+    ipa_host: idm.example.com
   roles:
     - manage-user-passwd
 
 - name: "TEST 2: Change user's IdM Passwd is not set and generate set, random, changed"
   hosts: ipa
-
   vars_files:
     - vars/passwdfile2.json
-
   vars:
     ipa_admin_user: admin
     ipa_admin_password: test123
-    ipa_host: idm.example.com 
-
+    ipa_host: idm.example.com
   roles:
     - manage-user-passwd
 
 - name: "TEST 3: Change user's IdM password: when neither is set: skipped"
   hosts: ipa
-
   vars_files:
     - vars/passwdfile3.json
-
   vars:
     ipa_admin_user: admin
     ipa_admin_password: test123
-    ipa_host: idm.example.com 
-
+    ipa_host: idm.example.com
   roles:
     - manage-user-passwd
 
 - name: "TEST 4:Change user's IdM password: missing generate field, no passwd: skipped "
   hosts: ipa
-
   vars_files:
     - vars/passwdfile4.json
-
   vars:
     ipa_admin_user: admin
     ipa_admin_password: test123
-    ipa_host: idm.example.com 
-
+    ipa_host: idm.example.com
   roles:
     - manage-user-passwd
 
 - name: "TEST 5:Change user's IdM password: missing generate=False, valid passwd: changed"
   hosts: ipa
-
   vars_files:
     - vars/passwdfile5.json
-
   vars:
     ipa_admin_user: admin
     ipa_admin_password: test123
-    ipa_host: idm.example.com 
-
+    ipa_host: idm.example.com
   roles:
     - manage-user-passwd
 
 - name: "TEST 6: Change user's IdM password: with list"
   hosts: ipa
-
   vars_files:
     - vars/passwordall.json
-
   vars:
     ipa_admin_user: admin
     ipa_admin_password: test123
-    ipa_host: idm.example.com 
-
+    ipa_host: idm.example.com
   roles:
     - manage-user-passwd
 

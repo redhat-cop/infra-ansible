@@ -1,0 +1,142 @@
+---
+
+- name: Check for valid client_authenticator_type value
+  set_fact:
+    invalid_field: "{{ '' if (client.client_authenticator_type | default('')) in client_vars.authenticator_type_opts else 'client_authenticator_type' }}"
+  when:
+    - client.client_authenticator_type is defined
+
+- name: "Invalid client_authenticator_type"
+  fail:
+    msg: "Skipping creation of client: {{ client.name }} due to invalid client_authenticator_type value."
+  ignore_errors: yes
+  when:
+    - invalid_field is defined
+    - invalid_field == "client_authenticator_type"
+
+- name: Check for valid protocol value
+  set_fact:
+    invalid_field: "{{ '' if (client.protocol | default('')) in client_vars.protocol_opts else 'protocol' }}"
+  when:
+    - client.protocol is defined
+
+- name: "Invalid protocol"
+  fail:
+    msg: "Skipping creation of client: {{ client.name }} due to invalid protocol value."
+  ignore_errors: yes
+  when:
+    - invalid_field is defined
+    - invalid_field == "protocol"
+
+- name: Set secret value if using client-secret authentication
+  set_fact:
+    secret: "{{ client.client_auth_secret }}"
+  when:
+    - client.client_auth_secret is defined
+    - client.client_authenticator_type is defined
+    - client.client_authenticator_type != 'client-secret')
+
+- name: "Create client: {{ client.name | mandatory }} in realm: {{ client.realm | mandatory }}"
+  keycloak_client:
+    auth_client_id: "{{ client.auth_client | default('admin-cli') }}"
+    auth_keycloak_url: "{{ client.auth_url | default('https://' + rh_sso_host + ':' + (rh_sso_port | string)) + '/auth' }}"
+    auth_realm: "{{ client.auth_realm | default('master') }}"
+    auth_username: "{{ client.auth_user | default(rh_sso_admin_user) }}"
+    auth_password: "{{ client.auth_password | default(rh_sso_admin_pass) }}"
+    state: "{{ client.state | default('present') }}"
+    realm: "{{ client.realm | default(omit) }}"
+    client_id: "{{ client.name | mandatory}}"
+    name: "{{ client.name | mandatory }}"
+    description: "{{ client.description | default(client.name) }}"
+    enabled: "{{ client.enabled | default(true) }}"
+    base_url: "{{ client.base_url | default(omit) }}"
+    admin_url: "{{ client.admin_url | default(omit) }}"
+    root_url: "{{ client.root_url | default(omit) }}"
+    client_authenticator_type: "{{ client.client_auth_type | default(omit) }}"
+    secret: "{{ secret | default(omit) }}"
+    redirect_uris: "{{ client.redirect_uris | default(omit) }}"
+    web_origins: "{{ client.web_origins | default(omit) }}"
+    bearer_only: "{{ client.bearer_only | default(false) }}"
+    consent_required: "{{ client.consent_req | default(false) }}"
+    standard_flow_enabled: "{{ client.standard_flow | default(false) }}"
+    implicit_flow_enabled: "{{ client.implicit_flow | default(false) }}"
+    direct_access_grants_enabled: "{{ client.direct_access_grants | default(false) }}"
+    service_accounts_enabled: "{{ client.svc_acct_enabled | default(false) }}"
+    authorization_services_enabled: "{{ client.auth_svc_enabled | default(false) }}"
+    frontchannel_logout: "{{ client.frontchannel_logout | default(false) }}"
+    protocol: "{{ client.protocol | default(omit) }}"
+    full_scope_allowed: "{{ client.full_scope_allowed | default(false) }}"
+    client_template: "{{ client.template | default('') }}"
+    use_template_config: "{{ client.use_template | default(false) }}"
+    use_template_scope: "{{ client.use_template_scope | default(false) }}"
+    use_template_mappers: "{{ client.use_template_mappers | default(false) }}"
+    surrogate_auth_required: "{{ client.surrogate_auth_req | default(false) }}"
+    default_roles: "{{ client.default_roles | default(omit)}}"
+    protocol_mappers: "{{ client.protocol_mappers | default(omit) }}"
+    attributes: "{{ client.attributes | default(omit) }}"
+    public_client: "{{ client.public_access | default(false) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_client
+  when:
+    - invalid_field is undefined or invalid_field|trim == ""
+
+- name: "Requesting Access Token"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ rh_sso_admin_user }}"
+      password: "{{ rh_sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_token
+
+- name: "Get Authentication Flows For Realm: {{ client.realm }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ client.realm }}/authentication/flows"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: client_flows
+  when:
+    - invalid_field is undefined or invalid_field|trim == ""
+    - client.authflow_overrides is defined
+
+- name: "Get Authentication Flow ID for Browser Override: {{ client.authflow_overrides.browser }}"
+  set_fact:
+    browser_override: "{{ client_flows.json | json_query(query) }}"
+  vars:
+    query: "[?alias=='{{ client.authflow_overrides.browser }}'].id"
+  when:
+    - client.authflow_overrides.browser is defined
+    - invalid_field is undefined or invalid_field|trim == ""
+
+- name: "Get Authentication Flow ID For Direct Grant Override: {{ client.authflow_overrides.direct_grant }}"
+  set_fact:
+    direct_override: "{{ client_flows.json | json_query(query) }}"
+  vars:
+    query: "[?alias=='{{ client.authflow_overrides.direct_grant }}'].id"
+  when:
+    - client.authflow_overrides.direct_grant is defined
+    - invalid_field is undefined or invalid_field|trim == ""
+
+- name: "Configure Auth Flow Overrides for client: {{ client.name }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ client.realm }}/clients/{{ rh_sso_client.end_state.id }}"
+    method: PUT
+    body:
+      authenticationFlowBindingOverrides:
+        browser: "{{ browser_override | first }}"
+    body_format: json
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  when:
+    - invalid_field is undefined or invalid_field|trim == ""
+    - client.authflow_overrides is defined
+    - browser_override|length > 0
+

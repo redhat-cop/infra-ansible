@@ -2,7 +2,8 @@
 
 # Download Binary
 - include_tasks: minishift_download.yml
-  when: download_minishift|bool
+  when:
+    - download_minishift|bool
 
 - name: Build Minishift Start command
   set_fact:
@@ -20,3 +21,4 @@
   environment:
     USER: "{{ minishift_local_user }}"
   delegate_to: localhost
+

@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This role allow users to automate the creation of their OpenStack Platform (OSP) instances based on their pre-defined inventory (see example below). 
+This role allow users to automate the creation of their OpenStack Platform (OSP) instances based on their pre-defined inventory (see example below).
 
 Requirements
 ------------
@@ -23,13 +23,13 @@ Dependencies
 * A valid OSP tenant with the proper configuration for:
   * Network (can be done with the `osp-admin-network` role)
   * Security Groups (can be done with the `osp-admin-sec-group` role)
-  * Volumes (can be done with the `osp-admin-volume` role) 
+  * Volumes (can be done with the `osp-admin-volume` role)
 
 
 Example Playbook
 ----------------
 
-``` 
+```
 - hosts: servers
   roles:
   - role: osp-admin-instance
@@ -77,11 +77,10 @@ osp_instances:
 License
 -------
 
-BSD
+Apache License 2.0
 
 
 Author Information
 ------------------
 
 Red Hat Community of Practice & staff of the Red Hat Open Innovation Labs.
-

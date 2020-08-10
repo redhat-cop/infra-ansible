@@ -1,0 +1,19 @@
+---
+
+- name: Set Authorization Header when specifying API token
+  set_fact:
+    auth_header: "Bearer {{ quay_api_token }}"
+  when: (quay_api_token|trim|length) > 0
+
+- name: Assert Authorization header has been set
+  assert:
+    that:
+      (quay_api_token|trim|length) > 0
+    fail_msg: "Quay API Token must be specified"
+
+- name: Manage Organizations
+  include_tasks: manage_organization.yml
+  loop: "{{ orgs | default([]) }}"
+  loop_control:
+    loop_var: quay_organization
+

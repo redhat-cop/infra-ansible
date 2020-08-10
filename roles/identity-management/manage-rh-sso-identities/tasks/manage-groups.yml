@@ -1,0 +1,34 @@
+---
+
+- name: "Processing group parameters"
+  include_tasks: pre-req.yml
+
+- name: "Retrieve template to create/update group"
+  set_fact:
+    sso_group_json: "{{ lookup('template', 'manage-groups.json.j2') | to_json }}"
+
+- name: "Create group"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ group_data.realm | mandatory }}/groups"
+    method: POST
+    body: "{{ sso_group_json }}"
+    body_format: json
+    status_code: 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  when: group_id[0] is not defined
+
+- name: "Update group"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ group_data.realm | mandatory }}/groups/{{ group_id[0].id }}"
+    method: PUT
+    body: "{{ sso_group_json }}"
+    body_format: json
+    status_code: 201, 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+  when: group_id[0] is defined

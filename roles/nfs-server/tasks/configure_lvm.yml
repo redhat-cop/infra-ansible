@@ -19,7 +19,7 @@
     force: yes
 
 - name: "Setup LV"
-  lvol: 
+  lvol:
     vg: "{{ nfs_vg_name }}"
     lv: "{{ nfs_lv_name }}"
     force: yes
@@ -30,14 +30,15 @@
     fstype: xfs
     dev: "/dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}"
 
-- name: "Ensure the base dir for NFS shares exists" 
+- name: "Ensure the base dir for NFS shares exists"
   file:
     path: "{{ nfs_share_basedir }}"
     state: directory
 
 - name: "Mount NFS base dir"
   mount:
-    src: "/dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}" 
+    src: "/dev/mapper/{{ nfs_vg_name }}-{{ nfs_lv_name }}"
     path: "{{ nfs_share_basedir }}"
-    fstype: xfs 
+    fstype: xfs
     state: mounted
+

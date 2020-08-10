@@ -8,15 +8,23 @@
 - name: Generate a consistent serial number to be used across all zones
   set_fact:
     zone_serial_number: "{{ ansible_date_time.epoch }}"
-    common_recursion: dns_data.named_global_config.recursion | default(default_recursion) 
+    common_recursion: dns_data.named_global_config.recursion | default(default_recursion)
   run_once: true
   delegate_to: "{{ ansible_play_hosts | first }}"
+
+- name: Flush any cache data and reload before making zone changes
+  block:
+    - command: /sbin/rndc flush
+    - command: /sbin/rndc reload
+  when:
+    - service_facts.ansible_facts.services['named.service'].state == "running"
 
 - include_tasks: process-zones.yml
   with_items:
     - "{{ dns_data.views }}"
   loop_control:
     loop_var: "view"
+    index_var: "view_idx"
 
 - name: Assemble the final view configuration
   assemble:

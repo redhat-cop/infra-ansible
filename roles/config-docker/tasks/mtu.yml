@@ -1,6 +1,6 @@
 ---
 
-- name: "Set Docker MTU based on parameters" 
+- name: "Set Docker MTU based on parameters"
   set_fact:
     new_mtu: "{{ ansible_facts[external_interface].mtu - mtu_offset|int }}"
 
@@ -55,4 +55,4 @@
     when:
     - not stat_result.stat.exists
   when:
-  - new_mtu != ansible_facts[docker_interface].mtu
+    - new_mtu != ansible_facts[docker_interface].mtu

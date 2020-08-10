@@ -1,7 +1,6 @@
 ---
 
-- name: Import identities information from CSV file 
+- name: Import identities information from CSV file
   hosts: identity
-
-  roles: 
+  roles:
     - populate-users

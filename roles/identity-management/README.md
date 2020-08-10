@@ -12,6 +12,7 @@ identities:
   targets:
     - idm
     - atlassian
+    - rh-sso
 
   users:
     - user_name: gdownie
@@ -32,7 +33,9 @@ identities:
       first_name: Wendel
       last_name: Clark
       email: "wclark@example.com"
-
+      realm: "my-realm"
+      targets:
+        - rh-sso
   groups:
     - name: "test-group1"
       targets:
@@ -42,6 +45,9 @@ identities:
         - lcohen
         - rhawkins
     - name: "test-group2"
+      realm: "my-realm"
+      targets:
+        - rh-sso
       members:
         - rhawkins
     - name: "test-group3"
@@ -50,4 +56,11 @@ identities:
       members:
         - gdownie
 
+  roles:
+    - name: "test-role"
+      realm: "test-realm"
+      targets:
+        - rh-sso
+      members:
+        - gdownie
 ```

@@ -1,11 +1,10 @@
 ---
 
-- name: "Install additional packages for IPA/IdM"
+- name: "Install packages for IPA/IdM"
   package:
-    name: "{{ item }}"
+    name:
+      - freeipa-client
+      - sssd-nfs-idmap
+      - python3-libselinux
     state: latest
-  with_items:
-  - ipa-client
-  - libsss_sudo
-  - sssd-nfs-idmap
-  - libselinux-python
+

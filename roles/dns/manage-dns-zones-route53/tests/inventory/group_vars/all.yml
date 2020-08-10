@@ -1,4 +1,6 @@
 ---
+test_aws_vpc_id: vpc-9dcde6f8
+test_aws_vpc_region: eu-west-1
 
 dns_data:
   views:
@@ -9,15 +11,15 @@ dns_data:
           route53:
             aws_access_key: "{{ aws_access_key }}"
             aws_secret_key: "{{ aws_secret_key }}"
-            vpc_id: vpc-9dcde6f8
-            vpc_region: eu-west-1
+            vpc_id: "{{ test_aws_vpc_id }}"
+            vpc_region: "{{ test_aws_vpc_region }}"
         - dns_domain: "roletest2.com"
           state: present
           route53:
             aws_access_key: "{{ aws_access_key }}"
             aws_secret_key: "{{ aws_secret_key }}"
-            vpc_id: vpc-9dcde6f8
-            vpc_region: eu-west-1
+            vpc_id: "{{ test_aws_vpc_id }}"
+            vpc_region: "{{ test_aws_vpc_region }}"
     - name: "public"
       zones:
         - dns_domain: "roletest3.com"

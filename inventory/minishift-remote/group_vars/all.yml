@@ -4,83 +4,84 @@ provision_infrastructure: True
 hosting_infrastructure: openstack
 
 osp_security_groups:
-- name: "ssh-sec-group"
-  description: "My SSH Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 22
-    port_range_max: 22
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-- name: "icmp-sec-group"
-  description: "ICMP Security Group"
-  rules:
-  - protocol: icmp
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-- name: "minishift-sec-group"
-  description: "Minishift Security Group"
-  rules:
-  - protocol: udp
-    port_range_min: 53
-    port_range_max: 53
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-  - protocol: tcp
-    port_range_min: 80
-    port_range_max: 80
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-  - protocol: tcp
-    port_range_min: 443
-    port_range_max: 443
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-  - protocol: tcp
-    port_range_min: 2376
-    port_range_max: 2376
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-  - protocol: tcp
-    port_range_min: 4001
-    port_range_max: 4001
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-  - protocol: tcp
-    port_range_min: 8053
-    port_range_max: 8053
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
-  - protocol: tcp
-    port_range_min: 8443
-    port_range_max: 8443
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0
+  - name: "ssh-sec-group"
+    description: "My SSH Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "icmp-sec-group"
+    description: "ICMP Security Group"
+    rules:
+      - protocol: icmp
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "minishift-sec-group"
+    description: "Minishift Security Group"
+    rules:
+      - protocol: udp
+        port_range_min: 53
+        port_range_max: 53
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 80
+        port_range_max: 80
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 443
+        port_range_max: 443
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 2376
+        port_range_max: 2376
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 4001
+        port_range_max: 4001
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 8053
+        port_range_max: 8053
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 8443
+        port_range_max: 8443
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
 
 osp_volumes:
-- name: "minishift-remote-vol"
-  display_description: "MiniShift Remote Volume"
-  display_name: "minishift-remote-vol"
-  size: 15
+  - name: "minishift-remote-vol"
+    display_description: "MiniShift Remote Volume"
+    display_name: "minishift-remote-vol"
+    size: 15
 
 osp_instances:
-- name: "my-minishift-remote-server"
-  meta:
-    group: minishift_remote
-  image: "CentOS-7-x86_64"
-  key_name: "my-key"
-  flavor: "m1.medium"
-  network: "my-network"
-  security_groups:
-    - ssh-sec-group
-    - icmp-sec-group
-    - minishift-sec-group
-  volumes:
-    - minishift-remote-vol
+  - name: "my-minishift-remote-server"
+    meta:
+      group: minishift_remote
+    image: "CentOS-7-x86_64"
+    key_name: "my-key"
+    flavor: "m1.medium"
+    network: "my-network"
+    security_groups:
+      - ssh-sec-group
+      - icmp-sec-group
+      - minishift-sec-group
+    volumes:
+      - minishift-remote-vol
 
 # Uncomment the below if a RHEL installation is use - which requires a valid subscription
 #rhsm_register: True
 #rhsm_pool: '^my pool$'
 #rhsm_repos:
-#- "rhel-7-server-rpms"
-#- rhel-7-server-extras-rpms
+#  - "rhel-7-server-rpms"
+#  - rhel-7-server-extras-rpms
+

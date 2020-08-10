@@ -5,29 +5,29 @@
     name: '{{ item }}'
     state: installed
   with_items:
-  - tftp-server
-  - syslinux
-  - firewalld
-  - python-firewall
+    - tftp-server
+    - syslinux
+    - firewalld
+    - python-firewall
 
 - name: 'Ensure firewalld is running'
   service:
     name: firewalld
-    state: started 
+    state: started
     enabled: yes
 
 - name: 'Ensure tftp-server is running'
   service:
     name: tftp
-    state: started 
+    state: started
     enabled: yes
 
 - name: 'Open Firewall for PXE/TFTP use'
-  firewalld: 
+  firewalld:
     port: "{{ item }}"
     permanent: yes
     state: enabled
     immediate: yes
   with_items:
-  - 69/udp
+    - 69/udp
 

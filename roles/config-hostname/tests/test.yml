@@ -2,4 +2,4 @@
 
 - hosts: my-host
   roles:
-  - role: config-hostname 
+    - role: config-hostname

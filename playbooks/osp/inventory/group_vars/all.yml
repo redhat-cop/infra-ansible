@@ -4,49 +4,48 @@ ansible_user: fedora
 ansible_become: True
 
 osp_volumes:
-- name: "vol1"
-  display_description: "Volume 1"
-  display_name: "Vol1"
-  size: 1
-- name: "vol2"
-  display_description: "Volume 2"
-  display_name: "Vol2"
-  size: 2
+  - name: "vol1"
+    display_description: "Volume 1"
+    display_name: "Vol1"
+    size: 1
+  - name: "vol2"
+    display_description: "Volume 2"
+    display_name: "Vol2"
+    size: 2
 
 osp_security_groups:
-- name: "multi-sec-group"
-  description: "My Multi-Port Sec Group"
-  rules:
-  - protocol: tcp
-    port_range_min: 22
-    port_range_max: 22
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
-  - protocol: tcp
-    port_range_min: 80
-    port_range_max: 80
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
-- name: "icmp-sec-group"
-  description: "ICMP Security Group"
-  rules:
-  - protocol: icmp
-    direction: ingress
-    remote_ip_prefix: 0.0.0.0/0 
+  - name: "multi-sec-group"
+    description: "My Multi-Port Sec Group"
+    rules:
+      - protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+      - protocol: tcp
+        port_range_min: 80
+        port_range_max: 80
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
+  - name: "icmp-sec-group"
+    description: "ICMP Security Group"
+    rules:
+      - protocol: icmp
+        direction: ingress
+        remote_ip_prefix: 0.0.0.0/0
 
 osp_instances:
-- name: "fedora1"
-  meta:
-    group: osp_instances
-  image: "Fedora-Cloud-Base-26-1.5.x86_64"
-  key_name: "my-keypair"
-  flavor: "m1.medium"
-  network: "my-network"
-  security_groups:
-  - multi-sec-group
-  - icmp-sec-group
-  volumes:
-  - vol1
-  - vol2
-
+  - name: "fedora1"
+    meta:
+      group: osp_instances
+    image: "Fedora-Cloud-Base-26-1.5.x86_64"
+    key_name: "my-keypair"
+    flavor: "m1.medium"
+    network: "my-network"
+    security_groups:
+      - multi-sec-group
+      - icmp-sec-group
+    volumes:
+      - vol1
+      - vol2
 

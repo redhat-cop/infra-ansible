@@ -5,3 +5,9 @@
 
 - name: "Manage Atlassian Identities"
   import_playbook: manage-atlassian-identities.yml
+
+- name: "Manage AWS Identities"
+  import_playbook: manage-aws-identities.yml
+
+- name: "Manage RH SSO Identities"
+  import_playbook: manage-rh-sso-identities.yml

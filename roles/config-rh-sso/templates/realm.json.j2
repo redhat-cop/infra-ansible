@@ -1,0 +1,14 @@
+{
+  "id": "{{ realm_data.id | default(realm_data.name) }}",
+  "realm": "{{ realm_data.name | mandatory }}",
+  "displayName": "{{ realm_data.displayName | default(realm_data.name) }}",
+  "enabled": "{{ realm_data.enabled | default(true) }}",
+  "sslRequired": "{{ realm_data.sslRequired | default('external') }}",
+  "registrationAllowed": "{{ realm_data.registrationAllowed | default(true) }}",
+  "loginWithEmailAllowed": "{{ realm_data.emailLogin | default(true) }}",
+  "duplicateEmailsAllowed": "{{ realm_data.dupsAllowed | default(false) }}",
+  "resetPasswordAllowed": "{{ realm_data.resetPwd | default(false) }}",
+  "editUsernameAllowed": "{{ realm_data.editUname | default(false) }}",
+  "bruteForceProtected": "{{ realm_data.bruteForceProtected | default(true) }}"
+}
+

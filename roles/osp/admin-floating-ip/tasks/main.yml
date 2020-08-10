@@ -1,0 +1,22 @@
+---
+
+- name: "Install prereq software"
+  package:
+    name: 'python2-shade'
+    state: present
+
+- name: "Create the floating ip"
+  os_floating_ip:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
+    fixed_address: "{{ item.fixed_address | default(omit) }}"
+    floating_ip_address: "{{ item.floating_ip_address | default(omit) }}"
+    nat_destination: "{{ item.nat_destination | default(omit) }}"
+    network: "{{ item.network | default(omit) }}"
+    purge: "{{ item.purge | default(omit) }}"
+    reuse: "{{ item.reuse | default(omit) }}"
+    server: "{{ item.server }}"
+    state: "{{ item.state | default(omit) }}"
+    timeout: "{{ item.timeout | default(omit) }}"
+    wait: "{{ item.wait | default(omit) }}"
+  with_items:
+  - "{{ osp_floating_ips | default([]) }}"

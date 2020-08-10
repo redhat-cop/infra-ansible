@@ -6,4 +6,5 @@
   hosts: ocp-nexus
 
   roles:
-  - configure-nexus
+    - configure-nexus
+

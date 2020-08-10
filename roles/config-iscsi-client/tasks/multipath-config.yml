@@ -1,7 +1,7 @@
 ---
 
 - name: "Configure MultiPath configuration"
-  blockinfile: 
+  blockinfile:
     path: /etc/multipath.conf
     block: |
       blacklist {
@@ -18,8 +18,6 @@
   service:
     name: multipathd
     state: restarted
-  when: 
-  - multipathconf.changed 
-
-
+  when:
+    - multipathconf.changed
 

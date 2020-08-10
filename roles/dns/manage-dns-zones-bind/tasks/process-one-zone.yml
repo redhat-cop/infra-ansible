@@ -10,38 +10,42 @@
     state: absent
   ignore_errors: True
   with_items:
-    - "/var/named/static/{{ view.name + '-' + zone.dns_domain }}.db"
+    - "{{ zone_files_location }}/{{ view.name + '-' + zone.dns_domain }}.db"
   when:
     - zone_state == 'absent'
 
 - block:
-  - name: Prepare Zone Files
-    vars:
-      zone_dns_domain: "{{ zone.dns_domain }}"
-    template:
-      src: zone.db.j2
-      dest: "/var/named/static/{{ view.name + '-' + zone.dns_domain }}.db"
-      owner: "{{ bind_user }}"
-      group: "{{ bind_group }}"
-      mode: 0660
-    notify: restart named
+    - name: Prepare Zone Files
+      vars:
+        zone_dns_domain: "{{ zone.dns_domain }}"
+      template:
+        src: zone.db.j2
+        dest: "/var/named/static/{{ view.name + '-' + zone.dns_domain }}.db"
+        owner: "{{ bind_user }}"
+        group: "{{ bind_group }}"
+        force: False
+        mode: 0660
+      notify: restart named
+      when:
+        - zone.type|default('master') != 'forward'
 
-  - name: Prepare the zone config content
-    vars:
-      zone_type: "{{ zone.type | default('master') }}"
-      zone_dns_domain: "{{ zone.dns_domain }}"
-      zone_forwarders: "{{ zone.forwarders | default([]) }}"
-      view_name: "{{ view.name }}"
-    template:
-      src: zone-config.j2
-      dest: "{{ dns_zone_temp_config_dir }}/{{ view.name }}/0002-{{ zone.dns_domain }}.cfg"
-      owner: "{{ bind_user }}"
-      group: "{{ bind_group }}"
-      mode: 0660
+    - name: Prepare the zone config content
+      vars:
+        zone_type: "{{ zone.type | default('master') }}"
+        zone_dns_domain: "{{ zone.dns_domain }}"
+        zone_forwarders: "{{ zone.forwarders | default([]) }}"
+        view_name: "{{ view.name }}"
+      template:
+        src: zone-config.j2
+        dest: "{{ dns_zone_temp_config_dir }}/{{ view.name }}/0002-{{ zone.dns_domain }}.cfg"
+        owner: "{{ bind_user }}"
+        group: "{{ bind_group }}"
+        mode: 0660
+      notify: restart named
 
-  - name: "Set flag that a zone was processed"
-    set_fact:
-      processed_zones: True
+    - name: "Set flag that a zone was processed"
+      set_fact:
+        processed_zones: True
   when:
     - zone.named is defined
     - zone.named|bool != False

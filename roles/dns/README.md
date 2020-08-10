@@ -28,22 +28,22 @@ Example Playbooks
 ```
 - hosts: new-dns-servers
   roles:
-  - role: cofig-dns-server
-  - role: manage-dns-zones
-  - role: manage-dns-records
+  - role: dns/cofig-dns-server-bind
+  - role: dns/manage-dns-zones-bind
+  - role: dns/manage-dns-records
 ```
 
 ```
 - hosts: existing-nsupdate-servers
   roles:
-  - role: manage-dns-records
+  - role: dns/manage-dns-records
 ```
 
 ```
 - hosts: route53-servers
   roles:
-  - role: manage-dns-zones
-  - role: manage-dns-records
+  - role: dns/manage-dns-zones-route53
+  - role: dns/manage-dns-records
 ```
 
 
@@ -55,17 +55,19 @@ Example Inventory
 
 ```
 print_dns_keys: True
+dnssec_keygen_algorithm: hmac-sha512  # Default: 'HMAC-SH256'
+dnssec_keygen_size: 512               # Default: '256'
 
 dns_data:
   named_global_config:
-    recursion: 'no'               # Default: 'yes'
-    dnssec_enable: 'yes'          # Default: 'no'
-    dnssec_validation: 'yes'      # Default: 'no'
-    dnssec_lookaside: 'no'        # Default: 'auto'
-    allow_query:                  # Default: 'any'
+    recursion: 'no'                   # Default: 'yes'
+    dnssec_enable: 'yes'              # Default: 'no'
+    dnssec_validation: 'yes'          # Default: 'no'
+    dnssec_lookaside: 'no'            # Default: 'auto'
+    allow_query:                      # Default: 'any'
     - 192.168.20.0/32
     - 192.168.30.0/24
-    allow_transfer:               # Default: 'any'
+    allow_transfer:                   # Default: 'any'
     - 192.168.10.11/32
     - 192.168.10.12/32
   views:
@@ -81,8 +83,8 @@ dns_data:
       state: present
       named: True
       route53:
-        aws_access_key: "ADFGIASDF343FMSDFF5431A"
-        aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
         vpc_id: vpc-9dcde6f8  # Private Zones only
         vpc_region: eu-west-1 # Private Zones only
         private_zone: true
@@ -91,7 +93,7 @@ dns_data:
       - server: "192.168.48.26"
         key_name: "private-first.example.com"
         key_secret: "EhZfRtlHgy7xTIi2LeVSGsBj99Sb8IGB6K30ovg13dE="
-        key_algorithm: "hmac-sha256"
+        key_algorithm: "hmac-sha512"
       entries:
       - type: A
         record: master
@@ -109,7 +111,7 @@ dns_data:
       - server: "192.168.48.26"
         key_name: "private-second.example.com"
         key_secret: "+UYdpSzdQyZ20V9/2Ud9RjHFz9Pouqn4aXP3V9X/gq4="
-        key_algorithm: "hmac-sha256"
+        key_algorithm: "hmac-sha512"
       entries:
       - type: A
         record: master
@@ -133,8 +135,8 @@ dns_data:
     zones:
     - dns_domain: first.example.com
       route53:
-        aws_access_key: "ADFGIASDF343FMSDFF5431A"
-        aws_secret_key: "EqFDGSDFGEWwergdsg4315L679DsA065wU+X1mPRtRLQ4Hve"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
       entries:
       - type: A
         record: master
