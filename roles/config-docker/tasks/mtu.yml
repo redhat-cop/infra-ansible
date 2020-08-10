@@ -55,4 +55,4 @@
     when:
     - not stat_result.stat.exists
   when:
-    - new_mtu != ansible_facts[docker_interface].mtu
+  - new_mtu != ansible_facts[docker_interface].mtu
