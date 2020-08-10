@@ -1,0 +1,8 @@
+---
+
+- name: Add Docker stable repo for Ubuntu
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    state: present
+    update_cache: true
+    validate_certs: true

@@ -1,0 +1,10 @@
+---
+
+- name: Add Docker stable repo for CentOS
+  yum_repository:
+    name: docker-ce-stable
+    description: "Docker CE Stable - x86_64"
+    file: docker-ce.repo
+    baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg

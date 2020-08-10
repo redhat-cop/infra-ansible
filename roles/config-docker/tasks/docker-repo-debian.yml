@@ -1,0 +1,8 @@
+---
+
+- name: Add Docker stable repo for Debian
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+    state: present
+    update_cache: true
+    validate_certs: true
