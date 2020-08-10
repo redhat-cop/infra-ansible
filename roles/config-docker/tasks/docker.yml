@@ -2,15 +2,15 @@
 
 - name: Get variables for OS
   include_vars: "{{ item }}"
-  with_items: "../vars/{{ ansible_os_family | lower }}.yml"
+  with_items: "{{ ansible_distribution | lower }}.yml"
 
 - name: "Remove old versions of Docker"
   package:
     name: "{{ docker-packages-remove }}"
     state: absent
 
-- name: "Docker repository - {{ ansible_os_family }}"
-  include_tasks: "docker-repo-{{ ansible_os_family | lower }}.yml"
+- name: "Docker repository - {{ ansible_distribution }}"
+  include_tasks: "docker-repo-{{ ansible_distribution | lower }}.yml"
 
 - name: "Install docker package(s)"
   package:
