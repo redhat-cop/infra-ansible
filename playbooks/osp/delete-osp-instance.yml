@@ -3,9 +3,9 @@
 - name: Delete Instance(s)
   hosts: osp-provisioner
   vars:
-    osp_resource_state: absent 
+    osp_resource_state: absent
   roles:
-  - osp/admin-instance
-  - osp/admin-sec-group
-  - osp/admin-volume
+    - osp/admin-instance
+    - osp/admin-sec-group
+    - osp/admin-volume
 

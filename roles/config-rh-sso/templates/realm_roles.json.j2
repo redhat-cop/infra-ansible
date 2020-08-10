@@ -1,0 +1,10 @@
+{
+  "id": "{{ role_data.id | default(omit) }}",
+  "name": "{{ role_data.name | mandatory}}",
+  "description": "{{ role_data.description | default('') }}",
+  "attributes": "{{ role_data.attributes | default(omit) }}",
+  "clientRole": "{{ role_data.clientRole | default(false) }}",
+  "composite":  "{{ role_data.composite | default(false) }}",
+  "composites": "{{ role_data.composites | default(omit) }}",
+  "containerId": "{{ role_data.containerId | default(role_data.targetRealm) }}"
+}

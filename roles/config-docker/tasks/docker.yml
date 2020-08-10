@@ -1,4 +1,5 @@
 ---
+
 - name: "Remove old versions of Docker"
   dnf:
     name: docker,docker-client,docker-client-latest,docker-common,docker-latest,docker-latest-logrotate,docker-logrotate,docker-selinux,docker-engine-selinux,docker-engine
@@ -18,6 +19,15 @@
     name: docker-ce,docker-ce-cli,containerd.io
     state: latest
 
+- name: "Install additional packages for Docker"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - docker
+  notify:
+    - restart docker
+
 - name: "Enable docker"
   service:
     name: docker
@@ -33,10 +43,10 @@
   group:
     name: docker
     state: present
-  notify: 
-  - restart docker
+  notify:
+    - restart docker
 
-- name: "Add username to the docker group" 
+- name: "Add username to the docker group"
   user:
     name: "{{ docker_username }}"
     groups: "docker"

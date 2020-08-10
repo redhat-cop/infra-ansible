@@ -3,25 +3,47 @@
   import_role:
     name: ../roles/config-packages
 
-- name: 'Update SSO bind addresses'
-  replace:
-    path: /etc/opt/rh/rh-sso7/keycloak/standalone/standalone.xml
-    regexp: '127.0.0.1'
-    replace: '0.0.0.0'
+- name: 'Start Red Hat SSO in Standalone mode'
+  service:
+    name: rh-sso7
+    state: started
+    enabled: yes
+
+- name: 'Waiting for SSO service to load'
+  pause:
+    seconds: '30'
+
+- name: 'Update Red Hat SSO management interface IP address'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/interface=management:write-attribute(name=inet-address,value="${jboss.bind.address.management:0.0.0.0}")'
+  args:
+    executable: "/bin/bash"
+
+- name: 'Update Red hat SSO public interface IP address'
+  shell: >
+    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+    --command='/interface=public:write-attribute(name=inet-address,value="${jboss.bind.address:0.0.0.0}")'
+  args:
+    executable: "/bin/bash"
+
+- include_tasks: setup-rh-sso-ssl.yml
+  when:
+    - rh_sso_protocol == 'https'
 
 - name: 'Add a default SSO administration user'
   shell: >
     "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/add-user-keycloak.sh"
-    --user "{{ sso_admin_user }}"
-    --password "{{ sso_admin_pass }}"
+    --user "{{ rh_sso_admin_user }}"
+    --password "{{ rh_sso_admin_pass }}"
   args:
     executable: "/bin/bash"
 
-- name: 'Start Red Hat SSO in Standalone mode'
+- name: 'Restart Red Hat SSO service to apply changes'
   service:
     name: rh-sso7
     state: restarted
 
 - name: 'Waiting for SSO service to load'
   pause:
-    seconds: '30'
+    seconds: '10'

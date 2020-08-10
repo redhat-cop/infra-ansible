@@ -1,25 +1,47 @@
 ---
 
-- name: "Set certificate fact"
-  set_fact:
-    certificate: "{{ host_cert.json.result.result.certificate }}"
-
-- name: "Write the Host Specific Certificate to a file"
-  template:
-    src: cert.j2
-    dest: "{{ target_host_cert_file }}"
+- block:
+    - name: "Write the Host Specific Certificate to a file"
+      vars:
+        cert_file_content: "{{ host_cert.json.result.result.certificate }}"
+        cert_file_type: "CERTIFICATE"
+      template:
+        src: cert.j2
+        dest: "{{ target_cert_files.host_cert }}"
+    - name: "Remove any extra new-lines in the file"
+      lineinfile:
+        path: "{{ target_cert_files.host_cert }}"
+        regexp: '^$'
+        state: absent
   when:
-  - target_host_cert_file is defined
-  - target_host_cert_file|trim != ''
+    - target_cert_files.host_cert is defined
+    - target_cert_files.host_cert|trim != ''
 
-- name: "Set certificate fact"
-  set_fact:
-    certificate: "{{ ca_cert.json.result.result.certificate }}"
-
-- name: "Write the CA Certificate to a file"
-  template:
-    src: cert.j2
-    dest: "{{ target_ca_cert_file }}"
+- block:
+    - name: "Write the CA Certificate to a file"
+      vars:
+        cert_file_content: "{{ ca_cert.json.result.result.certificate }}"
+        cert_file_type: "CERTIFICATE"
+      template:
+        src: cert.j2
+        dest: "{{ target_cert_files.intermediate_ca }}"
+    - name: "Remove any extra new-lines in the file"
+      lineinfile:
+        path: "{{ target_cert_files.intermediate_ca }}"
+        regexp: '^$'
+        state: absent
   when:
-  - target_ca_cert_file is defined
-  - target_ca_cert_file|trim != ''
+    - target_cert_files.intermediate_ca is defined
+    - target_cert_files.intermediate_ca|trim != ''
+
+- name: "Create Fullchain Cert if requested"
+  copy:
+    dest: "{{ target_cert_files.fullchain }}"
+    content: "{{ lookup('file', target_cert_files.host_cert) + '\n' + lookup('file', target_cert_files.intermediate_ca) + '\n' }}"
+  when:
+    - target_cert_files.host_cert is defined
+    - target_cert_files.host_cert|trim != ''
+    - target_cert_files.intermediate_ca is defined
+    - target_cert_files.intermediate_ca|trim != ''
+    - target_cert_files.fullchain is defined
+    - target_cert_files.fullchain|trim != ''

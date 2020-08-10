@@ -26,4 +26,4 @@ minishift_url:
 
 # Extra arguments to Minishift start command
 minishift_extra_start_args: ""
-      
+

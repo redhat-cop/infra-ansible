@@ -1,5 +1,5 @@
------BEGIN CERTIFICATE-----
-{% for c in certificate %}{{ c }}{% if loop.index % 64 == 0 %}{{ "\n" }}{% endif %}
+-----BEGIN {{ cert_file_type }}-----
+{% for c in cert_file_content %}{{ c }}{% if loop.index % 64 == 0 %}{{ "\n" }}{% endif %}
 {% endfor %}
 
------END CERTIFICATE-----
+-----END {{ cert_file_type }}-----

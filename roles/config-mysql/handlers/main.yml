@@ -1,3 +1,5 @@
+---
+
 - name: Restart MySQL Service
   systemd:
     name: "{{ mysql_name }}"
@@ -14,3 +16,4 @@
   service:
     name: iptables
     state: restarted
+

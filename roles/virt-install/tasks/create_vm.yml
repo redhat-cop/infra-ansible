@@ -2,8 +2,8 @@
 
 - name: 'Initialize Facts for VM deployments'
   set_fact:
-   virt_install_commands: []
-   mounted_iso: {}
+    virt_install_commands: []
+    mounted_iso: {}
 
 - name: 'Gather the list of existing VMs'
   command: virsh list --name
@@ -13,10 +13,10 @@
 - name: 'Compose Command for new VM provisioning'
   include_tasks: 'virt-install.yml'
   when:
-  - inventory_hostname == hostvars[vm]['infrahost']
-  - hostvars[vm]['libvirt_name'] not in existing_vms.stdout_lines
+    - inventory_hostname == hostvars[vm]['infrahost']
+    - hostvars[vm]['libvirt_name'] not in existing_vms.stdout_lines
   with_items:
-  - "{{ groups['infra_vms'] }}"
+    - "{{ groups['infra_vms'] }}"
   loop_control:
     loop_var: vm
 
@@ -26,14 +26,16 @@
   register: vm_instances
   async: 7200
   poll: 0
-  when: virt_install_commands|length > 0
+  when:
+    - virt_install_commands|length > 0
 
 - name: 'Wait for VMs creation to complete'
-  async_status: 
+  async_status:
     jid: "{{ item.ansible_job_id }}"
   register: vm_jobs
   until: vm_jobs.finished
   retries: 300
   with_items: "{{ vm_instances.results }}"
-  when: virt_install_commands|length > 0
+  when:
+    - virt_install_commands|length > 0
 

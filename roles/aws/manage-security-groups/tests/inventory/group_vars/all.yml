@@ -5,41 +5,41 @@ aws_key: "my_aws_key"
 aws_secret: "my_aws_secret"
 
 aws_networks:
-- name: "my-test-vpc"
-  cidr_blocks:
-    - 10.10.0.0/16
-  tags:
-    hello: world
-    some: value
+  - name: "my-test-vpc"
+    cidr_blocks:
+      - 10.10.0.0/16
+    tags:
+      hello: world
+      some: value
 
 aws_subnets:
-- name: "my-subnet"
-  vpc_name: "my-test-vpc"
-  cidr_block: "10.10.1.16/28"
-  enable_public_ip: false
-  tags:
-    some: "set"
-    of: "tags"
+  - name: "my-subnet"
+    vpc_name: "my-test-vpc"
+    cidr_block: "10.10.1.16/28"
+    enable_public_ip: false
+    tags:
+      some: "set"
+      of: "tags"
 
 aws_security_groups:
-- name: "my-test-sg"
-  description: "my test security group"
-  purge_incoming_rules: true
-  purge_outgoing_rules: true
-  purge_tags: true
-  incoming_rules:
-    - proto: tcp
-      ports:
-      - 80
-      - 443
-      cidr_ip: 0.0.0.0/0
-    - proto: tcp
-      from_port: 21
-      to_port: 22
-      cidr_ip: 0.0.0.0/0
-  outgoing_rules:
-    - proto: all
-  tags:
-    my: "tag_val"
-    something: "else"
-  vpc_name: "my-test-vpc"
+  - name: "my-test-sg"
+    description: "my test security group"
+    purge_incoming_rules: true
+    purge_outgoing_rules: true
+    purge_tags: true
+    incoming_rules:
+      - proto: tcp
+        ports:
+          - 80
+          - 443
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 21
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+    outgoing_rules:
+      - proto: all
+    tags:
+      my: "tag_val"
+      something: "else"
+    vpc_name: "my-test-vpc"

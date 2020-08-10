@@ -29,3 +29,4 @@
   tasks:
     - include_role:
         name: roles/configure-bitbucket
+

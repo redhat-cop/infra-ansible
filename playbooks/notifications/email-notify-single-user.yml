@@ -2,13 +2,13 @@
 
 - include_vars:
     file: "{{ email_content_file }}"
-  when: 
+  when:
     - email_content_file is defined
 - set_fact:
     markdown_content: "{{ body }}"
 - include_role:
     name: notifications/md-to-html
-- set_fact: 
+- set_fact:
     mail: "{{ mail | combine( {'subject': title, 'body': md_to_html.html_body_message, 'to': email_to} ) }}"
 - include_role:
     name: notifications/send-email

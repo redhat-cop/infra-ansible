@@ -1,0 +1,22 @@
+---
+
+- file:
+    path: "{{ target_cert_files.host_cert | dirname }}"
+    recurse: yes
+  when:
+  - target_cert_files.host_cert is defined
+  - target_cert_files.host_cert|trim != ''
+
+- file:
+    path: "{{ target_cert_files.fullchain | dirname }}"
+    recurse: yes
+  when:
+  - target_cert_files.fullchain is defined
+  - target_cert_files.fullchain|trim != ''
+
+- file:
+    path: "{{ target_cert_files.intermediate_ca | dirname }}"
+    recurse: yes
+  when:
+  - target_cert_files.intermediate_ca is defined
+  - target_cert_files.intermediate_ca |trim != ''

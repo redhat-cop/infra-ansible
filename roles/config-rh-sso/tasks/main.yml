@@ -2,8 +2,76 @@
 # tasks file for Red Hat SSO
 
 - import_tasks: 'prereq.yml'
+  tags:
+    - 'install'
+    - 'never'
+
 - import_tasks: 'setup-rh-sso.yml'
-- include_tasks: 'configure-rh-sso.yml'
-  loop: "{{ realms }}"
+  tags:
+    - 'install'
+    - 'never'
+
+- include_tasks:
+    file: 'manage-realms.yml'
+    apply:
+      tags:
+        - 'create-realm'
+        - 'manage-realm'
+  loop: "{{ realms | default([]) }}"
   loop_control:
-    loop_var: realm
+    loop_var: realm_data
+  tags:
+    - 'create-realm'
+    - 'manage-realm'
+
+- include_tasks:
+    file: 'manage-roles.yml'
+    apply:
+      tags:
+        - 'create-roles'
+        - 'manage-roles'
+  loop: "{{ roles | default([]) }}"
+  loop_control:
+    loop_var: role_data
+  tags:
+    - 'create-roles'
+    - 'manage-roles'
+
+- include_tasks:
+    file: 'manage-auth-flow.yml'
+    apply:
+      tags:
+        - 'create-auth-flow'
+        - 'manage-auth-flow'
+  loop: "{{ auth_flows | default([]) }}"
+  loop_control:
+    loop_var: af
+  tags:
+    - 'create-auth-flow'
+    - 'manage-auth-flow'
+
+- include_tasks:
+    file: 'manage-clients.yml'
+    apply:
+      tags:
+        - 'create-clients'
+        - 'manage-clients'
+  loop: "{{ clients | default([]) }}"
+  loop_control:
+    loop_var: client
+  tags:
+    - 'create-clients'
+    - 'manage-clients'
+
+- include_tasks:
+    file: 'manage-id-provider.yml'
+    apply:
+      tags:
+        - 'create-id-provider'
+        - 'manage-id-provider'
+  loop: "{{ id_providers | default([]) }}"
+  loop_control:
+    loop_var: id_provider
+  tags:
+    - 'create-id-provider'
+    - 'manage-id-provider'

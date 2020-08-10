@@ -2,17 +2,16 @@
 
 # Block for "become: yes"
 - block:
+    - name: "Copy CA cert(s) to target server"
+      copy:
+        src: "{{ item }}"
+        dest: "{{ server_ca_location }}{{ item|basename }}"
+      loop: "{{ list_of_additional_ca_certs }}"
+      register: ca_cert_installed
 
-  - name: "Copy CA cert(s) to target server"
-    copy: 
-      src: "{{ item }}"
-      dest: "{{ server_ca_location }}{{ item|basename }}"
-    loop: "{{ list_of_additional_ca_certs }}"
-    register: ca_cert_installed
-
-  - name: "update trusted ca"
-    command: /bin/update-ca-trust
-    when: 
-      - ca_cert_installed.changed
+    - name: "update trusted ca"
+      command: /bin/update-ca-trust
+      when:
+        - ca_cert_installed.changed
 
   become: yes
