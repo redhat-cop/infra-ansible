@@ -2,7 +2,7 @@
 
 - name: Get variables for OS
   include_vars: "{{ item }}"
-  with_items: "{{ ansible_os_family | lower }}.yml"
+  with_items: "../vars/{{ ansible_os_family | lower }}.yml"
 
 - name: "Remove old versions of Docker"
   package:
