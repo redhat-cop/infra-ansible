@@ -6,7 +6,7 @@
 
 - name: "Remove old versions of Docker"
   package:
-    name: "{{ docker-packages-remove }}"
+    name: "{{ docker_packages_remove }}"
     state: absent
 
 - name: "Docker repository - {{ ansible_distribution }}"
@@ -14,7 +14,7 @@
 
 - name: "Install docker package(s)"
   package:
-    name: "{{ docker-packages-install }}"
+    name: "{{ docker_packages_install }}"
     state: latest
 
 # This task will error out if the user doesn't exist
