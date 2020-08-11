@@ -5,6 +5,7 @@
       import_tasks: kernel_cgroups_v1.yml
       when:
         - kernel_cgroups_v1|default(False)
+        - ansible_distribution == 'Fedora'
 
     - name: "Install, configure and enable Docker"
       import_tasks: docker.yml
@@ -13,4 +14,3 @@
       import_tasks: mtu.yml
   when:
     - docker_install|default(False)
-
