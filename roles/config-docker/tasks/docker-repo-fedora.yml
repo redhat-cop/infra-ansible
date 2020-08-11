@@ -4,7 +4,7 @@
   yum_repository:
     name: docker-ce-stable
     description: "Docker CE Stable - x86_64"
-    file: docker-ce.repo
+    file: docker-ce
     baseurl: "https://download.docker.com/linux/fedora/$releasever/$basearch/stable"
     gpgcheck: yes
     gpgkey: https://download.docker.com/linux/fedora/gpg
