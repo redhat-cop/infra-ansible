@@ -3,5 +3,5 @@
     "description": "{{ host.description | default('') }}",
     "inventory": {{ inv_id }},
     "enabled": true,
-    "variables": "{{ host.variables | default('---') }}"
+    "variables": "{{ host.variables | from_yaml | default('---') }}"
 }

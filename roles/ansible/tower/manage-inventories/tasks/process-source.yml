@@ -24,7 +24,7 @@
       source: "{{ source.source | default('scm') }}"
       source_path: "{{ source.source_path }}"
       source_script: null
-      source_vars: "{{ source.source_vars }}"
+      source_vars: "{{ source.source_vars | from_yaml }}"
       credential: "{{ credential_id | int }}"
       source_regions: ""
       instance_filters: ""
