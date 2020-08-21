@@ -69,6 +69,7 @@ auth_flows.executions.provider | The type of execution to create. This comes fro
 auth_flows.executions.requirement | The appropriate requirements (i.e. REQUIRED, ALTERNATIVE, etc.) for this execution. Varies between types of provider | no | N/A |
 auth_flows.executions.index | The order to place this execution in | no | 0 |
 auth_flows.executions.name | The name that you would like to refer to this execution as | no | N/A |
+auth_flows.executions.config | A dictionary for configuration parameters to add to the auth flow execution | no | N/A |
 
 ## Example Playbook
 

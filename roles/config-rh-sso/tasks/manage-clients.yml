@@ -75,7 +75,7 @@
     protocol_mappers: "{{ client.protocol_mappers | default(omit) }}"
     attributes: "{{ client.attributes | default(omit) }}"
     public_client: "{{ client.public_access | default(false) }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: rh_sso_client
   when:
     - invalid_field is undefined or invalid_field|trim == ""
@@ -90,7 +90,7 @@
       password: "{{ rh_sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: rh_sso_token
 
 - name: "Get Authentication Flows For Realm: {{ client.realm }}"
@@ -99,13 +99,13 @@
     method: GET
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: client_flows
   when:
     - invalid_field is undefined or invalid_field|trim == ""
     - client.authflow_overrides is defined
 
-- name: "Get Authetication Flow ID for Browser Override: {{ client.authflow_overrides.browser }}"
+- name: "Get Authentication Flow ID for Browser Override: {{ client.authflow_overrides.browser }}"
   set_fact:
     browser_override: "{{ client_flows.json | json_query(query) }}"
   vars:
@@ -134,7 +134,7 @@
     status_code: 204
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
-    validate_certs: "{{ rh_sso_ssl_cert_validation | default(yes) }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   when:
     - invalid_field is undefined or invalid_field|trim == ""
     - client.authflow_overrides is defined
