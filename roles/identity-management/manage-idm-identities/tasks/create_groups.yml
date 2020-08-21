@@ -9,6 +9,7 @@
     state: "{{ group.state | default(omit) }}"
     name: "{{ group.name | trim }}"
     user: "{{ group.members | default(omit) }}"
+    group: "{{ group.childgroups | default(omit) }}"
   with_items:
     - "{{ identities.groups }}"
   loop_control:
