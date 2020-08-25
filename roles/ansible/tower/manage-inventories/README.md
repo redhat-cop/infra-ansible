@@ -37,15 +37,23 @@ ansible_tower:
   - name: test1
     hosts:
     - name: "localhost"
-      variables: "---\\nansible_connection: local"
+      variables: |-
+        ---
+        ansible_connection: local
     - name: "remote1"
-      variables: "---\\nansible_user: username"
+      variables: |-
+        ---
+        ansible_user: username
   - name: test2
     hosts:
     - name: "localhost"
-      variables: "---\\nansible_connection: local"
+      variables: |-
+        ---
+        ansible_connection: local
     - name: "remote2"
-      variables: "---\\nansible_user: username"
+      variables: |-
+        ---
+        ansible_user: username
 ```
 
 ### Groups
@@ -59,21 +67,33 @@ ansible_tower:
   - name: test1
     groups:
     - name: "my-test1-group1"
-      variables: "---\\nfoo1: bar1\\nfoo2: bar2"
+      variables: |-
+        ---
+        foo1: bar1
+        foo2: bar2
       hosts:
       - name: "localhost"
     - name: "my-test1-group2"
-      variables: "---\\nfoo3: bar3\\nfoo4: bar4"
+      variables: |-
+        ---
+        foo3: bar3
+        foo4: bar4
       hosts:
       - name: "host1"
   - name: test2
     groups:
     - name: "my-test2-group1"
-      variables: "---\\nfoo5: bar5\\nfoo6: bar6"
+      variables: |-
+        ---
+        foo5: bar5
+        foo6: bar6
       hosts:
       - name: "host2"
     - name: "my-test2-group2"
-      variables: "---\\nfoo7: bar7\\nfoo8: bar8"
+      variables: |-
+        ---
+        foo7: bar7
+        foo8: bar8
       hosts:
       - name: "host3"
 ```
@@ -88,7 +108,9 @@ ansible_tower:
       variables: ""
       hosts:
       - name: "localhost"
-        variables: "---\\nansible_connection: local"
+        variables: |-
+          ---
+          ansible_connection: local
       organization: "Default"
       groups:
       - name: "my-test1-group1"
@@ -102,7 +124,11 @@ ansible_tower:
         source: "scm"
         source_project: "test-project1"
         source_path: "scripts/test-script1.py"
-        source_vars: "---\nFOO: foo\nBAR: bar\nBAZ: baz"
+        source_vars: |-
+          ---
+          FOO: foo
+          BAR: bar
+          BAZ: baz
       - name: "test-source2"
         description: "Test Source 2"
         credential: "Test Credential"
@@ -128,10 +154,14 @@ ansible_tower:
     hosts:
     - name: "localhost"
       description: ""
-      variables: "---\\nansible_connection: local"
+      variables: |-
+        ---
+        ansible_connection: local
     groups:
     - name: "seed_hosts"
-      variables: "---\\nfoo: bar\\n"
+      variables: |-
+        ---
+        foo: bar
       hosts:
       - name: "localhost"
     sources:
@@ -141,7 +171,10 @@ ansible_tower:
       source: "scm"
       source_project: "project1"
       source_path: "scripts/script1.py"
-      source_vars: "---\nFIRST: John\nLAST: Doe"
+      source_vars: |-
+        ---
+        FIRST: John
+        LAST: Doe
 ```
 
 
