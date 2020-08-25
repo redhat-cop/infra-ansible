@@ -12,6 +12,7 @@
     loop_var: group_data
 
   when:
+    - identities.groups is defined
     - identities.groups|length > 0
     - group_data.targets is undefined or 'aws' in identities.targets
     - group_data.state|default('present') == 'present'
