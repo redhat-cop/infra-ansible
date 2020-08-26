@@ -27,6 +27,11 @@
   args:
     executable: "/bin/bash"
 
+- include_tasks: setup-rh-sso-ha.yml
+  when:
+    - rh_sso_standalone_ha is defined
+    - rh_sso_standalone_ha == 'yes'
+
 - include_tasks: setup-rh-sso-ssl.yml
   when:
     - rh_sso_protocol == 'https'
