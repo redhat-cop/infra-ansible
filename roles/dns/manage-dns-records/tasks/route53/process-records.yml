@@ -10,8 +10,9 @@
 
 - name: "Manage Route53 DNS records for view: {{ dns.0.name }}, zone: {{ dns.1.dns_domain }}"
   include_tasks: process-one-record.yml
-  with_items:
-    - "{{ dns.1.entries }}"
+  loop: "{{ dns.1.entries }}"
+  loop_control:
+    loop_var: dns_record
   when:
     - dns.0.name == 'private' or dns.0.name == 'public'
     - dns.1.entries is defined
