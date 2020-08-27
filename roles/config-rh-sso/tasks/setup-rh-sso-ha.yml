@@ -1,32 +1,42 @@
 ---
 
-- name: 'Update Red Hat SSO management interface IP address'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/interface=management:write-attribute(name=inet-address,value="${jboss.bind.address.management:0.0.0.0}")'
-  args:
-    executable: "/bin/bash"
+- name: 'Configure Red Hat SSO service to load the High Availability scripts'
+  lineinfile:
+    path: /etc/opt/rh/rh-sso7/keycloak/rh-sso7.conf
+    regexp: '^WILDFLY_SERVER_CONFIG='
+    line: WILDFLY_SERVER_CONFIG=standalone-ha.xml
 
-- name: 'Update Red Hat SSO private interface IP address'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/interface=management:write-attribute(name=inet-address,value="${jboss.bind.address.private:0.0.0.0}")'
-  args:
-    executable: "/bin/bash"
+- name: 'Start Red Hat SSO in Standalone HA mode'
+  service:
+    name: rh-sso7
+    state: restarted
+    enabled: yes
 
-- name: 'Update Red hat SSO public interface IP address'
+- name: 'Waiting for SSO service to load'
+  pause:
+    seconds: '30'
+
+- name: 'Create PostgreSQL JDBC driver module definition'
   shell: >
     "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/interface=public:write-attribute(name=inet-address,value="${jboss.bind.address:0.0.0.0}")'
+    --command='module add --name=system.layers.keycloak.org.postgresql --resources=/tmp/postgresql-42.2.16.jar --dependencies=javax.api,javax.transaction.api'
   args:
     executable: "/bin/bash"
+  register: add_psql_module
+  failed_when:
+    - add_psql_module.rc == 1
+    - "'Module system.layers.keycloak.org.postgresql already exists' not in add_psql_module.stdout"
 
 - name: 'Add PostgreSQL JDBC Driver'
   shell: >
     "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=org.postgresql,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)'
+    --command='/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=system.layers.keycloak.org.postgresql,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)'
   args:
     executable: "/bin/bash"
+  register: config_psql_driver
+  failed_when:
+    - config_psql_driver.rc == 1
+    - "'WFLYCTL0212' not in config_psql_driver.stdout"
 
 - name: 'Edit KeycloakDS datasource -- Add PostgreSQL database parameters'
   shell: >
@@ -53,12 +63,5 @@
   shell: >
     "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
     --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=password,value={{ rh_sso_psql_db_pass }})'
-  args:
-    executable: "/bin/bash"
-
-- name: 'Create PostgreSQL JDBC driver module definition'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='module add --name=system.layers.keycloak.org.postgresql --resources=/tmp/postgresql-42.2.16.jar --dependencies=javax.api,javax.transaction.api'
   args:
     executable: "/bin/bash"

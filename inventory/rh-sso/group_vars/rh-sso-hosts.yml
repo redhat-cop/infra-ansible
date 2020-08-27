@@ -17,11 +17,11 @@ rh_sso_ssl:
   keystore_pass: changeit
   keystore_path: "/etc/security/keystore.jks"
 
-rh_sso_standalone_ha: yes
+rh_sso_standalone_ha: True
 rh_sso_psql_db_url: 192.168.16.6
 rh_sso_psql_db_port: 5432
 rh_sso_psql_db_user: postgres
-rh_sso_psql_db_pass: random
+rh_sso_psql_db_pass: db_passwd
 
 realms:
   - name: my-awesome-realm
