@@ -16,52 +16,61 @@
   pause:
     seconds: '30'
 
-- name: 'Create PostgreSQL JDBC driver module definition'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='module add --name=system.layers.keycloak.org.postgresql --resources=/tmp/postgresql-42.2.16.jar --dependencies=javax.api,javax.transaction.api'
-  args:
-    executable: "/bin/bash"
-  register: add_psql_module
-  failed_when:
-    - add_psql_module.rc == 1
-    - "'Module system.layers.keycloak.org.postgresql already exists' not in add_psql_module.stdout"
+- name: 'Configure Red Hat SSO to use PostgreSQL'
+  block:
+    - name: 'Download JDBC driver'
+      get_url:
+        url: https://jdbc.postgresql.org/download/postgresql-42.2.16.jar
+        dest: /tmp
 
-- name: 'Add PostgreSQL JDBC Driver'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=system.layers.keycloak.org.postgresql,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)'
-  args:
-    executable: "/bin/bash"
-  register: config_psql_driver
-  failed_when:
-    - config_psql_driver.rc == 1
-    - "'WFLYCTL0212' not in config_psql_driver.stdout"
+    - name: 'Create PostgreSQL JDBC driver module definition'
+      shell: >
+        "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+        --command='module add --name=system.layers.keycloak.org.postgresql --resources=/tmp/postgresql-42.2.16.jar --dependencies=javax.api,javax.transaction.api'
+      args:
+        executable: "/bin/bash"
+      register: add_psql_module
+      failed_when:
+        - add_psql_module.rc == 1
+        - "'Module system.layers.keycloak.org.postgresql already exists' not in add_psql_module.stdout"
 
-- name: 'Edit KeycloakDS datasource -- Add PostgreSQL database parameters'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=connection-url,value=jdbc:postgresql://{{ rh_sso_psql_db_url }}:{{ rh_sso_psql_db_port }}/keycloak)'
-  args:
-    executable: "/bin/bash"
+    - name: 'Add PostgreSQL JDBC Driver'
+      shell: >
+        "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+        --command='/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=system.layers.keycloak.org.postgresql,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)'
+      args:
+        executable: "/bin/bash"
+      register: config_psql_driver
+      failed_when:
+        - config_psql_driver.rc == 1
+        - "'WFLYCTL0212' not in config_psql_driver.stdout"
 
-- name: 'Edit KeycloakDS datasource -- Point KeycloakDS to use PostgreSQL JDBC driver'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=driver-name,value=postgresql)'
-  args:
-    executable: "/bin/bash"
+    - name: 'Edit KeycloakDS datasource -- Add PostgreSQL database parameters'
+      shell: >
+        "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+        --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=connection-url,value=jdbc:postgresql://{{ rh_sso_psql_db_url }}:{{ rh_sso_psql_db_port }}/keycloak)'
+      args:
+        executable: "/bin/bash"
 
-- name: 'Edit KeycloakDS datasource -- Add keycloak database username'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=user-name,value={{ rh_sso_psql_db_user }})'
-  args:
-    executable: "/bin/bash"
+    - name: 'Edit KeycloakDS datasource -- Point KeycloakDS to use PostgreSQL JDBC driver'
+      shell: >
+        "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+        --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=driver-name,value=postgresql)'
+      args:
+        executable: "/bin/bash"
 
-- name: 'Edit KeycloakDS datasource -- Add keycloak database password'
-  shell: >
-    "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
-    --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=password,value={{ rh_sso_psql_db_pass }})'
-  args:
-    executable: "/bin/bash"
+    - name: 'Edit KeycloakDS datasource -- Add keycloak database username'
+      shell: >
+        "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+        --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=user-name,value={{ rh_sso_psql_db_user }})'
+      args:
+        executable: "/bin/bash"
+
+    - name: 'Edit KeycloakDS datasource -- Add keycloak database password'
+      shell: >
+        "/opt/rh/rh-sso7/root/usr/share/keycloak/bin/jboss-cli.sh" -c
+        --command='/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=password,value={{ rh_sso_psql_db_pass }})'
+      args:
+        executable: "/bin/bash"
+  when:
+    - rh_sso_db_type == 'postgresql'

@@ -21,8 +21,3 @@
     immediate: yes
   with_items:
   - "{{ rh_sso_port_list }}"
-
-- name: 'Download JDBC driver'
-  get_url:
-    url: https://jdbc.postgresql.org/download/postgresql-42.2.16.jar
-    dest: /tmp
