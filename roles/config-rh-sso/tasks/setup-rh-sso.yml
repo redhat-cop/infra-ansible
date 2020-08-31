@@ -9,13 +9,13 @@
     state: started
     enabled: yes
   when:
-    - rh_sso_standalone_ha == False
+    - rh_sso_standalone_ha == False or rh_sso_standalone_ha is not defined
 
 - name: 'Waiting for SSO service to load'
   pause:
     seconds: '30'
   when:
-    - rh_sso_standalone_ha == False
+    - rh_sso_standalone_ha == False or rh_sso_standalone_ha is not defined
 
 - name: 'Update Red Hat SSO management interface IP address'
   shell: >
@@ -24,7 +24,7 @@
   args:
     executable: "/bin/bash"
   when:
-    - rh_sso_standalone_ha == False
+    - rh_sso_standalone_ha == False or rh_sso_standalone_ha is not defined
 
 - name: 'Update Red hat SSO public interface IP address'
   shell: >
@@ -33,10 +33,11 @@
   args:
     executable: "/bin/bash"
   when:
-    - rh_sso_standalone_ha == False
+    - rh_sso_standalone_ha == False or rh_sso_standalone_ha is not defined
 
 - include_tasks: setup-rh-sso-ha.yml
   when:
+    - rh_sso_standalone_ha is defined
     - rh_sso_standalone_ha == True
 
 - include_tasks: setup-rh-sso-ssl.yml
