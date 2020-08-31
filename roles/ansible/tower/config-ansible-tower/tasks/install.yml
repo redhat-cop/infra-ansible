@@ -42,4 +42,11 @@
     when:
     - ansible_tower_oc_download_url|trim != ''
 
+  - name: "Download and Install the 'helm' client for Helm Charts"
+    shell: curl {{ ansible_tower_helm_download_url }} | tar -C /bin/ -xzf -
+    args:
+      warn: False
+    when:
+    - ansible_tower_helm_download_url|trim != ''
+
   become: True
