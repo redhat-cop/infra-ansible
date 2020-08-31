@@ -2,5 +2,5 @@
     "name": "{{ group.name }}",
     "description": "{{ group.description | default('') }}",
     "inventory": {{ inv_id }},
-    "variables": "{{ group.variables | default('---') }}"
+    "variables": "{{ group.variables | from_yaml | default('---') }}"
 }

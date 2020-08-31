@@ -1,0 +1,10 @@
+---
+
+- name: "LE Cert DNS cleanup"
+  vars:
+    certificate_dns_entries: "{{ certificate_dns_cleanup }}"
+  include_role:
+    name: "dns/manage-dns-records"
+  when:
+    - certificate_dns_cleanup is defined
+
