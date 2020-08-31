@@ -20,7 +20,7 @@ rh_sso_ssl:
 rh_sso_standalone_ha: True
 rh_sso_db_type: postgresql
 jdbc_driver_download_url: https://jdbc.postgresql.org/download/postgresql-42.2.16.jar
-rh_sso_psql_db_url: 192.168.16.6
+rh_sso_psql_db_url: 192.168.0.100
 rh_sso_psql_db_port: 5432
 rh_sso_psql_db_user: postgres
 rh_sso_psql_db_pass: db_password

@@ -1,5 +1,16 @@
 ---
 
+- name: 'Create keycloak database'
+  postgresql_db:
+    login_host: "{{ rh_sso_psql_db_url }}"
+    port: "{{ rh_sso_psql_db_port }}"
+    login_user: "{{ rh_sso_psql_db_user }}"
+    login_password: "{{ rh_sso_psql_db_pass }}"
+    name: keycloak
+    encoding: UTF-8
+  when:
+    - rh_sso_db_type == 'postgresql'
+
 - name: 'Configure Red Hat SSO service to load the High Availability scripts'
   lineinfile:
     path: /etc/opt/rh/rh-sso7/keycloak/rh-sso7.conf
