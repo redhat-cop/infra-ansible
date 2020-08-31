@@ -35,18 +35,53 @@
     args:
       chdir: "{{ ansible_tower_dir }}"
 
-  - name: "Download and Install the 'oc' client for OpenShift interactions"
-    shell: curl {{ ansible_tower_oc_download_url }} | tar -C /bin/ -xzf -
-    args:
-      warn: False
+#  - name: "Download and Install the 'oc' client for OpenShift interactions"
+#    shell: curl {{ ansible_tower_oc_download_url }} | tar -C /bin/ -xzf -
+#    args:
+#      warn: False
+#    when:
+#    - ansible_tower_oc_download_url|trim != ''
+
+  - name: "Download 'oc' client for OpenShift interactions"
+    get_url:
+      url: {{ ansible_tower_oc_download_url }}
+      dest: /tmp/
+    register: oc_download
     when:
     - ansible_tower_oc_download_url|trim != ''
 
-  - name: "Download and Install the 'helm' client for Helm Charts"
-    shell: curl {{ ansible_tower_helm_download_url }} | tar -C /bin/ -xzf -
-    args:
-      warn: False
+  - name: "Extract 'oc' client to /bin"
+    unarchive:
+      src: {{ oc_download.dest }}
+      dest: /bin
     when:
     - ansible_tower_helm_download_url|trim != ''
+    - oc_download.dest
+
+  - name: "Download 'helm' client for Helm Charts"
+    get_url:
+      url: {{ ansible_tower_helm_download_url }}
+      dest: /tmp/
+    register: helm_download
+    when:
+    - ansible_tower_helm_download_url|trim != ''
+
+  - name: "Extract 'helm' client to a temporary location"
+    unarchive:
+      src: {{ helm_download.dest }}
+      dest: /tmp
+    when:
+    - ansible_tower_helm_download_url|trim != ''
+    - helm_download.dest
+
+  - name: "Move the 'helm' binary to /bin"
+    copy:
+      src: /tmp/linux-amd64/helm
+      dest: /bin/
+      follow: yes
+      mode: '755'
+    when:
+    - ansible_tower_helm_download_url|trim != ''
+    - helm_download.dest
 
   become: True
