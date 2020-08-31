@@ -20,7 +20,7 @@
   block:
     - name: 'Download JDBC driver'
       get_url:
-        url: https://jdbc.postgresql.org/download/postgresql-42.2.16.jar
+        url: "{{ jdbc_driver_download_url }}"
         dest: /tmp
 
     - name: 'Create PostgreSQL JDBC driver module definition'
