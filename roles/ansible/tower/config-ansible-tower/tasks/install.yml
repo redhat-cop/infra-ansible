@@ -65,19 +65,23 @@
       src: "{{ helm_download.dest }}"
       dest: /tmp
       remote_src: True
+      list_files: True
+    register: helm_extract
     when:
     - ansible_tower_helm_download_url|trim != ''
     - helm_download.dest
 
   - name: "Move the 'helm' binary to /bin"
     copy:
-      src: /tmp/linux-amd64/helm
+      src: "/tmp/{{ item }}"
       dest: /bin/
       follow: yes
       mode: '755'
       remote_src: True
+    with_items: "{{ helm_extract.files | map('regex_search','.*helm') | select('string') | list }}"
     when:
     - ansible_tower_helm_download_url|trim != ''
     - helm_download.dest
+    - helm_extract.files
 
   become: True
