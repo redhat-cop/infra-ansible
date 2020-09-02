@@ -25,3 +25,4 @@
   yum:
     name: "{{ epel_packages }}"
     state: latest
+

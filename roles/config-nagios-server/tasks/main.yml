@@ -1,12 +1,4 @@
 ---
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> Fixing lint issues
 - name: Setup hostgroup directories
   file:
     path: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}
@@ -16,36 +8,20 @@
 
 - name: Setup common hostgroup configuration
   template:
-<<<<<<< HEAD
     src: common.cfg.j2
     dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/common.cfg
     owner: root
     group: root
     mode: 0644
-=======
-    src: common.cfg.j2 
-    dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/common.cfg
-    owner: root
-    group: root
-    mode: 0644 
->>>>>>> Fixing lint issues
   with_items: "{{groups['nagios-targets']}}"
 
 - name: Setup the hosts in the hostgroup configuration
   template:
-<<<<<<< HEAD
     src: host.cfg.j2
     dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/{{hostvars[item]['inventory_hostname_short']}}.cfg
     owner: root
     group: root
     mode: 0644
-=======
-    src: host.cfg.j2 
-    dest: /etc/nagios/objects/{{hostvars[item]['hostgroup_name']}}/{{hostvars[item]['inventory_hostname_short']}}.cfg
-    owner: root
-    group: root
-    mode: 0644 
->>>>>>> Fixing lint issues
   with_items: "{{groups['nagios-targets']}}"
 
 - name: Add common hostgroup configuration to master nagios configuration file
@@ -67,18 +43,6 @@
     name: nagios
     state: restarted
 
-<<<<<<< HEAD
-=======
->>>>>>> Fixing lint issues
-=======
-
->>>>>>> Fixing lint issues
-=======
->>>>>>> Fixing lint issues
-=======
->>>>>>> Rebased
-=======
->>>>>>> Fixing rebase issues
 # Different distro install steps to be added. Will only work with RHEL at this stage.
 - name: "Install Nagios"
   block:
@@ -91,77 +55,6 @@
   when: install_nagios == "yes"
   become: true
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-- import_tasks: configuration.yml
-
-=======
 - name: "Configure Nagios"
   import_tasks: configuration.yml
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> Fixing lint issues
-=======
 
-- name: Setup hostgroup directories
-  file:
-    path: "/etc/nagios/objects/{{ ansible_hostname }}"
-    state: directory
-    mode: 0755
-  with_items: "{{groups['nagios-targets']}}"
-  register: something_changed
-
-- name: Setup common hostgroup configuration
-  template:
-    src: common.cfg.j2 
-    dest: "/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
-    owner: root
-    group: root
-    mode: 0644 
-  with_items: "{{groups['nagios-targets']}}"
-  register: something_changed
-
-- name: Setup the hosts in the hostgroup configuration
-  template:
-    src: host.cfg.j2 
-    dest: "/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
-    owner: root
-    group: root
-    mode: 0644 
-  with_items: "{{groups['nagios-targets']}}"
-  register: something_changed
-
-- name: Add common hostgroup configuration to master nagios configuration file
-  lineinfile:
-    dest: /etc/nagios/nagios.cfg
-    regexp: "^cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
-    line: "cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/common.cfg"
-  with_items: "{{groups['nagios-targets']}}"
-  register: something_changed
-
-- name: Add host configuration to master nagios configuration file
-  lineinfile:
-    dest: /etc/nagios/nagios.cfg
-    regexp: "^cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
-    line: "cfg_file=/etc/nagios/objects/{{ ansible_hostname }}/{{ inventory_hostname_short }}.cfg"
-  with_items: "{{groups['nagios-targets']}}"
-  register: something_changed
-
-- name: Restart nagios if required
-  debug:
-    msg: "Please restart Nagios service."
-  notify:
-     - Restart nagios
-  when: something_changed
->>>>>>> Fixing lint issues
-=======
->>>>>>> Fixing lint issues
-=======
-- name: "Configure Nagios"
-  import_tasks: configuration.yml
->>>>>>> Rebased
-=======
-- name: "Configure Nagios"
-  import_tasks: configuration.yml
->>>>>>> Fixing rebase issues
