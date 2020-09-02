@@ -1,74 +1,22 @@
 ---
-<<<<<<< HEAD
-<<<<<<< HEAD
 # defaults file to use to default variables 
-<<<<<<< HEAD
-
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Fixing linting issues
-=======
-# defaults file to use to default variables
->>>>>>> Fixing linting issues
 libvirtenable: true
-=======
-libvirtenable: yes
->>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
-=======
-libvirtenable: true
->>>>>>> Fixed boolean variables and correctly changed include tasks to import.
-=======
-# defaults file to use to default variables
-libvirtenable: true
->>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80
 
 base_packages:
   - libguestfs-tools
   - virt-install
-<<<<<<< HEAD
-<<<<<<< HEAD
   - qemu-kvm 
   - libvirt 
   - libvirt-python 
-<<<<<<< HEAD
-<<<<<<< HEAD
   - bridge-utils
 
 service_name: "libvirtd"
 
 virt_manager_install: true 
-<<<<<<< HEAD
 
 virt_manager_package: virt-manager
-=======
-=======
-  - bridge-utils
->>>>>>> Added the bridge-utils package to be installed. Useful when users want to use bridge networking.
-
-service_name: "libvirtd"
-
-virt_manager_install: yes
-
-virt_manager_package: virt-manager
->>>>>>> Updated config-libvirt role which was having problems installing. Added better README and defaults.
-=======
-
-=======
-=======
->>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80
   - qemu-kvm
   - libvirt
   - libvirt-python
   - bridge-utils
 
-service_name: "libvirtd"
-virt_manager_install: true
-<<<<<<< HEAD
->>>>>>> Fixing linting issues
-virt_manager_package: virt-manager
->>>>>>> Fixed boolean variables and correctly changed include tasks to import.
-=======
-virt_manager_package: virt-manager
->>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80
