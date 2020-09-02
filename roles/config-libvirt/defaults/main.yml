@@ -1,18 +1,18 @@
 ---
-# defaults file to use to default variables 
+# defaults file to use to default variables
 libvirtenable: true
 
 base_packages:
   - libguestfs-tools
   - virt-install
-  - qemu-kvm 
-  - libvirt 
-  - libvirt-python 
+  - qemu-kvm
+  - libvirt
+  - libvirt-python
   - bridge-utils
 
 service_name: "libvirtd"
 
-virt_manager_install: true 
+virt_manager_install: true
 
 virt_manager_package: virt-manager
   - qemu-kvm
