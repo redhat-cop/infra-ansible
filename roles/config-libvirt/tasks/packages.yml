@@ -11,6 +11,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   when: virt_manager_install  
 =======
   when: virt_manager_install == 'yes'
@@ -21,3 +22,6 @@
 =======
   when: virt_manager_install
 >>>>>>> Fixing linting issues
+=======
+  when: virt_manager_install
+>>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80

@@ -1,5 +1,6 @@
 ---
 <<<<<<< HEAD
+<<<<<<< HEAD
 # defaults file to use to default variables 
 <<<<<<< HEAD
 
@@ -18,10 +19,15 @@ libvirtenable: yes
 =======
 libvirtenable: true
 >>>>>>> Fixed boolean variables and correctly changed include tasks to import.
+=======
+# defaults file to use to default variables
+libvirtenable: true
+>>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80
 
 base_packages:
   - libguestfs-tools
   - virt-install
+<<<<<<< HEAD
 <<<<<<< HEAD
   - qemu-kvm 
   - libvirt 
@@ -50,6 +56,8 @@ virt_manager_package: virt-manager
 =======
 
 =======
+=======
+>>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80
   - qemu-kvm
   - libvirt
   - libvirt-python
@@ -57,6 +65,10 @@ virt_manager_package: virt-manager
 
 service_name: "libvirtd"
 virt_manager_install: true
+<<<<<<< HEAD
 >>>>>>> Fixing linting issues
 virt_manager_package: virt-manager
 >>>>>>> Fixed boolean variables and correctly changed include tasks to import.
+=======
+virt_manager_package: virt-manager
+>>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80

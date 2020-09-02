@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   when: libvirtenable  
 =======
   when: libvirtenable == yes
@@ -18,3 +19,6 @@
 =======
   when: libvirtenable
 >>>>>>> Fixing linting issues
+=======
+  when: libvirtenable
+>>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80

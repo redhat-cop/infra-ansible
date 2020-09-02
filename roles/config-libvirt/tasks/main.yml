@@ -3,13 +3,17 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Fixing lint issues
+=======
+>>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80
 - name: "Install Packages"
   import: packages.yml
 
 - name: "Enable services"
   import: services.yml
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 - include: packages.yml
@@ -21,3 +25,5 @@
 >>>>>>> Fixed boolean variables and correctly changed include tasks to import.
 =======
 >>>>>>> Fixing lint issues
+=======
+>>>>>>> cdcc38ae5f44c9dd9c5c8d83b49462170c30cd80
