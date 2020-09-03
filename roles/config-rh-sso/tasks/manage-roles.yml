@@ -43,7 +43,7 @@
       when:
         - rh_sso_role_create.status == 409
   when:
-    - role_data.clientRole is false
+    - role_data.clientRole is undefined or role_data.clientRole is false
 
 - name: "Create Role: {{ role_data.name }} in Client: {{ role_data.clientName }} in Realm: {{ role_data.targetRealm }}"
   block:
@@ -84,5 +84,6 @@
       when:
         - rh_sso_role_create.status == 409
   when:
+    - role_data.clientRole is defined
     - role_data.clientRole is true
 
