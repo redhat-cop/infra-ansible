@@ -22,8 +22,14 @@ RUN \
       python-boto3 \
       python-openstacksdk; \
     yum clean all; \
-    rm -rf /var/cache/yum; \
-    pip install --upgrade --force-reinstall requests
+    rm -rf /var/cache/yum
+
+RUN \
+    rpm -e --nodeps python-ipaddress PyYAML; \
+    pip install --upgrade --force-reinstall requests; \
+    pip install --upgrade \
+      "cryptography==2.8" \
+      "openstacksdk==0.26.0"
 
 COPY images/infra-ansible/root /
 
