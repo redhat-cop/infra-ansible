@@ -6,3 +6,9 @@
 
 - name: Flush Handlers (Postgresql)
   meta: flush_handlers
+
+- name: Configure primary for High Availability
+  include_tasks: configure_standalone.yml
+
+- name: Configure primary for High Availability
+  include_tasks: configure_standby.yml

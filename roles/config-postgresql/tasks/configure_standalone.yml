@@ -1,0 +1,56 @@
+---
+
+- name: wait until postgresql userdata exists before continuing
+  wait_for:
+    path: /var/lib/postgresql/userdata/postmaster.pid
+
+- name: add new configuration to "postgresql.conf"
+  blockinfile:
+    dest: /var/lib/postgresql/userdata/postgresql.conf
+    block: |
+      include 'server.conf'
+
+- name: add new configuration to "server.conf"
+  blockinfile:
+    create: yes
+    owner: postgres
+    group: postgres
+    mode: 0600
+    dest: /var/lib/postgresql/userdata/server.conf
+    block: |
+      listen_addresses = '*'
+      wal_level = 'hot_standby'
+      archive_mode = on
+      archive_command = 'true'
+      max_wal_senders = 6
+      hot_standby = on
+
+- name: update environment variables in UNIX account postgres
+  blockinfile:
+    create: yes
+    dest: /var/lib/postgresql/.pgsql_profile
+    block: |
+      export PGHOST=/tmp PAGER=less PGDATA=/var/lib/postgresql/userdata
+
+- name: restart postgresql service
+  service:
+    name: postgresql
+    state: restarted
+
+- name: wait until postgresql userdata exists before continuing
+  wait_for:
+    delay: 3
+    port: 5432
+    state: drained
+
+- name: create ROLE replicant
+  postgresql_user:
+    db: postgres
+    login_host: 10.9.51.50
+    login_user: postgres
+    login_password: "{{ postgresql_admin_password }}"
+    login_unix_socket: /tmp
+    port: "{{ postgresql_host_port }}"
+    name: replicant
+    password: mypa55ss
+    role_attr_flags: LOGIN,REPLICATION
