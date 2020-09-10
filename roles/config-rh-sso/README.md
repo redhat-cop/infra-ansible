@@ -9,6 +9,16 @@ Active Red Hat Subscription to enable repositories and download the SSO package 
 ## Dependencies
 None
 
+## Roles
+
+| Variable | Description | Required | Defaults |
+|:---------|:------------|:---------|:---------|
+|roles.targetRealm | The name of the realm that you would like to create this role in.|N|`N/A`|
+|roles.name | The name of the role that you would like to create |Y|`N/A`|
+|roles.description| A description for the role|N|`N/A` |
+|roles.clientRole| Whether this role should be created within a client|N|`false`|
+|roles.clientName| The name of the client to create this role in |N|`N/A`|
+
 ## Clients
 
 | Variable | Description | Required | Defaults |
