@@ -31,6 +31,14 @@ osp_security_groups:
     port_range_max: 22
     direction: ingress
     remote_ip_prefix: 0.0.0.0/0
+- name: "postgres-sec-group"
+  description: "My PostgreSQL Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 5432
+    port_range_max: 5432
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
 - name: "sso-sec-group"
   description: "My sso Sec Group"
   rules:
@@ -52,15 +60,27 @@ osp_security_groups:
     remote_ip_prefix: 0.0.0.0/0
 
 osp_instances:
-- name: "my-rh-sso.example.com"
+- name: "postgresql-n1"
   meta:
-    group: rh-sso-hosts
+    group: postgresql-primary
   image: "rhel-server-7.7-1-x86_64"
-  key_name: "mykeyname"
+  key_name: "mykey"
   flavor: "m1.medium"
   network: "my-network"
   security_groups:
   - ssh-sec-group
   - icmp-sec-group
   - sso-sec-group
-
+  - postgres-sec-group
+- name: "postgresql-n2"
+  meta:
+    group: postgresql-standby
+  image: "rhel-server-7.7-1-x86_64"
+  key_name: "mykey"
+  flavor: "m1.medium"
+  network: "my-network"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - sso-sec-group
+  - postgres-sec-group

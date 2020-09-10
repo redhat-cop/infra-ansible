@@ -7,11 +7,20 @@ rh-sso-hosts
 
 [rh-sso-hosts]
 
+[postgresql-primary]
+
+[postgresql-standby]
+
 [rhsm_hosts:children]
 rh-sso-hosts
+db-hosts
 
 [identity-hosts]
 localhost
 
 [cert-host:children]
 rh-sso-hosts
+
+[db-hosts:children]
+postgresql-primary
+postgresql-standby

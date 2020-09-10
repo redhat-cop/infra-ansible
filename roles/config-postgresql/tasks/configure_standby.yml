@@ -1,33 +1,34 @@
 ---
 
-- service:
+- name: ensure postgresql service is stopped
+  service:
     name: postgresql
     state: stopped
 
 - file:
-   path: /var/lib/pgsql/data/
+   path: /var/lib/pgsql/data
    state: absent
 
 - file:
-   path:  /var/lib/pgsql/data/
+   path:  /var/lib/pgsql/data
    owner: postgres
    group: postgres
    mode:  0700
    state: directory
 
 - name: execute base backup
-  shell: export PGPASSWORD="{{ passwd }}" && /usr/bin/pg_basebackup -h pg1 -U replicant -D /var/lib/pgsql/data -P -v --xlog-method=stream 2>&1
+  become: true
+  become_user: postgres
+  shell: export PGPASSWORD="{{ postgresql_admin_password }}" && /bin/pg_basebackup -h {{ postgresql_primary_url }} -U replicant -D /var/lib/pgsql/data -P -v --xlog-method=stream 2>&1
 
 - name: add new configuration "recovery.conf"
   blockinfile:
     create: yes
+    owner: postgres
+    group: postgres
     dest: /var/lib/pgsql/data/recovery.conf
     block: |
       standby_mode = 'on'
-      primary_conninfo = 'user=replicant password={{ passwd }} host={{ master }} port=5432 sslmode=prefer'
-      recovery_target_timeline = 'latest'
-
-- service:
-    name: postgresql
-    state: started
-
+      primary_conninfo = 'user=replicant password={{ postgresql_replicant_password }} host={{ postgresql_primary_url }} port={{ postgresql_host_port }} sslmode=prefer'
+      trigger_file = '/var/lib/pgsql/trigger_file'
+  notify: "Restart PostgreSQL Service"

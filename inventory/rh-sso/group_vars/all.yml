@@ -7,6 +7,8 @@ hosting_infrastructure: openstack
 rhsm_register: True
 rhsm_repos:
   - "rhel-7-server-rpms"
+  - "rhel-7-server-extras-rpms"
+  - "rhel-7-server-optional-rpms"
   - "rh-sso-7.4-for-rhel-7-server-rpms"
   - "jb-eap-7.3-for-rhel-7-server-rpms"
 

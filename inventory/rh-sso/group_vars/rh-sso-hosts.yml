@@ -9,13 +9,6 @@ list_of_packages_to_install:
 rh_sso_admin_user: admin
 rh_sso_admin_pass: mypa55ss
 
-postgresql_image: registry.access.redhat.com/rhscl/postgresql-96-rhel7:latest
-postgresql_storage_dir: /var/lib/postgresql
-postgresql_host_port: 5432
-postgresql_username: postgres
-postgresql_admin_password: mypa55ss
-postgresql_replicant_password: mypa55ss
-
 rh_sso_protocol: https
 rh_sso_ssl:
   cert: /the/path/to/my/cert.crt

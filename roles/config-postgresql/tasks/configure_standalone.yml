@@ -1,12 +1,8 @@
 ---
 
-- name: wait until postgresql userdata exists before continuing
-  wait_for:
-    path: /var/lib/postgresql/userdata/postmaster.pid
-
 - name: add new configuration to "postgresql.conf"
   blockinfile:
-    dest: /var/lib/postgresql/userdata/postgresql.conf
+    dest: /var/lib/pgsql/data/postgresql.conf
     block: |
       include 'server.conf'
 
@@ -15,8 +11,7 @@
     create: yes
     owner: postgres
     group: postgres
-    mode: 0600
-    dest: /var/lib/postgresql/userdata/server.conf
+    dest: /var/lib/pgsql/data/server.conf
     block: |
       listen_addresses = '*'
       wal_level = 'hot_standby'
@@ -24,33 +19,45 @@
       archive_command = 'true'
       max_wal_senders = 6
       hot_standby = on
+  notify: "Restart PostgreSQL Service"
+
+- name: add new configuration to "pg_hba.conf"
+  blockinfile:
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    block: |
+      host    all             all             0.0.0.0/0                md5
+      host    replication     replicant       0.0.0.0/0                md5
+  notify: "Restart PostgreSQL Service"
 
 - name: update environment variables in UNIX account postgres
   blockinfile:
     create: yes
-    dest: /var/lib/postgresql/.pgsql_profile
+    owner: postgres
+    group: postgres
+    dest: /var/lib/pgsql/.pgsql_profile
     block: |
-      export PGHOST=/tmp PAGER=less PGDATA=/var/lib/postgresql/userdata
+      export PGHOST=/tmp PAGER=less PGDATA=/var/lib/pgsql/data
+  notify: "Restart PostgreSQL Service"
 
-- name: restart postgresql service
-  service:
-    name: postgresql
-    state: restarted
+- meta: flush_handlers
 
 - name: wait until postgresql userdata exists before continuing
   wait_for:
-    delay: 3
-    port: 5432
-    state: drained
+    path: /var/lib/pgsql/data/postmaster.pid
+
+- name: set postgres user password
+  become: true
+  become_user: postgres
+  postgresql_user:
+    name: postgres
+    password: "{{ postgresql_admin_password }}"
+    encrypted: yes
 
 - name: create ROLE replicant
+  become: true
+  become_user: postgres
   postgresql_user:
     db: postgres
-    login_host: 10.9.51.50
-    login_user: postgres
-    login_password: "{{ postgresql_admin_password }}"
-    login_unix_socket: /tmp
-    port: "{{ postgresql_host_port }}"
     name: replicant
-    password: mypa55ss
+    password: "{{ postgresql_replicant_password }}"
     role_attr_flags: LOGIN,REPLICATION

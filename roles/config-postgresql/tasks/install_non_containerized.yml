@@ -1,0 +1,27 @@
+---
+
+- name: Install required packages
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - postgresql-server
+    - postgresql-contrib
+    - python-psycopg2
+
+- file:
+   path: /var/lib/pgsql/data
+   state: absent
+
+- file:
+   path:  /var/lib/pgsql/data
+   owner: postgres
+   group: postgres
+   mode:  0700
+   state: directory
+
+- name: Ensure PostgreSQL database is initialized
+  command: "postgresql-setup initdb"
+  become: true
+  become_user: postgres
+  notify: "Restart PostgreSQL Service"
