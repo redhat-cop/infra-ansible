@@ -9,7 +9,7 @@ identities:
     - user_name: example1
       first_name: Example
       last_name: User
-      email: example@user
+      email: example@user.com
       enabled: true
       email_verified: yes
       realm: "my-realm"
@@ -32,5 +32,9 @@ identities:
       realm: "my-realm"
       members:
         - example1
+    - name: "client-reader"
+      realm: "my-realm"
+      client_name: "my-super-fun-client"
+      members:
+        - example1
     - name: "writer"
-
