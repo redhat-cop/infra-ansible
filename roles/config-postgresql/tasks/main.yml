@@ -13,6 +13,7 @@
   when:
     - postgresql_ha_mode == True
     - mode == "non-containerized"
+    - '"db-hosts" in group_names'
 
 - name: Flush Handlers (Postgresql)
   meta: flush_handlers
