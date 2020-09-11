@@ -5,9 +5,6 @@
   when:
     - mode == "containerized"
 
-- name: Flush Handlers (Postgresql)
-  meta: flush_handlers
-
 - name: Install Non-Containerized PostgreSQL
   include_tasks: install_non_containerized.yml
   when:

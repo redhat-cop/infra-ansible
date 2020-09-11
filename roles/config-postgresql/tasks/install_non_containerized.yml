@@ -25,3 +25,7 @@
   become: true
   become_user: postgres
   notify: "Restart PostgreSQL Service"
+
+- name: Registering primary IPv4 address
+  set_fact:
+    postgresql_primary_url: "{{ hostvars[groups['postgresql-primary'][0]]['ansible_default_ipv4']['address'] }}"

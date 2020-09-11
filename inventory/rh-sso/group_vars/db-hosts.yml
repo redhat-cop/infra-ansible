@@ -7,7 +7,6 @@ mode: non-containerized
 postgresql_ha_mode: True
 postgresql_image: registry.access.redhat.com/rhscl/postgresql-96-rhel7:latest
 postgresql_storage_dir: /var/lib/postgresql
-postgresql_primary_url: 10.9.51.245
 postgresql_host_port: 5432
 postgresql_username: postgres
 postgresql_admin_password: mypa55ss

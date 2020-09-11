@@ -64,7 +64,7 @@ osp_instances:
   meta:
     groups: "rh-sso-hosts,postgresql-primary"
   image: "rhel-server-7.7-1-x86_64"
-  key_name: "mykey_name"
+  key_name: "keyname"
   flavor: "m1.medium"
   network: "my-network"
   security_groups:
@@ -76,7 +76,7 @@ osp_instances:
   meta:
     groups: "rh-sso-hosts,postgresql-standby"
   image: "rhel-server-7.7-1-x86_64"
-  key_name: "mykey_name"
+  key_name: "keyname"
   flavor: "m1.medium"
   network: "my-network"
   security_groups:
