@@ -28,8 +28,6 @@
         {
           id: "{{ client_role_id }}",
           name: "{{ item.role }}",
-          clientRole: true,
-          containerId: "ef26bafa-ed79-4fb8-9cb5-287ac2e85005",
         }
       ]
     body_format: json
