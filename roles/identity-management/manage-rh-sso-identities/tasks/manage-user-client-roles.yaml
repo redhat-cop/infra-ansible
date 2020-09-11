@@ -1,3 +1,5 @@
+---
+
 - name: "Get Client ID for Client: {{ item.client }}"
   set_fact:
     client_id: "{{ realm_clients.json | json_query(query) | first }}"
@@ -24,7 +26,7 @@
     url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ user_id }}/role-mappings/clients/{{ client_id }}"
     method: POST
     body:
-      [ 
+      [
         {
           id: "{{ client_role_id }}",
           name: "{{ item.role }}",
