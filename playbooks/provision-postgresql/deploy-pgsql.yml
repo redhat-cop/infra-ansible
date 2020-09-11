@@ -1,5 +1,7 @@
 ---
 
-- hosts: db-hosts
+- hosts:
+    - db-hosts
+    - rh-sso-hosts
   roles:
-  - role: config-postgresql
+    - role: config-postgresql

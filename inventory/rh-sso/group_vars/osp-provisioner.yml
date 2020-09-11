@@ -60,11 +60,11 @@ osp_security_groups:
     remote_ip_prefix: 0.0.0.0/0
 
 osp_instances:
-- name: "postgresql-n1"
+- name: "sso-n1"
   meta:
-    group: postgresql-primary
+    groups: "rh-sso-hosts,postgresql-primary"
   image: "rhel-server-7.7-1-x86_64"
-  key_name: "mykey"
+  key_name: "mykey_name"
   flavor: "m1.medium"
   network: "my-network"
   security_groups:
@@ -72,11 +72,11 @@ osp_instances:
   - icmp-sec-group
   - sso-sec-group
   - postgres-sec-group
-- name: "postgresql-n2"
+- name: "sso-n2"
   meta:
-    group: postgresql-standby
+    groups: "rh-sso-hosts,postgresql-standby"
   image: "rhel-server-7.7-1-x86_64"
-  key_name: "mykey"
+  key_name: "mykey_name"
   flavor: "m1.medium"
   network: "my-network"
   security_groups:
