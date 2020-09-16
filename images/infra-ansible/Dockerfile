@@ -29,7 +29,7 @@ RUN \
     pip install --upgrade --force-reinstall requests; \
     pip install --upgrade \
       "cryptography==2.8" \
-      "openstacksdk==0.29"
+      "openstacksdk==0.29.0"
 
 COPY images/infra-ansible/root /
 
