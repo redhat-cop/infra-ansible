@@ -120,6 +120,9 @@
   vars:
     query: "[?name=='{{ item }}'].{id:id,name:name}"
   with_items: "{{ user_realm_roles }}"
+  when:
+    - realm_roles is defined
+    - realm_roles|len > 0
 
 - name: "Add Realm Role Mappings"
   uri:
@@ -131,6 +134,9 @@
     headers:
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  when:
+    - user_realm_role_ids is defined
+    - user_realm_role_ids|len > 0
 
 - name: "Get Clients"
   uri:
@@ -140,7 +146,13 @@
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: realm_clients
+  when:
+    - user_client_roles is defined
+    - user_client_roles|len > 0
 
 - name: "Manage Client Roles"
   include_tasks: "manage-user-client-roles.yaml"
   loop: "{{ user_client_roles }}"
+  when:
+    - user_client_roles is defined
+    - user_client_roles|len > 0
