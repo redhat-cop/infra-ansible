@@ -10,6 +10,7 @@ RUN \
     yum install -y --setopt=tsflags=nodocs \
       https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm \
       http://resources.ovirt.org/pub/yum-repo/ovirt-release42.rpm; \
+    yum -y update python-jinja2; \
     yum -y install python2-pip; \
     pip install --upgrade pip; \
     yum -y install \
