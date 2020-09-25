@@ -5,9 +5,7 @@
 
 # Add DNS TXT records for the ACME request
 - block:
-  - import_tasks: "manage-dns-records.yml"
-    vars:
-      dns_state: 'present'
+  - import_tasks: "add-dns-records.yml"
 
   # Ensure target directories exists
   - import_tasks: "create-directories.yml"
@@ -15,9 +13,11 @@
   # Verify ACME / Let's Encrypt request
   - import_tasks: "acme-request.yml"
 
-  # Remove DNS TXT records no longer needed
-  - import_tasks: "manage-dns-records.yml"
-    vars:
-      dns_state: 'absent'
+  # Clean-up of DNS records used earlier
+  # - this should really be a handler, but there are multiple
+  #   missing features in Ansible + some bugs causing a handler
+  #   not to work with a 'notify' on an include_role as well as
+  #   callig 'include_role' within a handler
+  - import_tasks: "rm-dns-records.yml"
   when:
   - acme_certificate_output.changed

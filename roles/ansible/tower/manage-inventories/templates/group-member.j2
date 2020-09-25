@@ -3,5 +3,5 @@
     "description": "{{ group_member.description | default('') }}",
     "enabled": "true",
     "instance_id": "",
-    "variables": "{{ group_member.variables | default('') }}"
+    "variables": "{{ group_member.variables | from_yaml | default('') }}"
 }

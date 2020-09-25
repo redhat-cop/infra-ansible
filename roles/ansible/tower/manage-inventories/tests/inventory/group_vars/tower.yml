@@ -10,7 +10,9 @@ ansible_tower:
     hosts:
     - name: "localhost"
       description: ""
-      variables: "---\\nansible_connection: local"
+      variables: |-
+        ---
+        ansible_connection: local
     groups:
     - name: "seed_hosts"
       hosts:

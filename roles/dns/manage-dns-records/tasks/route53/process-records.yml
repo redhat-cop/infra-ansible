@@ -5,14 +5,15 @@
     msg: "WARNING: only 'public' and 'private' views are processed for Route53"
   ignore_errors: True
   when:
-    - dns.0.name != 'private'
-    - dns.0.name != 'public'
+    - dns.0.name|trim != 'private'
+    - dns.0.name|trim != 'public'
 
 - name: "Manage Route53 DNS records for view: {{ dns.0.name }}, zone: {{ dns.1.dns_domain }}"
   include_tasks: process-one-record.yml
-  with_items:
-    - "{{ dns.1.entries }}"
+  loop: "{{ dns.1.entries }}"
+  loop_control:
+    loop_var: dns_record
   when:
-    - dns.0.name == 'private' or dns.0.name == 'public'
+    - dns.0.name|trim == 'private' or dns.0.name|trim == 'public'
     - dns.1.entries is defined
     - dns.1.route53 is defined

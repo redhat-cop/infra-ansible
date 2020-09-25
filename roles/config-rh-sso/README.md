@@ -9,6 +9,16 @@ Active Red Hat Subscription to enable repositories and download the SSO package 
 ## Dependencies
 None
 
+## Roles
+
+| Variable | Description | Required | Defaults |
+|:---------|:------------|:---------|:---------|
+|roles.targetRealm | The name of the realm that you would like to create this role in.|N|`N/A`|
+|roles.name | The name of the role that you would like to create |Y|`N/A`|
+|roles.description| A description for the role|N|`N/A` |
+|roles.clientRole| Whether this role should be created within a client|N|`false`|
+|roles.clientName| The name of the client to create this role in |N|`N/A`|
+
 ## Clients
 
 | Variable | Description | Required | Defaults |
@@ -69,6 +79,7 @@ auth_flows.executions.provider | The type of execution to create. This comes fro
 auth_flows.executions.requirement | The appropriate requirements (i.e. REQUIRED, ALTERNATIVE, etc.) for this execution. Varies between types of provider | no | N/A |
 auth_flows.executions.index | The order to place this execution in | no | 0 |
 auth_flows.executions.name | The name that you would like to refer to this execution as | no | N/A |
+auth_flows.executions.config | A dictionary for configuration parameters to add to the auth flow execution | no | N/A |
 
 ## Example Playbook
 

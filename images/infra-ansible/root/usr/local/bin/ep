@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -f ~/aws-credentials.csv ]
+then
+  source /usr/local/bin/aws_keys
+fi
+
+if [ -f ~/.config/openstack/openrc.sh ]
+then
+  source ~/.config/openstack/openrc.sh
+fi
+
+source /usr/local/bin/entrypoint
