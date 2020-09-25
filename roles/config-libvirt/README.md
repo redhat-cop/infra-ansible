@@ -16,11 +16,11 @@ Defaults file has example of variables that can be used.
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**libvirtenable**|  determines if libvirt will be installed or not | yes | yes |
-|**virt_manager_install**| Determines is virt-manager is installed | yes | yes |
-|**virt_manager_package**| The Name of the virt manager package| yes | yes |
-|**base_packages**| List of all the packages required to deploy libvirt | yes | yes |
-|**service_name**| The name of the libvirt service | yes | yes |
+|**libvirtenable**|  determines if libvirt will be installed or not | no | true |
+|**virt_manager_install**| Determines is virt-manager is installed | no | true |
+|**virt_manager_package**| The Name of the virt manager package| no | List of packages found in [defaults/main.yml](defaults/main.yml) |
+|**libvirt_base_packages**| List of all the packages required to deploy libvirt | no | List of packages found in [defaults/main.yml](defaults/main.yml) |
+|**service_name**| The name of the libvirt service | no | 'libvirtd' |
 
 
 Example Playbook
