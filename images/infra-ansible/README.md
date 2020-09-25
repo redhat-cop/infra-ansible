@@ -30,7 +30,7 @@ docker run -u `id -u` \
       -v $HOME/src/:/tmp/src \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
-      -t redhat-cop/infra-ansible
+      -t quay.io/redhat-cop/infra-ansible
 ```
 
 ... or, to run in interactive mode:
@@ -39,7 +39,7 @@ docker run -u `id -u` \
 docker run -u `id -u` \
       -v $HOME/.ssh/id_rsa:/opt/app-root/src/.ssh/id_rsa \
       -v $HOME/src/:/tmp/src \
-      -it redhat-cop/infra-ansible /bin/bash
+      -it quay.io/redhat-cop/infra-ansible /bin/bash
 ```
 
 ### For OpenStack
@@ -55,7 +55,7 @@ docker run -u `id -u` \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
       -e OPTS="-e some-extra-var=my-value" \
-      -t redhat-cop/infra-ansible
+      -t quay.io/redhat-cop/infra-ansible
 ```
 
 NOTE: The above commands expects the following inputs:
@@ -75,7 +75,7 @@ docker run -u `id -u` \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
       -e OPTS="-e some-extra-var=my-value" \
-      -t redhat-cop/infra-ansible-ansible
+      -t quay.io/redhat-cop/infra-ansible
 ```
 
 The above commands expects the following inputs:
