@@ -36,11 +36,35 @@
     args:
       chdir: "{{ ansible_tower_dir }}"
 
-  - name: "Download and Install the 'oc' client for OpenShift interactions"
-    shell: curl {{ ansible_tower_oc_download_url }} | tar -C /bin/ -xzf -
-    args:
-      warn: False
+  - name: "Download and extract 'oc' client to /bin"
+    unarchive:
+      src: "{{ ansible_tower_oc_download_url }}"
+      dest: /bin
+      remote_src: True
     when:
     - ansible_tower_oc_download_url|trim != ''
+    - oc_download.dest
+
+  - name: "Download and extract 'helm' client to a temporary location"
+    unarchive:
+      src: "{{ ansible_tower_helm_download_url }}"
+      dest: /tmp
+      remote_src: True
+      list_files: True
+    register: helm_extract
+    when:
+    - ansible_tower_helm_download_url|trim != ''
+
+  - name: "Move the 'helm' binary to /bin"
+    copy:
+      src: "/tmp/{{ item }}"
+      dest: /bin/
+      follow: yes
+      mode: '755'
+      remote_src: True
+    with_items: "{{ helm_extract.files | map('regex_search','.*helm') | select('string') | list }}"
+    when:
+    - ansible_tower_helm_download_url|trim != ''
+    - helm_extract.files
 
   become: True
