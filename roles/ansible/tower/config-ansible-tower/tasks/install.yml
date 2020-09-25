@@ -41,7 +41,7 @@
       dest: /bin
       remote_src: True
     when:
-    - ansible_tower_helm_download_url|trim != ''
+    - ansible_tower_oc_download_url|trim != ''
     - oc_download.dest
 
   - name: "Download and extract 'helm' client to a temporary location"
