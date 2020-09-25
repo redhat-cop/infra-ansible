@@ -1,0 +1,9 @@
+[all:vars]
+
+[docker_hosts]
+docker01.example.com ansible_user=root ansible_host=192.168.1.20
+
+
+
+
+

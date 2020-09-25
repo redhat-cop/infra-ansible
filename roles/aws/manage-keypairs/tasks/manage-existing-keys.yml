@@ -6,6 +6,7 @@
     ec2_key:
       name: "{{ item.name }}"
       key_material: "{{ item.public_key }}"
-      aws_access_key: "{{ item.access_key | default(aws_key) }}"
-      aws_secret_key: "{{ item.access_secret | default(aws_secret) }}"
+      state: "{{ item.state | default(omit) }}"
+      aws_access_key: "{{ item.access_key | default(aws_key) | default(omit) }}"
+      aws_secret_key: "{{ item.access_secret | default(aws_secret) | default(omit) }}"
       aws_region: "{{ item.region | default(aws_region) }}"
