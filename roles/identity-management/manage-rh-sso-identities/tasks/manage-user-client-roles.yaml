@@ -23,7 +23,7 @@
 
 - name: "Add Client Role Mappings"
   uri:
-    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ user_id }}/role-mappings/clients/{{ client_id }}"
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ sso_user_id }}/role-mappings/clients/{{ client_id }}"
     method: POST
     body:
       [
