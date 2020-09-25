@@ -15,7 +15,7 @@ Role Variables
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
 |**list_of_packages_to_install**| The list of packages (RPMs) to install | yes | 'none' |
-|**yumpreferred**| Used if the user wants to use the yum module instead of the package module. | no | false |
+|**yum_preferred**| Used if the user wants to use the yum module instead of the package module. | no | false |
 
 
 Dependencies
@@ -28,7 +28,7 @@ Example Playbook
 
     - hosts: servers
       vars:
-        - yumpreferred: true
+        - yum_preferred: true
       roles:
          - role: config-packages
 
