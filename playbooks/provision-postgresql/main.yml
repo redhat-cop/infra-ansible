@@ -3,4 +3,3 @@
 - import_playbook: deploy-pgsql.yml
   tags:
     - 'always'
-
