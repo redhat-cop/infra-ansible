@@ -1,0 +1,6 @@
+---
+
+docker_compose_install: false
+
+docker_compose_packages:
+  - docker-compose
