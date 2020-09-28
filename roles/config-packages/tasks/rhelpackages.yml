@@ -1,0 +1,7 @@
+---
+
+- name: 'Install additional Software packages/tools using yum.'
+  yum:
+    name: '{{ list_of_packages_to_install | default([]) }}'
+    state: latest
+

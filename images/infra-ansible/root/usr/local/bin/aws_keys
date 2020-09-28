@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Example CSV file #1:
+# User name,Password,Access key ID,Secret access key,Console login link
+# user,,AKIAJWYSDFSDFPQW5VFA,EqdiwsWYtDFwZNxAcJU+X1mPRtRLQ4Hve,https://example.signin.aws.amazon.com/console
+
+# Example CSV file #2:
+# Access key ID,Secret access key
+# AKIAJWYSDFSDFPQW5VFA,EqdiwsWYtDFwZNxAcJU+X1mPRtRLQ4Hve
+
+# Default files
+# The CSV file is based on AWS specific CSV files
+# The SH file is just a .sh with whatever content the user has - i.e.: the file will be sourced as-is
+CSV_FILE=~/aws-credentials.csv
+SH_FILE=~/aws-credentials.sh
+
+# Array used to determine the information sourced from the CSV file
+declare -A AWS_entries
+AWS_entries[AWS_ACCESS_KEY_ID]="Access key ID"
+AWS_entries[AWS_SECRET_ACCESS_KEY]="Secret access key"
+
+function parse_csv_file()
+{
+  # Don't do anything if the CSV file doesn't exists
+  if [ ! -f ${CSV_FILE} ]
+  then
+    return
+  fi
+
+  # The CSV has a header line (line 1) and a value line (line 2)
+  csv_headers=`head -n 1 ${CSV_FILE} | tr -d '\r\n'`
+  csv_values=`tail -n 1 ${CSV_FILE} | tr -d '\r\n'`
+
+  # Loop through all the AWS entries of interest to find them...
+  for k in "${!AWS_entries[@]}"
+  do 
+    found=0
+
+    # Let's process up to 9 items on a line (9 is a "wild guess" for a max, but seems enough)
+    for i in 1 2 3 4 5 6 7 8 9;
+    do
+      # Extract one-by-one until the one of interest is found
+      extract=`echo $csv_headers | cut -d ',' -f $i`
+      if [[ "${AWS_entries[$k]}" == "${extract}" ]]
+      then
+        found=${i}
+        break;
+      fi
+    done
+
+    # If found, apply it to the current environment
+    if [ ${found} != 0 ]
+    then
+      export ${k}=`echo ${csv_values} | cut -d ',' -f ${found}`
+    fi
+  done
+}
+
+function apply_sh_file()
+{
+  # Don't do anything if the .sh file doesn't exists
+  if [ ! -f ${SH_FILE} ]
+  then
+    return
+  fi
+
+  # Just apply the .sh file as-is
+  source ${SH_FILE}
+}
+
+parse_csv_file
+apply_sh_file

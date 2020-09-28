@@ -100,12 +100,13 @@ roles:
   - targetRealm: master
     name: sample-role
     description: "Example of role created via an API call"
-    attributes:
-      key1:
-        - value
-      key2:
-        - value2
     clientRole: false
+    composite: false
+  - targetRealm: my-awesome-realm
+    name: example-client-role
+    description: "Example of client role created via an API call"
+    clientRole: true
+    clientName: my-super-fun-client
     composite: false
 
 id_providers:
