@@ -1,0 +1,10 @@
+---
+
+- name: Enable and start service
+  service:
+    name: "{{ service_name }}"
+    state: started
+    enabled: yes
+  when:
+    - libvirtenable
+
