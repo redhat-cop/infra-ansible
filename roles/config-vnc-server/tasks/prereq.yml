@@ -1,18 +1,14 @@
 ---
 
-- name: 'Determine required python firewall package'
-  set_fact:
-    python_firewall_package: "python3-firewall"
-  when:
-  - ansible_python_version is match("3.*")
-
 - name: 'Install required packages'
   package:
-    name: '{{ item }}'
+    name:
+      - tigervnc-server
+      - policycoreutils-python-utils
+      - checkpolicy
+      - firewalld
+      - python3-firewall
     state: installed
-  with_items:
-  - firewalld
-  - "{{ python_firewall_package | default('python-firewall') }}"
 
 - name: 'Ensure firewalld is running'
   service:
@@ -20,16 +16,10 @@
     state: started
     enabled: yes
 
-- name: 'Open Firewall for NFS use'
+- name: 'Open Firewall for VNC use'
   firewalld:
-    port: "{{ item }}"
+    service: vnc-server
     permanent: yes
     state: enabled
     immediate: yes
-  with_items:
-  - 5900/tcp
-  - 5901/tcp
-  - 5902/tcp
-  - 5903/tcp
-  - 5904/tcp
-  - 5905/tcp
+

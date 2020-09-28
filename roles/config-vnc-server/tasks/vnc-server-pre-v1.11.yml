@@ -1,0 +1,40 @@
+---
+
+- name: "Copy SELinux .te file to the host - used to build the module (pre v1.11)"
+  copy:
+    src: SELinuxVNC-pre-v1.11.te
+    dest: /tmp/SELinuxVNC.te
+
+- name: "Build SELinux module (.mod) to allow VNC"
+  command: checkmodule -M -m -o SELinuxVNC.mod /tmp/SELinuxVNC.te
+
+- name: "Build SELinux module (.pp) to allow VNC"
+  command: semodule_package -m SELinuxVNC.mod -o SELinuxVNC.pp
+
+- name: "Load SELinux module to allow VNC"
+  command: semodule -i SELinuxVNC.pp
+
+- name: "Copy VNC service file into place"
+  copy:
+    src: /usr/lib/systemd/system/vncserver@.service
+    dest: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
+    remote_src: True
+
+- name: "Ensure the user config is set for the vnc service"
+  replace:
+    path: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
+    regexp: "{{ item.0 }}"
+    replace: "{{ item.1 }}"
+  with_together:
+    - ['<USER>', '/home/' ]
+    - [ "{{ main_user }}", "{{ vnc_home_dir }}/" ]
+
+- name: "Reload systemctl daemon"
+  command: systemctl daemon-reload
+
+- name: "Enable and start VNC server for user"
+  service:
+    name: "vncserver-{{ main_user }}@:1"
+    enabled: yes
+    state: started
+
