@@ -29,7 +29,7 @@
       delay: 10
       timeout: 300
 
-- name: Post-provision tasks
+- name: "Ensure the host is ready for Ansible"
   hosts: osp_instances
   gather_facts: no
   become: True
