@@ -8,6 +8,23 @@
   with_items:
   - "{{ existing_organizations_output.rest_output }}"
 
+- name: "Get the credential id based on the credential name"
+  block:
+  - name: "Get the credential"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/credentials/?name={{ project.scm_credential_name }}"
+    register: r_credential
+  - name: "Set credential_id fact"
+    set_fact:
+      credential_id: "{{ r_credential.rest_output[0].id | int }}"
+    when:
+    - r_credential.rest_output | length > 0
+  when:
+  - project.scm_credential_name is defined
+
 - name: "Load up the project"
   uri:
     url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/projects/"
@@ -26,5 +43,6 @@
 
 - name: "Clear/Update facts"
   set_fact:
+    credential_id: null
     org_id: ''
     processed_projects: "{{ processed_projects + [ { 'name': project.name } ] }}"
