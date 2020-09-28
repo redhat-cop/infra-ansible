@@ -6,15 +6,15 @@
     state: stopped
 
 - file:
-   path: /var/lib/pgsql/data
-   state: absent
+    path: /var/lib/pgsql/data
+    state: absent
 
 - file:
-   path:  /var/lib/pgsql/data
-   owner: postgres
-   group: postgres
-   mode:  0700
-   state: directory
+    path: /var/lib/pgsql/data
+    owner: postgres
+    group: postgres
+    mode: 0700
+    state: directory
 
 - name: execute base backup
   become: true
