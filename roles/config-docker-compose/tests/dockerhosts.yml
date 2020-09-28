@@ -1,0 +1,8 @@
+---
+
+- name: 'Install Docker Compose on the Docker hosts'
+  hosts: docker_hosts
+  roles:
+    - role: config-docker-compose
+  tags:
+    - configure_docker_hosts
