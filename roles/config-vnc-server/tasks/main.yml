@@ -1,27 +1,25 @@
 ---
 
 - block:
-  - name: "Prep for VNC server install"
-    import_tasks: prereq.yml
+    - name: "Prep for VNC server install"
+      import_tasks: prereq.yml
 
-  - name: "Gather the information about the package(s) installed"
-    package_facts:
-      manager: "auto"
+    - name: "Gather the information about the package(s) installed"
+      package_facts:
+        manager: "auto"
 
-  - name: "Prepare VNC runtime"
-    import_tasks: vnc-server-common.yml
+    - name: "Prepare VNC runtime"
+      import_tasks: vnc-server-common.yml
 
-  - name: "Install, configure and enable VNC server (pre v1.11 versions)"
-    import_tasks: vnc-server-pre-v1.11.yml
-    when:
-      - "ansible_facts.packages['tigervnc-server'][0].version is version('1.11', '<', true)"
+    - name: "Install, configure and enable VNC server (pre v1.11 versions)"
+      import_tasks: vnc-server-pre-v1.11.yml
+      when:
+        - "ansible_facts.packages['tigervnc-server'][0].version is version('1.11', '<', true)"
 
-  - name: "Install, configure and enable VNC server (latest versions)"
-    import_tasks: vnc-server.yml
-    when:
-      - "ansible_facts.packages['tigervnc-server'][0].version is version('1.11', '>=', true)"
+    - name: "Install, configure and enable VNC server (latest versions)"
+      import_tasks: vnc-server.yml
+      when:
+        - "ansible_facts.packages['tigervnc-server'][0].version is version('1.11', '>=', true)"
   when:
     - vnc_server_install|default(False)
-  
-
 
