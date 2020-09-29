@@ -4,6 +4,9 @@
   set_fact:
     new_mtu: "{{ ansible_facts[external_interface].mtu - mtu_offset|int }}"
 
+- name: "Re-gather facts to obtain latest information about the docker interface"
+  setup:
+
 - block:
   - name: "Check if the entry exists in the file"
     lineinfile:
