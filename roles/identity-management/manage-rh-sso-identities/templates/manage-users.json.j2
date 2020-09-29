@@ -3,7 +3,7 @@
     "firstName": "{{ user_data.first_name | default('') }}",
     "lastName": "{{ user_data.last_name | default('') }}",
     "email": "{{ user_data.email | default('') }}",
-    "enabled": {{ user_data.enabled | default(true) }},
+    "enabled": "{{ user_data.enabled | default(true) }}",
     "emailVerified": {{ user_data.email_verified | default(false) }},
-    "groups": {{ user_groups | to_json }},
+    "groups": {{ user_groups | default([]) }},
 }

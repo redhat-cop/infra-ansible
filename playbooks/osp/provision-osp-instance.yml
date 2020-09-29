@@ -32,11 +32,13 @@
 - name: "Ensure the host is ready for Ansible"
   hosts: osp_instances
   gather_facts: no
+  become: True
   roles:
   - role: ansible/prep-for-ansible
 
 - name: "Workaround for .novalocal"
   hosts: osp_instances
+  become: True
   tasks:
   - name: "Eliminate the .novalocal at the end of the FQDN"
     hostname:
