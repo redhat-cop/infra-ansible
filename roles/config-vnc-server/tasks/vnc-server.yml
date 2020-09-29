@@ -1,93 +1,5 @@
 ---
 
-- name: "Install additional packages for VNC server"
-  package:
-    name: "{{ item }}"
-    state: installed
-  with_items:
-    - tigervnc-server
-    - policycoreutils-python-utils
-    - checkpolicy
-
-- name: "Ensure .vnc dir exists"
-  file:
-    path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc"
-    state: directory
-    owner: "{{ main_user }}"
-
-- name: "Check to see if a VNC password already exists"
-  stat:
-    path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
-  register: passwd_info
-
-- name: "Set a vnc password"
-  shell: "echo {{ vnc_password | default('vncpasswd01') }} | vncpasswd -f > {{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
-  when: passwd_info.stat.exists == False
-
-- name: "Ensure correct ownership of the vnc password file"
-  file:
-    path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
-    owner: "{{ main_user }}"
-    mode: 0600
-
-- name: "Add the xstartup (gnome) configuration to the main user"
-  copy:
-    src: xstartup-gnome
-    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
-    force: no
-    owner: "{{ main_user }}"
-    mode: 0755
-  when:
-    - gnome_install|default(False)
-
-- name: "Add the xstartup (XFCE) configuration to the main user"
-  copy:
-    src: xstartup-xfce
-    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
-    force: no
-    owner: "{{ main_user }}"
-    mode: 0755
-  when:
-    - xfce_install|default(False)
-
-- name: "Add the xstartup (LXDE) configuration to the main user"
-  copy:
-    src: xstartup-lxde
-    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
-    force: no
-    owner: "{{ main_user }}"
-    mode: 0755
-  when:
-    - lxde_install|default(False)
-
-- name: "Add the xstartup (MATE) configuration to the main user"
-  copy:
-    src: xstartup-mate
-    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
-    force: no
-    owner: "{{ main_user }}"
-    mode: 0755
-  when:
-    - mate_install|default(False)
-
-- name: "Copy VNC service file into place"
-  copy:
-    src: /usr/lib/systemd/system/vncserver@.service
-    dest: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
-    remote_src: True
-
-- name: "Ensure the user config is set for the vnc service"
-  replace:
-    path: "/etc/systemd/system/vncserver-{{ main_user }}@.service"
-    regexp: "{{ item.0 }}"
-    replace: "{{ item.1 }}"
-  with_together:
-    - ['<USER>', '/home/' ]
-    - [ "{{ main_user }}", "{{ vnc_home_dir }}/" ]
-
-- name: "Reload systemctl daemon"
-  command: systemctl daemon-reload
-
 - name: "Copy SELinux .te file to the host - used to build the module"
   copy:
     src: SELinuxVNC.te
@@ -102,9 +14,15 @@
 - name: "Load SELinux module to allow VNC"
   command: semodule -i SELinuxVNC.pp
 
+- name: "Ensure the user has been assigned the VNC session"
+  lineinfile:
+    path: "/etc/tigervnc/vncserver.users"
+    regexp: "^:1={{ main_user }}"
+    line: ":1={{ main_user }}"
+
 - name: "Enable and start VNC server for user"
   service:
-    name: "vncserver-{{ main_user }}@:1"
+    name: "vncserver@:1"
     enabled: yes
     state: started
 

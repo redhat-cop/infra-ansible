@@ -57,7 +57,7 @@
       register: rh_sso_clients
     - name: "Get Client ID for Client: {{ role_data.clientName }}"
       set_fact:
-        client_id:  "{{ (rh_sso_clients.json | json_query(query))[0] }}"
+        client_id: "{{ (rh_sso_clients.json | json_query(query))[0] }}"
       vars:
         query: "[?clientId=='{{ role_data.clientName }}'].id"
     - name: "Create Client Role: {{ role_data.name }}"
