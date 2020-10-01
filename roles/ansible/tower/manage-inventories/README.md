@@ -129,6 +129,10 @@ ansible_tower:
           FOO: foo
           BAR: bar
           BAZ: baz
+        overwrite: false
+        overwrite_vars: false
+        update_on_launch: true
+        update_on_project_update: false
       - name: "test-source2"
         description: "Test Source 2"
         credential: "Test Credential"
@@ -175,6 +179,10 @@ ansible_tower:
         ---
         FIRST: John
         LAST: Doe
+      overwrite: false
+      overwrite_vars: false
+      update_on_launch: true
+      update_on_project_update: false
 ```
 
 
