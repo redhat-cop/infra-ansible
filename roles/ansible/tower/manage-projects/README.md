@@ -22,6 +22,7 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.projects.scm_url|URL to the SCM source|no||
 |ansible_tower.projects.scm_branch|SCM branch to use|no|master|
 |ansible_tower.projects.scm_credential_name|SCM credential name to use|no|null|
+|ansible_tower.projects.scm_update_on_launch|Update the project revision prior to job launch|no|false|
 |ansible_tower.projects.organization|Name of the organziation to associate this project with|yes||
 
 **_Note:_** Job Template configuration will **only** happen if the `ansible_tower.projects` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
@@ -41,6 +42,7 @@ ansible_tower:
     scm_url: "https://github.com/redhat-cop/infra-ansible.git"
     scm_branch: "master"
     scm_credential_name: "my-credential"
+    scm_update_on_launch: true
     organization: "Default"
 ```
 
