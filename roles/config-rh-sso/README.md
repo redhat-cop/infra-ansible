@@ -1,13 +1,27 @@
 Role Name
 =========
 
-This deploys RH SSO in Standalone mode without a database.
+This role can deploy RH SSO in Standalone mode without a database, and in Standalone HA mode with a database.
+At this time, this role only supports PostgreSQL databases.
 
 ## Requirements
 Active Red Hat Subscription to enable repositories and download the SSO package group.
 
 ## Dependencies
-None
+To deploy a highly available Red Hat SSO instance, this role currently expects that a PostgreSQL is configured in advanced and that the IP address of the primary is provided.
+
+## Database
+
+| Variable | Description | Required | Defaults |
+|:---------|:------------|:---------|:---------|
+|rh_sso_standalone_ha|Sets the RH SSO instance to start in HA mode|N|False|
+|rh_sso_db_type|Defines the database type. PostgreSQL currently supported|N|postgresql|
+|jdbc_driver_download_url|URL containing the JDBC driver|Y|https://jdbc.postgresql.org/download/postgresql-42.2.16.jar|
+|rh_sso_psql_db_url|URL/IP Address of PostgreSQL primary node|Y||
+|rh_sso_psql_db_port|Port where PostgreSQL is exposed|Y|5432|
+|rh_sso_psql_db_user|Username to connect to the running psql instance|Y|postgres|
+|rh_sso_psql_db_pass|Password of the remote psql user|Y||
+
 
 ## Roles
 
