@@ -1,4 +1,4 @@
-ole Name
+Role Name
 =========
 
 This role can deploy RH SSO in Standalone mode without a database, and in Standalone HA mode with a database.
