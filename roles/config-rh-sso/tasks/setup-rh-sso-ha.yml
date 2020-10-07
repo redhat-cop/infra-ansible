@@ -10,6 +10,7 @@
     encoding: UTF-8
   when:
     - rh_sso_db_type == 'postgresql'
+  run_once: true
 
 - name: 'Configure Red Hat SSO service to load the High Availability scripts'
   lineinfile:
