@@ -4,11 +4,12 @@
   include_tasks: install_containerized.yml
   when:
     - mode == "containerized"
+    - not postgresql_ha_mode
 
 - name: Install Non-Containerized PostgreSQL
   include_tasks: install_non_containerized.yml
   when:
-    - postgresql_ha_mode == True
+    - postgresql_ha_mode
     - mode == "non-containerized"
     - '"db-hosts" in group_names'
 
@@ -18,13 +19,13 @@
 - name: Configure primary for High Availability
   include_tasks: configure_standalone.yml
   when:
-    - postgresql_ha_mode == True
+    - postgresql_ha_mode
     - mode == "non-containerized"
     - "'postgresql-primary' in group_names"
 
 - name: Configure secondary for High Availability
   include_tasks: configure_standby.yml
   when:
-    - postgresql_ha_mode == True
+    - postgresql_ha_mode
     - mode == "non-containerized"
     - "'postgresql-standby' in group_names"

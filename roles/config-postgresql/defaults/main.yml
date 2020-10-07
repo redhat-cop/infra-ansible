@@ -1,8 +1,9 @@
 ---
-mode: containerized
+mode: non-containerized
 
 postgresql_name: postgresql
 postgresql_service: "{{ postgresql_name }}.service"
+postgresql_ha_mode: False
 
 #Systemd
 systemd_service_dir: /usr/lib/systemd/system

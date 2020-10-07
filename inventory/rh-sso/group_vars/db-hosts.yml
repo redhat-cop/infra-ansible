@@ -3,7 +3,6 @@
 ansible_user: cloud-user
 ansible_become: True
 
-mode: non-containerized
 postgresql_ha_mode: True
 postgresql_image: registry.access.redhat.com/rhscl/postgresql-96-rhel7:latest
 postgresql_storage_dir: /var/lib/postgresql
