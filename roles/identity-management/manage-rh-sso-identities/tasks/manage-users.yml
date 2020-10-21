@@ -39,8 +39,8 @@
     - item.client_name is defined
     - item.client_name|trim != ""
 
-- name: "Processing user parameters"
-  include_tasks: pre-req.yml
+- name: "Get Red Hat SSO Access Token"
+  include_tasks: access-token.yml
 
 - name: "Retrieve template to create/update user"
   set_fact:
