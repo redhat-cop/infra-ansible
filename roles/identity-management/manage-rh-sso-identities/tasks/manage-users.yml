@@ -26,18 +26,18 @@
     - item.targets is undefined or "rh-sso" in item.targets
     - item.members is defined
     - user_data.user_name in item.members
-    - item.client_name is undefined or item.client_name|trim == ""
+    - item.clientName is undefined or item.clientName|trim == ""
 
 - name: "Get User Client Roles"
   set_fact:
-    user_client_roles: "{{ user_client_roles + [ { 'role': item.name, 'client': item.client_name } ] }}"
+    user_client_roles: "{{ user_client_roles + [ { 'role': item.name, 'client': item.clientName } ] }}"
   loop: "{{ identities.roles }}"
   when:
     - item.targets is undefined or "rh-sso" in item.targets
     - item.members is defined
     - user_data.user_name in item.members
-    - item.client_name is defined
-    - item.client_name|trim != ""
+    - item.clientName is defined
+    - item.clientName|trim != ""
 
 - name: "Get Red Hat SSO Access Token"
   include_tasks: access-token.yml
@@ -103,6 +103,8 @@
       Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
     validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: realm_roles
+  when:
+    - user_realm_roles|length > 0
 
 - name: "Get Realm Role IDs"
   set_fact:
