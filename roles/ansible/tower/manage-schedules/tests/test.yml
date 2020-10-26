@@ -1,0 +1,5 @@
+---
+
+- hosts: tower
+  roles:
+  - role: ansible/tower/manage-schedules

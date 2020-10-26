@@ -21,5 +21,6 @@
   - role: ansible/tower/manage-inventories
   - role: ansible/tower/manage-job-templates
   - role: ansible/tower/manage-workflow-templates
+  - role: ansible/tower/manage-schedules
   tags:
   - 'always'

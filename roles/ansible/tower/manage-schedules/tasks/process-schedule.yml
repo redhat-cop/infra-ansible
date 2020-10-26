@@ -1,0 +1,38 @@
+---
+- name: "Get the Job Template ID based on the Unified Job Template name"
+  block:
+    - name: "Get the unified_job_template"
+      rest_get:
+        host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+        rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+        rest_password: "{{ ansible_tower.admin_password }}"
+        api_uri: "/api/v2/schedules/?name={{ schedule.unified_job_template }}"
+      register: r_unified_job_template
+    - name: "Set unified_job_template_id fact"
+      set_fact:
+        unified_job_template_id: "{{ r_unified_job_template.rest_output[0].id | int }}"
+      when:
+        - r_unified_job_template.rest_output | length > 0
+  when:
+    - schedule.unified_job_template is defined
+
+- name: "Load up the schedule"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/schedules/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'schedule.j2') }}"
+    body_format: "json"
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 200,201,400
+  register: schedule_output
+
+- name: "Clear/Update facts"
+  set_fact:
+    unified_job_template_id: null
+    processed_schedules: "{{ processed_schedules + [ { 'name': schedule.name } ] }}"
