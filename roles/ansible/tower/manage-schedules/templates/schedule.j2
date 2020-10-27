@@ -11,6 +11,6 @@
     "limit": "",
     "diff_mode": null,
     "verbosity": null,
-    "unified_job_template": "{{ schedule.unified_job_template | default('') }}",
-    "enabled": {{ schedule.enabled | default(true) }}"
+    "unified_job_template": "{{ unified_job_template_id | default('') }}",
+    "enabled": {{ schedule.enabled | default(true)| bool | lower }}"
 }
