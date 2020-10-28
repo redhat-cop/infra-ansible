@@ -30,7 +30,6 @@
       Accept: "application/json"
     validate_certs: no
     status_code: 200,201,400
-  register: schedule_output
 
 - name: "Clear/Update facts"
   set_fact:
