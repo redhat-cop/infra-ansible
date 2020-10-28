@@ -6,6 +6,8 @@
   tasks:
   - include_vars:
       file: "{{ email_content_file }}"
+    when:
+      - email_content_file is defined
   - include_role:
       name: notifications/md-to-html
     vars:

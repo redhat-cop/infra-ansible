@@ -3,7 +3,7 @@
 - include_vars:
     file: "{{ email_content_file }}"
   when:
-    - email_content_file is defined
+    - email_content_file is define
 - set_fact:
     markdown_content: "{{ body }}"
 - include_role:
