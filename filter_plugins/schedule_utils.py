@@ -17,7 +17,7 @@ def subtract_time(dt, **kwargs):
 
 # Creates an rrule from a datetime object and dateutil.rrule, for example freq and count
 def to_rrule(dtstart, **kwargs):
-    return str(rrule(dtstart=dtstart, **kwargs)).replace('\n', ';')
+    return str(rrule(dtstart=dtstart, **kwargs)).replace('\n', ' ')
 
 class FilterModule(object):
     def filters(self):
