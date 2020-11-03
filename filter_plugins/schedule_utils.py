@@ -21,7 +21,9 @@ def to_rrule(dt, **kwargs):
     'DTSTART:YYYYMMDDTHHMMSSZ RRULE:FREQ=MINUTELY,INTERVAL=10,COUNT=5'
     """
     r_rule = rrule(dtstart=dt, **kwargs).__str__().split('\n')
-    return r_rule[0] + 'Z RRULE:' + r_rule[1]
+    if 'INTERVAL' not in r_rule[1]:
+        interval = ', INTERVAL=1'
+    return r_rule[0] + 'Z RRULE:' + r_rule[1] + interval
 
 class FilterModule(object):
 
