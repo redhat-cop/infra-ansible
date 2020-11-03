@@ -1,25 +1,35 @@
-import datetime
-import dateutil.parser
+from datetime import timedelta
+from dateutil.parser import parse
 from dateutil.rrule import rrule
 
+def parse_datetime(datestring):
+    """Parses ISO date string and converts to datetime object."""
+    return parse(datestring)
 
-# Parse valid date string to an Ansible-friendly datetime object
-def parse_datetime(ds, **kwargs):
-    return dateutil.parser.parse(ds)
-
-# Add time to datetime objects
 def add_time(dt, **kwargs):
-    return dt + datetime.timedelta(**kwargs)
+    """Calculate future datetime object."""
+    return dt + timedelta(**kwargs)
 
-# Subtract time from datetime objects
 def subtract_time(dt, **kwargs):
-    return dt - datetime.timedelta(**kwargs)
+    """Calculate past datetime object."""
+    return dt - timedelta(**kwargs)
 
-# Creates an rrule from a datetime object and dateutil.rrule, for example freq and count
-def to_rrule(dtstart, **kwargs):
-    return str(rrule(dtstart=dtstart, **kwargs)).replace('\n', ' ')
+def to_rrule(dt, **kwargs):
+    """
+    Converts datetime object to recurrence rule in the format required by the
+    Ansible Tower/AWX /api/v2/project/{id}/schedules/ endpoint:
+    'DTSTART:YYYYMMDDTHHMMSSZ RRULE:FREQ=MINUTELY,INTERVAL=10,COUNT=5'
+    """
+    r_rule = rrule(dtstart=dt, **kwargs).__str__().split('\n')
+    return r_rule[0] + 'Z ' + r_rule[1]
 
 class FilterModule(object):
+
+    """
+    A set of filters to convert a standard ISO date string to a datetime object,
+    then add or subtract time before converting to an Ansible Tower/AWX compatible
+    recurrence rule (rrule).
+    """
     def filters(self):
         return {
             'parse_datetime': parse_datetime,
