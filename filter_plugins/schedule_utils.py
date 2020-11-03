@@ -3,27 +3,35 @@ from dateutil.parser import parse
 from dateutil.rrule import rrule
 
 def parse_datetime(datestring):
-    """Parses ISO date string and converts to datetime object."""
+
+    # Parses ISO date string and converts to datetime object.
     return parse(datestring)
 
 def add_time(dt, **kwargs):
-    """Calculate future datetime object."""
+
+    # Calculate future datetime object.
     return dt + timedelta(**kwargs)
 
 def subtract_time(dt, **kwargs):
-    """Calculate past datetime object."""
+
+    # Calculate past datetime object.
     return dt - timedelta(**kwargs)
 
 def to_rrule(dt, **kwargs):
+
     """
     Converts datetime object to recurrence rule in the format required by the
     Ansible Tower/AWX /api/v2/project/{id}/schedules/ endpoint:
-    'DTSTART:YYYYMMDDTHHMMSSZ RRULE:FREQ=MINUTELY,INTERVAL=10,COUNT=5'
+    DTSTART:YYYYMMDDTHHMMSSZ RRULE:FREQ=MINUTELY,INTERVAL=10,COUNT=5
+
+    Note that interval is required by the Tower/AWX api but omitted
+    by the rrule module if = 1
     """
-    r_rule = rrule(dtstart=dt, **kwargs).__str__().split('\n')
+    r_rule = str(rrule(dtstart=dt, **kwargs)).split('\n')
+    parts = ['Z RRULE:' + r_rule[1]]
     if 'INTERVAL' not in r_rule[1]:
-        interval = ', INTERVAL=1'
-    return r_rule[0] + 'Z RRULE:' + r_rule[1] + interval
+        parts.append('INTERVAL=1')
+    return r_rule[0] + ';'.join(parts)
 
 class FilterModule(object):
 
