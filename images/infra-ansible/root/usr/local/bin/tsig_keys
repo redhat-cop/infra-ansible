@@ -18,9 +18,9 @@ function parse_tsig_file()
     return
   fi
 
-  export TSIG_KEY_NAME=`sed -ne 's/key[[:space:]]*\([^[:space:]]*\)[[:space:]]*{/\1/p' $TSIG_FILE` 
-  export TSIG_KEY_ALGORITHM=`sed -ne 's/[[:space:]]*algorithm[[:space:]]*\([^;]*\);/\1/p' $TSIG_FILE`
-  export TSIG_KEY_SECRET=`sed -ne 's/[[:space:]]*secret[[:space:]]*"\([^"]*\)";/\1/p' $TSIG_FILE`
+  export TSIG_KEY_NAME="`sed -ne 's/key[[:space:]]*\([^[:space:]]*\)[[:space:]]*{.*$/\1/p' $TSIG_FILE`"
+  export TSIG_KEY_ALGORITHM="`sed -ne 's/[[:space:]]*algorithm[[:space:]]*\([^;]*\);.*$/\1/p' $TSIG_FILE`"
+  export TSIG_KEY_SECRET="`sed -ne 's/[[:space:]]*secret[[:space:]]*"\([^"]*\)";.*$/\1/p' $TSIG_FILE`"
 }
 
 parse_tsig_file
