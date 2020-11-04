@@ -85,7 +85,7 @@ The above commands expects the following inputs:
 
 > **Note:** The AWS credentials file can be using the .csv as downloaded from AWS, or a .sh file can be used and will be sourced as-is (make sure the **AWS_SECRET_ACCESS_KEY** and **AWS_ACCESS_KEY_ID** environment variables are exported correctly).
 
-## Supplying a TSIG key for DNS management with nsupdate
+### Supplying a TSIG key for DNS management with nsupdate
 
 When doing DNS management with nsupdate, the TSIG key information can be sourced from a TSIG file. These parameters will then be available as environment variables, as shown below:
 
