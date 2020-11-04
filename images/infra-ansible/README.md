@@ -97,7 +97,7 @@ docker run -u `id -u` \
       -t quay.io/redhat-cop/infra-ansible
 ```
 
-The paramters are then available as environment variables:
+The parameters are then available as environment variables:
 
 ```
 >  env | grep TSIG
