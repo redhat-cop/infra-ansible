@@ -1,4 +1,13 @@
 ---
+
+- name: "Get the schedule id based on the name"
+  set_fact:
+    schedule_id: "{{ item.id }}"
+  when:
+    - item.name|trim == schedule.name|trim
+  with_items:
+    - "{{ existing_schedules_output.rest_output }}"
+
 - name: "Get the Job Template ID based on the Unified Job Template name"
   block:
     - name: "Get the unified_job_template"
@@ -22,6 +31,22 @@
     user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'schedule.j2') }}"
+    body_format: "json"
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 201
+  when: schedule_id is not defined
+
+- name: "Update existing schedule"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/schedules/{{ schedule_id }}/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
     method: PUT
     body: "{{ lookup('template', 'schedule.j2') }}"
     body_format: "json"
@@ -29,7 +54,8 @@
       Content-Type: "application/json"
       Accept: "application/json"
     validate_certs: no
-    status_code: 200,201,400
+    status_code: 200
+  when: schedule_id is defined
 
 - name: "Clear/Update facts"
   set_fact:
