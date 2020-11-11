@@ -22,7 +22,7 @@
     user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: yes
-    method: POST
+    method: PUT
     body: "{{ lookup('template', 'schedule.j2') }}"
     body_format: "json"
     headers:
