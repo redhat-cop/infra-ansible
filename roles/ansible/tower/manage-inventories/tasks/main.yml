@@ -41,7 +41,7 @@
     loop_control:
       loop_var: inventory
 
-  - name: "Elminate the inventories that should not be present"
+  - name: "Eliminate the inventories that should not be present"
     uri:
       url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventories/{{ item.id }}/"
       user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
@@ -52,6 +52,8 @@
       status_code: 200,202,204
     with_items:
     - "{{ existing_inventories_output.rest_output | get_remaining_items(processed_inventories, 'name', 'name')}}"
+    when:      
+    - delete_missing_items|default(True) == True
 
   when:
   - ansible_tower.inventories is defined
