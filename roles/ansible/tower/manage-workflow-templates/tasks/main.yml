@@ -63,7 +63,7 @@
       status_code: 200,204
     with_items:
     - "{{ existing_workflow_templates_output.rest_output | get_remaining_items(processed_workflow_templates, 'name', 'name')}}"
-    when:  
+    when:
     - delete_missing_items|default(True) == True
 
   when:

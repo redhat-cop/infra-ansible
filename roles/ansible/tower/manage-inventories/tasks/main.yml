@@ -52,7 +52,7 @@
       status_code: 200,202,204
     with_items:
     - "{{ existing_inventories_output.rest_output | get_remaining_items(processed_inventories, 'name', 'name')}}"
-    when:      
+    when:
     - delete_missing_items|default(True) == True
 
   when:
