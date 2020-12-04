@@ -10,4 +10,9 @@ then
   source ~/.config/openstack/openrc.sh
 fi
 
+if [ -f ~/tsig.key ]
+then
+  source /usr/local/bin/tsig_keys
+fi
+
 source /usr/local/bin/entrypoint
