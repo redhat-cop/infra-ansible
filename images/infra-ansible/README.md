@@ -85,6 +85,27 @@ The above commands expects the following inputs:
 
 > **Note:** The AWS credentials file can be using the .csv as downloaded from AWS, or a .sh file can be used and will be sourced as-is (make sure the **AWS_SECRET_ACCESS_KEY** and **AWS_ACCESS_KEY_ID** environment variables are exported correctly).
 
+### Supplying a TSIG key for DNS management with nsupdate
+
+When doing DNS management with nsupdate, the TSIG key information can be sourced from a TSIG file. These parameters will then be available as environment variables, as shown below:
+
+```
+docker run -u `id -u` \
+         :
+      -v $HOME/my-tsig-file.key:/opt/app-root/src/tsig.key \
+         :
+      -t quay.io/redhat-cop/infra-ansible
+```
+
+The parameters are then available as environment variables:
+
+```
+>  env | grep TSIG
+TSIG_KEY_SECRET= ...
+TSIG_KEY_NAME= ...
+TSIG_KEY_ALGORITHM= ...
+```
+
 ## Building the Image
 
 This image is built and published to docker.io, so there's no reason to build it if you're just wanting to use the latest stable version. However, if you need to build it for development reasons, here's how:
