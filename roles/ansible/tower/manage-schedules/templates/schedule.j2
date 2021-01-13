@@ -1,0 +1,16 @@
+{
+    "rrule": "{{ schedule.rrule }}",
+    "name": "{{ schedule.name }}",
+    "description": "{{ schedule.description | default('') }}",
+    "extra_data": {{ schedule.extra_data | default("{}") | to_json }},
+    "inventory": "{{ schedule.inventory | default() }}",
+    "scm_branch": "{{ schedule.scm_branch | default('') }}",
+    "job_type": null,
+    "job_tags": "",
+    "skip_tags": "",
+    "limit": "",
+    "diff_mode": null,
+    "verbosity": null,
+    "unified_job_template": "{{ unified_job_template_id | default('') }}",
+    "enabled": {{ schedule.enabled | default(true)| bool | lower }}
+}

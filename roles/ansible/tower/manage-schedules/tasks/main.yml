@@ -1,0 +1,25 @@
+---
+- block: # when ansible_tower.schedules is defined
+    - name: "Set default values"
+      set_fact:
+        existing_schedules_output: []
+        processed_schedules: []
+
+    # Utilize the `rest_get` library routine to ensure REST pagination is handled
+    - name: "Get the existing schedules"
+      rest_get:
+        host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+        rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+        rest_password: "{{ ansible_tower.admin_password }}"
+        api_uri: "/api/v2/schedules/"
+      register: existing_schedules_output
+
+    - name: "Process the inventory schedules"
+      include_tasks: process-schedule.yml
+      with_items:
+        - "{{ ansible_tower.schedules }}"
+      loop_control:
+        loop_var: schedule
+
+  when:
+    - ansible_tower.schedules is defined

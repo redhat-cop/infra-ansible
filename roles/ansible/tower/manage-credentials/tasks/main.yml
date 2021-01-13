@@ -43,7 +43,7 @@
     loop_control:
       loop_var: credential
 
-  - name: "Elminate the credentials that should not be present"
+  - name: "Eliminate the credentials that should not be present"
     uri:
       url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/credentials/{{ item.id }}/"
       user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
@@ -54,6 +54,8 @@
       status_code: 200,204
     with_items:
     - "{{ existing_credentials_output.rest_output | get_remaining_items(processed_credentials, 'name', 'name')}}"
+    when:
+    - delete_missing_items|default(True) == True
 
   when:
   - ansible_tower.credentials is defined
