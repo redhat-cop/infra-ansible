@@ -42,6 +42,12 @@
         org_id: "{{ rhsm_org_id | default(omit) }}"
         force_register: "{{ rhsm_force_register | default(omit) }}"
 
+    - name: "Lock in specific release - if requested"
+      command: "subscription-manager release --set={{ rhsm_lock_release }}"
+      when:
+        - rhsm_lock_release is defined
+        - rhsm_lock_release|trim != ''
+
     - name: "Obtain currently enabled repos"
       shell: 'subscription-manager repos --list-enabled | sed -ne "s/^Repo ID:[^a-zA-Z0-9]*\(.*\)/\1/p"'
       register: enabled_repos

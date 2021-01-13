@@ -14,11 +14,11 @@ libvirt_networks:
   - name: "eth0"
     type: "bridge"
     hostif: "virbr0"
+    ip: 192.168.1.21
+    netmask: 255.255.255.0
+    gateway: 192.168.1.1
 
 libvirt_disks:
   - name: "disk1"
     size: "20"
 
-eth0_ip: 192.168.1.21
-eth0_mask: 255.255.255.0
-eth0_gw: 192.168.1.1
