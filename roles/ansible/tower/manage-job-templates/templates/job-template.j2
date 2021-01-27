@@ -20,7 +20,7 @@
     "host_config_key": "",
     "ask_diff_mode_on_launch": false,
     "ask_variables_on_launch": {{ job_template.ask_variables_on_launch | default(false) }},
-    "ask_limit_on_launch": false,
+    "ask_limit_on_launch": {{ job_template.ask_limit_on_launch | default(false) }},
     "ask_tags_on_launch": false,
     "ask_skip_tags_on_launch": false,
     "ask_job_type_on_launch": false,

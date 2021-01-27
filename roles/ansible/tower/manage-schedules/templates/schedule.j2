@@ -8,7 +8,7 @@
     "job_type": null,
     "job_tags": "",
     "skip_tags": "",
-    "limit": "",
+    "limit": "{{ schedule.limit | default('') }}",
     "diff_mode": null,
     "verbosity": null,
     "unified_job_template": "{{ unified_job_template_id | default('') }}",
