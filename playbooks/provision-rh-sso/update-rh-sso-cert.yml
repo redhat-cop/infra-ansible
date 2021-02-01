@@ -5,5 +5,4 @@
     - import_role:
         name: config-rh-sso
         tasks_from: setup-rh-sso-ssl.yml
-    
 
