@@ -10,7 +10,7 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
-Check the top level [README](../README) for additional/common variables.
+Check the top level [README](../README.md) for additional/common variables.
 
 The variables used must be defined in the Ansible Inventory using the `ansible_tower.credentials` list as explained below.
 

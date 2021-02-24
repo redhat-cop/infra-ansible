@@ -10,7 +10,7 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
-Check the top level [README](../README) for additional/common variables.
+Check the top level [README](../README.md) for additional/common variables.
 
 The variables used to maintain the Credential Types must be defined in the Ansible Inventory using the `ansible_tower.credential_types` dictionary as explained below.
 
