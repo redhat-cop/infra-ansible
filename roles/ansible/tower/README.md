@@ -16,9 +16,13 @@ The following is a list of required variables for the Ansible Tower roles that a
 
 | Variable | Description | Required | Defaults |
 |:--------:|:-----------:|:--------:|:--------:|
-|**ansible_tower.url**|URL for the Ansible Tower |yes||
-|**ansible_tower.admin_user**|Admin user for the Ansible Tower |yes||
+|**ansible_tower.url**|URL for the Ansible Tower |no|https://localhost|
+|**ansible_tower.admin_user**|Admin user for the Ansible Tower |no|admin|
 |**ansible_tower.admin_password**|Admin password for the Ansible Tower |yes||
+|**ansible_tower.validate_certs**|Wheter or not to validate Ansible Tower SSL Certificate, use `false` when using not trusted certificates |no|true|
+
+
+**Note:** You should ensure that the ansible_tower.url variable that is being used is not being redirected (i.e. redirected from http -> https, etc.). If there are concerns with how you're getting/setting this URL, you can use the `discover-url-redirect` role found in this repo.
 
 
 Roles
@@ -29,6 +33,7 @@ The following roles exists in this directory:
 - [config-ansible-tower](config-ansible-tower) role used to install and do initial configuration of Ansible tower.
 - [config-ansible-tower-ldap](config-ansible-tower-ldap) role used to configure Ansible Tower to use a LDAP backend for authentication.
 - [config-ansible-tower-license](config-ansible-tower-license) role used to configure Ansible Tower licensing.
+- [config-ansible-tower-subscription-manifest](config-ansible-tower-subscription-manifest) role used to configure Ansible Tower subscription.
 - [manage-credential-types](manage-credential-types) role used to manage and populate Ansible Tower Credential Types ("Settings >> Credential Types").
 - [manage-credentials](manage-credentials) role used to manage and populate Ansible Tower Credentials ("Settings >> Credentials").
 - [manage-inventories](manage-inventories) role used to manage and populate Ansible Tower Inventories ("Inventories").
@@ -36,6 +41,7 @@ The following roles exists in this directory:
 - [manage-projects](manage-projects) role used to manage and populate Ansible Tower Projects ("Projects").
 - [manage-settings](manage-settings) role used to manage and configure Ansible Tower Settings ("Settings").
 - [manage-workflow-templates](manage-workflow-templates) role used to manage and Ansible Tower WorkFlow templates. ("WorkFlow").
+- [wait-for-tower-to-be-ready](wait-for-tower-to-be-ready) role used to wait for Tower to be ready.
 
 
 Example Inventory

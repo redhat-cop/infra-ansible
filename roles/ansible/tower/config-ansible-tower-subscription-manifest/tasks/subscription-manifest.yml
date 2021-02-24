@@ -1,17 +1,8 @@
 ---
 
-- name: "Wait for Tower to become available before proceeding (30 sec max)"
-  uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
-    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-    password: "{{ ansible_tower.admin_password }}"
-    force_basic_auth: yes
-    method: GET
-    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
-  register: status_output
-  until: status_output.status == 200
-  retries: "{{ ansible_tower.install.wait_retries | default(6) }}"
-  delay: "{{ ansible_tower.install.wait_delay | default(5) }}"
+- name: "Call 'wait-for-tower-to-be-ready' to ensure Ansible Tower is ready"
+  include_role:
+    name: "ansible/tower/wait-for-tower-to-be-ready"
 
 - name: "Add Tower subscription manfiest"
   uri:
