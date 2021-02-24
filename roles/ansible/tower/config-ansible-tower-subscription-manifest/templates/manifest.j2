@@ -1,4 +1,4 @@
 {
-  "manifest": "{{ lookup('file' ansible_tower.install.manifest_file) | b64encode }}",
+  "manifest": "{{ lookup('file', ansible_tower.install.manifest_file) | b64encode }}",
   "eula_accepted": true
 }
