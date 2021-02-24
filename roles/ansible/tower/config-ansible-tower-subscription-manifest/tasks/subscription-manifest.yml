@@ -1,0 +1,31 @@
+---
+
+- name: "Wait for Tower to become available before proceeding (30 sec max)"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: GET
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+  register: status_output
+  until: status_output.status == 200
+  retries: 6
+  delay: 5
+
+- name: "Add Tower subscription manfiest"
+  uri:
+    url: "{{ ansible_tower.url | regex_replace('\\/$','')}}/api/v2/config/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'manifest.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+  when:
+    - ansible_tower.install.manifest_file is defined
+
