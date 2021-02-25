@@ -10,12 +10,12 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
-The variables used must be defined in the Ansible Inventory using the `ansible_tower.projects` list as explained below.
+Check the top level [README](../README.md) for additional/common variables.
 
+The variables used must be defined in the Ansible Inventory using the `ansible_tower.projects` list as explained below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
 |ansible_tower.projects.name|Name of the project|yes||
 |ansible_tower.projects.description|Description of the project|no||
 |ansible_tower.projects.scm_type|Type of source control management to use|no|git|
