@@ -6,8 +6,6 @@ This role is used to deploy and configure an Ansible Tower running as containers
 ## Requirements
 
   - A running OpenShift Cluster and installed 'oc' client in the Ansible host
-  - An existing project where to deploy Ansible Tower (must match the `ansible_tower.openshift_project` variable)
-  - An existing PVC for Postgresql named `postgresql-data`
 
 
 ## Role Variables
@@ -16,16 +14,15 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.openshift_host|OpenShift API url|yes||
-|ansible_tower.openshift_project|Project where to deploy Tower|yes|'ansible-tower'|
-|ansible_tower.openshift_user|User to login into openshift|yes||
-|ansible_tower.openshift_password|Openshift user password|yes||
-|ansible_tower.admin_password|Tower admin user password|yes||
-|ansible_tower.secret_key|Openshift token information|yes||
-|ansible_tower.pg_username|Postgresql User|yes||
-|ansible_tower.pg_password|Postgresql Password|yes||
-|ansible_tower.rabbitmq_password|RabbitMQ password to use|yes||
-|ansible_tower.rabbitmq_erlang_cookie|RabbitMQ cookie|yes||
+|openshift_host|OpenShift API url|yes||
+|openshift_project|Project where to deploy Tower|yes|'ansible-tower'|
+|openshift_user|User to login into openshift|yes||
+|openshift_password|Openshift user password|yes||
+|admin_user|Tower admin username|yes|
+|admin_password|Tower admin user password|yes||
+|secret_key|Tower secret key|yes||
+|pg_username|Postgresql User|yes||
+|pg_password|Postgresql Password|yes||
 
 
 ## Example Inventory
@@ -35,16 +32,13 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 
 ansible_connection: local
 
-ansible_tower:
-  openshift_host: https://console.openshift.local
-  openshift_user: "admin"
-  openshift_password: "secret"
-  admin_password: "secret"
-  pg_username: "awx"
-  pg_password: "redhat"
-  rabbitmq_password: "secret"
-  secret_key: "mysecrettoken"
-  rabbitmq_erlang_cookie: "secret"
+openshift_host: https://console.openshift.local
+openshift_user: "admin"
+openshift_password: "secret"
+admin_password: "secret"
+pg_username: "awx"
+pg_password: "redhat"
+secret_key: "myTowersecrettoken"
 ```
 
 ## Example Playbook
