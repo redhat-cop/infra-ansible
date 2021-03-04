@@ -1,3 +1,5 @@
+---
+
 ansible:
   use_hostnames: True
   expand_hostvars: True
