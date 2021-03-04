@@ -44,6 +44,13 @@ docker run -u `id -u` \
 
 ### For OpenStack
 
+The following setup setps are required to be done *once* in any new environments:
+
+* Obtain the [OpenStack RC File](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/11/html/command-line_interface_reference/ch_cli#cli_openrc)
+  * For the purpose of this write-up, copy the file to `~/.config/openstack/openrc.sh`
+* A [Key-pair in OpenStack](https://github.com/naturalis/openstack-docs/wiki/Howto:-Creating-and-using-OpenStack-SSH-keypairs-on-Linux-and-OSX)
+* Copy [clouds.yaml](../../files/clouds.yaml) to `~/.config/openstack/clouds.yaml`
+
 A typical run of the image would look like:
 
 ```

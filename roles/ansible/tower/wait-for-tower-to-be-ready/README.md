@@ -1,7 +1,7 @@
-config-ansible-tower-license
-=========================
+wait-for-tower-to-be-ready
+==========================
 
-This role is used to provide an Ansible Tower instance with a license
+This role is used to wait for Tower to become ready - i.e.: Tower URL returns a 200OK
 
 ## Requirements
 
@@ -12,20 +12,18 @@ A running Ansible Tower with admin permission level access.
 
 Check the top level [README](../README.md) for additional/common variables.
 
-The variables used to configure the Ansible Tower license are outlined in the table below.
-
 | Variable | Description | Required | Defaults |
-|:---------|:------------|:---------|:---------|
-|ansible_tower.install.license_file|Path to valid Ansible Tower license content|yes||
+|:--------:|:-----------:|:--------:|:--------:|
+|**ansible_tower.install.wait_delay**|Number of seconds between retries|no|5|
+|**ansible_tower.install.wait_retries**|Number of retries while waiting for the Tower API to become available|no|6|
 
 
 ## Example Inventory
 ```yaml
 ansible_tower:
+  url: 
   admin_username: "admin"
   admin_password: "admin123"
-  install:
-    license_file: "{{ inventory_dir }}/../files/example-license.json"
 ```
 
 ## Example Playbook
@@ -35,7 +33,7 @@ ansible_tower:
 
 - hosts: tower
   roles:
-  - role: config-ansible-tower-license
+  - role: wait-for-tower-to-be-ready
 ```
 
 

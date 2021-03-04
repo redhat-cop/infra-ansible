@@ -10,11 +10,12 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
+Check the top level [README](../README.md) for additional/common variables.
+
 The variables used must be defined in the Ansible Inventory using the `ansible_tower.job_templates` list as explained below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
 |ansible_tower.job_templates.name|Name of the Job Template|yes||
 |ansible_tower.job_templates.description|Description of the Job Template|no||
 |ansible_tower.job_templates.inventory|The name of the inventory to be used with this Job Template|yes||

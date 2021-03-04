@@ -1,0 +1,15 @@
+---
+
+- name: "Wait for Tower to become available before proceeding"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: GET
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+  register: status_output
+  until: status_output.status == 200
+  retries: "{{ ansible_tower.install.wait_retries | default(6) }}"
+  delay: "{{ ansible_tower.install.wait_delay | default(5) }}"
+

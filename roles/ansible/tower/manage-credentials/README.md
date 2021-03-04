@@ -10,11 +10,12 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
+Check the top level [README](../README.md) for additional/common variables.
+
 The variables used must be defined in the Ansible Inventory using the `ansible_tower.credentials` list as explained below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
 |ansible_tower.credentials.name|Name to be used for the credential|yes||
 |ansible_tower.credentials.description|Description for the credential|no|nothing('')|
 |ansible_tower.credentials.organization|Name of the existing org to tie these credentials with|yes||
@@ -26,6 +27,7 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 
 **_Note:_** Credential input will **only** happen if the `ansible_tower.credentials.inputs` portion of the dictionary is defined and complete as per [Tower Credential Types documentation](https://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html#credential-types).
 
+**_Note:_** User-defined credentials that are not declared in your inventory will be deleted by default after this role is run. Tower-managed credentials can be identified by a `'managed_by_tower` field returned by the Tower API and cannot be deleted by the user.
 
 ## Example Inventory
 
