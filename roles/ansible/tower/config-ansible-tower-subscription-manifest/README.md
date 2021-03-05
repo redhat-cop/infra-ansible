@@ -1,7 +1,7 @@
-config-ansible-tower-license
-=========================
+config-ansible-tower-subscription-manifest
+==========================================
 
-This role is used to provide an Ansible Tower instance with a license
+This role is used to provide an Ansible Tower instance with a subscription manifest
 
 ## Requirements
 
@@ -12,11 +12,11 @@ A running Ansible Tower with admin permission level access.
 
 Check the top level [README](../README.md) for additional/common variables.
 
-The variables used to configure the Ansible Tower license are outlined in the table below.
+The variables used to configure the Ansible Tower subscription are outlined in the table below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.install.license_file|Path to valid Ansible Tower license content|yes||
+|ansible_tower.install.manifest_file|Path to valid Ansible Tower manifest content|yes||
 
 
 ## Example Inventory
@@ -25,7 +25,7 @@ ansible_tower:
   admin_username: "admin"
   admin_password: "admin123"
   install:
-    license_file: "{{ inventory_dir }}/../files/example-license.json"
+    manifest_file: "{{ inventory_dir }}/../files/example-manifest.json"
 ```
 
 ## Example Playbook
@@ -35,7 +35,7 @@ ansible_tower:
 
 - hosts: tower
   roles:
-  - role: config-ansible-tower-license
+  - role: config-ansible-tower-subscription-manifest
 ```
 
 

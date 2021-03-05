@@ -10,11 +10,12 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
+Check the top level [README](../README.md) for additional/common variables.
+
 The variables used to configure Ansible Tower LDAP are outlined in the table below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
 |ansible_tower.containerized|Indicates whether this workload runs in a container|no|false|
 |ansible_tower.install.ldap.ca_cert|CA Certificate used for LDAP integration|no||
 |ansible_tower.install.ldap.uri|ldaps URL for LDAP server|yes||

@@ -10,11 +10,12 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
+Check the top level [README](../README.md) for additional/common variables.
+
 The variables used must be defined in the Ansible Inventory using the `ansible_tower.inventories` list as explained below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
 |ansible_tower.inventories.name|Name of the inventory|yes||
 |ansible_tower.inventories.description|Description of the inventory|no|nothing ('')|
 |ansible_tower.inventories.organization|Organization to associate the inventory with|yes||

@@ -4,6 +4,7 @@
   roles:
   - role: ansible/tower/config-ansible-tower
   - role: ansible/tower/config-ansible-tower-license
+  - role: ansible/tower/config-ansible-tower-subscription-manifest
   - role: ansible/tower/config-ansible-tower-ldap
   - role: config-packages
   - role: config-pip-packages
