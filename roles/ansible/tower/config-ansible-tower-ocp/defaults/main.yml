@@ -25,6 +25,6 @@ openshift_skip_tls_verify: "true"
 openshift_project: "tower"
 #Postgre should relay on PVC
 
-openshift_pg_pvc_name=postgresql
+openshift_pg_pvc_name: "postgresql"
 openshift_pg_emptydir: "true"
 

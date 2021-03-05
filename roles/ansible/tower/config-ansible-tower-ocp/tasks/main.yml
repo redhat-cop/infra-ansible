@@ -27,11 +27,11 @@
 
 - name: "Download & Unpack Ansible Tower installer"
   unarchive:
-      src: "{{ ansible_tower_download_url }}"
-      dest: "."
-      list_files: true
-      remote_src: true
-      exclude: "inventory"
+    src: "{{ ansible_tower_download_url }}"
+    dest: "."
+    list_files: true
+    remote_src: true
+    exclude: "inventory"
   register: ansible_tower_download_fact
 
 - name: "Set installation facts"
@@ -42,17 +42,17 @@
 
 - name: "Set up the Ansible Tower on Openshift Installer inventory"
   template:
-      src: inventory.j2
-      dest: "{{ ansible_tower_dir }}/inventory"
+    src: inventory.j2
+    dest: "{{ ansible_tower_dir }}/inventory"
   register: inventory
 
 - name: "run tower installer"
   shell: ./setup_openshift.sh
   args:
-      chdir: "{{ ansible_tower_dir }}"
+    chdir: "{{ ansible_tower_dir }}"
 
 - name: "parsing installation log..."
-  shell: ls -1 setup_container_cluster-* | tail -n 1 | xargs tail -n 2 
+  shell: ls -1 setup_container_cluster-* | tail -n 1 | xargs tail -n 1
   register: in_outcome
 
 - name: "Installation was .."
