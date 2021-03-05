@@ -10,19 +10,18 @@ This role is used to deploy and configure an Ansible Tower running as containers
 
 ## Role Variables
 
-The variables used to install an Ansible Tower instance are outlined in the table below.
+The variables used to install an Ansible Tower instance are outlined in the table below. Authentication shall be based on either username/token, with token being prefered. You can specify username and password but role will automatically retrieve token.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|openshift_host|OpenShift API url|yes||
-|openshift_project|Project where to deploy Tower|yes|'ansible-tower'|
-|openshift_user|User to login into openshift|yes||
-|openshift_password|Openshift user password|yes||
-|admin_user|Tower admin username|yes|
-|admin_password|Tower admin user password|yes||
-|secret_key|Tower secret key|yes||
-|pg_username|Postgresql User|yes||
-|pg_password|Postgresql Password|yes||
+|openshift_host|OpenShift API url|yes|CRC on local host|
+|openshift_project|Project where to deploy Tower|yes|'tower'|
+|openshift_user|User to login into openshift|yes|"kubeadmin"|
+|openshift_password|Openshift user password|yes(either that or token)||
+|openshift_token|Openshift token|yes(either that or password)||
+|admin_user|Tower admin username|yes|"admin"|
+|admin_password|Tower admin user password|yes|"admin"|
+|secret_key|Tower secret key|yes|"abcdefgh"|
 
 
 ## Example Inventory
@@ -30,15 +29,19 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 ```yaml
 ---
 
-ansible_connection: local
+##Initial Tower Config
+admin_user: 'admin'
+admin_password: 'admin'
+secret_key: 'abcdefghijkx'
 
-openshift_host: https://console.openshift.local
-openshift_user: "admin"
-openshift_password: "secret"
-admin_password: "secret"
-pg_username: "awx"
-pg_password: "redhat"
-secret_key: "myTowersecrettoken"
+# Deploy into Openshift
+
+openshift_host: "https://api.crc.testing:6443"
+openshift_skip_tls_verify: "true"
+openshift_project: "test-tower"
+openshift_user: "kubeadmin"
+openshift_password: "XXXXX"
+
 ```
 
 ## Example Playbook

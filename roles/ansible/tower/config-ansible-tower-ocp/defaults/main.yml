@@ -9,7 +9,7 @@ ansible_tower_oc_download_url: https://mirror.openshift.com/pub/openshift-v3/cli
 admin_user: 'admin'
 admin_password: 'admin'
 admin_email: 'root@localhost'
-
+secret_key: 'abcdefghijkx'
 #Postgre setup
 pg_username: 'pgu'
 pg_password: 'pgu'
@@ -23,8 +23,6 @@ postgress_activate_wait: "120"
 openshift_host: "https://api.crc.testing:6443"
 openshift_skip_tls_verify: "true"
 openshift_project: "tower"
-#Postgre should relay on PVC
-
+#Postgre should relay on PVC, but for the moment we support EmptyDir only
 openshift_pg_pvc_name: "postgresql"
 openshift_pg_emptydir: "true"
-

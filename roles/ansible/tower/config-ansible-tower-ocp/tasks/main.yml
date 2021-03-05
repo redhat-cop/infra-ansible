@@ -1,7 +1,5 @@
 ---
 
-- include_tasks: prereqs.yml
-  when: openshift_host is defined and openshift_host != ''
 
 - name: Check if inventory file variables are defined
   fail: msg="Please specify the value of {{item}} in your inventory file"
@@ -14,13 +12,10 @@
     - pg_password
     - openshift_host
     - openshift_project
-    - openshift_user
-    - openshift_password
 
 - include_tasks: "{{ tasks }}"
   with_items:
-    - openshift_auth.yml
-    - openshift.yml
+    - openshift_retrieve_token.yml
   loop_control:
     loop_var: tasks
 
@@ -36,8 +31,6 @@
 
 - name: "Set installation facts"
   set_fact:
-      # The first file listed in the output of the unarchiving from downloading tower
-      # is the directory so set that as ansible_tower_dir
     ansible_tower_dir: "{{ ansible_tower_download_fact.files.0 }}"
 
 - name: "Set up the Ansible Tower on Openshift Installer inventory"
@@ -46,8 +39,14 @@
     dest: "{{ ansible_tower_dir }}/inventory"
   register: inventory
 
-- name: "run tower installer"
-  shell: ./setup_openshift.sh
+- name: "Push a workaround for Migration taking too much time in 3.8.1"
+  copy:
+    src: main.yml
+    dest: "{{ ansible_tower_dir}}/roles/kubernetes/tasks/main.yml"
+  when: ansible_tower_download_fact.files.0 is search('3.8.1')
+
+- name: "Run Tower on Openshift installer using access token"
+  shell: "./setup_openshift.sh -e openshift_token={{ openshift_token }}"
   args:
     chdir: "{{ ansible_tower_dir }}"
 
@@ -55,7 +54,8 @@
   shell: ls -1 setup_container_cluster-* | tail -n 1 | xargs tail -n 1
   register: in_outcome
 
-- name: "Installation was .."
-  when: in_outcome.stdout.find('failed=0') == 0
-  debug: msg="Installation was succesfull"
-
+- name: "Installation cleanup .."
+  when: in_outcome.stdout.find('failed=0') == -1
+  file:
+    state: absent
+    path: "{{ ansible_tower_dir }}"

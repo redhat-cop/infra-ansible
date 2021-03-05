@@ -3,13 +3,13 @@ localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env pyth
 [all:vars]
 
 # This will create or update a default admin (superuser) account in Tower
-admin_user= {{ admin_user }}
-admin_password= {{ admin_password }}
+admin_user="{{ admin_user }}"
+admin_password="{{ admin_password }}"
 
 # Tower Secret key
 # It's *very* important that this stay the same between upgrades or you will lose
 # the ability to decrypt your credentials
-secret_key= {{ secret_key }}
+secret_key="{{ secret_key }}"
 
 # Database Settings
 # =================
@@ -21,12 +21,12 @@ secret_key= {{ secret_key }}
 # If using an external database, provide your existing credentials.
 # If you choose to use the provided containerized Postgres depolyment, these
 # values will be used when provisioning the database.
-pg_username= {{ pg_username }}
-pg_password= {{ pg_password }}
-pg_database= {{ pg_database }}
-pg_port= {{ pg_port }}
+pg_username="{{ pg_username }}"
+pg_password="{{ pg_password }}"
+pg_database="{{ pg_database }}"
+pg_port="{{ pg_port }}"
 pg_sslmode='prefer'  # set to 'verify-full' for client-side enforced SSL
-postgress_activate_wait= {{ postgress_activate_wait}}
+postgress_activate_wait="{{ postgress_activate_wait}}"
 
 # Note: The user running this installer will need cluster-admin privileges.
 # Tower's job execution container requires running in privileged mode,
@@ -35,11 +35,11 @@ postgress_activate_wait= {{ postgress_activate_wait}}
 # Deploy into Openshift
 # =====================
 
-openshift_host= {{ openshift_host }}
-openshift_skip_tls_verify= {{ openshift_skip_tls_verify }}
-openshift_project= {{ openshift_project}}
-openshift_user= {{ openshift_user }}
-openshift_password= {{ openshift_password }}
+openshift_host="{{ openshift_host }}"
+openshift_skip_tls_verify="{{ openshift_skip_tls_verify }}"
+openshift_project="{{ openshift_project}}"
+openshift_user="{{ openshift_user }}"
+openshift_token="{{ openshift_token }}"
 # If you don't want to hardcode a password here, just do:
 # ./setup_openshift.sh -e openshift_token=$TOKEN
 
@@ -50,11 +50,11 @@ openshift_password= {{ openshift_password }}
 #
 #
 # Name of a PVC you've already provisioned for database:
-#openshift_pg_pvc_name=postgresql
+openshift_pg_pvc_name="{{ openshift_pg_pvc_name }}"
 #
 # Or... use an emptyDir volume for the OpenShift Postgres pod.
 # Useful for demos or testing purposes.
-openshift_pg_emptydir= {{ openshift_pg_emptydir }}
+openshift_pg_emptydir="{{ openshift_pg_emptydir }}"
 
 # Deploy into Vanilla Kubernetes
 # ==============================
