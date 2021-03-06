@@ -12,11 +12,7 @@
     - openshift_host
     - openshift_project
 
-- include_tasks: "{{ tasks }}"
-  with_items:
-    - openshift_retrieve_token.yml
-  loop_control:
-    loop_var: tasks
+- import_tasks: openshift_retrieve_token.yml
 
 - name: "Download & Unpack Ansible Tower installer"
   unarchive:
