@@ -19,5 +19,4 @@
   when:
     - openshift_user is defined
     - openshift_password is defined
-    - openshift_token is not defined
-    - openshift_token|trim != ''
+    - openshift_token is not defined or openshift_token|trim == ''

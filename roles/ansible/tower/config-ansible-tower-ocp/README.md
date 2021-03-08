@@ -30,6 +30,7 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |admin_password|Tower admin user password|no|"admin"|
 |admin_email|Tower admin user e-mail address|no|root@localhost|
 |secret_key|Tower secret key|no|"abcdefghijkx"|
+|pg_hostname|PostgreSQL hostname to be used with Tower|no|"postgre"|
 |pg_username|PostgreSQL username to be used with Tower|yes|"pgu"|
 |pg_database|PostgreSQL database to be used with Tower|yes|"tower"|
 |pg_port|PostgreSQL TCP port to be used with Tower|yes|5432|
