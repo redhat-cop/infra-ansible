@@ -1,21 +1,21 @@
 ---
 
 - block:
-  - name: Authenticate with OpenShift via user and password
-    shell: |
-      oc login {{ openshift_host }} \
-        -u {{ openshift_user }} \
-        -p {{ openshift_password }} \
-        --insecure-skip-tls-verify={{ openshift_skip_tls_verify | default(false) | bool }}
-    no_log: true
-  - name: Retrieve Access Token ...
-    shell: oc whoami -t
-    register: ocwhoami
-    no_log: true
-  - name: Storing Token ..
-    set_fact:
-      openshift_token: "{{ ocwhoami.stdout }}"
-    no_log: true
+    - name: Authenticate with OpenShift via user and password
+      shell: |
+        oc login {{ openshift_host }} \
+          -u {{ openshift_user }} \
+          -p {{ openshift_password }} \
+          --insecure-skip-tls-verify={{ openshift_skip_tls_verify | default(false) | bool }}
+      no_log: true
+    - name: Retrieve Access Token ...
+      shell: oc whoami -t
+      register: ocwhoami
+      no_log: true
+    - name: Storing Token ..
+      set_fact:
+        openshift_token: "{{ ocwhoami.stdout }}"
+      no_log: true
   when:
     - openshift_user is defined
     - openshift_password is defined
