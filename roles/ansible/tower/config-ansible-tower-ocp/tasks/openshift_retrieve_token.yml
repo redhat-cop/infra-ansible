@@ -16,7 +16,6 @@
     set_fact:
       openshift_token: "{{ ocwhoami.stdout }}"
     no_log: true
-
   when:
     - openshift_user is defined
     - openshift_password is defined

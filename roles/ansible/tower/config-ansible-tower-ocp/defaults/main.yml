@@ -20,7 +20,7 @@ postgress_activate_wait: "120"
 
 # OpenShift Specific Credentials
 openshift_host: "https://api.crc.testing:6443"
-openshift_user: "test" # Installer needs a username even when installing with token - using a "fake" value works 
+openshift_user: "test" # Installer needs a username even when installing with token - using a "fake" value works
 openshift_password: ""
 openshift_token: ""
 openshift_skip_tls_verify: "false"
