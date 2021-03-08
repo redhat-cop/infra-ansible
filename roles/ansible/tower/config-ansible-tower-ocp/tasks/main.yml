@@ -33,11 +33,13 @@
     dest: "{{ ansible_tower_dir }}/inventory"
   register: inventory
 
-- name: "Push a workaround for Migration taking too much time in 3.8.1"
-  copy:
-    src: main.yml
-    dest: "{{ ansible_tower_dir}}/roles/kubernetes/tasks/main.yml"
-  when: ansible_tower_download_fact.files.0 is search('3.8.1')
+
+- name: "Apply Ansible customization to Tower Installer .. "
+  unarchive:
+    src: "{{ ansible_customization_file }}"
+    dest: "{{ ansible_tower_dir }}/"
+  when:
+    - ansible_customization_file is defined
 
 - name: "Run Tower on Openshift installer using access token"
   shell: "./setup_openshift.sh -e openshift_token={{ openshift_token }}"
