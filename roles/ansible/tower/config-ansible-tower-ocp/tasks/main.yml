@@ -1,6 +1,5 @@
 ---
 
-
 - name: Check if inventory file variables are defined
   fail: msg="Please specify the value of {{item}} in your inventory file"
   when: "{{item}} is undefined or {{item}} == ''"
@@ -13,12 +12,7 @@
     - openshift_host
     - openshift_project
 
-- include_tasks: "{{ tasks }}"
-  with_items:
-    - openshift_retrieve_token.yml
-  loop_control:
-    loop_var: tasks
-
+- import_tasks: openshift_retrieve_token.yml
 
 - name: "Download & Unpack Ansible Tower installer"
   unarchive:

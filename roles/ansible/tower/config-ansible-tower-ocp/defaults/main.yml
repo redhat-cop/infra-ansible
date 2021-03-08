@@ -1,16 +1,16 @@
 ---
-#Ansible Tower url
+
+# Ansible Tower Download and Version Information
 ansible_tower_download_url: "https://releases.ansible.com/ansible-tower/setup_openshift/ansible-tower-openshift-setup-{{ ansible_tower_version }}.tar.gz"
 ansible_tower_version: 3.8.1-1
-# oc clients found at 'https://mirror.openshift.com/pub/openshift-v3/clients/'
-ansible_tower_oc_download_url: https://mirror.openshift.com/pub/openshift-v3/clients/3.10.47/linux/oc.tar.gz
 
-##Initial Tower Config
+# Initial Default Ansible Tower Config
 admin_user: 'admin'
 admin_password: 'admin'
 admin_email: 'root@localhost'
 secret_key: 'abcdefghijkx'
-#Postgre setup
+
+# Default PostgreSQL setup
 pg_username: 'pgu'
 pg_password: 'pgu'
 pg_database: 'tower'
@@ -18,11 +18,14 @@ pg_port: '5432'
 pg_sslmode: 'prefer'  # set to 'verify-full' for client-side enforced SSL
 postgress_activate_wait: "120"
 
-# Openshift Credentials
-
+# OpenShift Specific Credentials
 openshift_host: "https://api.crc.testing:6443"
-openshift_skip_tls_verify: "true"
+openshift_user: "test" # Installer needs a username even when installing with token - using a "fake" value works 
+openshift_password: ""
+openshift_token: ""
+openshift_skip_tls_verify: "false"
 openshift_project: "tower"
-#Postgre should relay on PVC, but for the moment we support EmptyDir only
+
+# PostgreSQL should relay on PVC, but for the moment we support EmptyDir only
 openshift_pg_pvc_name: "postgresql"
 openshift_pg_emptydir: "true"
