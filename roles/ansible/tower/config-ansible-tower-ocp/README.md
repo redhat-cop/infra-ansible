@@ -16,15 +16,25 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
+|ansible_tower_download_url| URL of Ansible Tower installer artifact repository|yes|https://releases.ansible.com/ansible-tower| 
+|ansible_tower_version| Version of Ansible Tower Openshift installer|yes|3.8.1-1|
 |openshift_host|OpenShift API url|no|CRC on local host|
 |openshift_project|Project where to deploy Tower|no|'tower'|
 |openshift_user|User to login into openshift|no|"test"|
 |openshift_password|OpenShift user password|no(either that or token)||
 |openshift_token|OpenShift token|no(either that or password)||
+|openshift_skip_tls_verify| Should installer skip TLS verifcation of Openshift API|no|false|
+|openshift_pg_emptydir|Flag for Postgre to use EmptyDir for storage(not recommended for Production)|yes|true|
+|openshift_pg_pvc_name|Persistent Volume Claim to be used for PostgreSQL storage|no|postgresql|
 |admin_user|Tower admin username|no|"admin"|
 |admin_password|Tower admin user password|no|"admin"|
 |admin_email|Tower admin user e-mail address|no|root@localhost|
-|secret_key|Tower secret key|no|"abcdefgh"|
+|secret_key|Tower secret key|no|"abcdefghijkx"|
+|pg_username|PostgreSQL username to be used with Tower|yes|"pgu"|
+|pg_database|PostgreSQL database to be used with Tower|yes|"tower"|
+|pg_port|PostgreSQL TCP port to be used with Tower|yes|5432|
+|pg_sslmode|SSL mode to be used in communication between Tower and PostgreSQL|yes|prefer|
+|postgress_activate_wait|Time in seconds in which role will wait for PostgreSQL to become available during installation of Tower|no|120|
 
 
 ## Example Inventory
