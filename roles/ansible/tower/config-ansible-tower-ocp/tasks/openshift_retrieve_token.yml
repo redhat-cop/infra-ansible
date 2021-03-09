@@ -7,7 +7,7 @@
           -u {{ openshift_user }} \
           -p {{ openshift_password }} \
           --insecure-skip-tls-verify={{ openshift_skip_tls_verify | default(false) | bool }}
-#      no_log: true
+      no_log: true
     - name: Retrieve Access Token ...
       shell: oc whoami -t
       register: ocwhoami
