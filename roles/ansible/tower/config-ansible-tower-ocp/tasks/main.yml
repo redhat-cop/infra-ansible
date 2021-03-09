@@ -33,7 +33,6 @@
     dest: "{{ ansible_tower_dir }}/inventory"
   register: inventory
 
-
 - name: "Apply Ansible customization to Tower Installer .. "
   unarchive:
     src: "{{ ansible_customization_file }}"
@@ -55,3 +54,4 @@
   file:
     state: absent
     path: "{{ ansible_tower_dir }}"
+
