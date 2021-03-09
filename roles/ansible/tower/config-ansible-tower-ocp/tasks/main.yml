@@ -19,7 +19,7 @@
     src: "{{ ansible_tower_download_url }}"
     dest: "."
     list_files: true
-    remote_src: true
+    remote_src: "{{ ansible_tower_remote_src }}"
     exclude: "inventory"
   register: ansible_tower_download_fact
 
