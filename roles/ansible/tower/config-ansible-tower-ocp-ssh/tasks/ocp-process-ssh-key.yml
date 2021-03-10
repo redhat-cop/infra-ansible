@@ -2,35 +2,37 @@
 
 - name: Check for existing secret
   command: |
-    oc get secret/{{ ssh_key.secret_name | default('ansible-tower-ssh-key') }} \
-    -n {{ ssh_key.secret_project }} \
-    -o=jsonpath='{.metadata.name}'
-  register: secret_already_exists
-  failed_when: secret_already_exists.rc > 1
+    oc get secret {{ ssh_key.secret_name | default('ansible-tower-ssh-key') }} \
+      -o=jsonpath='{.metadata.name}' \
+      -n {{ ssh_key.secret_project }}
+  register: secret_check
+  failed_when: secret_check.rc > 1
 
 - name: Check for existing volume mount
   command: |
-    oc set volume \
-    -n {{ ssh_key.secret_project }} \
-    {{ ssh_key.deployment_type | default('deployment')}}/{{ ssh_key.deployment_name | default('ansible-tower') }}
-  register: volume_already_exists
+    oc set volume {{ ssh_key.deployment_type | default('deployment')}}/{{ ssh_key.deployment_name | default('ansible-tower') }} \
+    -n {{ ssh_key.secret_project }}
+  register: volume_check
 
 - name: Create a generic ssh key secret from file
   command: |
     oc create secret generic {{ ssh_key.secret_name | default('ansible-tower-ssh-key') }} \
-    -n {{ ssh_key.secret_project }} \
-    --from-file={{ ssh_key.src }}
+      --from-file={{ ssh_key.src }} \
+      -n {{ ssh_key.secret_project }}
   when:
-    - secret_already_exists.rc != 0
+    - secret_check.rc != 0
 
 - name: Mount generic ssh key secret
   command: |
     oc set volume {{ ssh_key.deployment_type | default('deployment')}}/{{ ssh_key.deployment_name | default('ansible-tower') }} \
-    -n {{ ssh_key.secret_project }} \
-    --add --default-mode 0600 --read-only \
-    --type {{ ssh_key.volume_type | default('secret') }} \
-    --mount-path {{ ssh_key.dest }} \
-    --sub-path {{ssh_key.dest | basename }} \
-    --secret-name {{ ssh_key.secret_name | default(ssh_key.dest | basename) }}
+      --add \
+      --default-mode 0600 \
+      --read-only \
+      --secret-name {{ ssh_key.secret_name | default(ssh_key.dest | basename) }} \
+      --type {{ ssh_key.volume_type | default('secret') }} \
+      --mount-path {{ ssh_key.dest }} \
+      --sub-path {{ssh_key.dest | basename }} \
+      --containers ansible-tower-task \
+      -n {{ ssh_key.secret_project }}
   when:
-    - ssh_key.secret_name not in volume_already_exists.stdout
+    - ssh_key.secret_name not in volume_check.stdout
