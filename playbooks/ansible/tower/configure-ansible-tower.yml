@@ -2,26 +2,35 @@
 
 - hosts: ansible-tower
   roles:
-  - role: ansible/tower/config-ansible-tower
-  - role: ansible/tower/config-ansible-tower-license
-  - role: ansible/tower/config-ansible-tower-subscription-manifest
-  - role: ansible/tower/config-ansible-tower-ldap
-  - role: config-packages
-  - role: config-pip-packages
-  - role: manage-ssh-private-keys
+    - role: ansible/tower/config-ansible-tower
+    - role: ansible/tower/config-ansible-tower-license
+    - role: ansible/tower/config-ansible-tower-subscription-manifest
+    - role: ansible/tower/config-ansible-tower-ldap
+    - role: config-packages
+    - role: config-pip-packages
+    - role: manage-ssh-private-keys
   tags:
-  - 'never'
-  - 'install'
+    - 'never'
+    - 'install'
+
+- hosts: ansible-tower
+  roles:
+    - role: ansible/tower/config-ansible-tower-ocp
+    - role: ansible/tower/config-ansible-tower-subscription-manifest
+    - role: ansible/tower/config-ansible-tower-ocp-ssh
+  tags:
+    - 'never'
+    - 'install-tower-ocp'
 
 - hosts: tower-management-host
   roles:
-  - role: ansible/tower/manage-settings
-  - role: ansible/tower/manage-credential-types
-  - role: ansible/tower/manage-credentials
-  - role: ansible/tower/manage-projects
-  - role: ansible/tower/manage-inventories
-  - role: ansible/tower/manage-job-templates
-  - role: ansible/tower/manage-workflow-templates
-  - role: ansible/tower/manage-schedules
+    - role: ansible/tower/manage-settings
+    - role: ansible/tower/manage-credential-types
+    - role: ansible/tower/manage-credentials
+    - role: ansible/tower/manage-projects
+    - role: ansible/tower/manage-inventories
+    - role: ansible/tower/manage-job-templates
+    - role: ansible/tower/manage-workflow-templates
+    - role: ansible/tower/manage-schedules
   tags:
-  - 'always'
+    - 'always'
