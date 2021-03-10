@@ -8,8 +8,6 @@
       shell:
         cmd: timedatectl show -p Timezone
       register: tz_data
-    - debug:
-        msg: "{{ tz_data.stdout | regex_replace('Timezone=') }}"
     - name: Verify system timezone matches inventory timezone
       assert:
         that:
