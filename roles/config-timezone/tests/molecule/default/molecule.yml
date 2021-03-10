@@ -14,11 +14,6 @@ platforms:
     command: ~
     groups:
       - node
-  - name: fedora33
-    image: quay.io/fedora/fedora:33-x86_64
-    command: /usr/sbin/init
-    groups:
-      - node
 provisioner:
   name: ansible
   env:
