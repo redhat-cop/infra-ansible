@@ -1,6 +1,6 @@
 ---
 
-- name: Check for existing secret 
+- name: Check for existing secret
   command: |
     oc get secret/{{ ssh_key.secret_name | default('ansible-tower-ssh-key') }} \
       -n {{ ssh_key.secret_project }} \
@@ -26,7 +26,6 @@
   command: |
     oc set volume {{ ssh_key.deployment_type | default('deployment')}}/{{ ssh_key.deployment_name | default('ansible-tower') }} \
       --add --default-mode 0600 --read-only \
-      --containers ansible-tower-task \
       --type {{ ssh_key.volume_type | default('secret') }} \
       --mount-path {{ ssh_key.dest }} \
       --sub-path {{ssh_key.dest | basename }} \
