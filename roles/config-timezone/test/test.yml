@@ -1,6 +1,0 @@
----
-
-- hosts: node
-  roles:
-  - role: config-timezone
-
