@@ -10,13 +10,14 @@ libvirt_ksfile: "{{ inventory_dir }}/../files/vm-2.ks"
 libvirt_http_host: '192.168.1.12'
 
 libvirt_networks:
-  - type: "bridge"
+  - name: "eth0"
+    type: "bridge"
     hostif: "virbr0"
+    ip: 192.168.1.22
+    netmask: 255.255.255.0
+    gateway: 192.168.1.1
 
 libvirt_disks:
   - name: "disk1"
     size: "20"
 
-eth0_ip: 192.168.1.22
-eth0_mask: 255.255.255.0
-eth0_gw: 192.168.1.1

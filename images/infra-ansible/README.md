@@ -30,7 +30,7 @@ docker run -u `id -u` \
       -v $HOME/src/:/tmp/src \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
-      -t redhat-cop/infra-ansible
+      -t quay.io/redhat-cop/infra-ansible
 ```
 
 ... or, to run in interactive mode:
@@ -39,7 +39,7 @@ docker run -u `id -u` \
 docker run -u `id -u` \
       -v $HOME/.ssh/id_rsa:/opt/app-root/src/.ssh/id_rsa \
       -v $HOME/src/:/tmp/src \
-      -it redhat-cop/infra-ansible /bin/bash
+      -it quay.io/redhat-cop/infra-ansible /bin/bash
 ```
 
 ### For OpenStack
@@ -55,7 +55,7 @@ docker run -u `id -u` \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
       -e OPTS="-e some-extra-var=my-value" \
-      -t redhat-cop/infra-ansible
+      -t quay.io/redhat-cop/infra-ansible
 ```
 
 NOTE: The above commands expects the following inputs:
@@ -75,7 +75,7 @@ docker run -u `id -u` \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
       -e OPTS="-e some-extra-var=my-value" \
-      -t redhat-cop/infra-ansible-ansible
+      -t quay.io/redhat-cop/infra-ansible
 ```
 
 The above commands expects the following inputs:
@@ -84,6 +84,27 @@ The above commands expects the following inputs:
 * Your ansible inventories and playbooks repos to live within the same directory, mounted at `/tmp/src`
 
 > **Note:** The AWS credentials file can be using the .csv as downloaded from AWS, or a .sh file can be used and will be sourced as-is (make sure the **AWS_SECRET_ACCESS_KEY** and **AWS_ACCESS_KEY_ID** environment variables are exported correctly).
+
+### Supplying a TSIG key for DNS management with nsupdate
+
+When doing DNS management with nsupdate, the TSIG key information can be sourced from a TSIG file. These parameters will then be available as environment variables, as shown below:
+
+```
+docker run -u `id -u` \
+         :
+      -v $HOME/my-tsig-file.key:/opt/app-root/src/tsig.key \
+         :
+      -t quay.io/redhat-cop/infra-ansible
+```
+
+The parameters are then available as environment variables:
+
+```
+>  env | grep TSIG
+TSIG_KEY_SECRET= ...
+TSIG_KEY_NAME= ...
+TSIG_KEY_ALGORITHM= ...
+```
 
 ## Building the Image
 

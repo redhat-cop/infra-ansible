@@ -53,3 +53,8 @@
     - process_undertowrealm.rc == 1
     - "'WFLYCTL0212' not in process_undertowrealm.stdout"
 
+- name: 'Restart Red Hat SSO service to apply changes'
+  service:
+    name: rh-sso7
+    state: restarted
+

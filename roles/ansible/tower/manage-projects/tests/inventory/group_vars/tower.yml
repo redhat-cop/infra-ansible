@@ -8,4 +8,6 @@ ansible_tower:
     scm_type: "git"
     scm_url: "https://github.com/redhat-cop/infra-ansible.git"
     scm_branch: "master"
+    scm_credential_name: "my-credential"
+    scm_update_on_launch: true
     organization: "Default"

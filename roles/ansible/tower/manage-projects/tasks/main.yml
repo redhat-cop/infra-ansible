@@ -32,7 +32,7 @@
     loop_control:
       loop_var: project
 
-  - name: "Elminate the projects that should not be present"
+  - name: "Eliminate the projects that should not be present"
     uri:
       url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/projects/{{ item.id }}/"
       user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
@@ -43,6 +43,8 @@
       status_code: 200,204
     with_items:
     - "{{ existing_projects_output.rest_output | get_remaining_items(processed_projects, 'name', 'name')}}"
+    when:
+    - delete_missing_items|default(True) == True
 
   when:
   - ansible_tower.projects is defined

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Example TSIG file:
+#
+#   key example.com. { 
+#      algorithm hmac-md5; 
+#      secret "+Cdjlkef9ZTSeixERZ433Q=="; 
+#  };
+
+# Default files
+TSIG_FILE=~/tsig.key
+
+function parse_tsig_file()
+{
+  # Don't do anything if the file doesn't exists
+  if [ ! -f ${TSIG_FILE} ]
+  then
+    return
+  fi
+
+  export TSIG_KEY_NAME="`sed -ne 's/key[[:space:]]*\([^[:space:]]*\)[[:space:]]*{.*$/\1/p' $TSIG_FILE`"
+  export TSIG_KEY_ALGORITHM="`sed -ne 's/[[:space:]]*algorithm[[:space:]]*\([^;]*\);.*$/\1/p' $TSIG_FILE`"
+  export TSIG_KEY_SECRET="`sed -ne 's/[[:space:]]*secret[[:space:]]*"\([^"]*\)";.*$/\1/p' $TSIG_FILE`"
+}
+
+parse_tsig_file

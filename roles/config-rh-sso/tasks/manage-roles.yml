@@ -43,7 +43,7 @@
       when:
         - rh_sso_role_create.status == 409
   when:
-    - role_data.clientRole is undefined or role_data.clientRole is false
+    - role_data.clientRole is undefined or not role_data.clientRole
 
 - name: "Create Role: {{ role_data.name }} in Client: {{ role_data.clientName }} in Realm: {{ role_data.targetRealm }}"
   block:
@@ -57,7 +57,7 @@
       register: rh_sso_clients
     - name: "Get Client ID for Client: {{ role_data.clientName }}"
       set_fact:
-        client_id:  "{{ (rh_sso_clients.json | json_query(query))[0] }}"
+        client_id: "{{ (rh_sso_clients.json | json_query(query))[0] }}"
       vars:
         query: "[?clientId=='{{ role_data.clientName }}'].id"
     - name: "Create Client Role: {{ role_data.name }}"
@@ -85,5 +85,5 @@
         - rh_sso_role_create.status == 409
   when:
     - role_data.clientRole is defined
-    - role_data.clientRole is true
+    - role_data.clientRole
 

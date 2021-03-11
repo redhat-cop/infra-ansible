@@ -2,19 +2,12 @@
 module SELinuxVNC 1.0;
 
 require {
-	type user_home_t;
-	type geoclue_t;
-	type init_t;
 	type nfs_t;
-	type unconfined_service_t;
-	class dir search;
-	class file { getattr open read unlink };
+	type vnc_session_t;
+	class dir { add_name search write };
+	class file { create open write };
 }
 
-#============= geoclue_t ==============
-allow geoclue_t unconfined_service_t:dir search;
-allow geoclue_t unconfined_service_t:file { getattr open read };
-
-#============= init_t ==============
-allow init_t nfs_t:file { open read };
-allow init_t user_home_t:file { open read unlink };
+#============= vnc_session_t ==============
+allow vnc_session_t nfs_t:dir { add_name search write };
+allow vnc_session_t nfs_t:file { create open write };

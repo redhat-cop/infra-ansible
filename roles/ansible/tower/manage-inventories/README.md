@@ -10,11 +10,12 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
+Check the top level [README](../README.md) for additional/common variables.
+
 The variables used must be defined in the Ansible Inventory using the `ansible_tower.inventories` list as explained below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
 |ansible_tower.inventories.name|Name of the inventory|yes||
 |ansible_tower.inventories.description|Description of the inventory|no|nothing ('')|
 |ansible_tower.inventories.organization|Organization to associate the inventory with|yes||
@@ -129,6 +130,10 @@ ansible_tower:
           FOO: foo
           BAR: bar
           BAZ: baz
+        overwrite: false
+        overwrite_vars: false
+        update_on_launch: true
+        update_on_project_update: false
       - name: "test-source2"
         description: "Test Source 2"
         credential: "Test Credential"
@@ -175,6 +180,10 @@ ansible_tower:
         ---
         FIRST: John
         LAST: Doe
+      overwrite: false
+      overwrite_vars: false
+      update_on_launch: true
+      update_on_project_update: false
 ```
 
 

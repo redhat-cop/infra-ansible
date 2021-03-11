@@ -32,7 +32,10 @@
   - admin_group|trim != ""
 
 - name: "Set up the IPA/IdM client integration"
-  command: 'ipa-client-install -U --automount-location={{ ipa_automount_location }} -p "{{ ipa_username }}" -w "{{ ipa_password }}" --domain="{{ ipa_domain }}" --force-join'
+  command: 'ipa-client-install -U -p "{{ ipa_username }}" -w "{{ ipa_password }}" --domain="{{ ipa_domain }}" --force-join'
+
+- name: "Set up automount for file systems"
+  command: 'ipa-client-automount -U --location {{ ipa_automount_location }}'
 
 - name: "Workaround for missing sss in nsswitch.conf"
   lineinfile:
@@ -42,16 +45,18 @@
     state: present
   register: automount_line
 
-- name: "Restart sssd if nsswitch.conf was updated"
-  service:
-    name: sssd
-    state: restarted
+- block:
+  - name: "Restart sssd if nsswitch.conf was updated"
+    service:
+      name: sssd
+      state: restarted
+  - name: "Restart autofs if nsswitch.conf was updated"
+    service:
+      name: autofs
+      state: restarted
   when:
   - automount_line.changed
 
-- name: "Restart autofs if nsswitch.conf was updated"
-  service:
-    name: autofs
-    state: restarted
-  when:
-  - automount_line.changed
+- name: "Reboot the host to ensure all changes have been applied correctly"
+  reboot:
+

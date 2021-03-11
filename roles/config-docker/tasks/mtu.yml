@@ -4,27 +4,34 @@
   set_fact:
     new_mtu: "{{ ansible_facts[external_interface].mtu - mtu_offset|int }}"
 
-- name: "Check if the entry exists in the file"
-  lineinfile:
-    path: "{{ docker_network_file }}"
-    regexp: '^DOCKER_NETWORK_OPTIONS=".*"$'
-    state: absent
-  check_mode: yes
-  register: mtu_config_exists
+- name: "Re-gather facts to obtain latest information about the docker interface"
+  setup:
 
 - block:
-    - name: "Update file based on mtu_diff - mtu_offset"
-      replace:
-        path: "{{ docker_network_file }}"
-        regexp: '^DOCKER_NETWORK_OPTIONS="\s*(.*(?=--mtu=\d+))(--mtu=\d+)\s*(.*)"$|^DOCKER_NETWORK_OPTIONS="(.*)"$'
-        replace: 'DOCKER_NETWORK_OPTIONS="\1 --mtu={{ new_mtu }} \3\4"'
-      when:
-        - mtu_config_exists.found
-    - name: "Add line if it wasn't updated above"
-      lineinfile:
-        path: "{{ docker_network_file }}"
-        line: 'DOCKER_NETWORK_OPTIONS="--mtu={{ new_mtu }}"'
-      when:
-        - not mtu_config_exists.found
+  - name: "Check if the entry exists in the file"
+    lineinfile:
+      path: "{{ docker_network_file }}"
+      regexp: '^DOCKER_NETWORK_OPTIONS=".*"$'
+      state: absent
+    check_mode: yes
+    register: docker_network_options_exists
+
+  - name: "Update file based on mtu_diff - mtu_offset"
+    replace:
+      path: "{{ docker_network_file }}"
+      regexp: '^DOCKER_NETWORK_OPTIONS="\s*(.*(?=--mtu=\d+))(--mtu=\d+)\s*(.*)"$|^DOCKER_NETWORK_OPTIONS="(.*)"$'
+      replace: 'DOCKER_NETWORK_OPTIONS="\1 --mtu={{ new_mtu }} \3\4"'
+    when:
+    - docker_network_options_exists.found is defined
+    - docker_network_options_exists.found > 0
+
+  - name: "Add line if it wasn't updated above"
+    lineinfile:
+      path: "{{ docker_network_file }}"
+      line: 'DOCKER_NETWORK_OPTIONS="--mtu={{ new_mtu }}"'
+      create: yes
+    when:
+    - docker_network_options_exists.found is undefined or docker_network_options_exists.found == 0
+
   when:
-    - new_mtu != ansible_facts[docker_interface].mtu
+  - new_mtu != ansible_facts[docker_interface].mtu

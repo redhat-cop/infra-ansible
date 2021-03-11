@@ -4,17 +4,19 @@
   hosts: mail-host
   gather_facts: no
   tasks:
-  - include_vars:
-      file: "{{ email_content_file }}"
-  - include_role:
-      name: notifications/md-to-html
-    vars:
-      markdown_content: "{{ body }}"
-  - set_fact:
-      mail: "{{ mail | combine({ 'subject': title, 'body': md_to_html.html_body_message }) }}"
-  - set_fact:
-      list_of_mail_to: "{{ list_of_mail_to | default([]) }} + [ '{{ item.email }}' ]"
-    with_items:
-    - "{{ list_of_users }}"
-  - include_role:
-      name: notifications/send-email
+    - include_vars:
+        file: "{{ email_content_file }}"
+      when:
+        - email_content_file is defined
+    - include_role:
+        name: notifications/md-to-html
+      vars:
+        markdown_content: "{{ body }}"
+    - set_fact:
+        mail: "{{ mail | combine({ 'subject': title, 'body': md_to_html.html_body_message }) }}"
+    - set_fact:
+        list_of_mail_to: "{{ list_of_mail_to | default([]) }} + [ '{{ item.email }}' ]"
+      with_items:
+        - "{{ list_of_users }}"
+    - include_role:
+        name: notifications/send-email

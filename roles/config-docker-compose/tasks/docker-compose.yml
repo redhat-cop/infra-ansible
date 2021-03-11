@@ -1,7 +1,5 @@
 ---
 - name: "Install additional packages for Docker Compose"
   package:
-    name: "{{ item }}"
+    name: "{{ docker_compose_packages }}"
     state: latest
-  with_items:
-  - docker-compose

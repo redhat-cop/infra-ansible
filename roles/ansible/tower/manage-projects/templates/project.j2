@@ -7,9 +7,9 @@
     "scm_branch": "{{ project.scm_branch | default('master') }}",
     "scm_clean": {{ project.scm_clean | default(false) }},
     "scm_delete_on_update": {{ project.scm_delete_on_update | default(false) }},
-    "credential": null,
+    "credential": {{ credential_id | default(None) | to_json }},
     "timeout": 0,
     "organization": {{ org_id }},
-    "scm_update_on_launch": false,
+    "scm_update_on_launch": {{ project.scm_update_on_launch | default(false) }},
     "scm_update_cache_timeout": 0
 }

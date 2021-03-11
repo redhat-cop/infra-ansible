@@ -12,6 +12,8 @@ Access to the Ansible Tower software and an Ansible Tower license.
 
 ## Role Variables
 
+Check the top level [README](../README.md) for additional/common variables.
+
 The variables used to install an Ansible Tower instance are outlined in the table below.
 
 | Variable | Description | Required | Defaults |
@@ -19,7 +21,7 @@ The variables used to install an Ansible Tower instance are outlined in the tabl
 |ansible_tower_download_url|URL from which the Tower installer will be downloaded. If different version required, recommended to change `ansible_tower_version`|no|'https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz'|
 |ansible_tower_version|Version of Ansible Tower to install|no|'3.3.0-1'|
 |ansible_tower_oc_download_url|Version of oc client to install|no|'https://mirror.openshift.com/pub/openshift-v3/clients/3.10.47/linux/oc.tar.gz'|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
+|ansible_tower_helm_download_url|Version of  helm client to install|no|https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz|
 |ansible_tower.install.pg.host|PostgreSQL hostname to listen on|no|nothing ('')|
 |ansible_tower.install.pg.host|PostgreSQL port to listen on|no|nothing ('')|
 |ansible_tower.install.pg.database|DB to use|no|'awx'|

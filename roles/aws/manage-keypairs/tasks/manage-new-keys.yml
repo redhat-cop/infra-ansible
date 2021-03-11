@@ -20,8 +20,8 @@
     - name: "Create keypair: {{ item.name }}"
       ec2_key:
         name: "{{ item.name }}"
-        aws_access_key: "{{ item.access_key | default(aws_key) }}"
-        aws_secret_key: "{{ item.access_secret | default(aws_secret) }}"
+        aws_access_key: "{{ item.access_key | default(aws_key) | default(omit) }}"
+        aws_secret_key: "{{ item.access_secret | default(aws_secret) | default(omit) }}"
         aws_region: "{{ item.region | default(aws_region) }}"
         force: "{{ item.force | default(false) }}"
       register: ec2_key
