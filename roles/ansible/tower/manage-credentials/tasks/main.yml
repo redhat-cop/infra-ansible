@@ -56,6 +56,7 @@
     - "{{ existing_credentials_output.rest_output | get_remaining_items(processed_credentials, 'name', 'name')}}"
     when:
     - delete_missing_items|default(True) == True
+    - item.managed_by_tower|default(False) == False
 
   when:
   - ansible_tower.credentials is defined
