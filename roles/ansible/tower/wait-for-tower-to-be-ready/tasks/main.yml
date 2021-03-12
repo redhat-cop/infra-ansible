@@ -13,4 +13,3 @@
   retries: "{{ ansible_tower.install.wait_retries | default(6) }}"
   delay: "{{ ansible_tower.install.wait_delay | default(5) }}"
 
-
