@@ -19,7 +19,7 @@
     src: "{{ ansible_tower_download_url }}"
     dest: "."
     list_files: true
-    remote_src: true
+    remote_src: "{{ ansible_tower_remote_src }}"
     exclude: "inventory"
   register: ansible_tower_download_fact
 
@@ -32,7 +32,6 @@
     src: inventory.j2
     dest: "{{ ansible_tower_dir }}/inventory"
   register: inventory
-
 
 - name: "Apply Ansible customization to Tower Installer .. "
   unarchive:
@@ -55,3 +54,4 @@
   file:
     state: absent
     path: "{{ ansible_tower_dir }}"
+
