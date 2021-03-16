@@ -3,9 +3,10 @@
 - block: # become: True
 
   - name: "install epel-release"
-    package:
+    yum:
       name: "{{ ansible_tower_epel_download_url }}"
       state: present
+      disable_gpg_check: yes
 
   - name: "Download & Unpack Ansible Tower installer"
     unarchive:
