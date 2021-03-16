@@ -16,10 +16,10 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |:---------|:------------|:---------|:---------|
 |ocp_ssh_private_keys.src|File path to ssh private key, for example ssh_private_key.pem|yes||
 |ocp_ssh_private_keys.dest|Path where ssh private key will be mounted on the container|yes|/var/lib/awx/.ssh + src \| basename|
-|ocp_ssh_private_keys.secret_project|Openshift Project for your tower deployment|yes|test-tower|
-|ocp_ssh_private_keys.secret_name|A name for your secret|yes|src \| basename|
+|ocp_ssh_private_keys.secret_project|Openshift Project for your tower deployment|no|tower|
+|ocp_ssh_private_keys.secret_name|A name for your secret|no|src \| basename|
 |ocp_ssh_private_keys.deployment_type|One of deployment or deploymentconfig|no|deployment|
-|ocp_ssh_private_keys.deployment_name|The name of the Ansible Tower deployment|yes|ansible-tower|
+|ocp_ssh_private_keys.deployment_name|The name of the Ansible Tower deployment|no|ansible-tower|
 
 ## Example Inventory
 

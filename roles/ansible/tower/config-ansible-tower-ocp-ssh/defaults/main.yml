@@ -2,4 +2,4 @@
 
 ### OCP SSH Private Keys
 
-openshift_project: test-tower
+openshift_project: tower
