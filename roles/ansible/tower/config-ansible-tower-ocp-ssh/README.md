@@ -1,7 +1,7 @@
 config-ansible-tower-ocp-ssh
 ============================
 
-This role is a helper for `config-ansible-tower-ocp` to create an Openshift secret from an SSH key, and mount it as read-only in the `awx` users $HOME/.ssh folder
+This role is a helper for `config-ansible-tower-ocp` to create an OpenShift secret from an SSH key, and mount it as read-only in the `awx` users $HOME/.ssh folder
 
 ## Requirements
 
