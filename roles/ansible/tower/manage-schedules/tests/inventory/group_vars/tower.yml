@@ -1,0 +1,9 @@
+---
+
+ansible_tower:
+  admin_password: "admin01"
+  schedules:
+  - name: "Demo Schedule"
+    description: "My Schedule"
+    rrule: "DTSTART;TZID=US-Eastern:20201222T110000Z RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=1"
+    unified_job_template: "Demo Job Template"

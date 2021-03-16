@@ -9,5 +9,6 @@
       password: "{{ rh_sso_admin_pass }}"
       grant_type: "password"
       client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
   register: rh_sso_token
 

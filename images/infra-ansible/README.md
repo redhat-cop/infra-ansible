@@ -44,6 +44,13 @@ docker run -u `id -u` \
 
 ### For OpenStack
 
+The following setup setps are required to be done *once* in any new environments:
+
+* Obtain the [OpenStack RC File](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/11/html/command-line_interface_reference/ch_cli#cli_openrc)
+  * For the purpose of this write-up, copy the file to `~/.config/openstack/openrc.sh`
+* A [Key-pair in OpenStack](https://github.com/naturalis/openstack-docs/wiki/Howto:-Creating-and-using-OpenStack-SSH-keypairs-on-Linux-and-OSX)
+* Copy [clouds.yaml](../../files/clouds.yaml) to `~/.config/openstack/clouds.yaml`
+
 A typical run of the image would look like:
 
 ```
@@ -84,6 +91,27 @@ The above commands expects the following inputs:
 * Your ansible inventories and playbooks repos to live within the same directory, mounted at `/tmp/src`
 
 > **Note:** The AWS credentials file can be using the .csv as downloaded from AWS, or a .sh file can be used and will be sourced as-is (make sure the **AWS_SECRET_ACCESS_KEY** and **AWS_ACCESS_KEY_ID** environment variables are exported correctly).
+
+### Supplying a TSIG key for DNS management with nsupdate
+
+When doing DNS management with nsupdate, the TSIG key information can be sourced from a TSIG file. These parameters will then be available as environment variables, as shown below:
+
+```
+docker run -u `id -u` \
+         :
+      -v $HOME/my-tsig-file.key:/opt/app-root/src/tsig.key \
+         :
+      -t quay.io/redhat-cop/infra-ansible
+```
+
+The parameters are then available as environment variables:
+
+```
+>  env | grep TSIG
+TSIG_KEY_SECRET= ...
+TSIG_KEY_NAME= ...
+TSIG_KEY_ALGORITHM= ...
+```
 
 ## Building the Image
 

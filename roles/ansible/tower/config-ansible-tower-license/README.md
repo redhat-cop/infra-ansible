@@ -10,16 +10,14 @@ A running Ansible Tower with admin permission level access.
 
 ## Role Variables
 
-The variables used to configure Ansible Tower LDAP are outlined in the table below.
+Check the top level [README](../README.md) for additional/common variables.
+
+The variables used to configure the Ansible Tower license are outlined in the table below.
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.admin_password|Admin password for the Ansible Tower install|yes||
-|ansible_tower.admin_username|Admin username for the Ansible Tower install|yes||
 |ansible_tower.install.license_file|Path to valid Ansible Tower license content|yes||
-|ansible_tower.validate_certs|Wheter or not to validate Ansible Tower SSL Certificate, use `false` when using not trusted certificates |no|true|
 
-**Note:** You should ensure that the ansible_tower.url variable that is being used is not being redirected (i.e. redirected from http -> https, etc.). If there are concerns with how you're getting/setting this URL, you can use the `discover-url-redirect` role found in this repo.
 
 ## Example Inventory
 ```yaml

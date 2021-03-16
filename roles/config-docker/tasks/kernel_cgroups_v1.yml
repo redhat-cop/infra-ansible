@@ -1,6 +1,8 @@
 ---
-- name: Update Grub config file
+
+- name: "Update Grub config file"
   shell: grubby --args="{{ grub_add_arg }}" --update-kernel=ALL
 
-- name: "Reboot the host - {{ inventory_hostname }}"
+- name: "Reboot the host to apply the changes made with grub"
   reboot:
+

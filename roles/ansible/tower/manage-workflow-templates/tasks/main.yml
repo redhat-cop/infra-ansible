@@ -52,7 +52,7 @@
     loop_control:
       loop_var: workflow_template
 
-  - name: "Elminate the workflow templates that should not be present"
+  - name: "Eliminate the workflow templates that should not be present"
     uri:
       url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/workflow_job_templates/{{ item.id }}/"
       user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
@@ -63,6 +63,8 @@
       status_code: 200,204
     with_items:
     - "{{ existing_workflow_templates_output.rest_output | get_remaining_items(processed_workflow_templates, 'name', 'name')}}"
+    when:
+    - delete_missing_items|default(True) == True
 
   when:
   - ansible_tower.workflow_templates is defined
