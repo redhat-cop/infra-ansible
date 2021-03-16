@@ -16,6 +16,9 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 
 **Note:** As Tower Installer is based on Ansible playbooks, you may want to customize specific parts of it. You can copy over specific files by pointing to zip archive which contains new files along with the directory structure.
 
+**Note:** Tower installer supports PostgreSQL deployment done in two way, EmptyDir and PVC based. If you choose EmptyDir (openshift_pg_emptydir=true) be aware that PostgreSQL storage is not going to be persisted in any way. If you choose PVC, and the PVC doesn't exist, this playbook will automatically create a PVC(and underlying PV) based on default configuration of you clusters PV plugin. If PVC does exist, playbook will use it.
+
+
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
 |ansible_tower_download_url|URL of Ansible Tower installer artifact repository|no|`https://releases.ansible.com/ansible-tower/setup_openshift/ansible-tower-openshift-setup-{{ ansible_tower_version }}.tar.gz`|
@@ -29,6 +32,9 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |openshift_skip_tls_verify| Should installer skip TLS verifcation of Openshift API|no|false|
 |openshift_pg_emptydir|Flag for Postgre to use EmptyDir for storage(not recommended for Production)|no|true|
 |openshift_pg_pvc_name|Persistent Volume Claim to be used for PostgreSQL storage|no|postgresql|
+|openshift_pv_size|Size of PV that's going to be created for PostgreSQL storage|no|10Gi|
+|openshift_pv_wait_retries| How many attempts should have been taken on PVC readiness check|no|5|
+|openshift_pv_wait_delay| What's the delay between each attempt on making PVC readiness check (in seconds)|no|30|
 |admin_user|Tower admin username|no|"admin"|
 |admin_password|Tower admin user password|no|"admin"|
 |admin_email|Tower admin user e-mail address|no|root@localhost|

@@ -13,6 +13,7 @@
     - openshift_project
 
 - import_tasks: openshift_retrieve_token.yml
+- import_tasks: setup_pvc.yml
 
 - name: "Download & Unpack Ansible Tower installer"
   unarchive:
@@ -54,4 +55,3 @@
   file:
     state: absent
     path: "{{ ansible_tower_dir }}"
-

@@ -29,4 +29,3 @@ openshift_project: "test-tower"
 openshift_user: "kubeadmin"
 openshift_password: "APBEh-jjrVy-hLQZX-VI9Kg"
 openshift_pg_emptydir: "true"
-
