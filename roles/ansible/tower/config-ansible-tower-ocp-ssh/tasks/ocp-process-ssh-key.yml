@@ -3,26 +3,27 @@
 - name: Set SSH key filename
   set_fact:
     ssh_key_filename: "{{ ssh_key.src | basename }}"
+    ssh_key_project: "{{ ssh_key.secret_project | default(openshift_project) | default('tower') }}"
 
 - name: Check for existing secret
   command: |
     oc get secret {{ ssh_key.secret_name | default('ansible-tower-ssh-key') }} \
       -o=jsonpath='{.metadata.name}' \
-      -n {{ ssh_key.secret_project }}
+      -n {{ ssh_key_project }}
   register: secret_check
   failed_when: secret_check.rc > 1
 
 - name: Check for existing volume mount
   command: |
     oc set volume {{ ssh_key.deployment_type | default('deployment')}}/{{ ssh_key.deployment_name | default('ansible-tower') }} \
-    -n {{ ssh_key.secret_project }}
+    -n {{ ssh_key_project }}
   register: volume_check
 
 - name: Create a generic ssh key secret from file
   command: |
     oc create secret generic {{ ssh_key.secret_name | default('ansible-tower-ssh-key') }} \
       --from-file={{ ssh_key.src }} \
-      -n {{ ssh_key.secret_project }}
+      -n {{ ssh_key_project }}
   when:
     - secret_check.rc != 0
 
@@ -37,6 +38,6 @@
       --mount-path {{ ssh_key.dest | default('/var/lib/awx/.ssh/' + ssh_key_filename) }} \
       --sub-path {{ ssh_key_filename }} \
       --containers ansible-tower-task \
-      -n {{ ssh_key.secret_project }}
+      -n {{ ssh_key_project }}
   when:
     - ssh_key.secret_name not in volume_check.stdout
