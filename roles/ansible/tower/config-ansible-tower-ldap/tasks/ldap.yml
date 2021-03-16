@@ -37,7 +37,7 @@
       headers:
         Content-Type: "application/json"
         Accept: "application/json"
-      validate_certs: no
+      validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
 
 # This is only useful if the bind user is in the necessary LDAP group
   - name: "Force LDAP Sync"
@@ -47,7 +47,7 @@
       password: "{{ ansible_tower.ldap.bind_password }}"
       force_basic_auth: yes
       method: GET
-      validate_certs: no
+      validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     register: status_output
     until: status_output.status == 200
     retries: 6
