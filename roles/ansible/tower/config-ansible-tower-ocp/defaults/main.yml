@@ -31,6 +31,6 @@ openshift_project: "tower"
 openshift_pg_emptydir: "true"
 
 # Only applicable if openshift_pg_emptydir is set to "false"
-openshift_pv_size: "10Gi"
+openshift_pg_pvc_size: "10Gi"
 openshift_pg_pvc_name: "postgresql"
 
