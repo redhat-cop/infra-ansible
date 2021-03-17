@@ -1,4 +1,5 @@
 ---
+
 - block:
     - name: Authenticate with OpenShift via user and password
       shell: |
