@@ -1,52 +1,16 @@
 ---
 - block:
-   - name: Ensure user is authenticated with OCP
-     shell: |
-       oc login {{ openshift_host }} \
-          --token {{ openshift_token }} \
-          --insecure-skip-tls-verify={{ openshift_skip_tls_verify | default(false) | bool }}
-     no_log: true
-
-   - name: Checking if target project exists on OCP..
-     command: oc get project {{ openshift_project }}
-     register: getProject
-     failed_when: false
-
-   - name: Creating target project..
-     shell: oc new-project {{ openshift_project }}
-     register: getProject
-     failed_when: false
-
-   - name: Creating target project..
-     shell: oc new-project {{ openshift_project }}
-     when: getProject is search("not found")
-
-   - name: Creating Temp Dir ..
-     file:
-      state: directory
-      path: "./temp"
-
-   - name: Source the PVC template ...
-     template:
-      src: pvc.j2
-      dest: "./temp/pvc.yml"
-
-   - name: Apply the PVC manifest..
-     shell: oc apply -f ./temp/pvc.yml
+   - name: Apply the PVC manifest...
+     command: echo -n " {{ lookup('template','templates/pvc.j2') }} " | oc apply -n "{{ openshift_project }}" -f -
      register: pvcoutput
-     failed_when: pvcoutput.rc !=0
-
-   - name: Clean the temp..
-     file:
-      state: absent
-      path: "./temp"
+     failed_when: pvcoutput.rc != 0
 
    - name: Check PVC status
      command: "oc get pvc {{ openshift_pg_pvc_name }} -n {{ openshift_project }} -o=jsonpath='{.status.phase}'"
      register: pg_pvc_status
      until: pg_pvc_status.stdout is search("Bound")
-     retries: "{{ openshift_pv_wait_retries | default(5) }}"
-     delay: "{{ openshift_pv_wait_delay | default(30) }} "
+     retries: "{{ openshift_pg_pv_wait_retries | default(5) }}"
+     delay: "{{ openshift_pg_pv_wait_delay | default(30) }} "
 
   when:
    - openshift_pg_emptydir|trim == 'false'
