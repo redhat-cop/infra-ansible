@@ -13,6 +13,16 @@
   - 'never'
   - 'install'
 
+- hosts: ansible-tower
+  roles:
+  - role: ansible/tower/config-ansible-tower-ocp
+  - role: ansible/tower/config-ansible-tower-subscription-manifest
+  - role: ansible/tower/config-ansible-tower-ocp-ssh
+  - role: ansible/tower/config-ansible-tower-ldap
+  tags:
+  - 'never'
+  - 'install-tower-ocp'
+
 - hosts: tower-management-host
   roles:
   - role: ansible/tower/manage-settings
