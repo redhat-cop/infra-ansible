@@ -1,10 +1,11 @@
 ---
-   - name: Checking if target project exists on OCP..
-     command: oc get project {{ openshift_project }}
-     register: getProject
-     failed_when: false
+- name: Checking if target project exists on OCP..
+  command: oc get project {{ openshift_project }}
+  register: getProject
+  failed_when: false
 
-   - name: Creating target project..
-     shell: oc new-project {{ openshift_project }}
-     failed_when: false
-     when: getProject.stdout is search("not found")
+- name: Creating target project..
+  shell: oc new-project {{ openshift_project }}
+  failed_when: false
+  when: getProject.stdout is search("not found")
+  
