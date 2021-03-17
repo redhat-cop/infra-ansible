@@ -39,4 +39,3 @@
   file:
     state: absent
     path: "{{ ansible_tower_dir }}"
-    

@@ -1,6 +1,6 @@
 ---
 - block:
-    - name: Authenticate with OpenShift via user and password and retrieve token
+    - name: Authenticate with OpenShift via user and password
       shell: |
         oc login {{ openshift_host }} \
           -u {{ openshift_user }} \
