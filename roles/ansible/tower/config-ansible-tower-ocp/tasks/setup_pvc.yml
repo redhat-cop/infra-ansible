@@ -1,6 +1,7 @@
 ---
+
 - block:
-   - name: Create PVC for Tower PostgreSQL 
+   - name: Create PVC for Tower PostgreSQL
      command: echo -n "{{ lookup('template','templates/pvc.j2') }}" | oc apply -n "{{ openshift_project }}" -f -
      register: pvcoutput
      failed_when: pvcoutput.rc != 0

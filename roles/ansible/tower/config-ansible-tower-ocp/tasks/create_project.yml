@@ -1,4 +1,5 @@
 ---
+
 - name: Checking if target project exists on OCP..
   command: oc get project {{ openshift_project }}
   register: getProject

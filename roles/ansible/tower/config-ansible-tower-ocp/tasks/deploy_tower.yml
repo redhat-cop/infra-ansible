@@ -1,4 +1,5 @@
 ---
+
 - name: "Download & Unpack Ansible Tower installer"
   unarchive:
     src: "{{ ansible_tower_download_url }}"

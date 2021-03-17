@@ -4,8 +4,8 @@
     - name: Authenticate with OpenShift via user and password
       shell: |
         oc login {{ openshift_host }} \
-          -u {{ openshift_user }} \
-          -p {{ openshift_password }} \
+          -u '{{ openshift_user }}' \
+          -p '{{ openshift_password }}' \
           --insecure-skip-tls-verify={{ openshift_skip_tls_verify | default(false) | bool }}
       no_log: true
     - name: Retrieve Access Token ...
@@ -25,7 +25,7 @@
     - name: Authenticate with Openshift via token
       shell: |
         oc login {{ openshift_host }} \
-          --token {{ openshift_token }} \
+          --token '{{ openshift_token }}' \
           --insecure-skip-tls-verify="{{ openshift_skip_tls_verify | default(false) | bool }}"
       no_log: true
   when:

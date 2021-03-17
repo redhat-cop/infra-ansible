@@ -1,4 +1,5 @@
 ---
+
 - name: Check if inventory file variables are defined
   fail: msg="Please specify the value of {{item}} in your inventory file"
   when: "{{item}} is undefined or {{item}} == ''"
