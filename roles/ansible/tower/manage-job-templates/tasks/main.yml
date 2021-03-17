@@ -78,7 +78,7 @@
       password: "{{ ansible_tower.admin_password }}"
       force_basic_auth: yes
       method: DELETE
-      validate_certs: no
+      validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
       status_code: 200,204
     with_items:
     - "{{ existing_job_templates_output.rest_output | get_remaining_items(processed_job_templates, 'name', 'name')}}"
