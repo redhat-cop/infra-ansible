@@ -1,0 +1,13 @@
+---
+
+- name: Check if inventory file variables are defined
+  fail: msg="Please specify the value of {{item}} in your inventory file"
+  when: "{{item}} is undefined or {{item}} == ''"
+  with_items:
+    - admin_user
+    - admin_password
+    - secret_key
+    - pg_username
+    - pg_password
+    - openshift_host
+    - openshift_project

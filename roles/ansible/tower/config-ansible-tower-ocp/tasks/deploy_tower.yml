@@ -1,0 +1,42 @@
+---
+
+- name: "Download & Unpack Ansible Tower installer"
+  unarchive:
+    src: "{{ ansible_tower_download_url }}"
+    dest: "."
+    list_files: true
+    remote_src: "{{ ansible_tower_remote_src }}"
+    exclude: "inventory"
+  register: ansible_tower_download_fact
+
+- name: "Set installation facts"
+  set_fact:
+    ansible_tower_dir: "{{ ansible_tower_download_fact.files.0 }}"
+
+- name: "Set up the Ansible Tower on Openshift Installer inventory"
+  template:
+    src: inventory.j2
+    dest: "{{ ansible_tower_dir }}/inventory"
+  register: inventory
+
+- name: "Apply Ansible customization to Tower Installer .. "
+  unarchive:
+    src: "{{ ansible_customization_file }}"
+    dest: "{{ ansible_tower_dir }}/"
+  when:
+    - ansible_customization_file is defined
+
+- name: "Run Tower on Openshift installer using access token"
+  shell: "./setup_openshift.sh -e openshift_token={{ openshift_token }}"
+  args:
+    chdir: "{{ ansible_tower_dir }}"
+
+- name: "parsing installation log..."
+  shell: ls -1 setup_container_cluster-* | tail -n 1 | xargs tail -n 1
+  register: in_outcome
+
+- name: "Installation cleanup .."
+  when: in_outcome.stdout.find('failed=0') == -1
+  file:
+    state: absent
+    path: "{{ ansible_tower_dir }}"

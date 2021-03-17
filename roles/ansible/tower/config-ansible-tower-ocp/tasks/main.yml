@@ -1,57 +1,7 @@
 ---
 
-- name: Check if inventory file variables are defined
-  fail: msg="Please specify the value of {{item}} in your inventory file"
-  when: "{{item}} is undefined or {{item}} == ''"
-  with_items:
-    - admin_user
-    - admin_password
-    - secret_key
-    - pg_username
-    - pg_password
-    - openshift_host
-    - openshift_project
-
-- import_tasks: openshift_retrieve_token.yml
-
-- name: "Download & Unpack Ansible Tower installer"
-  unarchive:
-    src: "{{ ansible_tower_download_url }}"
-    dest: "."
-    list_files: true
-    remote_src: "{{ ansible_tower_remote_src }}"
-    exclude: "inventory"
-  register: ansible_tower_download_fact
-
-- name: "Set installation facts"
-  set_fact:
-    ansible_tower_dir: "{{ ansible_tower_download_fact.files.0 }}"
-
-- name: "Set up the Ansible Tower on Openshift Installer inventory"
-  template:
-    src: inventory.j2
-    dest: "{{ ansible_tower_dir }}/inventory"
-  register: inventory
-
-- name: "Apply Ansible customization to Tower Installer .. "
-  unarchive:
-    src: "{{ ansible_customization_file }}"
-    dest: "{{ ansible_tower_dir }}/"
-  when:
-    - ansible_customization_file is defined
-
-- name: "Run Tower on Openshift installer using access token"
-  shell: "./setup_openshift.sh -e openshift_token={{ openshift_token }}"
-  args:
-    chdir: "{{ ansible_tower_dir }}"
-
-- name: "parsing installation log..."
-  shell: ls -1 setup_container_cluster-* | tail -n 1 | xargs tail -n 1
-  register: in_outcome
-
-- name: "Installation cleanup .."
-  when: in_outcome.stdout.find('failed=0') == -1
-  file:
-    state: absent
-    path: "{{ ansible_tower_dir }}"
-
+- import_tasks: precheck.yml
+- import_tasks: opeshift_authenticate.yml
+- import_tasks: create_project.yml
+- import_tasks: setup_pvc.yml
+- import_tasks: deploy_tower.yml

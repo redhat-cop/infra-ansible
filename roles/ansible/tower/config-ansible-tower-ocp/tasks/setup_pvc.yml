@@ -1,0 +1,17 @@
+---
+
+- block:
+    - name: Create PVC for Tower PostgreSQL
+      command: echo -n "{{ lookup('template','templates/pvc.j2') }}" | oc apply -n "{{ openshift_project }}" -f -
+      register: pvcoutput
+      failed_when: pvcoutput.rc != 0
+
+    - name: Check PVC status
+      command: oc get pvc {{ openshift_pg_pvc_name }} -n {{ openshift_project }} -o=jsonpath='{.status.phase}'
+      register: pg_pvc_status
+      until: pg_pvc_status.stdout is search("Bound")
+      retries: "{{ openshift_pg_pvc_wait_retries | default(5) }}"
+      delay: "{{ openshift_pg_pvc_wait_delay | default(30) }}"
+
+  when:
+    - openshift_pg_emptydir|trim == 'false'
