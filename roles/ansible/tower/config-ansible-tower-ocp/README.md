@@ -46,8 +46,7 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |pg_sslmode|SSL mode to be used in communication between Tower and PostgreSQL|no|prefer|
 |postgress_activate_wait|Time in seconds in which role will wait for PostgreSQL to become available during installation of Tower|no|120|
 |ansible_customization_file|Tower Installer may have some bugs in specific versions, this variable points to archive which holds an overlay if any Installer changes are needed|no|N/A|
-|kubernetes_awx_image|Container repository/image for custom Ansible Tower container images|no|Determined by Ansible Tower installer|
-|kubernetes_awx_version|Container tag for custom Ansible Tower container image|no|Determined by Ansible Tower installer|
+|tower_vars_overrides|(Dict) Used to override settings in the Tower Installer group_vars/all file. See "Tower Overrides" below for details.|no||
 
 ## Example Inventory
 
@@ -78,6 +77,20 @@ openshift_password: "XXXXX"
   - role: config-ansible-tower-ocp
 ```
 
+## Tower Overrides
+
+Most variables are set through the included [inventory.j2](templates/inventory.j2) template. However, there are some advanced use cases which require overriding the `group_vars/all` file inside of the bundled Tower installer.
+
+For example, the Ansible Tower documentation recommends adding [custom virtual environments](https://docs.ansible.com/ansible-tower/3.8.1/html/administration/openshift_configuration.html#build-custom-virtual-environments) requires extending the ansible-tower-ocp base image and uploading the container image to your own repository. You can then override the `group_vars/all` file using a dict like the one below:
+
+```yaml
+tower_vars_overrides:
+  kubernetes_awx_image: quay.io/container_repo/container_image
+  kubernetes_awx_version: v3.8.1
+  foo: bar
+```
+
+Note that existing variables will be replaced. New variables introduced such as `foo: bar`, will be appended to the end of the `group_vars/all` file if it does not already exist as a top level variable. Use with caution when replacing variables outside of the documented use cases.
 
 License
 -------
