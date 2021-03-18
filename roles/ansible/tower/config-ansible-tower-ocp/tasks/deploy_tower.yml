@@ -26,6 +26,18 @@
   when:
     - ansible_customization_file is defined
 
+- name: "Apply custom container image to Openshift Installer"
+  lineinfile:
+    path: "{{ ansible_tower_dir }}/group_vars/all"
+    regexp: "^kubernetes_awx_image:"
+    line: "kubernetes_awx_image: {{ kubernetes_awx_image }}"
+
+- name: "Apply custom container image tag to Openshift Installer"
+  lineinfile:
+    path: "{{ ansible_tower_dir }}/group_vars/all"
+    regexp: "^kubernetes_awx_version:"
+    line: "kubernetes_awx_version: {{ kubernetes_awx_version }}"
+
 - name: "Run Tower on Openshift installer using access token"
   shell: "./setup_openshift.sh -e openshift_token={{ openshift_token }}"
   args:
