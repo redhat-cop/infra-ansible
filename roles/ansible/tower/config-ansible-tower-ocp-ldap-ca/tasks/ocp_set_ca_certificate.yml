@@ -1,0 +1,40 @@
+---
+
+- name: Create CA ConfigMap
+  command: oc create configmap ldap-pem --from-file=ldap.pem -n {{ openshift_project }}
+  register: ccmoutput
+  failed_when: ccmoutput.stdout is not search('created')
+
+- name: Patching Ansible Tower OCP deployment with CA Secret
+  command: | 
+           oc -n patch secret ansible-tower-secret \
+           -p='{"data":{"ldap_py":"QVVUSF9MREFQX0dMT0JBTF9PUFRJT05TID0gewogICAgbGRhcC5PUFRfWF9UTFNfUkVRVUlSRV9DRVJUOiBUcnVlLAogICAgbGRhcC5PUFRfWF9UTFNfQ0FDRVJURklMRTogIi9ldGMvY2VydHMvbGRhcC5wZW0iCn0K"}}' \
+           -n {{ openshift_project }}
+  register: ocpatchoutput
+  failed_when: ocpatchoutput.stdout is not Search('patched')
+
+- name: Patching Ansible Tower OCP deployment with CA ConfigMap volume
+  command: |
+           oc patch deployment \
+           -p='{"spec": {"template": {"spec": {"volumes": [{"configMap": {"items": [{"key": "ldap-pem", "path": "ldap.pem"}], "name": "ldap-pem"}, "name": "ldap-pem"}]}}}}' \
+           -n {{ openshift_project }}
+     
+- name: Patching Ansible Tower OCP deployment with CA Secret volume
+  command: |
+           oc -n patch deployment ansible-tower \
+           -p='{"spec": {"template": {"spec": {"volumes": [{"name": "ansible-tower-application-credentials", "secret": {"items": [{"key": "ldap_py", "path": "ldap.py"}], "secretName": "ansible-tower-secrets"}}]}}}}' \
+           -n {{ openshift_project }}
+ 
+- name: Add ConfigMap volumeMount to Ansible Tower Web container
+  command: |
+           oc patch deployment ansible-tower \
+           -p='{"spec": {"template": {"spec": {"containers": [{"name": "ansible-tower-web", "volumeMounts":[{"mountPath":"/etc/certs/ldap.pem","subPath":"ldap.pem","name":"ldap-pem"}]}]}}}}'' \
+           -n {{ openshift_project }}
+
+- name: Add ConfigMap volumeMount to Ansible Tower Task container
+  command: | 
+           oc patch deployment ansible-tower \
+          -p='{"spec": {"template": {"spec": {"containers": [{"name": "ansible-tower-task", "volumeMounts":[{"mountPath":"/etc/certs/ldap.pem","subPath":"ldap.pem","name":"ldap-pem"}]}]}}}}' \
+          -n {{ openshift_project }}
+
+
