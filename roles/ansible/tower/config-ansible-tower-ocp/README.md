@@ -85,8 +85,8 @@ For example, the Ansible Tower documentation recommends adding [custom virtual e
 
 ```yaml
 tower_vars_overrides:
-  kubernetes_awx_image: quay.io/container_repo/container_image
-  kubernetes_awx_version: v3.8.1
+  kubernetes_awx_image: registry.redhat.io/ansible-tower-38/ansible-tower-rhel7
+  kubernetes_awx_version: 3.8.1
   foo: bar
 ```
 
