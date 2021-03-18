@@ -46,6 +46,8 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |pg_sslmode|SSL mode to be used in communication between Tower and PostgreSQL|no|prefer|
 |postgress_activate_wait|Time in seconds in which role will wait for PostgreSQL to become available during installation of Tower|no|120|
 |ansible_customization_file|Tower Installer may have some bugs in specific versions, this variable points to archive which holds an overlay if any Installer changes are needed|no|N/A|
+|kubernetes_awx_image|Container repository/image for custom Ansible Tower container images|no|Determined by Ansible Tower installer|
+|kubernetes_awx_version|Container tag for custom Ansible Tower container image|no|Determined by Ansible Tower installer|
 
 ## Example Inventory
 
