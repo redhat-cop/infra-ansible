@@ -1,40 +1,57 @@
 ---
 
-- name: Create CA ConfigMap
-  command: oc create configmap ldap-pem --from-file=ldap.pem -n {{ openshift_project }}
-  register: ccmoutput
-  failed_when: ccmoutput.stdout is not search('created')
-
-- name: Patching Ansible Tower OCP deployment with CA Secret
-  command: | 
-           oc -n patch secret ansible-tower-secret \
-           -p='{"data":{"ldap_py":"QVVUSF9MREFQX0dMT0JBTF9PUFRJT05TID0gewogICAgbGRhcC5PUFRfWF9UTFNfUkVRVUlSRV9DRVJUOiBUcnVlLAogICAgbGRhcC5PUFRfWF9UTFNfQ0FDRVJURklMRTogIi9ldGMvY2VydHMvbGRhcC5wZW0iCn0K"}}' \
-           -n {{ openshift_project }}
-  register: ocpatchoutput
-  failed_when: ocpatchoutput.stdout is not Search('patched')
-
-- name: Patching Ansible Tower OCP deployment with CA ConfigMap volume
+- name: Check for CA ConfigMap
   command: |
-           oc patch deployment \
-           -p='{"spec": {"template": {"spec": {"volumes": [{"configMap": {"items": [{"key": "ldap-pem", "path": "ldap.pem"}], "name": "ldap-pem"}, "name": "ldap-pem"}]}}}}' \
-           -n {{ openshift_project }}
-     
-- name: Patching Ansible Tower OCP deployment with CA Secret volume
-  command: |
-           oc -n patch deployment ansible-tower \
-           -p='{"spec": {"template": {"spec": {"volumes": [{"name": "ansible-tower-application-credentials", "secret": {"items": [{"key": "ldap_py", "path": "ldap.py"}], "secretName": "ansible-tower-secrets"}}]}}}}' \
-           -n {{ openshift_project }}
- 
-- name: Add ConfigMap volumeMount to Ansible Tower Web container
-  command: |
-           oc patch deployment ansible-tower \
-           -p='{"spec": {"template": {"spec": {"containers": [{"name": "ansible-tower-web", "volumeMounts":[{"mountPath":"/etc/certs/ldap.pem","subPath":"ldap.pem","name":"ldap-pem"}]}]}}}}'' \
-           -n {{ openshift_project }}
+    oc get configmap ldap-pem \
+      -n {{ openshift_project }}
+  register: ldap_ca_check
+  failed_when: ldap_ca_check.rc > 1
 
-- name: Add ConfigMap volumeMount to Ansible Tower Task container
-  command: | 
-           oc patch deployment ansible-tower \
-          -p='{"spec": {"template": {"spec": {"containers": [{"name": "ansible-tower-task", "volumeMounts":[{"mountPath":"/etc/certs/ldap.pem","subPath":"ldap.pem","name":"ldap-pem"}]}]}}}}' \
+- name: Create and Mount CA cert as configmap
+  block:
+    - name: Create configmap for CA
+      command: |
+        oc create configmap ldap-pem \
+          --from-file={{ ansible_tower.ldap.ca_cert }} \
           -n {{ openshift_project }}
+    - name: Mount configmap as volume in /etc/certs direcotry
+      command: |
+        oc set volume deployment/ansible-tower \
+          --add \
+          --configmap-name ldap-pem \
+          --type configmap \
+          --mount-path /etc/certs/{{ ansible_tower.ldap.ca_cert | basename }} \
+          --sub-path {{ ansible_tower.ldap.ca_cert | basename }} \
+          -n {{ openshift_project }}
+  when:
+    - ldap_ca_check.rc != 0
 
+- name: Set data for ldap.py configuration file
+  command: |
+    oc set data secret/ansible-tower-secrets \
+      --from-file={{ ansible_tower.ldap.ldap_py }} \
+      -n {{ openshift_project }}
 
+- name: Set fact for secret volume paths in /etc/tower/conf.d directory
+  set_fact:
+    secret_volume_patch_data:
+      spec:
+        template:
+          spec:
+            volumes:
+              - name: ansible-tower-application-credentials
+                secret:
+                  items:
+                    - key: ldap.py
+                      path: ldap.py
+                    - key: credentials_py
+                      path: credentials.py
+                    - key: environment_sh
+                      path: environment.sh
+                  secretName: ansible-tower-secrets
+
+- name: Patch Ansible Tower deployment with CA Secret volume
+  command: |
+    oc patch deployment/ansible-tower \
+      -p '{{ secret_volume_patch_data | to_json }}' \
+      -n {{ openshift_project }}
