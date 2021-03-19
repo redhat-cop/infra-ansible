@@ -1,7 +1,7 @@
 ---
 
 - import_tasks: precheck.yml
-- import_tasks: opeshift_authenticate.yml
+- import_tasks: openshift_authenticate.yml
 - import_tasks: create_project.yml
 - import_tasks: setup_pvc.yml
 - import_tasks: deploy_tower.yml
