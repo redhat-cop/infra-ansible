@@ -20,8 +20,8 @@
           --add \
           --configmap-name ldap-pem \
           --type configmap \
-          --mount-path /etc/certs/{{ ansible_tower.ldap.ca_cert | basename }} \
-          --sub-path {{ ansible_tower.ldap.ca_cert | basename }} \
+          --mount-path /etc/certs/ldap.pem \
+          --sub-path ldap.pem \
           -n {{ openshift_project }}
   when:
     - ldap_ca_check.rc != 0
