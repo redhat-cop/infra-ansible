@@ -2,7 +2,7 @@
 
 # Ansible Tower Download and Version Information
 ansible_tower_download_url: "https://releases.ansible.com/ansible-tower/setup_openshift/ansible-tower-openshift-setup-{{ ansible_tower_version }}.tar.gz"
-ansible_tower_version: 3.8.1-1
+ansible_tower_version: 3.8.2-1
 ansible_tower_remote_src: true
 
 # Initial Default Ansible Tower Config
