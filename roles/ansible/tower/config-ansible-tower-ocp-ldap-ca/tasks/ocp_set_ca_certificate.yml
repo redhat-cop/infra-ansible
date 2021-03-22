@@ -14,7 +14,7 @@
         oc create configmap ldap-pem \
           --from-file={{ ansible_tower.ldap.ca_cert }} \
           -n {{ openshift_project }}
-    - name: Mount configmap as volume in /etc/certs direcotry
+    - name: Mount configmap as volume in /etc/certs directory
       command: |
         oc set volume deployment/ansible-tower \
           --add \

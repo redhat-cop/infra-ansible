@@ -1,3 +1,6 @@
 ---
 
-- include_tasks: ocp_set_ca_certificate.yml
+- import_tasks: ocp_set_ca_certificate.yml
+  when: 
+   - ansible_tower.ldap.ca_cert is defined
+   - ansible_tower.ldap.ca_cert|trim != ""

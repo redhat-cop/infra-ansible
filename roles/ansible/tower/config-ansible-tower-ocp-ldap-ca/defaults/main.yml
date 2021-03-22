@@ -1,4 +1,5 @@
 ---
+openshift_project: "tower"
 secret_volume_patch_data:
   spec:
     template:
