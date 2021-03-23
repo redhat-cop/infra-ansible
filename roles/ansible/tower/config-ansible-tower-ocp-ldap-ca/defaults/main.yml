@@ -1,17 +1,8 @@
 ---
+
 openshift_project: "tower"
+
 secret_volume_patch_data:
-  spec:
-    template:
-      spec:
-        volumes:
-          - name: ansible-tower-application-credentials
-            secret:
-              items:
-                - key: ldap.py
-                  path: ldap.py
-                - key: credentials_py
-                  path: credentials.py
-                - key: environment_sh
-                  path: environment.sh
-              secretName: ansible-tower-secrets
+  key: ldap.py
+  path: ldap.py
+
