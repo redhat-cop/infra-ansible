@@ -34,6 +34,7 @@
   unarchive:
     src: "{{ ansible_customization_file }}"
     dest: "{{ ansible_tower_dir }}/"
+    remote_src: "{{ ansible_customization_remote_src | default(false) }}"
   when:
     - ansible_customization_file is defined
 
