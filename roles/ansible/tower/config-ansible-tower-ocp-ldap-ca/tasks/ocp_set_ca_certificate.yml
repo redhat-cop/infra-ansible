@@ -1,0 +1,39 @@
+---
+
+- name: Check for CA ConfigMap
+  command: |
+    oc get configmap ldap-pem \
+      -n {{ openshift_project }}
+  register: ldap_ca_check
+  failed_when: ldap_ca_check.rc > 1
+
+- name: Create and Mount CA cert as configmap
+  block:
+    - name: Create configmap for CA
+      command: |
+        oc create configmap ldap-pem \
+          --from-file={{ ansible_tower.ldap.ca_cert }} \
+          -n {{ openshift_project }}
+    - name: Mount configmap as volume in /etc/certs directory
+      command: |
+        oc set volume deployment/ansible-tower \
+          --add \
+          --configmap-name ldap-pem \
+          --type configmap \
+          --mount-path /etc/certs/ldap.pem \
+          --sub-path ldap.pem \
+          -n {{ openshift_project }}
+  when:
+    - ldap_ca_check.rc != 0
+
+- name: Set data for ldap.py configuration file
+  command: |
+    oc set data secret/ansible-tower-secrets \
+      --from-file="{{ role_path }}/files/ldap.py" \
+      -n {{ openshift_project }}
+
+- name: Patch Ansible Tower deployment with CA Secret volume
+  command: |
+    oc patch deployment/ansible-tower \
+      -p '{{ secret_volume_patch_data | to_json }}' \
+      -n {{ openshift_project }}
