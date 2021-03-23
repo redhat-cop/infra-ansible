@@ -38,7 +38,7 @@
 
 - name: Extract the 'ansible-tower-application-credentials' from the existing deployment
   set_fact:
-    existing_volume: 
+    existing_volume:
       "{{ oc_output.stdout |
           from_json |
           json_query(\"[?name=='ansible-tower-application-credentials']\") }}"
