@@ -10,8 +10,8 @@
       command: oc get pvc {{ openshift_pg_pvc_name }} -n {{ openshift_project }} -o=jsonpath='{.status.phase}'
       register: pg_pvc_status
       until: pg_pvc_status.stdout is search("Bound")
-      retries: "{{ openshift_pg_pvc_wait_retries | default(5) }}"
-      delay: "{{ openshift_pg_pvc_wait_delay | default(30) }}"
+      retries: "{{ openshift_pg_pvc_wait_retries }}"
+      delay: "{{ openshift_pg_pvc_wait_delay }}"
 
   when:
     - openshift_pg_emptydir|trim == 'false'

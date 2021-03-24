@@ -1,5 +1,9 @@
 ---
 
+- name: Override default openshift_project if one is supplied
+  set_fact:
+    openshift_project: "{{ ansible_tower.install.openshift.project | d(openshift_project) }}"
+
 - name: Check for CA ConfigMap
   command: |
     oc get configmap ldap-pem \
@@ -33,7 +37,10 @@
       -n {{ openshift_project }}
 
 - name: Fetch existing deployment template volumes
-  command: oc get deployment/ansible-tower -o=jsonpath="{.spec.template.spec.volumes}"
+  command: |
+    oc get deployment/ansible-tower \
+      -n {{ openshift_project }} \
+      -o=jsonpath="{.spec.template.spec.volumes}"
   register: oc_output
 
 - name: Extract the 'ansible-tower-application-credentials' from the existing deployment
