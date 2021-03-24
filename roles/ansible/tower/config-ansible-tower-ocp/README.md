@@ -46,7 +46,9 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |pg_sslmode|SSL mode to be used in communication between Tower and PostgreSQL|no|prefer|
 |postgress_activate_wait|Time in seconds in which role will wait for PostgreSQL to become available during installation of Tower|no|120|
 |ansible_customization_file|Tower Installer may have some bugs in specific versions, this variable points to archive which holds an overlay if any Installer changes are needed|no|N/A|
+|ansible_customization_remote_src|Used to indicate if the above ansible_customization_file is a remote src or not|no|false|
 |tower_vars_overrides|(Dict) Used to override settings in the Tower Installer group_vars/all file. See "Tower Overrides" below for details.|no||
+|clean_up|Flag to indicate if the role should perform clean-up at the end|no|'True' - will perform clean-up|
 
 ## Example Inventory
 

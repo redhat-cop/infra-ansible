@@ -1,9 +1,20 @@
 ---
 
+- name: "Create a temporary directory for the Ansible Tower installer"
+  tempfile:
+    state: directory
+    suffix: ansible-tower
+  register: ansible_tower_tmp_dir
+  notify: "cleanup temp dir"
+
+- name: "Store away temporary directory path"
+  set_fact:
+    ansible_tower_tmp_dir_path: "{{ ansible_tower_tmp_dir.path }}"
+
 - name: "Download & Unpack Ansible Tower installer"
   unarchive:
     src: "{{ ansible_tower_download_url }}"
-    dest: "."
+    dest: "{{ ansible_tower_tmp_dir_path }}"
     list_files: true
     remote_src: "{{ ansible_tower_remote_src }}"
     exclude: "inventory"
@@ -11,7 +22,7 @@
 
 - name: "Set installation facts"
   set_fact:
-    ansible_tower_dir: "{{ ansible_tower_download_fact.files.0 }}"
+    ansible_tower_dir: "{{ ansible_tower_tmp_dir_path }}/{{ ansible_tower_download_fact.files.0 }}"
 
 - name: "Set up the Ansible Tower on Openshift Installer inventory"
   template:
@@ -19,19 +30,16 @@
     dest: "{{ ansible_tower_dir }}/inventory"
   register: inventory
 
-- name: "Apply Ansible customization to Tower Installer .. "
+- name: "Apply Ansible customization to Tower Installer"
   unarchive:
     src: "{{ ansible_customization_file }}"
     dest: "{{ ansible_tower_dir }}/"
+    remote_src: "{{ ansible_customization_remote_src | default(false) }}"
   when:
     - ansible_customization_file is defined
 
 - name: "Add or replace group_vars in the Tower Installer"
-  lineinfile:
-    path: "{{ ansible_tower_dir }}/group_vars/all"
-    regexp: "^{{ item.key }}:.*$"
-    line: "{{ item.key }}: {{ item.value }}"
-  loop: "{{ lookup('dict', tower_vars_overrides) }}"
+  include_tasks: update_tower_inventory.yml
   when:
     - tower_vars_overrides is defined
     - (tower_vars_overrides | type_debug) == 'dict'
@@ -41,12 +49,3 @@
   args:
     chdir: "{{ ansible_tower_dir }}"
 
-- name: "parsing installation log..."
-  shell: ls -1 setup_container_cluster-* | tail -n 1 | xargs tail -n 1
-  register: in_outcome
-
-- name: "Installation cleanup .."
-  when: in_outcome.stdout.find('failed=0') == -1
-  file:
-    state: absent
-    path: "{{ ansible_tower_dir }}"
