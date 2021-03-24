@@ -7,14 +7,14 @@
   register: ldap_ca_check
   failed_when: ldap_ca_check.rc > 1
 
-- name: Create and Mount CA cert as configmap
+- name: Create and Mount CA cert as ConfigMap
   block:
-    - name: Create configmap for CA
+    - name: Create ConfigMap for CA
       command: |
         oc create configmap ldap-pem \
           --from-file={{ ansible_tower.ldap.ca_cert }} \
           -n {{ openshift_project }}
-    - name: Mount configmap as volume in /etc/certs directory
+    - name: Mount ConfigMap as volume in /etc/certs directory
       command: |
         oc set volume deployment/ansible-tower \
           --add \
@@ -32,8 +32,33 @@
       --from-file="{{ role_path }}/files/ldap.py" \
       -n {{ openshift_project }}
 
+- name: Fetch existing deployment template volumes
+  command: oc get deployment/ansible-tower -o=jsonpath="{.spec.template.spec.volumes}"
+  register: oc_output
+
+- name: Extract the 'ansible-tower-application-credentials' from the existing deployment
+  set_fact:
+    existing_volume:
+      "{{ oc_output.stdout |
+          from_json |
+          json_query(\"[?name=='ansible-tower-application-credentials']\") }}"
+
+- name: Append the new entry to the secret volume list
+  set_fact:
+    add_secret:
+      secret:
+        items: "{{ existing_volume[0]['secret']['items'] + [ secret_volume_patch_data ] }}"
+
+- name: Assemble final patch value for the new list
+  set_fact:
+    final_secret_volume_patch:
+      spec:
+        template:
+          spec:
+            volumes: "{{ [ existing_volume | combine(add_secret, recursive=True) ] }}"
+
 - name: Patch Ansible Tower deployment with CA Secret volume
   command: |
     oc patch deployment/ansible-tower \
-      -p '{{ secret_volume_patch_data | to_json }}' \
+      -p '{{ final_secret_volume_patch | to_json }}' \
       -n {{ openshift_project }}

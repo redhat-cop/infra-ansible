@@ -1,5 +1,5 @@
 config-ansible-tower-ocp-ldap-ca
-============================
+================================
 
 This role is a helper for `config-ansible-tower-ocp` to create and provision CA certificate secret and ConfigMap which is  used to validate connection with LDAP
 
@@ -11,12 +11,12 @@ This role is a helper for `config-ansible-tower-ocp` to create and provision CA 
 
 ## Role Variables
 
-The variables used to create and deploy CA secret/ConfigMap  Ansible Tower on OpenShift are outlined in the table below. 
+The variables used to create and deploy CA secret/ConfigMap Ansible Tower on OpenShift are outlined in the table below. 
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
 |openshift_project|OCP project in which Ansible Tower is deployed|no|'tower'|
-|ansible_tower.ldap.ca_cert| Path to CA pem file to be uploaded to Ansible Tower - file must be named "ldap.pem" |yes||
+|ansible_tower.ldap.ca_cert|Path to CA pem file to be uploaded to Ansible Tower|yes||
 
 ## Example Inventory
 
