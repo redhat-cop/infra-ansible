@@ -1,0 +1,9 @@
+---
+
+- name: "cleanup temp dir"
+  file:
+    path: "{{ ansible_tower_tmp_dir_path }}"
+    state: absent
+  run_once: True
+  when:
+    - clean_up is undefined or clean_up|bool == true

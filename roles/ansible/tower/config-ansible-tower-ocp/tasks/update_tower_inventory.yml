@@ -1,0 +1,9 @@
+---
+
+- name: "Add or replace group_vars in the Tower Installer"
+  lineinfile:
+    path: "{{ ansible_tower_dir }}/group_vars/all"
+    regexp: "^{{ item.key }}:.*$"
+    line: "{{ item.key }}: {{ item.value }}"
+  loop: "{{ lookup('dict', tower_vars_overrides) }}"
+
