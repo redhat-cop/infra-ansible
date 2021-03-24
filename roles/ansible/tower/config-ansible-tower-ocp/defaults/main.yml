@@ -36,4 +36,3 @@ openshift_pg_pvc_name: "postgresql"
 openshift_pg_pvc_wait_retries: 5
 openshift_pg_pvc_wait_delay: 30
 
-
