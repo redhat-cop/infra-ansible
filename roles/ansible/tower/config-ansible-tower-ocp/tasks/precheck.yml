@@ -1,5 +1,29 @@
 ---
 
+- name: Update values based on passed in inventory
+  set_fact:
+    admin_user: "{{ ansible_tower.admin_user | d(admin_user) }}"
+    admin_password: "{{ ansible_tower.admin_password | d(admin_password) }}"
+    secret_key: "{{ ansible_tower.install.secret_key | d(secret_key) }}"
+    openshift_project: "{{ ansible_tower.install.openshift.project | d(openshift_project) }}"
+    openshift_host: "{{ ansible_tower.install.openshift.host | d(openshift_host) }}"
+    openshift_skip_tls_verify: "{{ ansible_tower.install.openshift.skip_tls_verify | d(openshift_skip_tls_verify) }}"
+    openshift_user: "{{ ansible_tower.install.openshift.user | d(openshift_user) }}"
+    openshfit_password: "{{ ansible_tower.install.openshift.password | d(openshift_password) }}"
+    openshift_token: "{{ ansible_tower.install.openshift.token | d(openshift_token) }}"
+    openshift_pg_emptydir: "{{ ansible_tower.install.openshift.pg_emptydir | d(openshift_pg_emptydir) }}"
+    openshift_pg_pvc_name: "{{ ansible_tower.install.openshift.pg_pvc_name | d(openshift_pg_pvc_name) }}"
+    openshift_pg_pvc_size: "{{ ansible_tower.install.openshift.pg_pvc_size | d(openshift_pg_pvc_size) }}"
+    openshift_pg_pvc_wait_retries: "{{ ansible_tower.install.openshift.pg_pvc_wait_retries | d(openshift_pg_pvc_wait_retries) }}"
+    openshift_pg_pvc_wait_delay: "{{ ansible_tower.install.openshift.pg_pvc_wait_delay | d(openshift_pg_pvc_wait_delay) }}"
+    pg_host: "{{ ansible_tower.install.pg.host | d('') }}"
+    pg_username: "{{ ansible_tower.install.pg.username | d(pg_username) }}"
+    pg_password: "{{ ansible_tower.install.pg.password | d(pg_password) }}"
+    pg_database: "{{ ansible_tower.install.pg.database | d(pg_database) }}"
+    pg_port: "{{ ansible_tower.install.pg.port | d(pg_port) }}"
+    pg_sslmode: "{{ ansible_tower.install.pg.sslmode | d(pg_sslmode) }}"
+    postgress_activate_wait: "{{ ansible_tower.install.pg.activate_wait | d(postgress_activate_wait) }}"
+
 - name: Check if inventory file variables are defined
   fail: msg="Please specify the value of {{item}} in your inventory file"
   when: "{{item}} is undefined or {{item}} == ''"
