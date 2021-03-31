@@ -1,0 +1,19 @@
+{
+    "categories": [
+      {
+        "title": "## New Features",
+        "labels": ["new feature"]
+      },
+      {
+        "title": "## Enhancements",
+        "labels": ["enhancement"]
+      },
+      {
+        "title": "## Bug Fixes",
+        "labels": ["bug"]
+      }
+    ],
+    "template": "${{CHANGELOG}}\n\n## Uncategorized\n\n${{UNCATEGORIZED}}\n",
+    "pr_template": "- ${{TITLE}} (#${{NUMBER}}) by [${{AUTHOR}}](https://github.com/${{AUTHOR}})"
+}
+
