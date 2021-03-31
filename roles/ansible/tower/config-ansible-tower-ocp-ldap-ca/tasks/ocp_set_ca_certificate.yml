@@ -69,3 +69,12 @@
     oc patch deployment/ansible-tower \
       -p '{{ final_secret_volume_patch | to_json }}' \
       -n {{ openshift_project }}
+
+- name: Verify Ansible Tower deployment has completed rollout after setting CA Secret volume
+  command: |
+    oc rollout status deployment/ansible-tower \
+      -n {{ openshift_project }}
+  register: deployment_status_check
+  until: deployment_status_check.stdout == "deployment \"ansible-tower\" successfully rolled out"
+  retries: 6
+  delay: 10

@@ -31,7 +31,7 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |ansible_tower.install.openshift.token|OpenShift token|no(either that or password)||
 |ansible_tower.install.openshift.skip_tls_verify| Should installer skip TLS verifcation of Openshift API|no|false|
 |ansible_tower.install.openshift.pg_emptydir|Flag for PostgreSQL to use EmptyDir for storage(not recommended for Production)|no|true|
-|onsible_tower.install.penshift.pg_pvc_name|Persistent Volume Claim to be used for PostgreSQL storage|no|postgresql|
+|ansible_tower.install.openshift.pg_pvc_name|Persistent Volume Claim to be used for PostgreSQL storage|no|postgresql|
 |ansible_tower.install.openshift.pg_pvc_size|Size of PVC that's going to be created for PostgreSQL storage|no|10Gi|
 |ansible_tower.install.openshift.pg_pvc_wait_retries|How many attempts should have been taken on PVC readiness check|no|5|
 |ansible_tower.install.openshift.pg_pvc_wait_delay|The delay between each attempt on making PVC readiness check (in seconds)|no|30|
