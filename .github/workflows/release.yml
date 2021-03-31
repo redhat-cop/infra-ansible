@@ -4,7 +4,7 @@ name: Add changelog to release
 
 on:
   release:
-    types: 
+    types:
       - created
 jobs:
   build:
