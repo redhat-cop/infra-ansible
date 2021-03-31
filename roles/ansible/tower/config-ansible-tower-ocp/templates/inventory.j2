@@ -16,7 +16,7 @@ secret_key="{{ secret_key }}"
 
 # Set pg_hostname if you have an external postgres server, otherwise
 # a new postgres service will be created
-# pg_hostname=postgresql
+# pg_hostname="{{ pg_host }}"
 
 # If using an external database, provide your existing credentials.
 # If you choose to use the provided containerized Postgres depolyment, these
@@ -25,8 +25,8 @@ pg_username="{{ pg_username }}"
 pg_password="{{ pg_password }}"
 pg_database="{{ pg_database }}"
 pg_port="{{ pg_port }}"
-pg_sslmode='prefer'  # set to 'verify-full' for client-side enforced SSL
-postgress_activate_wait="{{ postgress_activate_wait}}"
+pg_sslmode="{{ pg_sslmode }}"  # set to 'verify-full' for client-side enforced SSL
+postgress_activate_wait="{{ postgress_activate_wait }}"
 
 # Note: The user running this installer will need cluster-admin privileges.
 # Tower's job execution container requires running in privileged mode,
@@ -37,7 +37,7 @@ postgress_activate_wait="{{ postgress_activate_wait}}"
 
 openshift_host="{{ openshift_host }}"
 openshift_skip_tls_verify="{{ openshift_skip_tls_verify }}"
-openshift_project="{{ openshift_project}}"
+openshift_project="{{ openshift_project }}"
 openshift_user="{{ openshift_user }}"
 openshift_token="{{ openshift_token }}"
 # If you don't want to hardcode a password here, just do:
