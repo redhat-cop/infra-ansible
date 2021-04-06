@@ -9,7 +9,7 @@
     openshift_host: "{{ ansible_tower.install.openshift.host | d(openshift_host) }}"
     openshift_skip_tls_verify: "{{ ansible_tower.install.openshift.skip_tls_verify | d(openshift_skip_tls_verify) }}"
     openshift_user: "{{ ansible_tower.install.openshift.user | d(openshift_user) }}"
-    openshfit_password: "{{ ansible_tower.install.openshift.password | d(openshift_password) }}"
+    openshift_password: "{{ ansible_tower.install.openshift.password | d(openshift_password) }}"
     openshift_token: "{{ ansible_tower.install.openshift.token | d(openshift_token) }}"
     openshift_pg_emptydir: "{{ ansible_tower.install.openshift.pg_emptydir | d(openshift_pg_emptydir) }}"
     openshift_pg_pvc_name: "{{ ansible_tower.install.openshift.pg_pvc_name | d(openshift_pg_pvc_name) }}"
