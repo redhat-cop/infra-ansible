@@ -2,12 +2,14 @@ FROM registry.fedoraproject.org/fedora
 
 USER root
 ENV WORK_DIR /infra-ansible
+ENV HOME /tmp
 
 # Update System and install clients
 RUN \
     dnf install -y --setopt=tsflags=nodocs \
       https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm
 RUN dnf -y install \
+      ansible \
       jq \
       python3-cinderclient \
       python3-glanceclient \
