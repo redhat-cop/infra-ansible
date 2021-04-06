@@ -11,6 +11,7 @@ RUN \
 RUN dnf -y install \
       ansible \
       jq \
+      ncurses \
       python3-cinderclient \
       python3-glanceclient \
       python3-heatclient \
@@ -24,13 +25,15 @@ RUN dnf -y install \
       python3-pyOpenSSL \
       python3-shade \
       python3-boto3 \
-      python3-openstacksdk && \
+      python3-openstacksdk \
+      unzip && \
     dnf clean all && \
     rm -rf /var/cache/yum
 
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
 
+RUN chmod 664 /etc/passwd
 RUN /usr/local/bin/user_setup
 
 USER ${USER_UID}
