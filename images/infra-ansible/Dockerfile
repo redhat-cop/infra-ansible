@@ -28,13 +28,6 @@ RUN dnf -y install \
     dnf clean all && \
     rm -rf /var/cache/yum
 
-#RUN \
-#    rpm -e --nodeps python-ipaddress PyYAML; \
-#    pip install --upgrade --force-reinstall requests; \
-#    pip install --upgrade \
-#      "cryptography==2.8" \
-#      "openstacksdk==0.37.0"
-
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
 
