@@ -1,10 +1,5 @@
 ---
 
-- name: "Install prereq software"
-  package:
-    name: 'python2-shade'
-    state: present
-
 - name: Manage Security Groups
   os_security_group:
     cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"

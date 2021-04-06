@@ -1,10 +1,5 @@
 ---
 
-- name: "Install prereq software"
-  package:
-    name: 'python2-shade'
-    state: present
-
 - import_tasks: "manage-networks.yml"
 
 - import_tasks: "manage-subnets.yml"
