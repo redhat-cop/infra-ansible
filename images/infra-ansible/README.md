@@ -119,7 +119,7 @@ This image is built and published to docker.io, so there's no reason to build it
 
 ```
 cd ./infra-ansible
-docker build -f images/infra-ansible/Dockerfile -t redhat-cop/infra-ansible .
+docker build -f images/infra-ansible/Dockerfile -t quay.io/redhat-cop/infra-ansible .
 ```
 
 ## Troubleshooting
