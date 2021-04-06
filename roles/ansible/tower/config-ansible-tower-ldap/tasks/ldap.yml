@@ -3,16 +3,15 @@
   set_fact:
     tower_containerized: '{{ ansible_tower.containerized | default(false) }}'
 
-- name:
+- name: 'As priveleged user, upload and update CA cert for LDAP authentication'
   block:
-    - name: 'Upload Cert CA to Ansible Tower (if applicable)'
+    - name: 'Upload Cert CA to Ansible Tower'
       copy:
         src: '{{ ansible_tower.ldap.ca_cert }}'
         dest: '/etc/pki/ca-trust/source/anchors/{{ ansible_tower.ldap.ca_cert | basename }}'
       when:
         - ansible_tower.ldap.ca_cert is defined
         - ansible_tower.ldap.ca_cert|trim != ''
-        - not tower_containerized
       notify:
         - restart-tower
       register: ca_uploaded
@@ -22,8 +21,8 @@
       when:
         - ca_uploaded is defined
         - ca_uploaded.changed
-  become: true
   when: not tower_containerized
+  become: true
 
 - name: 'Update Ansible Tower LDAP config'
   uri:
