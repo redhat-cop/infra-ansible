@@ -6,13 +6,13 @@ ENV WORK_DIR /infra-ansible
 
 # Update System and install clients
 RUN \
-    yum-config-manager --disable azure-cli; \
+    yum-config-manager --disable azure-cli && \
     yum install -y --setopt=tsflags=nodocs \
       https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm \
-      http://resources.ovirt.org/pub/yum-repo/ovirt-release42.rpm; \
-    yum -y update ansible python-jinja2; \
-    yum -y install python2-pip; \
-    pip install --upgrade pip; \
+      http://resources.ovirt.org/pub/yum-repo/ovirt-release42.rpm && \
+    yum -y update ansible python-jinja2 && \
+    yum -y install python2-pip && \
+    pip install --force-reinstall 'pip==20.3.4' && \
     yum -y install \
       jq \
       python-ovirt-engine-sdk4 \
@@ -24,8 +24,8 @@ RUN \
       python-openstackclient python-dns \
       python2-pyOpenSSL python-shade \
       python-boto3 \
-      python-openstacksdk; \
-    yum clean all; \
+      python-openstacksdk && \
+    yum clean all && \
     rm -rf /var/cache/yum
 
 RUN \
