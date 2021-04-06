@@ -15,4 +15,8 @@ then
   source /usr/local/bin/tsig_keys
 fi
 
-source /usr/local/bin/entrypoint
+#if ! whoami &>/dev/null; then
+#  echo "${USER:-default}:x:$(id -u):$(id -g):Default User:$HOME:/sbin/nologin" >> /etc/passwd
+#fi
+
+exec "$@"
