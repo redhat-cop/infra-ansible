@@ -14,4 +14,4 @@
       delay: "{{ openshift_pg_pvc_wait_delay }}"
 
   when:
-    - openshift_pg_emptydir is false
+    - openshift_pg_emptydir|bool == false
