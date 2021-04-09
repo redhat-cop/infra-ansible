@@ -1,43 +1,39 @@
-FROM quay.io/openshift/origin-ansible:v3.11
+FROM registry.fedoraproject.org/fedora
 
 USER root
-
 ENV WORK_DIR /infra-ansible
+ENV HOME /tmp
 
 # Update System and install clients
 RUN \
-    yum-config-manager --disable azure-cli && \
-    yum install -y --setopt=tsflags=nodocs \
-      https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm \
-      http://resources.ovirt.org/pub/yum-repo/ovirt-release42.rpm && \
-    yum -y update ansible python-jinja2 && \
-    yum -y install python2-pip && \
-    pip install --force-reinstall 'pip==20.3.4' && \
-    yum -y install \
+    dnf install -y --setopt=tsflags=nodocs \
+      https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm
+RUN dnf -y install \
+      ansible \
       jq \
-      python-ovirt-engine-sdk4 \
-      python-ceilometerclient \
-      python-cinderclient python-glanceclient \
-      python-heatclient python-neutronclient \
-      python-novaclient python-saharaclient \
-      python-swiftclient python-troveclient \
-      python-openstackclient python-dns \
-      python2-pyOpenSSL python-shade \
-      python-boto3 \
-      python-openstacksdk && \
-    yum clean all && \
+      ncurses \
+      python3-cinderclient \
+      python3-glanceclient \
+      python3-heatclient \
+      python3-neutronclient \
+      python3-novaclient \
+      python3-saharaclient \
+      python3-swiftclient \
+      python3-troveclient \
+      python3-openstackclient \
+      python3-dns \
+      python3-pyOpenSSL \
+      python3-shade \
+      python3-boto3 \
+      python3-openstacksdk \
+      unzip && \
+    dnf clean all && \
     rm -rf /var/cache/yum
-
-RUN \
-    rpm -e --nodeps python-ipaddress PyYAML; \
-    pip install --upgrade --force-reinstall requests; \
-    pip install --upgrade \
-      "cryptography==2.8" \
-      "openstacksdk==0.37.0"
 
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
 
+RUN chmod 664 /etc/passwd
 RUN /usr/local/bin/user_setup
 
 USER ${USER_UID}
