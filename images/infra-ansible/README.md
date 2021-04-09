@@ -24,9 +24,20 @@ systemctl restart docker
 
 For OpenStack and AWS specific see the example runs below. For all others use the following generic run example.
 
+**podman**:
+```
+podman run -u `id -u` \
+      -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa \
+      -v $HOME/src/:/tmp/src \
+      -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
+      -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
+      -t quay.io/redhat-cop/infra-ansible
+```
+
+**docker**:
 ```
 docker run -u `id -u` \
-      -v $HOME/.ssh/id_rsa:/opt/app-root/src/.ssh/id_rsa \
+      -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa \
       -v $HOME/src/:/tmp/src \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
@@ -37,7 +48,7 @@ docker run -u `id -u` \
 
 ```
 docker run -u `id -u` \
-      -v $HOME/.ssh/id_rsa:/opt/app-root/src/.ssh/id_rsa \
+      -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa \
       -v $HOME/src/:/tmp/src \
       -it quay.io/redhat-cop/infra-ansible /bin/bash
 ```
@@ -55,9 +66,9 @@ A typical run of the image would look like:
 
 ```
 docker run -u `id -u` \
-      -v $HOME/.ssh/id_rsa:/opt/app-root/src/.ssh/id_rsa \
+      -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa \
       -v $HOME/src/:/tmp/src \
-      -v $HOME/.config/openstack/:/opt/app-root/src/.config/openstack/ \
+      -v $HOME/.config/openstack/:/tmp/.config/openstack/ \
       -v /etc/pki:/etc/pki \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
@@ -66,8 +77,8 @@ docker run -u `id -u` \
 ```
 
 NOTE: The above commands expects the following inputs:
-* Your ssh key to be mounted in the container at `/opt/app-root/src/.ssh/id_rsa`
-* An link:https://docs.openstack.org/user-guide/common/cli-set-environment-variables-using-openstack-rc.html[OpenStack RC file] to be mounted at `/opt/app-root/src/.config/openstack/opensh.rc`.
+* Your ssh key to be mounted in the container at `/tmp/.ssh/id_rsa`
+* An link:https://docs.openstack.org/user-guide/common/cli-set-environment-variables-using-openstack-rc.html[OpenStack RC file] to be mounted at `/tmp/.config/openstack/opensh.rc`.
 * Your ansible inventories and playbooks repos to live within the same directory, mounted at `/tmp/src`
 * The `/etc/pki` repo has some custom certs needed by the container 
 
@@ -76,8 +87,8 @@ A typical run of the image would look like:
 
 ```
 docker run -u `id -u` \
-      -v $HOME/.ssh:/opt/app-root/src/.ssh \
-      -v $HOME/aws-credentials.csv:/opt/app-root/src/aws-credentials.csv \
+      -v $HOME/.ssh:/tmp/.ssh \
+      -v $HOME/aws-credentials.csv:/tmp/aws-credentials.csv \
       -v $HOME/src/:/tmp/src \
       -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
       -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
@@ -86,7 +97,7 @@ docker run -u `id -u` \
 ```
 
 The above commands expects the following inputs:
-* Your ssh key (~/.ssh/id_rsa) to be mounted in the container at `/opt/app-root/src/.ssh/id_rsa`
+* Your ssh key (~/.ssh/id_rsa) to be mounted in the container at `/tmp/.ssh/id_rsa`
 * Your AWS credentials (in CSV format) is available in your home directory
 * Your ansible inventories and playbooks repos to live within the same directory, mounted at `/tmp/src`
 
@@ -99,7 +110,7 @@ When doing DNS management with nsupdate, the TSIG key information can be sourced
 ```
 docker run -u `id -u` \
          :
-      -v $HOME/my-tsig-file.key:/opt/app-root/src/tsig.key \
+      -v $HOME/my-tsig-file.key:/tmp/tsig.key \
          :
       -t quay.io/redhat-cop/infra-ansible
 ```
@@ -117,9 +128,16 @@ TSIG_KEY_ALGORITHM= ...
 
 This image is built and published to docker.io, so there's no reason to build it if you're just wanting to use the latest stable version. However, if you need to build it for development reasons, here's how:
 
+**buildah**
 ```
 cd ./infra-ansible
-docker build -f images/infra-ansible/Dockerfile -t redhat-cop/infra-ansible .
+buildah bud -f images/infra-ansible/Dockerfile -t quay.io/redhat-cop/infra-ansible .
+```
+
+**docker**
+```
+cd ./infra-ansible
+docker build -f images/infra-ansible/Dockerfile -t quay.io/redhat-cop/infra-ansible .
 ```
 
 ## Troubleshooting
