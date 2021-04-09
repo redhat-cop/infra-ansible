@@ -30,8 +30,6 @@ RUN dnf -y install \
     dnf clean all && \
     rm -rf /var/cache/yum
 
-# RUN ln -fs /usr/bin/python3 /usr/bin/python 
-
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
 

@@ -24,6 +24,17 @@ systemctl restart docker
 
 For OpenStack and AWS specific see the example runs below. For all others use the following generic run example.
 
+**podman**:
+```
+podman run -u `id -u` \
+      -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa \
+      -v $HOME/src/:/tmp/src \
+      -e INVENTORY_DIR=/tmp/src/<path-to-your-inventory> \
+      -e PLAYBOOK_FILE=/tmp/src/<path-to-your-playbook> \
+      -t quay.io/redhat-cop/infra-ansible
+```
+
+**docker**:
 ```
 docker run -u `id -u` \
       -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa \
@@ -117,6 +128,13 @@ TSIG_KEY_ALGORITHM= ...
 
 This image is built and published to docker.io, so there's no reason to build it if you're just wanting to use the latest stable version. However, if you need to build it for development reasons, here's how:
 
+**buildah**
+```
+cd ./infra-ansible
+buildah bud -f images/infra-ansible/Dockerfile -t quay.io/redhat-cop/infra-ansible .
+```
+
+**docker**
 ```
 cd ./infra-ansible
 docker build -f images/infra-ansible/Dockerfile -t quay.io/redhat-cop/infra-ansible .
