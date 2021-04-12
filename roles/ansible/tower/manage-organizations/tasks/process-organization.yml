@@ -44,7 +44,7 @@
   with_items:
     - '{{ organization.galaxy_credentials }}'
   loop_control:
-    loop_var: galaxy_credential_name
+    loop_var: galaxy_credential
   when:
     - organization.galaxy_credentials | length > 0
 
