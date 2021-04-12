@@ -18,10 +18,8 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |:---------|:------------|:---------|:---------|
 |ansible_tower.organizations.name|Name of the organization|yes||
 |ansible_tower.organizations.description|Description of the organization|no||
-|ansible_tower.organizations.rrule|Add a recurrence rule, AKA RRULE|yes||
-|ansible_tower.organizations.enabled|enable/disable your organization|no|yes|
-|ansible_tower.organizations.unified_job_template|Name of template to run, which will translate to an integer ID|yes||
-
+|ansible_tower.organizations.custom_virtualenv|Custom virtual environment used for the organization|no||
+|ansible_tower.organizations.galaxy_credentials|List of galaxy_credentials associated with the organization|no||
 
 **_Note:_** Organization configuration will **only** happen if the `ansible_tower.organizations` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
@@ -31,19 +29,14 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 ```yaml
 ---
 
-ansible_tower:
-  admin_password: "admin01"
-  organizations:
-  - name: "Demo Organization"
-    description: "My Organization runs My Job Template on a Recurrency Rule timer running at 2020-12-22 at 11 a.m US/Eastern"
-    rrule: "DTSTART;TZID=US-Eastern:20201222T110000Z RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=1"
-    unified_job_template: "Demo Job Template"
-
-
-ansible_tower:
-  admin_password: "admin01"
-  organizations:
-  - name: "My Organization"
+ansible_tower:  
+  admin_password: 'admin01'  
+  organizations:             
+    - name: 'Demo Organization'  
+      description: 'My Organization'  
+      custom_virtualenv: '/var/lib/awx/venv/awx'
+      galaxy_credentials:  
+        - Ansible Galaxy  
 ```
 
 ## Example Playbook

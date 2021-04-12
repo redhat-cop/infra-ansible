@@ -2,4 +2,4 @@
 
 - hosts: tower
   roles:
-  - role: ansible/tower/manage-schedules
+  - role: ansible/tower/manage-organizations
