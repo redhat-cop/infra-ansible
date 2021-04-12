@@ -51,4 +51,4 @@
 - name: 'Clear/Update facts'
   set_fact:
     existing_galaxy_credentials: null
-    processed_organizations: "{{ processed_organizations + [ { 'name': organization.name } ] }}"
+
