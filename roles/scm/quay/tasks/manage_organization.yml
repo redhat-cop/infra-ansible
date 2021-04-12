@@ -1,5 +1,4 @@
 ---
-
 - name: Check if Organization Exists
   uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
@@ -11,14 +10,13 @@
       Authorization: "{{ auth_header }}"
   register: quay_organization_exists
 
-
 - name: Create Quay Organization
   uri:
     url: "{{ quay_api_base }}/organization/"
     method: POST
     body:
       name: "{{ quay_organization.name }}"
-      email: "{{ quay_organization.email | default('') }}"
+      email: "{{ quay_organization.email | default(omit) }}"
     validate_certs: "{{ quay_validate_certs }}"
     body_format: json
     status_code: 201
@@ -32,7 +30,7 @@
     method: PUT
     body:
       name: "{{ quay_organization.name }}"
-      email: "{{ quay_organization.email | default('') }}"
+      email: "{{ quay_organization.email | default(omit) }}"
     validate_certs: "{{ quay_validate_certs }}"
     body_format: json
     status_code: 200
@@ -58,6 +56,16 @@
       Authorization: "{{ auth_header }}"
   register: org_robots
 
+- name: List Organization Prototypes
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/prototypes"
+    validate_certs: "{{ quay_validate_certs }}"
+    status_code:
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: org_prototypes
+
 - name: Manage Robots
   include_tasks: manage_robot.yml
   loop: "{{ quay_organization.robots | default([]) }}"
@@ -70,6 +78,12 @@
   loop_control:
     loop_var: quay_team
 
+- name: Manage Prototypes
+  include_tasks: manage_prototypes.yml
+  loop: "{{ quay_organization.prototypes | default([]) }}"
+  loop_control:
+    loop_var: quay_prototype
+
 - name: List Repositories
   uri:
     url: "{{ quay_api_base }}/repository?namespace={{ quay_organization.name }}"
@@ -81,7 +95,6 @@
     headers:
       Authorization: "{{ auth_header }}"
   register: org_repositories
-
 
 - name: Manage Repositories
   include_tasks: manage_repository.yml
@@ -133,4 +146,3 @@
       when: "item.key not in quay_organization.teams |  map(attribute='name') | list"
 
   when: quay_prune|bool
-

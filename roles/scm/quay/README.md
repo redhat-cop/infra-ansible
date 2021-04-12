@@ -9,6 +9,7 @@ Support is available for managing the following assets:
     * Repositories
     * Teams
     * Robot Accounts
+    * Default Permissions (Prototypes)
 
 Requirements
 ------------
