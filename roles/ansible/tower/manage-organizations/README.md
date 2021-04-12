@@ -16,10 +16,11 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 
 | Variable | Description | Required | Defaults |
 |:---------|:------------|:---------|:---------|
-|ansible_tower.organizations.name|Name of the organization|yes||
-|ansible_tower.organizations.description|Description of the organization|no||
-|ansible_tower.organizations.custom_virtualenv|Custom virtual environment used for the organization|no||
-|ansible_tower.organizations.galaxy_credentials|List of galaxy_credentials associated with the organization|no||
+|ansible_tower.organizations.name|Name of the organization|yes|n/a|
+|ansible_tower.organizations.description|Description of the organization|no|""|
+|ansible_tower.organizations.max_hosts|Description of the organization|no|0|
+|ansible_tower.organizations.custom_virtualenv|Custom virtual environment used for the organization|no|""|
+|ansible_tower.organizations.galaxy_credentials|List of galaxy_credentials associated with the organization|no|[]|
 
 **_Note:_** Organization configuration will **only** happen if the `ansible_tower.organizations` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
@@ -36,7 +37,8 @@ ansible_tower:
       description: 'My Organization'  
       custom_virtualenv: '/var/lib/awx/venv/awx'
       galaxy_credentials:  
-        - Ansible Galaxy  
+        - name: My Ansible Galaxy Credential
+          description: 'Description for my Ansible Galaxy Credential'
 ```
 
 ## Example Playbook
