@@ -1,0 +1,6 @@
+{
+    "name": '{{ organization.name }}',
+    "description": '{{ organization.description | default('') }}',
+    "max_hosts": '{{ organization.max_hosts | default(0) | int }}',
+    "custom_virtualenv": '{{ organization.custom_virtualenv | default(omit) }}'
+}
