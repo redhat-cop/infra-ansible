@@ -10,6 +10,7 @@ RUN \
       https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm
 RUN dnf -y install \
       ansible \
+      findutils \
       jq \
       ncurses \
       python3-cinderclient \
@@ -26,7 +27,6 @@ RUN dnf -y install \
       python3-shade \
       python3-boto3 \
       python3-openstacksdk \
-      findutils \ 
       unzip && \
     dnf clean all && \
     rm -rf /var/cache/yum
