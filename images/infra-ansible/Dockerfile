@@ -13,6 +13,7 @@ RUN dnf -y install \
       findutils \
       jq \
       ncurses \
+      openssl \
       python3-cinderclient \
       python3-glanceclient \
       python3-heatclient \
@@ -39,6 +40,11 @@ RUN dnf -y install \
     chmod 700 kustomize && \
     cp kustomize /usr/bin/ && \
     rm -rf /var/cache/yum
+
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
+    chmod 700 get_helm.sh && \
+    ./get_helm.sh; \
+    rm -f ./get_helm.sh
 
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
