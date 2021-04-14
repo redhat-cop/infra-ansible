@@ -33,6 +33,10 @@ RUN dnf -y install \
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
     chmod 700 get_helm.sh && \
     ./get_helm.sh && \
+    curl -fsSL -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.4/kustomize_v3.5.4_linux_amd64.tar.gz && \
+    tar -xvf kustomize.tar.gz && \ 
+    chmod 700 kustomize && \
+    cp kustomize /usr/bin/ && \
     rm -rf /var/cache/yum
 
 COPY . ${WORK_DIR}
