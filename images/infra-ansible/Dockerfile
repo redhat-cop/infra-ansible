@@ -1,5 +1,8 @@
 FROM registry.fedoraproject.org/fedora
 
+ENV HELM_VERSION=latest \
+    KUSTOMIZE_VERSION=v3.5.4
+
 USER root
 ENV WORK_DIR /infra-ansible
 ENV HOME /tmp
@@ -36,6 +39,12 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master
     chmod 700 get_helm.sh && \
     ./get_helm.sh; \
     rm -f ./get_helm.sh
+
+RUN curl -fsSL -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+    tar -xzf kustomize.tar.gz && \
+    chmod 700 kustomize && \
+    cp kustomize /usr/bin/; \
+    rm -f kustomize.tar.gz
 
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
