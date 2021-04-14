@@ -26,6 +26,7 @@ RUN dnf -y install \
       python3-shade \
       python3-boto3 \
       python3-openstacksdk \
+      findutils \ 
       unzip && \
     dnf clean all && \
     rm -rf /var/cache/yum
