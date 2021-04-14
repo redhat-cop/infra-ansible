@@ -1,5 +1,8 @@
 FROM registry.fedoraproject.org/fedora
 
+ENV HELM_VERSION=latest \
+    KUSTOMIZE_VERSION=v3.5.4
+
 USER root
 ENV WORK_DIR /infra-ansible
 ENV HOME /tmp
@@ -28,23 +31,20 @@ RUN dnf -y install \
       python3-shade \
       python3-boto3 \
       python3-openstacksdk \
-      findutils \ 
-      openssl \
       unzip && \
     dnf clean all && \
-    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
-    chmod 700 get_helm.sh && \
-    ./get_helm.sh && \
-    curl -fsSL -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.5.4/kustomize_v3.5.4_linux_amd64.tar.gz && \
-    tar -xvf kustomize.tar.gz && \ 
-    chmod 700 kustomize && \
-    cp kustomize /usr/bin/ && \
     rm -rf /var/cache/yum
 
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
     chmod 700 get_helm.sh && \
     ./get_helm.sh; \
     rm -f ./get_helm.sh
+
+RUN curl -fsSL -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+    tar -xzf kustomize.tar.gz && \
+    chmod 700 kustomize && \
+    cp kustomize /usr/bin/; \
+    rm -f kustomize.tar.gz
 
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
