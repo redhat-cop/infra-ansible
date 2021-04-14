@@ -27,8 +27,12 @@ RUN dnf -y install \
       python3-boto3 \
       python3-openstacksdk \
       findutils \ 
+      openssl \
       unzip && \
     dnf clean all && \
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
+    chmod 700 get_helm.sh && \
+    ./get_helm.sh && \
     rm -rf /var/cache/yum
 
 COPY . ${WORK_DIR}
