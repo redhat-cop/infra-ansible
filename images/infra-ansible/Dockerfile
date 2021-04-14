@@ -13,6 +13,7 @@ RUN dnf -y install \
       findutils \
       jq \
       ncurses \
+      openssl \
       python3-cinderclient \
       python3-glanceclient \
       python3-heatclient \
@@ -27,7 +28,6 @@ RUN dnf -y install \
       python3-shade \
       python3-boto3 \
       python3-openstacksdk \
-      openssl \
       unzip && \
     dnf clean all && \
     rm -rf /var/cache/yum
