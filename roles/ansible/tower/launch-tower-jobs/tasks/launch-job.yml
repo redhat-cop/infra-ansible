@@ -1,0 +1,97 @@
+---
+- name: 'Get the job template id based on the job template name'
+  set_fact:
+    job_template_id: '{{ item.id | int }}'
+  when:
+    - item.name|trim == launch_job.job_template|trim
+  with_items:
+    - '{{ existing_job_templates.rest_output }}'
+        # Utilize the `rest_get` library routine to ensure REST pagination is handled
+
+- name: If using an inventory with PROMPT ON LAUNCH, get inventory ID
+  block:
+    - name: 'Get the existing inventories'
+      rest_get:
+        host_url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}'
+        rest_user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+        rest_password: '{{ ansible_tower.admin_password }}'
+        api_uri: '/api/v2/inventories/'
+      register: existing_inventories
+
+    - name: 'Get the inventory id based on the inventory name'
+      set_fact:
+        inventory_id: '{{ item.id | int }}'
+      when:
+        - item.name|trim == launch_job.inventory|trim
+      with_items:
+        - '{{ existing_inventories.rest_output }}'
+  when: launch_job.inventory is defined
+
+- name: 'When defined, get the credential id based on the credential name'
+  block:
+    - name: 'Get the credential'
+      rest_get:
+        host_url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}'
+        rest_user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+        rest_password: '{{ ansible_tower.admin_password }}'
+        api_uri: '/api/v2/credentials/?name={{ project.scm_credential_name }}'
+      register: r_credential
+
+    - name: 'Set credential_id fact'
+      set_fact:
+        credential_id: '{{ r_credential.rest_output[0].id | int }}'
+      when:
+        - r_credential.rest_output | length > 0
+  when:
+    - launch_job.credential is defined
+
+- name: show templating results
+  debug:
+    msg: "{{ lookup('template', 'launch-job-template.j2') }}"
+
+- name: 'Launch the job'
+  uri:
+    url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/job_templates/{{ job_template_id }}/launch/'
+    user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+    password: '{{ ansible_tower.admin_password }}'
+    force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'launch-job-template.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: 'application/json'
+      Accept: 'application/json'
+    validate_certs: '{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}'
+    status_code: 201
+  register: launched_job
+
+- name: 'Wait for Tower Job'
+  uri:
+    url: '{{ launched_job.location }}'
+    user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+    password: '{{ ansible_tower.admin_password }}'
+    force_basic_auth: yes
+    method: GET
+    headers:
+      Content-Type: 'application/json'
+      Accept: 'application/json'
+    validate_certs: '{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}'
+    status_code: 200
+  register: waiting_job
+  until: waiting_job.json.status == "successful" or waiting_job.json.status == "failed"
+  delay: "{{ launch_job.delay | int | default(5) }}"
+  retries: "{{ launch_job.retries | int | default(6) }}"
+  when:
+    - launched_job.location is defined
+    - launched_job.status == 201
+    - launch_job.wait | default(false) == true
+  failed_when: waiting_job.json.status == "failed"
+  changed_when: waiting_job.json.status == "successful"
+
+- name: 'Job successfully launched without wait specified'
+  debug:
+    var: launched_job.location
+  when:
+    - launched_job.location is defined
+    - launched_job.status == 201
+    - launch_job.wait | default(false) == false

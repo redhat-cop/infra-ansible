@@ -13,9 +13,11 @@
 - name: "Set the workflow template endpoint"
   set_fact:
     workflow_template_endpoint: |-
-      {{'/api/v2/workflow_job_templates/{{ workflow_template_id }}/workflow_nodes/'
-      if (workflow_node.type == 'start') else
-      '/api/v2/workflow_job_template_nodes/{{ job_node_uids[workflow_node.parent_index] }}/{{ workflow_node.type }}/'}}
+      {% if workflow_node.type == 'start' -%}
+      /api/v2/workflow_job_templates/{{ workflow_template_id }}/workflow_nodes/
+      {% else %}
+      /api/v2/workflow_job_template_nodes/{{ job_node_uids[workflow_node.parent_index] }}/{{ workflow_node.type }}/
+      {%- endif %}
 
 - name: "Load up the workflow nodes template"
   uri:

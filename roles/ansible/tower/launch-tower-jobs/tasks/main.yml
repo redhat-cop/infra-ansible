@@ -1,0 +1,39 @@
+---
+- block: # when ansible_tower.projects is defined
+
+    # Utilize the `rest_get` library routine to ensure REST pagination is handled
+    - name: 'Get the existing job_templates'
+      rest_get:
+        host_url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}'
+        rest_user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+        rest_password: '{{ ansible_tower.admin_password }}'
+        api_uri: '/api/v2/job_templates/'
+      register: existing_job_templates
+
+    # Utilize the `rest_get` library routine to ensure REST pagination is handled
+    - name: 'Get the existing workflow_job_templates'
+      rest_get:
+        host_url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}'
+        rest_user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+        rest_password: '{{ ansible_tower.admin_password }}'
+        api_uri: '/api/v2/workflow_job_templates/'
+      register: existing_workflow_job_templates
+
+    # Utilize the `rest_get` library routine to ensure REST pagination is handled
+    - name: 'Get the existing credentials'
+      rest_get:
+        host_url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}'
+        rest_user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+        rest_password: '{{ ansible_tower.admin_password }}'
+        api_uri: '/api/v2/credentials/'
+      register: existing_credentials
+
+    - name: 'Launch Tower Jobs'
+      include_tasks: launch-job.yml
+      with_items:
+        - '{{ ansible_tower.launch_jobs }}'
+      loop_control:
+        loop_var: launch_job
+
+  when:
+    - ansible_tower.projects is defined

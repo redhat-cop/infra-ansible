@@ -37,3 +37,9 @@
   - role: ansible/tower/manage-schedules
   tags:
   - 'always'
+
+- hosts: tower-management-host
+  roles:
+  - role: ansible/tower/launch-tower-jobs
+  tags:
+  - 'launch-tower-jobs'
