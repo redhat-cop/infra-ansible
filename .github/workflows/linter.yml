@@ -8,9 +8,9 @@ jobs:
   yaml_lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2.3.4
     - name: yaml-lint
-      uses: ibiqlik/action-yamllint@v1.0.0
+      uses: ibiqlik/action-yamllint@v3.0.1
       with:
         # Path to custom configuration
         config_file: .github/workflow-config/yamllint.yml

@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - name: Build Changelog
         id: gh_changelog
         uses: mikepenz/release-changelog-builder-action@v1
@@ -23,7 +23,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - name: Update release with changelog
-        uses: tubone24/update_release@v1.1.0
+        uses: tubone24/update_release@v1.2.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
