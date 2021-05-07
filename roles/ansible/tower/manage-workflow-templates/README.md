@@ -31,7 +31,7 @@ The Workflow Template nodes structure is defined in the `workflow_templates.node
 |:---------|:------------|:---------|:---------|
 |unified_job_template.name|Name of the job_template to use for the node| yes| no ||
 |success_nodes|List of job nodes to be run after successful execution| no| no ||
-|no_nodes|List of job nodes to be run after failure execution| no| no ||
+|failure_nodes|List of job nodes to be run after failure execution| no| no ||
 
 An example of such an inventory is shown below.
 

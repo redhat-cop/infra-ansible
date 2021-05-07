@@ -1,0 +1,14 @@
+{
+  "extra_vars": "{{ launch_job.extra_vars | default('') }}",
+  {% if inventory_id is defined and inventory_id|trim != '' %}
+  "inventory": {{ inventory_id }},
+  {% endif -%}
+  "credentials": {{ launch_job.credentials | default([]) }},
+  "scm_branch": "{{ launch_job.scm_branch | default('') }}",
+  "diff_mode": {{ launch_job.diff_mode | default(false) | bool | lower }},
+  "limit": "{{ launch_job.inventory_limit_pattern | default('') }}",
+  "job_tags": "{{ launch_job.job_tags | default('') }}",
+  "skip_tags": "{{ launch_job.skip_tags | default('') }}",
+  "job_type": "{{ launch_job.job_type | default('run') }}",
+  "verbosity": {{ launch_job.verbosity | default(0) }},
+}
