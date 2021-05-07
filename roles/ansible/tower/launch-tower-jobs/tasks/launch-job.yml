@@ -1,13 +1,13 @@
 ---
-- name: 'Get the job template id based on the job template name'
+- name: 'Get the job template id and launch uri based on the job template name'
   set_fact:
-    job_template_id: '{{ item.id | int }}'
+    launch_uri: '{{ item.related.launch }}'
   when:
     - item.name|trim == launch_job.job_template|trim
   with_items:
-    - '{{ existing_job_templates.rest_output }}'
-        # Utilize the `rest_get` library routine to ensure REST pagination is handled
+    - '{{ existing_unified_job_templates.rest_output }}'
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: If using an inventory with PROMPT ON LAUNCH, get inventory ID
   block:
     - name: 'Get the existing inventories'
@@ -27,6 +27,7 @@
         - '{{ existing_inventories.rest_output }}'
   when: launch_job.inventory is defined
 
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
 - name: 'When defined, get the credential id based on the credential name'
   block:
     - name: 'Get the credential'
@@ -45,13 +46,9 @@
   when:
     - launch_job.credential is defined
 
-- name: show templating results
-  debug:
-    msg: "{{ lookup('template', 'launch-job-template.j2') }}"
-
 - name: 'Launch the job'
   uri:
-    url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/job_templates/{{ job_template_id }}/launch/'
+    url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}{{ launch_uri }}'
     user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
     password: '{{ ansible_tower.admin_password }}'
     force_basic_auth: yes
