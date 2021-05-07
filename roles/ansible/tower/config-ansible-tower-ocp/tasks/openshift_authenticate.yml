@@ -15,7 +15,9 @@
 
 - block:
     - name: Retrieve Access Token ...
-      shell: oc whoami -t
+      shell: |
+         oc whoami -t \
+         --insecure-skip-tls-verify="{{ openshift_skip_tls_verify | default(false) | bool }}"
       register: ocwhoami
       no_log: true
     - name: Storing Token ..
@@ -34,4 +36,3 @@
   when:
     - openshift_token is defined
     - openshift_token|trim != ''
-
