@@ -1,4 +1,4 @@
-Role Name
+htpasswd-users
 =========
 
 This role will add users with cluster admin privileges to OpenShift.

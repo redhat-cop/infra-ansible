@@ -1,4 +1,4 @@
-Role Name
+registry-nfs-storage
 =========
 
 This role will add nfs storage for the internal registry in OpenShift.

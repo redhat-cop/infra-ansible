@@ -1,4 +1,4 @@
-Role Name
+bonding
 =========
 
 This role will create machine config files to setup ethernet bonding on cluster nodes. This can easily be modified to directly apply these machine configs, however it is often preferred to add these machine configs at install time so writing to a file for injecting into install manifests was the goal here.

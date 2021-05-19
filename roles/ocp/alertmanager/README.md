@@ -1,4 +1,4 @@
-Role Name
+alertmanager
 =========
 
 This role will update the alertmanager secret in OpenShift to a working configuration.
