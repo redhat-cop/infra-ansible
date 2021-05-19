@@ -18,7 +18,7 @@ See `Example Playbook` below for more specific details on global vars. At a high
 - **Passed as extra var or environment variable**
   - `config`: The json config file that holds the bonding details
   - `destination`: Where to create the machine config files (-e destination=./out)
-  - `type`: [OPTIIONAL] The type of node to create machine configs for, default is all
+  - `type`: [OPTIONAL] The type of node to create machine configs for, default is all
 
 **NOTE:** Type corresponds to the parent keys in the config file passed. (master, worker, etc...)
 
