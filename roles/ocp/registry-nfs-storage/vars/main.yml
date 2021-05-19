@@ -1,0 +1,4 @@
+nfs_server: nfs.example.com
+nfs_path: /exports/ocp-registry
+pv_capacity: 100Gi
+pvc_storage_request: 100Gi 

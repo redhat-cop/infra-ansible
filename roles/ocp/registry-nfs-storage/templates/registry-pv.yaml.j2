@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: registry-pv
+  labels:
+    type: registry
+    volume-name: reg01
+spec:
+  capacity:
+    storage: {{ pv_capacity }}
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    path: {{ nfs_path }}
+    server: {{ nfs_server }}
+  persistentVolumeReclaimPolicy: Recycle

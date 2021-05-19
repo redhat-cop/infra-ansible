@@ -1,0 +1,7 @@
+---
+- name: Create CR OAuth for HTPasswd users
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    state: present
+    definition:
+      "{{ lookup('file', 'roles/users/files/cr-users-oauth-cluster.yaml') }}"

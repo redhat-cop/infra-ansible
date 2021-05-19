@@ -1,0 +1,33 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+{% macro mac_fix(bonds) %}
+  {% include "roles/bonding/templates/bonds.sh.j2" %}
+{% endmacro %}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    machineconfiguration.openshift.io/role: {{ type }}
+  name: 11-{{ type }}-bonding
+spec:
+  config:
+    ignition:
+      version: 2.2.0
+    storage:
+      files:
+      - contents:
+          source: data:;base64,{{ mac_fix(bonds) | b64encode }}
+        path: /usr/local/bin/add-mac.sh
+        filesystem: root
+        mode: 0755
+      - contents:
+          source: data:;base64,W21haW5dCiMgRG8gbm90IGRvIGF1dG9tYXRpYyAoREhDUC9TTEFBQykgY29uZmlndXJhdGlvbiBvbiBldGhlcm5ldCBkZXZpY2VzCiMgd2l0aCBubyBvdGhlciBtYXRjaGluZyBjb25uZWN0aW9ucy4Kbm8tYXV0by1kZWZhdWx0PSoKIyBJZ25vcmUgdGhlIGNhcnJpZXIgKGNhYmxlIHBsdWdnZWQgaW4pIHN0YXRlIHdoZW4gYXR0ZW1wdGluZyB0bwojIGFjdGl2YXRlIHN0YXRpYy1JUCBjb25uZWN0aW9ucy4KaWdub3JlLWNhcnJpZXI9Kgo=
+        path: /etc/NetworkManager/conf.d/98-disable.conf
+        filesystem: root
+        mode: 0755
+    systemd:
+      units:
+      - contents: "[Unit]\nDescription=Configure BOND\nAfter=ignition-firstboot-complete.service\nBefore=nodeip-configuration.service kubelet.service crio.service\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/add-mac.sh\n\n[Install]\nWantedBy=multi-user.target"
+        enabled: true
+        name: set-bond-mac.service

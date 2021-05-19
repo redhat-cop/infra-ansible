@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry-pvc
+  namespace: openshift-image-registry
+spec:
+  selector:
+    matchLabels:
+      type: registry
+      volume-name: reg01
+  accessModes:
+  - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: {{ pvc_storage_request }}

@@ -1,0 +1,7 @@
+---
+- name: Create the registry pv
+  include: "registry-pv.yml"
+- name: Create the registry pvc
+  include: "registry-pvc.yml"
+- name: Patch the registry
+  include: "registry-patch.yml"

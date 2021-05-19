@@ -1,0 +1,13 @@
+---
+- name: Create the alertmanager rules secret
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    state: present
+    definition:
+      apiVersion: v1
+      data:
+        alertmanager.yaml: "{{ lookup('template', 'roles/alertmanager/templates/alertmanager.yaml')|b64encode }}"
+      kind: Secret
+      metadata:
+        name: alertmanager-main
+        namespace: openshift-monitoring

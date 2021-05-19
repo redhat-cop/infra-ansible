@@ -1,0 +1,9 @@
+---
+- name: Create password files
+  include: "passwords.yml"
+- name: Create secret in cluster
+  include: "htpass-secret.yml"
+- name: Create Oauth CRD
+  include: "oauth-crd.yml"
+- name: Create cluster admin group
+  include: "tekadmins.yml"

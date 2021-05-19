@@ -1,0 +1,26 @@
+---
+# tasks file for create_machine_config
+- name: Read in json config
+  shell: roles/bonding/files/jsontovars.py --ansible --type "{{ type }}" "{{ config }}"
+  register: jsonbonds
+
+- name: Combine and flatten all '{{ type }}' lines in config
+  set_fact:
+    jsonbondsdict: "{{ jsonbondsdict | default({}) | combine ( { item.split(': ')[0]: item.split(': ', 1)[1] } ) }}"
+  with_items: "{{ jsonbonds.stdout_lines }}"
+  when: jsonbonds is defined
+
+- name: Create '{{ type }}' bonds variable
+  set_fact:
+      bonds: "{{ jsonbondsdict }}"
+
+- name: Print '{{ type }}' bonds variable
+  debug:
+    msg: "{{ bonds }}"
+
+- name: Create '{{ type }}' bonding config
+  template:
+    src: roles/bonding/templates/bonding.yaml.j2
+    dest: "{{ destination }}/11_{{ type|replace('-','_') }}_bonding.yaml"
+  environment: "{{ bonds }}"
+  when: type is defined

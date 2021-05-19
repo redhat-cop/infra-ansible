@@ -1,0 +1,3 @@
+---
+- name: Create alertmanager rules
+  include: "alert-man.yml"

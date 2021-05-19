@@ -1,0 +1,1 @@
+{"spec":{"managementState":"Managed","storage":{"pvc":{"claim":"registry-pvc"}}}}

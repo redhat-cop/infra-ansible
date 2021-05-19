@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Interfaces are defined using nmcli to provide better flexibility and be able to force the default bond mac address.
+
+if [ ! -f /var/lib/bonds-configured.stamp ]; then
+{% for number in range(bonds | select('match', '^BONDING_BOND_[0-9]+_INTERFACES') | list | count) %}
+{% set name = bonds['BONDING_BOND_' + number | string + '_NAME'] %}
+{% set mtu = bonds['BONDING_BOND_' + number | string + '_MTU'] %}
+{% set interfaces = bonds['BONDING_BOND_' + number | string + '_INTERFACES'].split(",") %}
+{% set bootproto = bonds['BONDING_BOND_' + number | string + '_BOOTPROTO'] %}
+{% set options = bonds['BONDING_BOND_' + number | string + '_OPTIONS'] %}
+{% set ipv6 = bonds['BONDING_BOND_' + number | string + '_IPV6_ENABLED'] if bonds['BONDING_BOND_' + number | string + '_IPV6_ENABLED'] is defined else "no" %}
+
+# {{ name }} creation
+cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-{{ name }}
+DEVICE={{ name }}
+TYPE=Bond
+NAME={{ name }}
+BONDING_MASTER=yes
+BOOTPROTO={{ bootproto }}
+ONBOOT=yes
+MTU={{ mtu }}
+DHCP_CLIENT_ID=$(ip link show dev {{ interfaces[0] }} | awk '/link/ {print $2}')
+BONDING_OPTS="{{ options }}"
+{% if ipv6 == "no" or ipv6 == "false" %}
+IPV6INIT=no
+DHCPV6C=no
+IPV6INIT=no
+IPV6_AUTOCONF=no
+IPV6_DEFROUTE=no
+IPV6_PEERDNS=no
+IPV6_PEERROUTES=no
+IPV6_FAILURE_FATAL=no
+{% endif %}
+{% if bootproto == "dhcp" %}
+IPV4_DHCP_TIMEOUT=2147483647
+{% endif %}
+EOF
+
+# {{ name }} members creation
+{% for nic in interfaces %}
+cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-{{ nic }}
+TYPE=Ethernet
+DEVICE={{ nic }}
+BOOTPROTO=none
+ONBOOT=yes
+MASTER={{ name }}
+SLAVE=yes
+EOF
+
+{% endfor %}
+{% endfor %}
+
+# Block Storage VLAN
+{% set block_storage_parent_iface = bonds['BLOCK_STORAGE_VLAN_PARENT_IFACE'] %}
+{% set block_storage_vlan_id = bonds['BLOCK_STORAGE_VLAN_ID'] %}
+{% set block_storage_mtu = bonds['BLOCK_STORAGE_MTU'] %}
+cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-{{ block_storage_parent_iface }}.{{ block_storage_vlan_id }}
+DEVICE={{ block_storage_parent_iface }}.{{ block_storage_vlan_id }}
+BOOTPROTO=dhcp
+DEFROUTE=no
+ONBOOT=yes
+MTU={{ block_storage_mtu }}
+VLAN=yes
+EOF
+
+touch /var/lib/bonds-configured.stamp
+fi

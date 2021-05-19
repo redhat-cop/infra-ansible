@@ -20,3 +20,4 @@ This includes tasks like the following (but not limited to) automated:
 - user management with [IdM](playbooks/provision-idm-server) and local users + IdM/IPA integrated hosts
 - RHEL [subscription](roles/rhsm) management
 - 3rd party tooling, such as [Atlassian](roles/identity-management) SaaS suite
+- [OpenShift Container Platform](roles/ocp) install and post install operations

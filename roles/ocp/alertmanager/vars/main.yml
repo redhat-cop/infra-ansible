@@ -1,0 +1,5 @@
+smtp_from: '{{smtp_from}}'
+smtp_smarthost: '{{smtp_host}}:{{smtp_port}}'
+smtp_hello: "{{cluster_name}}.{{base_domain}}"
+smtp_auth_username: '{{ smtp_user }}'
+smtp_auth_password: '{{ smtp_pass }}'
