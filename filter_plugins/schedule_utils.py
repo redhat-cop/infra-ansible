@@ -5,27 +5,22 @@ from dateutil.rrule import rrule, DAILY
 import pytz
 
 
-def parse_datetime(datestring):
+def parse_datetime(datestring, **kwargs):
 
     # Parses ISO date string and converts to datetime object.
     return parse(datestring)
 
 
-def set_time(dt, hour, minute):
+def replace_datetime(dt, **kwargs):
 
-    # Set the time to a specific hour, minute
-    return dt.replace(hour=hour, minute=minute)
-
-
-def set_timezone(dt, tz):
-
-    # Unset existing timezone
-    dt = dt.replace(tzinfo=None)
-    # Set the timezone
-    tz = pytz.timezone(tz)
-
-    # Normalize the timezone offset based on the datetime
-    return tz.normalize(tz.localize(dt))
+    new_dt = dt
+    if "tzinfo" in kwargs:
+        if kwargs["tzinfo"] not in pytz.all_timezones:
+            raise AnsibleError("Timezone is not valid: {0}".format(kwargs["tzinfo"]))
+        tzinfo = pytz.timezone(kwargs.pop("tzinfo"))
+        dt = dt.replace(tzinfo=None)
+        new_dt = tzinfo.normalize(tzinfo.localize(dt))
+    return new_dt.replace(**kwargs)
 
 
 def add_time(dt, **kwargs):
@@ -53,19 +48,22 @@ def to_rrule(dt, **kwargs):
         "count": 1,
         "timezone": "Zulu",
     }
+    # Add and override default options as needed
     options.update(kwargs)
-    # Pop timezone from options for later use
+
+    # Timezone needs to be processed separately from rrule
     timezone = options.pop("timezone")
     my_rrule = rrule(dtstart=dt, **options)
-    # Validate timezone name and add to RRULE using some string manipulation
     if timezone not in pytz.all_timezones:
-        raise AnsibleError("Timezone is not valid")
+        raise AnsibleError("Timezone is not valid: {0}".format(timezone))
+
+    # Add TZID now that we have a valid rrule
     return_rrulestr = (
         str(my_rrule)
         .replace("\n", " ")
         .replace("DTSTART:", "DTSTART;TZID={0}:".format(timezone))
     )
-    # Add interval again as required by Tower API if omitted by rrule module
+    # Note that interval is required by the Tower/AWX api but omitted by the rrule module if interval=1
     if "INTERVAL" not in return_rrulestr:
         return_rrulestr = "{0};INTERVAL=1".format(return_rrulestr)
     return return_rrulestr
@@ -82,8 +80,7 @@ class FilterModule(object):
     def filters(self):
         return {
             "parse_datetime": parse_datetime,
-            "set_time": set_time,
-            "set_timezone": set_timezone,
+            "replace_datetime": replace_datetime,
             "add_time": add_time,
             "subtract_time": subtract_time,
             "to_rrule": to_rrule,
