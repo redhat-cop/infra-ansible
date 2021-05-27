@@ -180,7 +180,7 @@ Getting "permission denied" when attempting to access external files mounted to 
 ```
 $ docker run \
  -u `id -u` \
- -v $HOME/.ssh/id_etl_openstack_rsa:/tmp/.ssh/id_rsa \
+ -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa \
  -v $HOME/Workspace:/tmp/src \
  -it quay.io/redhat-cop/infra-ansible \
  /bin/bash
@@ -189,7 +189,9 @@ bash-5.1$ cat $HOME/.ssh/id_rsa
 cat: /tmp/.ssh/id_rsa: Permission denied
  :
 ```
-This error generated because SELinux context was not properly configured  for attached volume.
+This error generated because SELinux context was not properly configured  for attached volume. 
+
+**NOTE** the resolution may vary based on your runtime environment, for example using a shared filesystem for your home directory may have a different resolution and outcome than those described here. 
 
 **Resolution #1**
 
@@ -203,7 +205,7 @@ As described at docker-run manual [page](https://docs.docker.com/storage/bind-mo
 ```
 $ docker run \
  -u `id -u` \
- -v $HOME/.ssh/id_etl_openstack_rsa:/tmp/.ssh/id_rsa:z\
+ -v $HOME/.ssh/id_rsa:/tmp/.ssh/id_rsa:z \
  -v $HOME/Workspace:/tmp/src:z \
  -it quay.io/redhat-cop/infra-ansible \
  /bin/bash
