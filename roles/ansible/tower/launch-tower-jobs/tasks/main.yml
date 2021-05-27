@@ -27,4 +27,4 @@
         loop_var: launch_job
 
   when:
-    - ansible_tower.projects is defined
+    - ansible_tower.launch_jobs is defined
