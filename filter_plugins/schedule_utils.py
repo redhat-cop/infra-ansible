@@ -13,6 +13,18 @@ def parse_datetime(datestring, **kwargs):
 
 def replace_datetime(dt, **kwargs):
 
+    """
+    Return a datetime with the same attributes, except for those attributes given new values by whichever keyword arguments are specified.
+    Docs: https://docs.python.org/3/library/datetime.html#datetime.datetime.replace
+    Example to convert a datestring to datetime object and set to America/New_York timezone at exactly midnight:
+    midnight_eastern: |-
+      {{ '2006-01-02T15:04:05.999-0700'
+      | parse_datetime
+      | replace_datetime(hour=0, minute=0, second=0, microsecond=0, tzinfo='America/New_York') }}
+    Output:
+      midnight_eastern: '2006-01-02 00:00:00-05:00'
+    """
+
     new_dt = dt
     if "tzinfo" in kwargs:
         if kwargs["tzinfo"] not in pytz.all_timezones:
