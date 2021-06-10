@@ -1,0 +1,18 @@
+---
+
+##################################################
+# Name: crc.yml
+# Description: Example playbook for CodeReady Containers
+##################################################
+
+- name: Provision CRC Servers
+  hosts: crc_servers
+  gather_facts: True
+  roles:
+    - role: config-crc-server
+
+- name: Provision CRC Clients
+  hosts: crc_clients
+  gather_facts: True
+  roles:
+    - role: config-crc-client

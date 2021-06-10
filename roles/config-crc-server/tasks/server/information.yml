@@ -1,0 +1,56 @@
+---
+
+- name: Get CRC server URL
+  command:
+    argv:
+      - crc
+      - console
+      - --url
+      - --log-level
+      - "{{ crc_log_level }}"
+  register: crc_server_console_url
+  ignore_errors: "{{ ansible_check_mode }}"
+  changed_when: False
+
+- name: Get CRC server credentials
+  command:
+    argv:
+      - crc
+      - console
+      - --credentials
+      - --log-level
+      - "{{ crc_log_level }}"
+  register: crc_server_console_creds
+  ignore_errors: "{{ ansible_check_mode }}"
+  changed_when: False
+
+- name: Show CRC server VM details
+  command:
+    argv:
+      - virsh
+      - -c
+      - qemu:///system
+      - list
+      - --all
+  register: crc_server_virsh
+  become: True
+  ignore_errors: "{{ ansible_check_mode }}"
+  changed_when: False
+
+- name: Display CRC information
+  debug:
+    msg:
+      - "#############################################"
+      - "########### CodeReady Containers ############"
+      - "#############################################"
+      - " "
+      - "Virtual Machine:"
+      - ""
+      - "{{ crc_server_virsh.stdout_lines | default('Error obtaining VM details')}}"
+      - ""
+      - "Console URL: {{ crc_server_console_url.stdout | default('Error obtaining URL') }}"
+      - ""
+      - "Credentials:"
+      - ""
+      - "{{ crc_server_console_credentials.stdout_lines | default('Error obtaining credentials') }}"
+      - ""

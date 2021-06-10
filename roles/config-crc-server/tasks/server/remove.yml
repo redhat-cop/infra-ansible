@@ -1,0 +1,56 @@
+---
+
+- name: Check CRC server installed
+  shell:
+    cmd: "crc version | awk '//{print $3}'"
+  changed_when: False
+  failed_when: False
+  ignore_errors: True
+  register: crc_server_installed
+  check_mode: False
+
+- name: Set CRC version fact
+  set_fact:
+    crc_installed_version: "{{ crc_server_version.stdout | default('None') }}"
+
+- name: Stop CRC version {{ crc_server_installed_version }}
+  command:
+    argv:
+      - crc
+      - stop
+      - --force
+      - --log-level
+      - "{{ crc_log_level }}"
+  ignore_errors: True
+  when:
+    - crc_server_installed_version != 'None'
+
+- name: Remove CRC version {{ crc_server_installed_version }}
+  command:
+    argv:
+      - crc
+      - delete
+      - --force
+      - --log-level
+      - "{{ crc_log_level }}"
+  ignore_errors: False
+  when:
+    - crc_installed_version != 'None'
+
+- name: Remove CRC binary
+  file:
+    path: "/usr/local/bin/crc"
+    state: absent
+  become: True
+
+- name: Remove CRC server working directory
+  file:
+    path: "{{ crc_workdir }}/server"
+    state: absent
+  become: True
+
+- name: Remove CRC server config directory for {{ crc_server_user }}
+  file:
+    path: "/home/{{ crc_server_user }}/.crc"
+    state: absent
+  become: True

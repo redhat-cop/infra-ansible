@@ -1,0 +1,130 @@
+---
+
+- name: Create CRC client working directory
+  file:
+    path: "{{ crc_workdir }}/client"
+    state: directory
+    mode: '0755'
+  check_mode: False
+
+- name: Download CRC client checksum
+  get_url:
+    url: "{{ crc_client_release_url }}/{{ crc_client_release }}/sha256sum.txt"
+    dest: "{{ crc_workdir }}/client/openshift-client-linux-{{ crc_client_release_version }}.sha256sum"
+    force: True
+  register: crc_client_checksum_download
+  until: crc_client_checksum_download is succeeded
+  retries: 5
+  delay: 60
+  changed_when: False
+  check_mode: False
+
+- name: Register CRC Checksum for client
+  shell:
+    cmd: grep {{ crc_client_release_name }} {{ crc_client_checksum_file }} | awk '//{print $1}'
+  vars:
+    crc_client_checksum_file: "{{ crc_workdir }}/client/openshift-client-linux-{{ crc_client_release_version }}.sha256sum"
+  register: crc_client_checksum_release
+  changed_when: False
+  check_mode: False
+  when:
+    - crc_client_checksum_download is success
+
+- name: Debug Message
+  debug:
+    msg:
+      - "Release: {{ crc_client_release }}"
+      - "Checksum: {{ crc_client_checksum_release.stdout }}"
+      - "URL: {{ crc_client_release_url }}/{{ crc_client_release_version }}/{{ crc_client_release_name }}"
+  when:
+    - crc_enable_debug | bool
+
+- name: Download CRC client release
+  get_url:
+    url: "{{ crc_client_release_url }}/{{ crc_client_release_version }}/{{ crc_client_release_name }}"
+    dest: "{{ crc_workdir }}/client/{{ crc_client_release_name }}"
+    force: no
+    checksum: sha256:{{ crc_client_checksum_release.stdout }}
+  register: crc_client_release_download
+  until: crc_client_release_download is succeeded
+  retries: 5
+  delay: 60
+
+- name: Create CRC client extract directory
+  file:
+    path: "{{ crc_workdir }}/client/extracted"
+    state: directory
+    mode: '0755'
+  check_mode: False
+
+- name: Extract CRC client archive
+  unarchive:
+    src: "{{ crc_workdir }}/client/{{ crc_client_release_name }}"
+    dest: "{{ crc_workdir }}/client/extracted"
+    keep_newer: False
+    list_files: True
+    remote_src: True
+  become: True
+  when:
+    - crc_client_release_download is changed
+
+- name: Copy CRC client oc binary
+  copy:
+    src: "{{ crc_workdir }}/client/extracted/oc"
+    dest: "/usr/local/bin/oc"
+    validate: "%s version"
+    remote_src: True
+    mode: '0755'
+    force: yes
+  register: crc_client_release_version_installed_oc
+  when:
+    - not ansible_check_mode
+    - crc_client_release_download is changed
+
+- name: Copy CRC client kubectl binary
+  copy:
+    src: "{{ crc_workdir }}/client/extracted/kubectl"
+    dest: "/usr/local/bin/kubectl"
+    validate: "%s version"
+    remote_src: True
+    mode: '0755'
+    force: yes
+  register: crc_client_release_version_installed_kubectl
+  when:
+    - not ansible_check_mode
+    - crc_client_release_download is changed
+
+- name: Debug Message
+  debug:
+    msg:
+      - "OpenShift CLI version: {{ crc_client_release_version_installed_oc }}"
+      - "Kubectl CLI version: {{ crc_client_release_version_installed_kubectl }}"
+  when:
+    - crc_enable_debug | bool
+    - not ansible_check_mode
+
+- name: Check CRC client in PATH for oc
+  shell:
+    cmd: which oc
+  register: crc_client_result_oc
+  ignore_errors: True
+  changed_when: False
+  check_mode: False
+
+- name: Check CRC client in PATH for kubectl
+  shell:
+    cmd: which kubectl
+  register: crc_client_result_kubectl
+  ignore_errors: True
+  changed_when: False
+  check_mode: False
+
+- name: Verify CRC client in PATH
+  fail:
+    msg:
+      - "CRC clients are not available in the path!"
+  ignore_errors: "{{ ansible_check_mode }}"
+  failed_when: >
+    crc_client_result_oc.rc != 0
+    or
+    crc_client_result_kubectl.rc != 0

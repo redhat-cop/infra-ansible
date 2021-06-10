@@ -1,0 +1,19 @@
+---
+
+#########################
+# Vars
+#########################
+
+# A map of CPU architecture variables
+arch_map:
+  i386: '386'
+  x86_64: 'amd64'
+  aarch64: 'arm64'
+  armv7l: 'arm'
+  armv6l: 'arm6vl'
+
+# Pick the correct architecture for the node running the playbook
+arch: "{{ arch_map[ansible_architecture] | default(ansible_architecture) }}"
+
+# Detected OS
+os: "{{ ansible_distribution }}_{{ ansible_distribution_major_version }}"

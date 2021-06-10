@@ -1,0 +1,15 @@
+---
+
+- name: Remove CRC client
+  include_tasks: tasks/client/remove.yml
+  when:
+    - crc_client_remove | bool
+  tags:
+    - remove
+
+- name: Install CRC client
+  include_tasks: tasks/client/install.yml
+  when:
+    - crc_client_install | bool
+  tags:
+    - install

@@ -1,0 +1,22 @@
+---
+
+- name: Remove CRC server
+  include_tasks: tasks/server/remove.yml
+  when:
+    - crc_server_remove | bool
+  tags:
+    - remove
+
+- name: Install CRC server
+  include_tasks: tasks/server/install.yml
+  when:
+    - crc_server_install | bool
+  tags:
+    - install
+
+- name: Display CRC information
+  include_tasks: tasks/server/information.yml
+  when:
+    - crc_server_install | bool
+  tags:
+    - information

@@ -1,0 +1,24 @@
+---
+
+#########################
+# Role defaults
+#########################
+
+# Common settings used across functions
+
+crc_enable_debug: False                                           # If enabled, captures additional debug information (tag=debug)
+crc_log_level: "info"                                             # The log level for crc binary operations, written to crc.log
+crc_workdir: "/tmp/crc"                                           # WARNING: There is a 10GB minimum requirement to house extracted archives
+
+# Client specific defaults (applied when crc_client enabled globally)
+
+crc_client_install: True                                          # If enabled, performs installation of the CRC client (OpenShift CLI)
+crc_client_remove: False                                          # If enabled, removes existing installation of CRC client (OpenShift CLI)
+
+# User configurable release details
+
+crc_client_release: "4.7.13"
+crc_client_release_version: "4.7.13"
+crc_client_release_sha: "1cb937460d33f655e2a09bf79982db0d22725a5990515fac69d431b77c73058c"
+crc_client_release_url: "https://mirror.openshift.com/pub/openshift-v4/clients/ocp"
+crc_client_release_name: "openshift-client-linux-{{ crc_client_release_version }}.tar.gz"

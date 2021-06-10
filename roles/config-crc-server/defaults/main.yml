@@ -1,0 +1,74 @@
+---
+
+#########################
+# Role defaults
+#########################
+
+# Common settings used across functions
+
+crc_enable_debug: False                                                         # If enabled, captures additional debug information (tag=debug)
+crc_workdir: "/tmp/crc"                                                         # WARNING: There is a 10GB minimum requirement to house extracted archives
+
+# Server specific defaults (applied when crc_server enabled globally)
+
+crc_server_install: True                                                        # If enabled, installs CRC (enable this + remove for total reinstall)
+crc_server_remove: False                                                        # If enabled, removes CRC (enable this + install for total reinstall)
+crc_server_remote: True                                                         # If enabled, enables remote access through HAProxy and DNSmasq (tags=remote)
+crc_server_log_level: "info"                                                           # The log level for crc binary operations, written to crc.log
+crc_server_user: "{{ ansible_user }}"                                           # The user who initiates the setup of CRC
+
+# Pull secret obtained from: https://cloud.redhat.com/openshift/create/local
+#crc_server_pull_secret_content: |
+#  USER
+#  PROVIDED
+#  PULL
+#  SECRET
+#  GOES
+#  HERE
+
+crc_server_pull_secret_path: "/home/{{ crc_server_user }}/.crc/pull-secret.json"  # Path where user provided pull secret is stored
+
+# User configurable release details
+
+crc_server_release_version: "1.27.0"
+crc_server_release_sha: "0a727f3789d5490ce5badd3a7d81738f99f7675b9fdbb5e7ef569d7e7b8e1bb8"
+crc_server_release_url: "https://mirror.openshift.com/pub/openshift-v4/clients/crc"
+crc_server_release_name: crc-linux-{{ arch }}.tar.xz
+
+# Post install variables
+
+crc_server_ip_address: ""
+
+# Default config options
+
+crc_server_config_consent_telemetry: "yes"
+crc_server_config_cpus: "4"
+crc_server_config_disable_update_check: "false"
+crc_server_config_disk_size: "32"
+crc_server_config_enable_cluster_monitoring: "false"
+crc_server_config_enable_experimental_features: "false"
+crc_server_config_memory: "14000"
+crc_server_config_pull_secret_file: "{{ crc_server_pull_secret_path }}"
+crc_server_config_skip_check_admin_helper_cached: "false"
+crc_server_config_skip_check_bundle_extracted: "false"
+crc_server_config_skip_check_crc_network: "false"
+crc_server_config_skip_check_crc_network_active: "false"
+crc_server_config_skip_check_dnsmasq_network_manager_config: "false"
+crc_server_config_skip_check_kvm_enabled: "false"
+crc_server_config_skip_check_libvirt_driver: "false"
+crc_server_config_skip_check_libvirt_group_active: "false"
+crc_server_config_skip_check_libvirt_installed: "false"
+crc_server_config_skip_check_libvirt_running: "false"
+crc_server_config_skip_check_libvirt_version: "false"
+crc_server_config_skip_check_network_manager_dispatcher_file: "false"
+crc_server_config_skip_check_network_manager_installed: "false"
+crc_server_config_skip_check_network_manager_running: "false"
+crc_server_config_skip_check_ram: "false"
+crc_server_config_skip_check_root_user: "false"
+crc_server_config_skip_check_supported_cpu_arch: "false"
+crc_server_config_skip_check_systemd_networkd_running: "false"
+crc_server_config_skip_check_systemd_resolved_running: "false"
+crc_server_config_skip_check_user_in_libvirt_group: "false"
+crc_server_config_skip_check_virt_enabled: "false"
+crc_server_config_skip_check_vsock: "false"
+crc_server_config_skip_check_wsl2: "false"

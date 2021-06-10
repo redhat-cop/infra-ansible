@@ -1,0 +1,19 @@
+---
+
+- name: Remove CRC client binary oc
+  file:
+    path: "/usr/local/bin/oc"
+    state: absent
+  become: True
+
+- name: Remove CRC client binary kubectl
+  file:
+    path: "/usr/local/bin/kubectl"
+    state: absent
+  become: True
+
+- name: Remove CRC client working directory
+  file:
+    path: "{{ crc_workdir }}/client"
+    state: absent
+  become: True

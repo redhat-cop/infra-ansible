@@ -1,0 +1,166 @@
+---
+
+- name: Verify pull secret is available
+  fail:
+    msg: "ERROR: Please provide your pull secret via the crc_server_pull_secret_content variable"
+  when:
+    - crc_server_pull_secret_content is not defined
+
+- name: Create CRC server working directory
+  file:
+    path: "{{ crc_workdir }}/server"
+    state: directory
+    mode: '0755'
+  check_mode: False
+
+- name: Download CRC server checksum
+  get_url:
+    url: "{{ crc_server_release_url }}/{{ crc_server_release_version }}/sha256sum.txt"
+    dest: "{{ crc_workdir }}/server/crc-linux-{{ arch }}.sha256sum"
+    force: True
+  register: crc_server_checksum_download
+  until: crc_server_checksum_download is succeeded
+  retries: 5
+  delay: 60
+  changed_when: False
+  check_mode: False
+
+- name: Register CRC Checksum for server
+  shell:
+    cmd: grep {{ crc_server_release_name }} {{ crc_server_checksum_file }} | awk '//{print $1}'
+  vars:
+    crc_server_checksum_file: "{{ crc_workdir }}/server/crc-linux-{{ arch }}.sha256sum"
+  register: crc_server_checksum_release
+  changed_when: False
+  check_mode: False
+  when:
+    - crc_server_checksum_download is success
+
+- name: Debug Message
+  debug:
+    msg:
+      - "Release: {{ crc_server_release_version }}"
+      - "Checksum: {{ crc_server_checksum_release.stdout }}"
+      - "URL: {{ crc_server_release_url }}/{{ crc_server_release_version }}/{{ crc_server_release_name }}"
+  when:
+    - crc_enable_debug | bool
+
+- name: Download CRC server release
+  get_url:
+    url: "{{ crc_server_release_url }}/{{ crc_server_release_version }}/{{ crc_server_release_name }}"
+    dest: "{{ crc_workdir }}/server/{{ crc_server_release_name }}"
+    force: False
+    checksum: sha256:{{ crc_server_checksum_release.stdout }}
+  register: crc_server_release_download
+  until: crc_server_release_download is succeeded
+  retries: 5
+  delay: 60
+
+- name: Create CRC server extract directory
+  file:
+    path: "{{ crc_workdir }}/server/extracted"
+    state: directory
+    mode: '0755'
+  check_mode: False
+
+- name: Extract CRC server archive
+  unarchive:
+    src: "{{ crc_workdir }}/server/{{ crc_server_release_name }}"
+    dest: "{{ crc_workdir }}/server/extracted"
+    keep_newer: False
+    list_files: True
+    remote_src: True
+    extra_opts:
+      - "--strip-components=1"
+  register: crc_server_release_extracted
+  when:
+    - crc_server_release_download is changed
+
+- name: Copy CRC server binary
+  copy:
+    src: "{{ crc_workdir }}/server/extracted/crc"
+    dest: "/usr/local/bin/crc"
+    validate: "%s version"
+    remote_src: True
+    mode: '0755'
+    force: True
+  register: crc_server_release_version_installed
+  when:
+    - not ansible_check_mode
+    - crc_server_release_extracted is changed
+
+- name: Debug Message
+  debug:
+    msg:
+      - "CRC Server CLI version: {{ crc_server_release_version_installed }}"
+  when:
+    - crc_enable_debug | bool
+    - not ansible_check_mode
+
+- name: Check CRC in PATH for server
+  shell:
+    cmd: which crc
+  register: crc_server_result
+  ignore_errors: True
+  changed_when: False
+  check_mode: False
+
+- name: Verify CRC server in PATH
+  fail:
+    msg:
+      - "CRC server is not available in the path!"
+  ignore_errors: "{{ ansible_check_mode }}"
+  failed_when: crc_server_result.rc != 0
+
+- name: Create CRC server config directory for {{ crc_server_user }}
+  file:
+    path: "/home/{{ crc_server_user }}/.crc"
+    state: directory
+    mode: '0755'
+    owner: "{{ crc_server_user }}"
+    group: "{{ crc_server_user }}"
+  become: True
+
+- name: Copy CRC server pull secret for {{ crc_server_user }}
+  template:
+    src: pull-secret.json.j2
+    dest: "{{ crc_server_pull_secret_path }}"
+    owner: "{{ crc_server_user }}"
+    group: "{{ crc_server_user }}"
+    force: True
+  become: True
+
+- name: Copy CRC server config for {{ crc_server_user }}
+  template:
+    src: crc.json.j2
+    dest: "/home/{{ crc_server_user }}/.crc/crc.json"
+    owner: "{{ crc_server_user }}"
+    group: "{{ crc_server_user }}"
+    force: True
+  become: True
+
+- name: Setup CRC server deployment for {{ crc_server_user }}
+  command:
+    argv:
+      - crc
+      - setup
+      - --log-level
+      - "{{ crc_server_log_level }}"
+  become: False
+  become_user: "{{ crc_server_user }}"
+  changed_when: False
+  when:
+    - not ansible_check_mode
+
+- name: Start CRC server cluster for {{ crc_server_user }}
+  command:
+    argv:
+      - crc
+      - start
+      - --log-level
+      - "{{ crc_server_log_level }}"
+  become: False
+  become_user: "{{ crc_server_user }}"
+  changed_when: False
+  when:
+    - not ansible_check_mode
