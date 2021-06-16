@@ -30,6 +30,6 @@
     "survey_enabled": false,
     "become_enabled": {{ job_template.enable_privilege_escalation | default(false) }},
     "diff_mode": false,
-    "allow_simultaneous": true,
+    "allow_simultaneous": {{ job_template.allow_simultaneous | default(true) }}, 
     "webhook_service": "{{ job_template.webhook_service | default('') }}"
 }
