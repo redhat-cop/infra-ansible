@@ -91,5 +91,5 @@
 - name: "Clear/Update facts"
   set_fact:
     credential_id: null
-    org_id: ""
+    org_id: ''
     processed_projects: "{{ processed_projects + [ { 'name': project.name } ] }}"
