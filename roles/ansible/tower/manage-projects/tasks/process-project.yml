@@ -40,7 +40,7 @@
     force_basic_auth: yes
     method: POST
     body: "{{ lookup('template', 'project.j2') }}"
-    body_format: "json"
+    body_format: 'json'
     headers:
       Content-Type: "application/json"
       Accept: "application/json"
