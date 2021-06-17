@@ -24,6 +24,10 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.projects.scm_credential_name|SCM credential name to use|no|null|
 |ansible_tower.projects.scm_update_on_launch|Update the project revision prior to job launch|no|false|
 |ansible_tower.projects.organization|Name of the organziation to associate this project with|yes||
+|ansible_tower.projects.scm_update_project|Update project with latest data from source control|no|false|
+|ansible_tower.projects.scm_update_wait|Wait for update to complete when updating source project|no|false|
+|ansible_tower.projects.scm_project_update_delay|Delay between retries when updating project froms source control|no|5|
+|ansible_tower.projects.scm_project_update_retries|Retries when updating project from source control|no|6|
 
 **_Note:_** Job Template configuration will **only** happen if the `ansible_tower.projects` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
