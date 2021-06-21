@@ -1,29 +1,36 @@
 ---
+- name: "Get the project update url based on the project name"
+  set_fact:
+    project_update_uri: "{{ item['related']['update'] }}"
+  when:
+    - item.name|trim == project.name|trim
+  with_items:
+    - "{{ existing_projects_output.rest_output }}"
 
 - name: "Get the org id based on the org name"
   set_fact:
     org_id: "{{ item.id }}"
   when:
-  - item.name|trim == project.organization|trim
+    - item.name|trim == project.organization|trim
   with_items:
-  - "{{ existing_organizations_output.rest_output }}"
+    - "{{ existing_organizations_output.rest_output }}"
 
 - name: "Get the credential id based on the credential name"
   block:
-  - name: "Get the credential"
-    rest_get:
-      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
-      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-      rest_password: "{{ ansible_tower.admin_password }}"
-      api_uri: "/api/v2/credentials/?name={{ project.scm_credential_name }}"
-    register: r_credential
-  - name: "Set credential_id fact"
-    set_fact:
-      credential_id: "{{ r_credential.rest_output[0].id | int }}"
-    when:
-    - r_credential.rest_output | length > 0
+    - name: "Get the credential"
+      rest_get:
+        host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+        rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+        rest_password: "{{ ansible_tower.admin_password }}"
+        api_uri: "/api/v2/credentials/?name={{ project.scm_credential_name }}"
+      register: r_credential
+    - name: "Set credential_id fact"
+      set_fact:
+        credential_id: "{{ r_credential.rest_output[0].id | int }}"
+      when:
+        - r_credential.rest_output | length > 0
   when:
-  - project.scm_credential_name is defined
+    - project.scm_credential_name is defined
 
 - name: "Load up the project"
   uri:
@@ -40,6 +47,47 @@
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201,400
   register: project_output
+
+- name: "Update existing project from source"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}{{ project_update_uri }}"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+    status_code: 202
+  register: project_update_response
+  when:
+    - project_output.status == 400
+    - project_update_uri is defined
+    - project.scm_project_update | default(false) is true
+
+- name: "Wait for Project Update"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}{{ project_update_response.json.url }}"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: GET
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+    status_code: 200
+  register: waiting_project_update
+  until: waiting_project_update.json.status == "successful" or waiting_project_update.json.status == "failed"
+  delay: "{{ project.scm_project_update_delay | default(5) }}"
+  retries: "{{ project.scm_project_update_retries | default(12) }}"
+  when:
+    - project_update_response.url is defined
+    - project_update_response.status == 202
+    - project.scm_project_update_wait | default(false) == true
+  failed_when: waiting_project_update.json.status == "failed"
+  changed_when: waiting_project_update.json.status == "successful"
 
 - name: "Clear/Update facts"
   set_fact:
