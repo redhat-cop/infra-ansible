@@ -81,7 +81,7 @@
   register: waiting_project_update
   until: waiting_project_update.json.status == "successful" or waiting_project_update.json.status == "failed"
   delay: "{{ project.scm_project_update_delay | default(5) }}"
-  retries: "{{ project.scm_project_update_retries | default(6) }}"
+  retries: "{{ project.scm_project_update_retries | default(12) }}"
   when:
     - project_update_response.url is defined
     - project_update_response.status == 202

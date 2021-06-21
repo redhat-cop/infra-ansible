@@ -27,7 +27,7 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.projects.scm_project_update|Update existing project with latest data from source control.Best used for "inventory" projects|no|false|
 |ansible_tower.projects.scm_project_update_wait|Wait for update to complete when updating existing source project|no|false|
 |ansible_tower.projects.scm_project_update_delay|Delay between retries when updating existing project froms source control|no|5|
-|ansible_tower.projects.scm_project_update_retries|Retries when updating existing project from source control|no|6|
+|ansible_tower.projects.scm_project_update_retries|Retries when updating existing project from source control|no|12|
 
 **_Note:_** Job Template configuration will **only** happen if the `ansible_tower.projects` portion of the dictionary is defined. Likewise, the installation expects this section to be "complete" if specified as it otherwise may error out.
 
@@ -47,7 +47,7 @@ ansible_tower:
     organization: "Default"
     scm_type: "git"
     scm_url: "https://github.com/redhat-cop/infra-ansible.git"
-    scm_branch: "master"
+    scm_branch: "main"
     scm_credential_name: "my-credential"
     scm_update_on_launch: true
 ```
@@ -64,8 +64,8 @@ ansible_tower:
     description: "Projects which only contain inventories can be created (or updated if existing) using this type of inventory"
     organization: "Default"
     scm_type: "git"
-    scm_url: "https://github.com/redhat-cop/infra-ansible.git"
-    scm_branch: "master"
+    scm_url: "https://github.com/project/example_repository.git"
+    scm_branch: "main"
     scm_credential_name: "my-credential"
     scm_project_update: true
 ```
