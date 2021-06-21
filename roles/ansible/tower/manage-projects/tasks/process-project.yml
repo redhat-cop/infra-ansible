@@ -1,7 +1,7 @@
 ---
 - name: "Get the project update url based on the project name"
   set_fact:
-    project_update_uri: "{{ item.related.update }}"
+    project_update_uri: "{{ item['related']['update'] }}"
   when:
     - item.name|trim == project.name|trim
   with_items:
@@ -62,12 +62,17 @@
     status_code: 202
   register: project_update_response
   when:
+    - project_output.status == 400
     - project_update_uri is defined
-    - project.scm_update_project | default(false) is true
+    - project.scm_project_update | default(false) is true
+
+- name:
+  debug:
+    var: project_update_response
 
 - name: "Wait for Project Update"
   uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}{{ project_update_response.url }}"
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}{{ project_update_response.json.url }}"
     user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
     password: "{{ ansible_tower.admin_password }}"
     force_basic_auth: yes
@@ -79,12 +84,12 @@
     status_code: 200
   register: waiting_project_update
   until: waiting_project_update.json.status == "successful" or waiting_project_update.json.status == "failed"
-  delay: "{{ project.scm_project_update_delay | int | default(5) }}"
-  retries: "{{ project.scm_project_update_retries | int | default(6) }}"
+  delay: "{{ project.scm_project_update_delay | default(5) }}"
+  retries: "{{ project.scm_project_update_retries | default(6) }}"
   when:
     - project_update_response.url is defined
     - project_update_response.status == 202
-    - project.wait | default(false) == true
+    - project.scm_project_update_wait | default(true) == true
   failed_when: waiting_project_update.json.status == "failed"
   changed_when: waiting_project_update.json.status == "successful"
 
