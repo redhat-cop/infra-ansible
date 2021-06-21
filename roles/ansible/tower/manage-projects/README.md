@@ -25,7 +25,7 @@ The variables used must be defined in the Ansible Inventory using the `ansible_t
 |ansible_tower.projects.scm_credential_name|SCM credential name to use|no|null|
 |ansible_tower.projects.scm_update_on_launch|Update the project revision prior to job launch. Best used for "playbook" projects|no|false|
 |ansible_tower.projects.scm_project_update|Update existing project with latest data from source control.Best used for "inventory" projects|no|false|
-|ansible_tower.projects.scm_project_update_wait|Wait for update to complete when updating existing source project|no|true|
+|ansible_tower.projects.scm_project_update_wait|Wait for update to complete when updating existing source project|no|false|
 |ansible_tower.projects.scm_project_update_delay|Delay between retries when updating existing project froms source control|no|5|
 |ansible_tower.projects.scm_project_update_retries|Retries when updating existing project from source control|no|6|
 

@@ -66,10 +66,6 @@
     - project_update_uri is defined
     - project.scm_project_update | default(false) is true
 
-- name:
-  debug:
-    var: project_update_response
-
 - name: "Wait for Project Update"
   uri:
     url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}{{ project_update_response.json.url }}"
@@ -89,7 +85,7 @@
   when:
     - project_update_response.url is defined
     - project_update_response.status == 202
-    - project.scm_project_update_wait | default(true) == true
+    - project.scm_project_update_wait | default(false) == true
   failed_when: waiting_project_update.json.status == "failed"
   changed_when: waiting_project_update.json.status == "successful"
 
