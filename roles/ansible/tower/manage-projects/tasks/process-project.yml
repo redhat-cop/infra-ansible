@@ -64,7 +64,7 @@
   when:
     - project_output.status == 400
     - project_update_uri is defined
-    - project.scm_project_update | default(false) is true
+    - project.scm_project_update | default(false) == true
 
 - name: "Wait for Project Update"
   uri:
