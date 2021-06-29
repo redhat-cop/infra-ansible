@@ -3,7 +3,6 @@
     - name: "Set default values"
       set_fact:
         existing_schedules_output: []
-        processed_schedules: []
 
     # Utilize the `rest_get` library routine to ensure REST pagination is handled
     - name: "Get the existing schedules"
