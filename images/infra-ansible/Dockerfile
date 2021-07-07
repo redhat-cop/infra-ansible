@@ -1,7 +1,8 @@
 FROM registry.fedoraproject.org/fedora
 
 ENV HELM_VERSION=latest \
-    KUSTOMIZE_VERSION=v3.5.4
+    KUSTOMIZE_VERSION=v3.5.4 \
+    AWS_CLI_VERSION=2.2.5
 
 USER root
 ENV WORK_DIR /infra-ansible
@@ -41,11 +42,16 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master
     ./get_helm.sh; \
     rm -f ./get_helm.sh
 
-RUN curl -fsSL -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
-    tar -xzf kustomize.tar.gz && \
+RUN curl -fsSL -v -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+    tar -xvzf kustomize.tar.gz && \
     chmod 755 kustomize && \
     cp kustomize /usr/bin/; \
     rm -f kustomize.tar.gz
+
+RUN curl -fsSL -o awscliv2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip && \
+    unzip awscliv2.zip && \
+    ./aws/install; \
+    rm -rf ./awscliv2.zip ./aws
 
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
