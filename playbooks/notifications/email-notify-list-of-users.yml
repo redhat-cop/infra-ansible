@@ -18,5 +18,9 @@
         list_of_mail_to: "{{ list_of_mail_to | default([]) }} + [ '{{ item.email }}' ]"
       with_items:
         - "{{ list_of_users }}"
+    - set_fact:
+        list_of_mail_cc: "{{ list_of_mail_cc | default([]) }} + [ '{{ item.email }}' ]"
+      with_items:
+        - "{{ list_of_users_cc | default ([]) }}"
     - include_role:
         name: notifications/send-email
