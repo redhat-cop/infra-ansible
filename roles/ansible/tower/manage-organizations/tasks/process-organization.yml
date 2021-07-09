@@ -47,8 +47,8 @@
     loop_var: galaxy_credential
   when:
     - organization.galaxy_credentials | length > 0
+    - organization_id is defined
 
 - name: 'Clear/Update facts'
   set_fact:
     existing_galaxy_credentials: null
-
