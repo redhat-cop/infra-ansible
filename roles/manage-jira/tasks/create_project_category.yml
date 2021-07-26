@@ -1,0 +1,21 @@
+---
+- name: Create Jira Project Category
+  uri:
+    url: "{{ jira_url }}/rest/api/2/projectCategory"
+    method: POST
+    user: "{{ jira_username }}"
+    password: "{{ jira_password }}"
+    return_content: yes
+    force_basic_auth: yes
+    body_format: json
+    header:
+      - Accept: 'application/json'
+      - Content-Type: 'application/json'
+    body: "{ 'name': '{{ atlassian.jira.project.category_name }}',
+              'description': '{{ atlassian.jira.project.category_description }}' }"
+    status_code: 201
+  register: category
+
+- name: Set fact for Category ID
+  set_fact:
+    CategoryID: "{{ category.json.id }}"

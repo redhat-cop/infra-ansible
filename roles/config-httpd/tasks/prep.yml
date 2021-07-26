@@ -1,0 +1,31 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - httpd
+  - firewalld
+  - python-firewall
+
+- name: 'Ensure firewalld is running'
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: 'Ensure httpd is running'
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: 'Open Firewall for httpd use'
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+  - 80/tcp

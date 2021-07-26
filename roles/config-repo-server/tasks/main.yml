@@ -1,0 +1,7 @@
+---
+
+- include_role:
+    name: config-httpd
+
+- import_tasks: mount-iso.yml
+

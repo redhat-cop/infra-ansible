@@ -1,0 +1,34 @@
+---
+
+- name: Store current permission_list to old_permission_list
+  set_fact:
+    old_permission_list: "{{ permission_list | default([]) }}"
+
+- name: Set Permissions based on role
+  set_fact:
+    permissions: "{{ default_permissions[group.role] }}"
+  when:
+    - group.role is defined
+
+- name: Set Passed in Permissions
+  set_fact:
+    permissions: "{{ group.permissions }}"
+  when:
+    - group.permissions is defined
+
+- name: Configure permissions_list for {{ group.name }}
+  set_fact:
+    permission:
+      holder:
+        type: group
+        parameter: "{{ group.name }}"
+      permission: "{{ item }}"
+  with_items: "{{ permissions }}"
+  register: permission_list_result
+
+- name: Make a new_permission_list
+  set_fact: new_permission_list="{{ permission_list_result.results | map(attribute='ansible_facts.permission') | list }}"
+
+- name: Combine new_permission_list with old_permission_list to create permission_list
+  set_fact:
+    permission_list: "{{ new_permission_list }} + {{ old_permission_list }}"

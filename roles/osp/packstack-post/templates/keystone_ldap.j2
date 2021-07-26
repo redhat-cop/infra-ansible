@@ -1,0 +1,19 @@
+
+[ldap]
+url = {{ item.url }}
+user = {{ item.user }}
+user_filter = {{ item.user_filter }}
+password = {{ item.password }}
+user_tree_dn = {{ item.user_tree_dn }}
+user_objectclass = {{ item.user_objectclass }}
+user_id_attribute = {{ item.user_id_attribute }}
+user_name_attribute = {{ item.user_name_attribute }}
+user_mail_attribute =  {{ item.user_mail_attribute }}
+user_pass_attribute = {{ item.user_pass_attribute }}
+user_allow_create =  {{ item.user_allow_create }}
+user_allow_update =  {{ item.user_allow_update }}
+user_allow_delete =  {{ item.user_allow_delete }}
+tls_cacertfile = {{ item.tls_cacertfile }}
+
+[identity]
+driver = ldap

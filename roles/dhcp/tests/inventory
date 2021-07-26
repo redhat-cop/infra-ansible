@@ -1,0 +1,7 @@
+# Staging inventory file
+[all:vars]
+
+
+[dhcp]
+dhcp1.test.lab 
+dhcp2.test.lab dhcp_service_enabled=False

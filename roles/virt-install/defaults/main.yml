@@ -1,0 +1,28 @@
+---
+
+# consider that this role isn't run against the created VMs but against the virtualization host,
+# i.e. you can only overwrite these variables in the inventory by defining them at the host level.
+# Use the libvirt_... variables to overwrite them at the VM level.
+
+default_http_dir: "/var/www/html"
+default_http_host: "192.168.122.1"
+
+default_connect: "qemu:///system"
+default_virt_type: "kvm"
+default_name: "tmpvm-{{ ansible_date_time.epoch }}"
+default_title: "tmpvm-title"
+default_description: "tmpvm-description"
+default_memory: "1024"
+default_vcpus: "2"
+default_disk_size: "10"
+default_disk_pool: "default"
+default_os_variant: "rhel7.6"
+default_iso: "/tmp/rhel-server-7.6-x86_64-dvd.iso"
+default_ksfile: "/tmp/my.ks"
+default_authorized_keys: "/tmp/authorized_keys"
+default_network_hostif: "eth0"
+default_network_model: "virtio"
+default_network_type: "direct"
+
+virt_install_disk_string: "{{ ' --disk pool=' +  default_disk_pool + ',size=' + default_disk_size + ',bus=virtio' }}"
+virt_install_network_string: "{{ ' --network \"type='+ default_network_type + ',source=' + default_network_hostif + ',source_mode=bridge,model=' + default_network_type + '\"' }}"

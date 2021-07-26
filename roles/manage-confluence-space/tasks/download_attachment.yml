@@ -1,0 +1,15 @@
+---
+- name: Download attachment from source
+  get_url:
+    url: '{{ confluence_source_url }}/wiki/{{ attachment_data._links.download }}'
+    dest: '{{ attachment_tempdir.path }}/{{ attachment_data.title }}'
+    force: yes
+    force_basic_auth: yes
+    url_username: '{{ confluence_source_username }}'
+    url_password: '{{ confluence_source_password }}'
+  no_log: true
+  delegate_to: 127.0.0.1
+
+- name: Upload attachment to destination
+  command: 'curl -u {{ confluence_destination_username }}:{{ confluence_destination_password }} -X POST -H "X-Atlassian-Token: no-check" -F "file=@{{ attachment_tempdir.path }}/{{ attachment_data.title }}" {{ confluence_destination_url }}/wiki/rest/api/content/{{ confluence_content_ids.value.id }}/child/attachment'
+  delegate_to: 127.0.0.1

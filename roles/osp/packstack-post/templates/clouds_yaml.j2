@@ -1,0 +1,13 @@
+---
+
+clouds:
+  {{ osp_default_cloud }}:
+    region_name: RegionOne
+    identity_api_version: {{ lookup('ini','OS_IDENTITY_API_VERSION type=properties file=' + keystonerc_file.path) | default('3') }}
+    auth:
+      auth_url: {{ lookup('ini','OS_AUTH_URL type=properties file=' + keystonerc_file.path) }}
+      username: {{ lookup('ini','OS_USERNAME type=properties file=' + keystonerc_file.path) }}
+      password: {{ lookup('ini','OS_PASSWORD type=properties file=' + keystonerc_file.path) }}
+      project_name: {{ lookup('ini','OS_PROJECT_NAME type=properties file=' + keystonerc_file.path) }}
+      user_domain_name: {{ lookup('ini','OS_USER_DOMAIN_NAME type=properties file=' + keystonerc_file.path) }}
+      project_domain_name: {{ lookup('ini','OS_PROJECT_DOMAIN_NAME type=properties file=' + keystonerc_file.path) }}

@@ -1,0 +1,5 @@
+---
+
+- hosts: repo_server
+  roles:
+    - config-repo-server

@@ -1,0 +1,21 @@
+---
+
+osp_networks:
+- name: "my-network"
+  description: "My Network"
+
+osp_subnets:
+- name: "my-subnet"
+  network_name: "my-network"
+  cidr: "192.168.10.0/24"
+  gateway_ip: "192.168.10.1"
+  allocation_pool_start: "192.168.10.2"
+  allocation_pool_end: "192.168.10.254"
+  dns_nameservers:
+  - "192.168.1.11"
+  - "192.168.1.12"
+
+osp_routers:
+- name: "my-router"
+  external_gateway: "external"
+  subnet: "my-subnet"

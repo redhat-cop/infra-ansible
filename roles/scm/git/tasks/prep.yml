@@ -1,0 +1,107 @@
+---
+
+- name: Prepare git credentials (SSH)
+  block:
+
+    - name: Define SSH folder location
+      set_fact:
+        ssh_dir: "{{ playbook_dir}}/.ssh"
+
+    - name: Create temporary directory for the SSH key
+      file:
+        path: "{{ ssh_dir }}"
+        state: directory
+
+    - name: Create temporary file for the SSH private key
+      tempfile:
+        path: "{{ ssh_dir }}"
+        prefix: "key-"
+      register: result_scm_ssh_key
+
+    - name: Set SSH Key paths
+      set_fact:
+        scm_ssh_key: "{{ result_scm_ssh_key.path }}"
+
+    # Without an extra blank line, the following will fail with 'invalid_format'
+    # This will occur if rstrip=False is not provided to lookup.
+    - name: Copy SSH private key to temporary file
+      copy:
+        content: "{{ repository.ssh_key + '\n' }}"
+        dest: "{{ scm_ssh_key }}"
+        mode: 0600
+      no_log: True
+
+    - name: Template SSH config
+      template:
+        src: ssh_config.j2
+        dest: "{{ ssh_dir }}/config"
+        force: True
+        backup: True
+        trim_blocks: False
+        mode: 0600
+
+    - name: Template git wrapper
+      template:
+        src: git_wrapper.j2
+        dest: "{{ ssh_dir }}/wrapper"
+        force: True
+        trim_blocks: False
+        mode: 0700
+
+    - name: Set the SCM repository (SSH)
+      set_fact:
+        scm_repository: "{{ repository.url }}"
+
+  when:
+    - repository.ssh_key is defined
+
+- name: Prepare git URL (HTTP)
+  block:
+
+    - name: Split the SCM repository URL (HTTP)
+      set_fact:
+        scm_repo_scheme: "{{ repository.url | urlsplit('scheme') }}"
+        scm_repo_hostname: "{{ repository.url | urlsplit('hostname') }}"
+        scm_repo_path: "{{ repository.url | urlsplit('path') }}"
+        scm_username: "{{ repository.username | urlencode() | regex_replace('/','%2F') }}"
+        scm_password: "{{ repository.password | urlencode() | regex_replace('/','%2F') }}"
+      no_log: True
+
+    - name: Set the SCM repository (HTTP)
+      set_fact:
+        scm_repository: "{{ scm_repo_scheme }}://{{ scm_username }}:{{ scm_password }}@{{ scm_repo_hostname }}{{ scm_repo_path }}"
+
+  when:
+    - repository.url is regex ("^http[s]?://")
+
+- name: Prepare global git credentials (HTTP)
+  block:
+
+    - name: Set the git username
+      shell: git config --global user.name "{{ repository.username }}"
+
+    - name: Set the git password
+      shell: git config --global user.password "{{ repository.password }}"
+
+  when:
+    - repository.username is defined
+    - repository.password is defined
+    - not scm_dir is defined
+
+- name: Prepare local git credentials (HTTP)
+  block:
+
+    - name: Set the git username
+      shell: git config --global user.name "{{ repository.username }}"
+      args:
+        chdir: "{{ scm_dir }}"
+
+    - name: Set the git password
+      shell: git config --global user.password "{{ repository.password }}"
+      args:
+        chdir: "{{ scm_dir }}"
+
+  when:
+    - repository.username is defined
+    - repository.password is defined
+    - scm_dir is defined

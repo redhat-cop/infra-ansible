@@ -1,0 +1,17 @@
+---
+
+mail:
+  host: "smtp.example.com"
+  port: "465"
+  username: "user1@example.com"
+  password: "pa55word"
+  secure: "always"
+  headers:
+  - 'Reply-To=user2@example.com'
+  to:
+  - "person1@example.com"
+  - "person2@example.com"
+  subject: "Test Message 1"
+  body: "<html><body><h1>This is a H1 header</h1></body></html>"
+  subtype: "html"
+

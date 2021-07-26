@@ -1,0 +1,13 @@
+{
+  "alias": "{{ af_exec.name | default(omit) }}",
+  "authenticationConfig": "{{ af_exec.authConfig | default(omit) }}",
+  "authenticationFlow": "{{ af_exec.authFlow | default(false) }}",
+  "configurable": "{{ af_exec.configurable | default(false) }}",
+  "displayName": "{{ af_exec.name | default(omit) }}",
+  "index": "{{ af_exec.index | default(omit) }}",
+  "level": "{{ af_exec.level | default(omit) }}",
+  "providerId": "{{ af_exec.provider | mandatory }}",
+  "requirement": "{{ af_exec.requirement | default(omit) }}",
+  "id": "{{ (exec_out.location | basename) | default(omit) }}"
+}
+

@@ -1,0 +1,89 @@
+---
+
+- block: # when ansible_tower.job_templates is defined
+
+  - name: "Initilize facts"
+    set_fact:
+      processed_job_templates: []
+      existing_job_templates_output: []
+      existing_inventories_output: []
+      existing_projects_output: []
+      existing_credentials_output: []
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing inventories"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/inventories/"
+    register: existing_inventories_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing projects"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/projects/"
+    register: existing_projects_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing job templates"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/job_templates/"
+    register: existing_job_templates_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing credentials"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/credentials/"
+    register: existing_credentials_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing users"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/users/"
+    register: existing_users_output
+
+  # Utilize the `rest_get` library routine to ensure REST pagination is handled
+  - name: "Get the existing teams"
+    rest_get:
+      host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+      rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      rest_password: "{{ ansible_tower.admin_password }}"
+      api_uri: "/api/v2/teams/"
+    register: existing_teams_output
+
+  - name: "Process the inventory job template"
+    include_tasks: process-job-template.yml
+    with_items:
+    - "{{ ansible_tower.job_templates }}"
+    loop_control:
+      loop_var: job_template
+
+  - name: "Elminate the job templates that should not be present"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/job_templates/{{ item.id }}/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: DELETE
+      validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+      status_code: 200,204
+    with_items:
+    - "{{ existing_job_templates_output.rest_output | get_remaining_items(processed_job_templates, 'name', 'name')}}"
+    when:
+    - delete_missing_items|default(True) == True
+
+  when:
+  - ansible_tower.job_templates is defined

@@ -1,0 +1,40 @@
+---
+
+# User management variables
+identities:
+  targets:
+    - rh-sso
+
+  users:
+    - user_name: example1
+      first_name: Example
+      last_name: User
+      email: example@user.com
+      enabled: true
+      email_verified: yes
+      realm: "my-realm"
+
+  groups:
+    - name: "test-group1"
+      realm: "my-realm"
+      members:
+        - example1
+    - name: "test-group2"
+      realm: "my-realm"
+    - name: "test-group3"
+      targets:
+        - atlassian
+      members:
+        - example1
+
+  roles:
+    - name: "reader"
+      realm: "my-realm"
+      members:
+        - example1
+    - name: "client-reader"
+      realm: "my-realm"
+      client_name: "my-super-fun-client"
+      members:
+        - example1
+    - name: "writer"

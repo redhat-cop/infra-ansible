@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+  - certs/idm-host-cert

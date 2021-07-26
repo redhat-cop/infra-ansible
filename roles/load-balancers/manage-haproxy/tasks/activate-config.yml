@@ -1,0 +1,52 @@
+---
+
+# Use a 'block' to ensure "become: True" for all tasks requiring elevated privileges
+- block:
+
+  - name: 'Copy the HAproxy config file to a temp location for validity checking'
+    copy:
+      src: '{{ haproxy_temp_file }}'
+      dest: '{{ temp_new_file }}'
+
+  - name: 'Check the validity'
+    command: 'haproxy -c -f {{ temp_new_file }}'
+    notify: 'remove tmp new file'
+
+  - name: 'Copy and activate the HAproxy config file'
+    copy:
+      src: '{{ haproxy_temp_file }}'
+      dest: '/etc/haproxy/haproxy.cfg'
+      backup: 'yes'
+    notify: 'reload haproxy'
+
+  - name: 'Open Firewall for LB use (TCP only)'
+    firewalld:
+      port: "{{ fe.lb_host_port }}/tcp"
+      permanent: yes
+      state: enabled
+      immediate: yes
+    loop_control:
+      loop_var: fe
+    loop: "{{ lb_config.frontends|flatten(levels=1) }}"
+
+  - name: 'Tweak SELinux for LB use (TCP only)'
+    seport:
+      ports: "{{ fe.lb_host_port }}"
+      proto: tcp
+      setype: http_port_t
+      state: present
+    loop_control:
+      loop_var: fe
+    loop: "{{ lb_config.frontends|flatten(levels=1) }}"
+
+  # End of outer block for "become: True"
+  become: True
+
+- name: 'Clean-up the temp file'
+  file:
+    path: "{{ haproxy_temp_file }}"
+    state: absent
+  when:
+  - (clean_up_temp|default('yes'))|lower == 'yes'
+  delegate_to: localhost
+  run_once: True

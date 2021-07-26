@@ -1,0 +1,13 @@
+---
+
+- name: "Grant access for account {{ user.name }}"
+  shell: >
+    openstack role add \
+      --user "{{ user.name }}" \
+      --user-domain "{{ user.domain }}" \
+      --project "{{ item.0.name }}" \
+      --project-domain "{{ item.0.domain }}" \
+      "{{ item.1 }}"
+  with_subelements:
+  - "{{ user.projects }}"
+  - roles

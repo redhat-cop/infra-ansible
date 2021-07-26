@@ -1,0 +1,44 @@
+---
+
+- name: Cleanup SSH Key
+  block:
+
+    - name: Remove temporary directory for the SSH key
+      file:
+        path: "{{ ssh_dir }}"
+        state: absent
+
+  when:
+    - repository.ssh_key is defined
+
+- name: Remove global git credentials (HTTP)
+  block:
+
+    - name: Set the git username
+      shell: git config --global user.name ""
+
+    - name: Set the git password
+      shell: git config --global user.password ""
+
+  when:
+    - repository.username is defined
+    - repository.password is defined
+    - not scm_dir.path is defined
+
+- name: Remove local git credentials (HTTP)
+  block:
+
+    - name: Set the git username
+      shell: git config --global user.name ""
+      args:
+        chdir: "{{ scm_dir.path }}"
+
+    - name: Set the git password
+      shell: git config --global user.password ""
+      args:
+        chdir: "{{ scm_dir.path }}"
+
+  when:
+    - repository.username is defined
+    - repository.password is defined
+    - scm_dir.path is defined

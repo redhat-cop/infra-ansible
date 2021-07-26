@@ -1,0 +1,8 @@
+---
+
+#clair_database_username: clair
+#clair_database_password: clair
+#clair_database_admin_username: ""
+#clair_database_admin_password: ""
+#clair_database_name: clair
+#clair_database_port: 5433

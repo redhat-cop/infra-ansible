@@ -1,0 +1,11 @@
+[all:vars]
+idm_master_hostname=idm1.test.lab
+idm_domain=test.lab
+idm_realm=test.lab
+idm_dm_password=test123$
+idm_admin_password=test123$
+
+[idm-server]
+idm1.test.lab 
+idm2.test.lab idm_src=idm1.test.lab
+

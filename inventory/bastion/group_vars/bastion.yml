@@ -1,0 +1,31 @@
+---
+
+# Starting with Fedora 28, the python interpreter needs to be Python3
+# for various packages to work - including prereq for firewalld
+ansible_python_interpreter: /usr/bin/python3
+
+ansible_user: fedora
+ansible_become: True
+
+main_user: bob
+
+ipa_client_install: True
+ipa_domain: ipa-realm.example.com
+ipa_automount_location: userhome
+ipa_username: bob
+
+docker_install: True
+docker_compose_install: True
+docker_username: bob
+
+# option to enable cgroups v1 via kernel parameter
+# enable this option if your OS uses cgroups v2 and you want to have docker installed
+kernel_cgroups_v1: False
+
+vnc_server_install: False
+
+list_of_packages_to_install:
+- git
+- screen
+- bash-completion
+- ansible

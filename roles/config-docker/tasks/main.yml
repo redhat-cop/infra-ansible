@@ -1,0 +1,16 @@
+---
+
+- block:
+    - name: "Install, configure and enable Docker"
+      import_tasks: docker.yml
+
+    - name: "Configure docker mtu"
+      import_tasks: mtu.yml
+
+    - name: "Configure cgroups v1 if requested"
+      import_tasks: kernel_cgroups_v1.yml
+      when:
+        - kernel_cgroups_v1|default(False)
+  when:
+    - docker_install|default(False)
+

@@ -1,0 +1,10 @@
+---
+
+- name: "Obtain list of users to e-mail"
+  hosts: mail-host
+  gather_facts: no
+  tasks:
+  - include_role:
+      name: roles/identity-management/list-users-by-group
+
+- import_playbook: email-notify-list-of-users.yml

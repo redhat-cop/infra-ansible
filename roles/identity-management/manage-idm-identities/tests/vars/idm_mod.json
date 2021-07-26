@@ -1,0 +1,28 @@
+{
+    "users" : [
+        {
+            "user_name": "gdownie",
+            "first_name": "Gord-change",
+            "last_name": "Downie-change",
+            "email": "gdownie@example.com",
+            "expiration_date": "2019-11-30T22:38:40.326Z"
+        },
+        {
+            "user_name": "rhawkins",
+            "first_name": "Ron",
+            "last_name": "Hawkins",
+            "email": "rhawkins@example.com",
+            "expiration_date": "2018-11-30T22:38:40.326Z"
+            "state": "absent"
+        }
+   ],
+    "user_groups": [
+        {
+            "name": "test-group1",
+            "members": [ "gdownie", "wclark" ]
+        },
+        {
+            "name": "test-group2"
+        }
+    ]
+}

@@ -1,0 +1,254 @@
+---
+
+- name: "Include prereq"
+  import_tasks: prereq.yml
+
+- name: "Initialize variables"
+  set_fact:
+    config: []
+
+- name: "Get the list of hosts part of this OSP cluster"
+  set_fact:
+    cluster_hosts: "{{ cluster_hosts | default(groups[group_names[0]]) | intersect(groups[item]) }}"
+  with_items:
+  - "{{ group_names }}"
+
+- name: "Build OSP fact: Compute(nova) Host(s)"
+  set_fact:
+    compute_hosts: "{{ compute_hosts|default([]) }} + [ '{{ hostvars[item].ansible_host }}' ]"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'nova' in hostvars[item].osp_roles.split(',')"
+
+- name: "Build OSP fact: Network(neutron) Host(s)"
+  set_fact:
+    network_hosts: "{{ network_hosts|default([]) }} + [ '{{ hostvars[item].ansible_host }}' ]"
+  with_items:
+  - "{{ cluster_hosts }}"
+  when:
+  - "'neutron' in hostvars[item].osp_roles.split(',')"
+
+- name: "Set OSP fact: Build Config Dictionary"
+  set_fact:
+    config:
+      compute: "{{ compute_hosts|join(',') }}"
+      network: "{{ network_hosts|join(',') }}"
+
+- name: "Set OSP fact: Build Config Dictionary"
+  set_fact:
+    config: "{{ config | combine( { item.1: hostvars[item.0].ansible_host } ) }}"
+  with_nested:
+  - "{{ cluster_hosts }}"
+  - [ 'controller', 'cinder', 'amqp', 'mariadb', 'mongodb', 'redis' ]
+  when:
+  - "item[1] in hostvars[item.0].osp_roles.split(',')"
+
+- name: "Set answer-file fact"
+  set_fact:
+    answer_file: "answer-file-{{ ansible_date_time.date }}-{{ ansible_date_time.time }}"
+
+- name: "Generate the Initial answer file"
+  command: "packstack --gen-answer-file={{ answer_file }}"
+
+- name: "Populate the yes/no choices in the answer file"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^{{ item.key }}'
+    line: '{{ item.key }}={{ item.value }}'
+  with_dict: "{{ osp_install_choices }}"
+
+- name: "Populate the answer file with OSP host values"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^{{ item.answer_key }}='
+    line: '{{ item.answer_key }}={{ config[item.config_key] }}'
+  with_items:
+  - { config_key: 'amqp', answer_key: 'CONFIG_AMQP_HOST' }
+  - { config_key: 'compute', answer_key: 'CONFIG_COMPUTE_HOSTS' }
+  - { config_key: 'controller', answer_key: 'CONFIG_CONTROLLER_HOST' }
+  - { config_key: 'mariadb', answer_key: 'CONFIG_MARIADB_HOST' }
+  - { config_key: 'mongodb', answer_key: 'CONFIG_MONGODB_HOST' }
+  - { config_key: 'network', answer_key: 'CONFIG_NETWORK_HOSTS' }
+  - { config_key: 'redis', answer_key: 'CONFIG_REDIS_HOST' }
+
+- name: "Update SSL_CERT Subject CN"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CERT_SUBJECT_CN='
+    line: 'CONFIG_SSL_CERT_SUBJECT_CN={{ osp_public_fqdn }}'
+
+- name: "Update SSL_CERT Subject MAIL"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CERT_SUBJECT_MAIL='
+    line: 'CONFIG_SSL_CERT_SUBJECT_MAIL=admin@{{ osp_public_fqdn }}'
+
+- name: "Replace PW placeholders"
+  replace:
+    path: "{{ answer_file }}"
+    regexp: 'PW_PLACEHOLDER'
+    replace: '{{ pw_placeholder_replacement }}'
+
+- name: "Update MariaDB Password"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_MARIADB_PW='
+    line: 'CONFIG_MARIADB_PW={{ mariadb_passwd }}'
+
+- name: "Update Keystone DB Password"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_KEYSTONE_DB_PW='
+    line: 'CONFIG_KEYSTONE_DB_PW={{ keystone_db_password }}'
+
+- name: "Update Keystone Admin Password"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_KEYSTONE_ADMIN_PW='
+    line: 'CONFIG_KEYSTONE_ADMIN_PW={{ keystone_admin_password }}'
+
+- name: "Update the default password"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_DEFAULT_PASSWORD='
+    line: 'CONFIG_DEFAULT_PASSWORD={{ default_password }}'
+
+- name: "Update to NOT create cinder volumes"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_CINDER_VOLUMES_CREATE='
+    line: 'CONFIG_CINDER_VOLUMES_CREATE=n'
+
+- name: "Allow for SSH migration of instances"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NOVA_COMPUTE_MIGRATE_PROTOCOL='
+    line: 'CONFIG_NOVA_COMPUTE_MIGRATE_PROTOCOL=ssh'
+
+- name: "Set Neutron L3 External Bridge to 'provider'"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NEUTRON_L3_EXT_BRIDGE='
+    line: 'CONFIG_NEUTRON_L3_EXT_BRIDGE=provider'
+
+- name: "Set Neutron ML2 Type Drivers"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NEUTRON_ML2_TYPE_DRIVERS='
+    line: 'CONFIG_NEUTRON_ML2_TYPE_DRIVERS={{ neutron_ml2_type_drivers }}'
+
+- name: "Set Neutron ML2 VLAN Ranges"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NEUTRON_ML2_VLAN_RANGES='
+    line: 'CONFIG_NEUTRON_ML2_VLAN_RANGES={{ neutron_vlan_ranges }}'
+
+- name: "Set OVS Bridge Interfaces"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NEUTRON_OVS_BRIDGE_IFACES='
+    line: 'CONFIG_NEUTRON_OVS_BRIDGE_IFACES={{ neutron_ovs_bridge_ifaces }}'
+
+- name: "Set OVS Tunnel Interface"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NEUTRON_OVS_TUNNEL_IF='
+    line: 'CONFIG_NEUTRON_OVS_TUNNEL_IF={{ neutron_ovs_tunnel_if }}'
+
+- name: "Set OVS Bridge Mappings"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS='
+    line: 'CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS={{ neutron_ovs_bridge_mappings }}'
+
+- name: "Set OVS Bridges Compute"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NEUTRON_OVS_BRIDGES_COMPUTE='
+    line: 'CONFIG_NEUTRON_OVS_BRIDGES_COMPUTE={{ neutron_ovs_bridges_compute }}'
+
+- name: "Set NTP servers"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_NTP_SERVERS='
+    line: 'CONFIG_NTP_SERVERS={{ ntp_servers }}'
+
+- name: "Do not provision demo usage and testing"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_PROVISION_DEMO='
+    line: 'CONFIG_PROVISION_DEMO=n'
+
+- name: "Enable SSL for Horizon (dashboard)"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_HORIZON_SSL='
+    line: 'CONFIG_HORIZON_SSL=y'
+
+- name: "Disable self-signed certs"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CACERT_SELFSIGN='
+    line: 'CONFIG_SSL_CACERT_SELFSIGN=n'
+
+- name: "Set the cert directory"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CERT_DIR='
+    line: 'CONFIG_SSL_CERT_DIR={{ ssl_cert_directory }}'
+
+- name: "Set the SSL CA cert"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CACERT_FILE='
+    line: 'CONFIG_SSL_CACERT_FILE={{ ssl_cacert_file }}'
+
+- name: "Set the SSL CA Cert key file"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_SSL_CACERT_KEY_FILE='
+    line: 'CONFIG_SSL_CACERT_KEY_FILE={{ ssl_host_key_file }}'
+
+- name: "Set the VNC SSL cert"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_VNC_SSL_CERT='
+    line: 'CONFIG_VNC_SSL_CERT={{ ssl_host_cert_file }}'
+
+- name: "Set the VNC SSL key file"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_VNC_SSL_KEY='
+    line: 'CONFIG_VNC_SSL_KEY={{ ssl_host_key_file }}'
+
+- name: "Set the Horizon CA cert"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_HORIZON_SSL_CACERT='
+    line: 'CONFIG_HORIZON_SSL_CACERT={{ ssl_cacert_file }}'
+
+- name: "Set the Horizon SSL cert"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_HORIZON_SSL_CERT='
+    line: 'CONFIG_HORIZON_SSL_CERT={{ ssl_host_cert_file }}'
+
+- name: "Set the Horizon SSL key file"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_HORIZON_SSL_KEY='
+    line: 'CONFIG_HORIZON_SSL_KEY={{ ssl_host_key_file }}'
+
+- name: "Provision Cinder related settings"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_CINDER_{{ item.key|upper }}='
+    line: 'CONFIG_CINDER_{{ item.key|upper }}={{ item.value }}'
+  with_dict: "{{ cinder }}"
+
+- name: "Configure keystone identity backend"
+  lineinfile:
+    path: "{{ answer_file }}"
+    regexp: '^CONFIG_KEYSTONE_IDENTITY_BACKEND='
+    line: 'CONFIG_KEYSTONE_IDENTITY_BACKEND={{ keystone_identity_backend }}'

@@ -1,0 +1,13 @@
+---
+
+- name: "Install, configure and enable Gnome"
+  include_tasks: "{{ distro_file }}"
+  with_first_found:
+  - files:
+    - gnome-{{ ansible_distribution }}.yml
+    skip: true
+  loop_control:
+    loop_var: distro_file
+  when:
+  - gnome_install|default(False)
+

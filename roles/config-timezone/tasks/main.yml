@@ -1,0 +1,8 @@
+---
+
+- name: set timezone to {{ timezone }}
+  timezone:
+    name: "{{ timezone }}"
+  when:
+  - timezone is defined
+  - timezone | trim != ""

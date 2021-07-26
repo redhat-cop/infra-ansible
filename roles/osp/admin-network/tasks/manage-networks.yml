@@ -1,0 +1,14 @@
+---
+
+- name: "Set up network(s)"
+  os_network:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
+    project: "{{ item.project | default(omit) }}"
+    state: "{{ item.state | default(osp_resource_state) | default('present') }}"
+    name: "{{ item.name }}"
+    external: "{{ item.external | default(False) }}"
+    provider_network_type: "{{ item.provider_network_type | default(omit) }}"
+    provider_physical_network: "{{ item.provider_physical_network | default(omit) }}"
+    provider_segmentation_id: "{{ item.provider_segmentation_id | default(omit) }}"
+  with_items:
+  - "{{ osp_networks | default([]) }}"

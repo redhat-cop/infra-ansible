@@ -1,0 +1,13 @@
+
+frontend lb_stats_fe
+    bind {{ page_config.host_vip | default('*') }}:{{ page_config.host_port }}
+
+    default_backend lb_stats_be
+
+
+backend lb_stats_be
+    mode http
+    stats enable
+    stats uri /stats
+    stats realm Haproxy\ Statistics
+    stats auth {{ page_config.username }}:{{ page_config.password }}

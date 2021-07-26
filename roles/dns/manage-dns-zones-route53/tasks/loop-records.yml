@@ -1,0 +1,9 @@
+---
+
+- name: Loop through zone records
+  include_tasks: empty-zone.yml
+  with_subelements:
+    - "{{ r53_zone.ResourceRecordSets }}"
+    - ResourceRecords
+  loop_control:
+    loop_var: r53_record

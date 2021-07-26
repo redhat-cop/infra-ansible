@@ -1,0 +1,49 @@
+{% set lb_ssl = namespace(enabled=False) -%}
+{% set lb_mode = namespace(http=False) -%}
+
+{% for entry in lb_config.lb_entries %}
+
+{% if ((entry.lb_mode is defined and entry.lb_mode == 'http') or
+       (entry.lb_mode is undefined and entry.lb_match_port|string == '80')) %}
+{% set lb_mode.http = True %}
+{% else %}
+{% set lb_mode.http = False %}
+{% endif -%}
+
+{% if ((entry.lb_ssl_enabled is defined and entry.lb_ssl_enabled) or
+       (entry.lb_ssl_enabled is undefined and entry.lb_match_port|string == '443')) %}
+{% set lb_ssl.enabled = True %}
+{% else %}
+{% set lb_ssl.enabled = False %}
+{% endif -%}
+
+{% set backend_name = (entry.name | default(entry.lb_match_fqdn) | default('default_backend')) | regex_replace('^\.', '') %}
+
+backend {{ backend_name }}-{{ entry.lb_match_port }}
+    balance {{ entry.lb_balance | default('roundrobin') }}
+{% if entry.lb_mode is defined %}
+    mode {{ entry.lb_mode }}
+{% elif lb_ssl.enabled %}
+    mode tcp
+{% endif -%}
+
+{% if lb_mode.http %}
+    option httpclose
+    option forwardfor
+    cookie JSESSIONID prefix
+{% endif -%}
+
+{% for backend in entry.backends %}
+{% set lb_backend_host = backend.name | default(backend.host) -%}
+{% set lb_backend_port = backend.port | default(entry.lb_match_port) -%}
+
+{% if backend.check is defined %}
+{% set lb_backend_check = backend.check %}
+{% elif lb_mode.http %}
+{% set lb_backend_check = 'cookie A check' %}
+{% else %}
+{% set lb_backend_check = 'check' %}
+{% endif %}
+    server {{ lb_backend_host }} {{ backend.host }}:{{ lb_backend_port }} {{ lb_backend_check }}
+{% endfor -%}
+{% endfor -%}

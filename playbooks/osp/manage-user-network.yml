@@ -1,0 +1,8 @@
+---
+
+# See the roles README for detailed info on inventory requirements.
+# https://github.com/redhat-cop/infra-ansible/blob/master/roles/osp/admin-network/README.md
+
+- hosts: osp-provisioner
+  roles:
+  - osp/admin-network

@@ -1,0 +1,9 @@
+---
+
+- name: 'Seed web server with content'
+  copy:
+    src: "{{ httpd_seed_dir }}"
+    dest: "{{ html_document_root | default(default_document_root) }}"
+  when:
+  - httpd_seed_dir is defined
+  - httpd_seed_dir|trim != ""

@@ -1,0 +1,63 @@
+---
+
+- name: "Ensure .vnc dir exists"
+  file:
+    path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc"
+    state: directory
+    owner: "{{ main_user }}"
+
+- name: "Check to see if a VNC password already exists"
+  stat:
+    path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
+  register: passwd_info
+
+- name: "Set a vnc password"
+  shell: "echo {{ vnc_password | default('vncpasswd01') }} | vncpasswd -f > {{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
+  when: passwd_info.stat.exists == False
+
+- name: "Ensure correct ownership of the vnc password file"
+  file:
+    path: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/passwd"
+    owner: "{{ main_user }}"
+    mode: 0600
+
+- name: "Add the xstartup (gnome) configuration to the main user"
+  copy:
+    src: xstartup-gnome
+    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+  when:
+    - gnome_install|default(False)
+
+- name: "Add the xstartup (XFCE) configuration to the main user"
+  copy:
+    src: xstartup-xfce
+    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+  when:
+    - xfce_install|default(False)
+
+- name: "Add the xstartup (LXDE) configuration to the main user"
+  copy:
+    src: xstartup-lxde
+    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+  when:
+    - lxde_install|default(False)
+
+- name: "Add the xstartup (MATE) configuration to the main user"
+  copy:
+    src: xstartup-mate
+    dest: "{{ vnc_home_dir }}/{{ main_user }}/.vnc/xstartup"
+    force: no
+    owner: "{{ main_user }}"
+    mode: 0755
+  when:
+    - mate_install|default(False)
+

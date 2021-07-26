@@ -1,0 +1,32 @@
+---
+
+- name: Create channel payload
+  set_fact:
+    channel_payload:
+      name: "{{ channel.name }}"
+
+- name: Create channel
+  uri:
+    url: "https://slack.com/api/channels.create"
+    method: POST
+    status: [200]
+    body_format: json
+    body: "{{ channel_payload }}"
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
+    return_content: yes
+  register: channel_data
+  when: channel.private == False
+
+- name: Create group
+  uri:
+    url: "https://slack.com/api/groups.create"
+    method: POST
+    status: [200]
+    body_format: json
+    body: "{{ channel_payload }}"
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
+    return_content: yes
+  register: channel_data
+  when: channel.private == True

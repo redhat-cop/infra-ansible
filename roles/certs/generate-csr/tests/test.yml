@@ -1,0 +1,5 @@
+---
+
+- hosts: csr-host
+  roles:
+  - certs/generate-csr

@@ -1,0 +1,33 @@
+---
+
+- name: Prepare SCM credentials
+  include_tasks: prep.yml
+
+- name: Create temporary directory for the repository
+  tempfile:
+    state: directory
+    prefix: "repo-"
+  register: result_scm_dir
+  when:
+    - not repository.path is defined
+
+- name: Set directory for the repository
+  set_fact:
+    scm_dir: "{{ repository.path if repository.path is defined else result_scm_dir.path }}"
+
+- name: "Clone repository to temporary location"
+  git:
+    clone: true
+    repo: "{{ scm_repository }}"
+    dest: "{{ scm_dir }}"
+    force: "{{ repository.force | default(false) }}"
+    key_file: "{{ scm_ssh_key if scm_ssh_key is defined else omit }}"
+    remote: "{{ repository.remote | default('origin') }}"
+    update: "{{ repository.update | default('true') | bool }}"
+    version: "{{ repository.version | default('HEAD') }}"
+    accept_hostkey: "{{ repository.accept_hostkey | default(true) }}"
+  when:
+    - scm_dir is defined
+
+- name: Cleanup SCM credentials
+  include_tasks: cleanup.yml

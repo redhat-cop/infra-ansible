@@ -1,0 +1,206 @@
+---
+
+- name: Preflight Checks
+  hosts: localhost
+  tasks:
+    - name: Validate Required Group Configuration
+      fail:
+        msg: "'database', 'redis' and 'quay_enterprise' groups must be specified"
+      when:
+        - "'redis' not in groups or groups['redis']| length == 0 or 'database' not in groups or groups['database']| length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise']| length == 0"
+
+- name: Install Docker
+  hosts: docker_hosts
+  tasks:
+    - name: Configure Docker
+      include_role:
+        name: config-container-storage-setup
+      when: (docker_install|default(false))|bool
+
+    - name: Install Docker
+      include_role:
+        name: config-docker
+      when: (docker_install|default(false))|bool
+
+- name: Install HAProxy
+  hosts: lb
+  pre_tasks:
+    - name: Setup
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: true
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+  roles:
+    - role: load-balancers/manage-haproxy
+      lb_config:
+        stats_page:
+          enabled: True
+          host_vip: "{{ haproxy_host_vip | default('*') }}"
+          host_port: 8080
+          username: "{{ haproxy_stats_username | default('admin') }}"
+          password: "{{ haproxy_stats_password | default('admin') }}"
+        frontends:
+          - lb_name: quay_http
+            lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+            lb_host_port: 80
+          - lb_name: quay_https
+            lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+            lb_host_port: 443
+          - lb_name: redis
+            lb_host_vip: "{{ haproxy_host_vip | default('*') }}"
+            lb_host_port: 6379
+            lb_ssl_enabled: True
+      lb_backend_template: "{{ playbook_dir }}/templates/haproxy_backend.cfg.j2"
+
+- name: Install and Configure Database for Quay
+  hosts: database
+  become: True
+  tasks:
+    - name: Install MySQL
+      include_role:
+        name: config-mysql
+      vars:
+        mode: containerized
+        mysql_name: "{{ quay_database_service_name | default('mysql-quay') }}"
+        mysql_username: "{{ quay_database_username }}"
+        mysql_password: "{{ quay_database_password }}"
+        mysql_root_username: "{{ quay_database_admin_username }}"
+        mysql_root_password: "{{ quay_database_admin_password }}"
+        mysql_database: "{{ quay_database_name }}"
+      when: quay_database_type == "mysql"
+
+    - name: Install and Configure PostgreSQL for Quay
+      block:
+        - name: Install PostgreSQL for Quay
+          include_role:
+            name: config-postgresql
+          vars:
+            mode: containerized
+            postgresql_name: "{{ quay_database_service_name | default('postgresql-quay') }}"
+            postgresql_username: "{{ quay_database_username }}"
+            postgresql_password: "{{ quay_database_password }}"
+            postgresql_admin_user: "{{ quay_database_admin_username }}"
+            postgresql_admin_password: "{{ quay_database_admin_password }}"
+            postgresql_port: "{{ quay_database_port | default('5432') }}"
+            postgresql_database: "{{ quay_database_name }}"
+
+        - name: Flush Handlers
+          meta: flush_handlers
+
+        - name: Sleep to give PostgreSQL a chance to finish starting up
+          pause:
+            seconds: 10
+
+        - name: Locate PostgreSQL Container
+          command: docker ps --filter=name="{{ quay_database_service_name | default('postgresql-quay') }}" -q
+          register: postgresql_container
+
+        - name: Configure PostgreSQL
+          shell: docker exec -i {{ postgresql_container.stdout }} /bin/bash -c 'PGPASSWORD={{ quay_database_admin_password }} psql {{ quay_database_name }} -c "CREATE EXTENSION pg_trgm;"'
+          register: shell_result
+          failed_when:
+            - shell_result.rc != 0
+            - "'already exists' not in shell_result.stderr"
+      when: quay_database_type == "postgresql"
+
+- name: Install Redis
+  hosts: redis
+  become: True
+  tasks:
+    - name: Install Redis
+      include_role:
+        name: config-redis
+      vars:
+        mode: containerized
+
+- name: Install Quay Enterprise
+  hosts: quay_enterprise
+  become: True
+  tasks:
+    - name: Set Quay Hostname When LB Defined
+      set_fact:
+        quay_hostname: "{{ hostvars[groups['lb'][0]]['inventory_hostname'] }}"
+      when: quay_hostname is undefined and groups['lb'] | length > 0
+    - name: Set Quay Hostname When LB Not Defined
+      set_fact:
+        quay_hostname: "{{ hostvars[groups['quay_enterprise'][0]]['inventory_hostname'] }}"
+      when: quay_hostname is undefined and groups['lb'] | length == 0
+    - name: Install Quay
+      include_role:
+        name: config-quay-enterprise
+      vars:
+        quay_database_username: "{{ hostvars[groups['database'][0]]['quay_database_username'] }}"
+        quay_database_password: "{{ hostvars[groups['database'][0]]['quay_database_password'] }}"
+        quay_database_name: "{{ hostvars[groups['database'][0]]['quay_database_name'] }}"
+        quay_database_port: "{{ hostvars[groups['database'][0]]['quay_database_port'] }}"
+        quay_database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        redis_host: "{{ quay_hostname | default(hostvars[groups['lb'][0]]['inventory_hostname']) if groups['lb'] | length > 0 else hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        quay_server_hostname: "{{ quay_hostname | default(inventory_hostname) }}"
+        quay_clair_enable: "{{ (groups['clair']| length > 0) | ternary('True','False') }}"
+        quay_clair_endpoint: "http://{{ hostvars[groups['clair'][0]]['ansible_eth0']['ipv4']['address'] if (groups['clair']| length > 0) else '' }}:{{ clair_endpoint_port | default('6060') }}"
+        quay_builder_enable: "{{ (groups['quay_builder']| length > 0) | ternary('True','False') }}"
+        quay_superuser_username: "{{ hostvars[groups['quay_enterprise'][0]]['quay_superuser_username'] }}"
+        quay_superuser_password: "{{ hostvars[groups['quay_enterprise'][0]]['quay_superuser_password'] }}"
+        quay_superuser_email: "{{ hostvars[groups['quay_enterprise'][0]]['quay_superuser_email'] }}"
+
+- name: Install Clair Database
+  hosts: database
+  become: True
+  tasks:
+    - name: Install and Configure PostgreSQL for Clair
+      include_role:
+        name: config-postgresql
+      vars:
+        mode: containerized
+        postgresql_name: "{{ clair_database_service_name | default('postgresql-clair') }}"
+        postgresql_username: "{{ clair_database_username }}"
+        postgresql_password: "{{ clair_database_password }}"
+        postgresql_admin_user: "{{ clair_database_admin_username }}"
+        postgresql_admin_password: "{{ clair_database_admin_password }}"
+        postgresql_host_port: "{{ clair_database_port | default('5433') }}"
+        postgresql_database: "{{ clair_database_name }}"
+      when: groups['clair']| length > 0
+
+- name: Install Clair
+  hosts: clair
+  become: True
+  tasks:
+    - name: Gather facts from machine
+      setup:
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+    - name: Set Quay Hostname When LB Defined
+      set_fact:
+        quay_hostname: "{{ hostvars[groups['lb'][0]]['inventory_hostname'] }}"
+      when: quay_hostname is undefined and groups['lb'] | length > 0
+    - name: Set Quay Hostname When LB Defined
+      set_fact:
+        quay_hostname: "{{ hostvars[groups['quay_enterprise'][0]]['inventory_hostname'] }}"
+      when: quay_hostname is undefined and groups['lb'] | length == 0
+
+    - name: Install Clair
+      include_role:
+        name: config-clair
+      vars:
+        database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        quay_enterprise_address: "{{ hostvars[groups['quay_enterprise'][0]]['quay_http_protocol'] }}://{{ quay_hostname }}"
+        clair_ssl_trust_configure: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool }}"
+        clair_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file_to_use'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"
+        postgresql_port: "{{ clair_database_port | default('5433') }}"
+        clair_host_proxy_port: "{{ clair_endpoint_port | default('6060') }}"
+
+- name: Install Quay Builder
+  hosts: quay_builder
+  tasks:
+    - name: Gather facts from machine
+      setup:
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+    - name: Install Quay Enterprise
+      include_role:
+        name: config-quay-builder
+      vars:
+        quay_enterprise_hostname: "{{ quay_hostname }}"
+        quay_builder_ssl_trust_configure: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool }}"
+        quay_builder_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file_to_use'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"

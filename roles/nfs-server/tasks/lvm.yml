@@ -1,0 +1,9 @@
+---
+
+- name: "Check if LV has been created and mounted"
+  shell: "lsblk {{ nfs_storage_device }} | egrep 'lvm.*/exports'"
+  register: lvm_check
+  ignore_errors: yes
+
+- include_tasks: configure_lvm.yml
+  when: lvm_check.rc != 0

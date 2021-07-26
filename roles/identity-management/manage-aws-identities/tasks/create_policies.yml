@@ -1,0 +1,24 @@
+---
+
+- name: Creates custom managed IAM policies
+  iam_managed_policy:
+    policy_name: "{{ policy_data.policy_name }}"
+    policy_description: "{{ policy_data.policy_description|default(omit) }}"
+    policy: "{{ policy_data.policy|from_yaml }}"
+    make_default: "{{ policy_data.make_default|default(omit) }}"
+    only_version: "{{ policy_data.only_version|default(omit) }}"
+    profile: "{{ identities.profile_name | default(omit) }}"
+    state: present
+  loop: "{{ identities.policies }}"
+  loop_control:
+    loop_var: policy_data
+
+  when:
+    - identities.policies is defined
+    - identities.policies|length > 0
+    - policy_data.targets is undefined or 'aws' in identities.targets
+    - policy_data.state|default('present') == 'present'
+
+  tags:
+    - create
+    - policies

@@ -1,0 +1,35 @@
+---
+
+- name: "Create the 'To:' list of addresses"
+  set_fact:
+    mail: "{{ mail | combine({ 'to': list_of_mail_to }) }}"
+  when:
+  - list_of_mail_to is defined
+
+- name: "Create the 'CC:' list of addresses"
+  set_fact:
+    mail: "{{ mail | combine({ 'cc': list_of_mail_cc }) }}"
+  when:
+  - list_of_mail_cc is defined
+
+- name: "Create the 'BCC:' list of addresses"
+  set_fact:
+    mail: "{{ mail | combine({ 'bcc': list_of_mail_bcc }) }}"
+  when:
+  - list_of_mail_bcc is defined
+
+- name: "Send out e-mail content to users"
+  mail:
+    subject: "{{ mail.subject }}"
+    body: "{{ mail.body | default(omit) }}"
+    host: "{{ mail.host | default(omit) }}"
+    port: "{{ mail.port | default (omit) }}"
+    username: "{{ mail.username | default(omit) }}"
+    password: "{{ mail.password | default(omit) }}"
+    to: "{{ mail.to | default(omit) }}"
+    cc: "{{ mail.cc | default(omit) }}"
+    bcc: "{{ mail.bcc | default(omit) }}"
+    from: "{{ mail.from | default(omit)}}"
+    headers: "{{ mail.headers | default(omit)}}"
+    secure: "{{ mail.secure | default(omit) }}"
+    subtype: "{{ mail.subtype | default(omit) }}"

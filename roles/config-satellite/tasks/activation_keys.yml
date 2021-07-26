@@ -1,0 +1,11 @@
+---
+
+- name: "Get current subscriptions"
+  shell: hammer -u "{{ satellite_username }}" -p "{{ satellite_password }}" --output=yaml subscription list --organization "{{ satellite_organization }}"
+  register: subids
+
+- include_tasks: process-one-activation-key.yml
+  loop: "{{ satellite_activation_keys }}"
+  loop_control:
+    loop_var: activation_key
+

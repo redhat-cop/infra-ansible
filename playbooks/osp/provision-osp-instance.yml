@@ -1,0 +1,63 @@
+---
+
+- name: Provision Instance(s)
+  hosts: osp-provisioner
+  roles:
+  - role: osp/admin-volume
+  - role: osp/admin-sec-group
+  - role: osp/admin-instance
+
+- name: Refresh Server inventory
+  hosts: osp-provisioner
+  gather_facts: False
+  tasks:
+  - meta: refresh_inventory
+
+- name: Print Instance info + Wait for Instances to come alive
+  hosts: osp_instances
+  gather_facts: false
+  tasks:
+  - name: Debug hostvar
+    debug:
+      msg: "{{ hostvars[inventory_hostname] }}"
+      verbosity: 2
+  - name: waiting for server to come back
+    local_action:
+      module: wait_for
+      host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
+      port: 22
+      delay: 10
+      timeout: 300
+
+- name: "Ensure the host is ready for Ansible"
+  hosts: osp_instances
+  gather_facts: no
+  become: True
+  roles:
+  - role: ansible/prep-for-ansible
+
+- name: "Workaround for .novalocal"
+  hosts: osp_instances
+  become: True
+  tasks:
+  - name: "Eliminate the .novalocal at the end of the FQDN"
+    hostname:
+      name: "{{ ansible_fqdn | regex_replace('(.*).novalocal$', '\\1') }}"
+  - name: "Ensure the local host can resolve by its own IP"
+    lineinfile:
+      path: /etc/hosts
+      regexp: "^{{ ansible_default_ipv4.address }}.*"
+      line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn | regex_replace('(.*).novalocal$', '\\1') }}"
+  - name: "Ensure the changes stick during reboot"
+    stat: path=/etc/cloud/cloud.cfg
+    register: cloud_cfg
+  - lineinfile:
+      dest: /etc/cloud/cloud.cfg
+      state: present
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+    - { regexp: '^ - set_hostname', line: '# - set_hostname' }
+    - { regexp: '^ - update_hostname', line: '# - update_hostname' }
+    when: cloud_cfg.stat.exists == True
+

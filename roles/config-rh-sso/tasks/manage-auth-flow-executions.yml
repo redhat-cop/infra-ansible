@@ -1,0 +1,111 @@
+---
+
+- name: "Initialize the execution config facts"
+  set_fact:
+    execution_config: {}
+
+- name: "Request Red Hat SSO REST API Access Token"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ rh_sso_admin_user }}"
+      password: "{{ rh_sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_token
+
+- name: "Check if Execution: {{ af_exec.provider }} exists in Authentication Flow: {{ af.name }}"
+  set_fact:
+    exec_check: "{{ rh_sso_exec.json | json_query(query) }}"
+  vars:
+    query: "[?providerId=='{{ af_exec.provider }}']"
+
+- name: "Create New Execution"
+  block:
+    - debug:
+        msg: "Creating new execution"
+    - name: "Create New Execution"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows/{{ af.name }}/executions/execution"
+        method: POST
+        body:
+          provider: "{{ af_exec.provider }}"
+        body_format: json
+        status_code: 201
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+      register: exec_out
+    - name: "Retrieve Template for Execution Flow"
+      set_fact:
+        exec_json: "{{ lookup('template', 'auth-flow-exec.json.j2') | to_json }}"
+    - name: "Update Execution Properties"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows/{{ af.name }}/executions"
+        method: PUT
+        body: "{{ exec_json }}"
+        body_format: json
+        status_code: 204
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+      register: update_out
+    - name: "[NEW|POST] Prepare Execution Config to be processed"
+      set_fact:
+        execution_config:
+          url: "executions/{{ (exec_out.location | basename) }}/config"
+          method: POST
+          body:
+            alias: "{{ af_exec.name }}"
+            config: "{{ af_exec.config | default({}) }}"
+          status_code: 201
+  when:
+    - exec_check[0] is not defined
+
+- name: "Update Execution"
+  block:
+    - debug:
+        msg: "Execution type: {{ af_exec.provider }} exists in Authentication Flow: {{ af.name }}"
+    - name: "[UPDATE|PUT] Prepare Execution Config to be processed"
+      set_fact:
+        execution_config:
+          url: "config/{{ exec_check[0].authenticationConfig }}"
+          method: PUT
+          body:
+            alias: "{{ af_exec.name }}"
+            config: "{{ af_exec.config | default({}) }}"
+          status_code: 204
+      when:
+        - exec_check[0].authenticationConfig is defined
+        - exec_check[0].authenticationConfig|trim != ""
+    - name: "[UPDATE|POST] Prepare Execution Config to be processed"
+      set_fact:
+        execution_config:
+          url: "executions/{{ exec_check[0].id }}/config"
+          method: POST
+          body:
+            alias: "{{ af_exec.name }}"
+            config: "{{ af_exec.config | default({}) }}"
+          status_code: 201
+      when:
+        - exec_check[0].authenticationConfig is undefined
+        - exec_check[0].id is defined
+        - exec_check[0].id|trim != ""
+  when:
+    - exec_check[0] is defined
+
+- name: "Add|Update Execution config"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/{{ execution_config.url }}"
+    method: "{{ execution_config.method }}"
+    body: "{{ execution_config.body }}"
+    body_format: json
+    status_code: "{{ execution_config.status_code }}"
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  when:
+    - execution_config|length > 0

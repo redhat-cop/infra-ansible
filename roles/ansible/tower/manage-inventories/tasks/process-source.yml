@@ -1,0 +1,55 @@
+---
+
+- name: "Get the project id based on the source project name"
+  set_fact:
+    source_project_id: "{{ item.id }}"
+  when:
+  - item.name|trim == source.source_project|trim
+  with_items:
+  - "{{ existing_projects_output.rest_output }}"
+
+- name: "Get the credential id based on the credential name"
+  set_fact:
+    credential_id: "{{ item.id }}"
+  when:
+  - item.name|trim == source.credential|trim
+  with_items:
+  - "{{ existing_credentials_output.rest_output }}"
+
+- name: "Create new payload"
+  set_fact:
+    payload:
+      name: "{{ source.name }}"
+      description: "{{ source.description | default('') }}"
+      source: "{{ source.source | default('scm') }}"
+      source_path: "{{ source.source_path }}"
+      source_script: null
+      source_vars: "{{ source.source_vars | from_yaml }}"
+      credential: "{{ credential_id | int }}"
+      source_regions: ""
+      instance_filters: ""
+      group_by: ""
+      overwrite: "{{ (source.overwrite | default(False)) | bool }}"
+      overwrite_vars: "{{ (source.overwrite_vars | default(False)) | bool }}"
+      timeout: 0
+      verbosity: 1
+      inventory: "{{ inv_id | int }}"
+      update_on_launch: "{{ (source.update_on_launch | default(False)) | bool }}"
+      update_cache_timeout: 0
+      source_project: "{{ source_project_id | int }}"
+      update_on_project_update: "{{ (source.update_on_project_update | default(False)) | bool }}"
+
+- name: "Load up the inventory (source)"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventory_sources/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ payload }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+    status_code: 200,201,400

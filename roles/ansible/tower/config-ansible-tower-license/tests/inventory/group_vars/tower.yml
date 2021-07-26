@@ -1,0 +1,13 @@
+---
+
+ansible_connection: local
+
+# NOTE: below is an example on how these params and files can be specified
+#       - please replace with valid values and files
+
+ansible_tower:
+  admin_username: "admin"
+  admin_password: "secret"
+  url: https://tower.example.com
+  install:
+    license_file: "{{ inventory_dir }}/../files/example-license.json"

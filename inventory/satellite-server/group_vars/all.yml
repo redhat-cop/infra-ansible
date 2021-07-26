@@ -1,0 +1,92 @@
+---
+
+pkg_update: true
+hosting_infrastructure: openstack
+ansible_user: cloud-user
+
+osp_networks:
+- name: "sat-network"
+  description: "Satellite Network"
+
+osp_subnets:
+- name: "sat-subnet"
+  network_name: "sat-network"
+  cidr: "192.168.15.0/24"
+  gateway_ip: "192.168.15.1"
+  allocation_pool_start: "192.168.15.2"
+  allocation_pool_end: "192.168.15.254"
+  dns_nameservers:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+osp_routers:
+- name: "sat-router"
+  external_gateway: "external"
+  subnet: "sat-subnet"
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "www-sec-group"
+  description: "My WWW Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 443
+    port_range_max: 443
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+
+osp_volumes:
+- name: "mongodb-vol"
+  display_description: "MongoDB Volume"
+  display_name: "mongodb-vol"
+  size: 50
+- name: "pulp-vol"
+  display_description: "Pulp Volume"
+  display_name: "pulp-vol"
+  size: 160
+
+lvm_entries:
+- mount_path: "/var/lib/mongodb"
+  device_name: "mongodb-vol"
+  storage_device: ""
+  vg_name: "mongodb"
+  lv_name: "vol1"
+- mount_path: "/var/lib/pulp"
+  device_name: "pulp-vol"
+  storage_device: ""
+  vg_name: "pulp"
+  lv_name: "vol1"
+
+osp_instances:
+- name: "my-satellite-server"
+  meta:
+    group: satellite-server
+  image: "rhel-server-7.4-x86_64"
+  key_name: "my-keypair"
+  flavor: "m1.large"
+  network: "sat-network"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - www-sec-group
+  volumes:
+  - mongodb-vol
+  - pulp-vol

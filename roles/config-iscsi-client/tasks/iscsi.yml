@@ -1,0 +1,7 @@
+---
+
+- import_tasks: prereq.yml
+- import_tasks: iscsi-config.yml
+- import_tasks: multipath-config.yml
+- import_tasks: lvm-config.yml
+- import_tasks: lock-lvm.yml

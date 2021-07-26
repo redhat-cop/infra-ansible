@@ -1,0 +1,22 @@
+---
+
+- name: Delete Group(s)
+  uri:
+    url: '{{ atlassian.url }}/rest/api/2/user?username={{ group.name }}'
+    method: DELETE
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
+    force_basic_auth: yes
+    status_code:
+      - 204
+    body_format: json
+  with_items:
+    - "{{ identities.groups }}"
+  loop_control:
+    loop_var: group
+  when:
+    - identities.groups|length > 0
+    - group.targets is undefined or
+      'atlassian' in group.targets
+    - group.state is defined
+    - group.state == 'absent'

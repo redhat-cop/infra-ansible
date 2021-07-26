@@ -1,0 +1,28 @@
+---
+
+- name: "Copy SELinux .te file to the host - used to build the module"
+  copy:
+    src: SELinuxVNC.te
+    dest: /tmp/SELinuxVNC.te
+
+- name: "Build SELinux module (.mod) to allow VNC"
+  command: checkmodule -M -m -o SELinuxVNC.mod /tmp/SELinuxVNC.te
+
+- name: "Build SELinux module (.pp) to allow VNC"
+  command: semodule_package -m SELinuxVNC.mod -o SELinuxVNC.pp
+
+- name: "Load SELinux module to allow VNC"
+  command: semodule -i SELinuxVNC.pp
+
+- name: "Ensure the user has been assigned the VNC session"
+  lineinfile:
+    path: "/etc/tigervnc/vncserver.users"
+    regexp: "^:1={{ main_user }}"
+    line: ":1={{ main_user }}"
+
+- name: "Enable and start VNC server for user"
+  service:
+    name: "vncserver@:1"
+    enabled: yes
+    state: started
+

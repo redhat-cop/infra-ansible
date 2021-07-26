@@ -1,0 +1,14 @@
+---
+- name: Gather VPC facts
+  ec2_vpc_net_facts:
+    filters:
+      tag:Name: "{{ vpc_name }}"
+    region: "{{ aws_region }}"
+  register: vpc
+
+- name: Gather Subnet facts
+  ec2_vpc_subnet_facts:
+    filters:
+      tag:Name: "{{ vpc_name }}"
+    region: "{{ aws_region }}"
+  register: sub

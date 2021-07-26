@@ -1,0 +1,25 @@
+DEVICE="{{ ifcfg.device }}"
+NAME="{{ name | default(ifcfg.device) }}"
+BONDING_OPTS="{{ ifcfg.bonding_opts }}"
+TYPE="Bond"
+BONDING_MASTER="yes"
+MTU="{{ ifcfg.mtu | default('1500') }}"
+DEFROUTE="yes"
+ONBOOT="{{ ifcfg.onboot | default('yes') }}"
+BOOTPROTO="{{ ifcfg.bootproto | default('none') }}"
+{% if ifcfg.ipaddr is defined %}
+IPADDR="{{ ifcfg.ipaddr }}"
+{% endif %}
+{% if ifcfg.netmask is defined %}
+NETMASK="{{ ifcfg.netmask }}"
+{% endif %}
+{% if ifcfg.gateway is defined %}
+GATEWAY="{{ ifcfg.gateway }}"
+{% endif %}
+{% if ifcfg.dns1 is defined %}
+DNS1="{{ ifcfg.dns1 }}"
+{% endif %}
+{% if ifcfg.dns2 is defined %}
+DNS2="{{ ifcfg.dns2 }}"
+{% endif %}
+NM_CONTROLLED=no

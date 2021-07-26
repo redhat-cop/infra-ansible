@@ -1,0 +1,48 @@
+---
+
+- name: Download Minishift from official release
+  block:
+    - name: Get latest version of Minishift
+      uri:
+        url: https://api.github.com/repos/minishift/minishift/releases/latest
+        status_code: 200
+        return_content: yes
+        body_format: json
+      register: minishift_version_response
+      delegate_to: localhost
+
+    - name: Set Minishift version
+      set_fact:
+        minishift_version: "{{ minishift_version_response.json.tag_name }}"
+      delegate_to: localhost
+
+    - name: Set Minishift Download URL
+      set_fact:
+        minishift_url: "https://github.com/minishift/minishift/releases/download/{{ minishift_version }}/minishift-{{ minishift_version | regex_replace('v') }}-linux-amd64.tgz"
+      delegate_to: localhost
+  when: minishift_url is not undefined and minishift_url|trim != ''
+
+- name: Download Minishift
+  get_url:
+    url: "{{ minishift_url }}"
+    dest: "{{ minishift_tmp_dir }}/minishift.tar.gz"
+  delegate_to: localhost
+
+- name: Extract Minishift
+  become: "{{ minishift_binary_location_escalation | bool }}"
+  command: >
+    tar --strip-components=1 -xzf {{ minishift_tmp_dir }}/minishift.tar.gz -C {{ minishift_install_dir }}
+  args:
+    warn: false
+  delegate_to: localhost
+
+- name: Remove Downloaded Minishift
+  file:
+    state: absent
+    path: "{{ minishift_tmp_dir }}/minishift.tar.gz"
+  delegate_to: localhost
+
+- name: Set Minishift Executable
+  set_fact:
+    minishift_binary: "{{ minishift_install_dir }}/minishift"
+  delegate_to: localhost

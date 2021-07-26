@@ -1,0 +1,11 @@
+
+[osp-provisioner]
+localhost
+
+[nfs-server]
+
+[osp_instances:children]
+nfs-server
+
+[rhsm_hosts:children]
+nfs-server

@@ -1,0 +1,11 @@
+
+module nova-ssh 1.0;
+
+require {
+	type nova_var_lib_t;
+	type sshd_t;
+	class file { getattr open read };
+}
+
+#============= sshd_t ==============
+allow sshd_t nova_var_lib_t:file { getattr open read };

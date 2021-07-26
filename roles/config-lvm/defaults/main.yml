@@ -1,0 +1,4 @@
+---
+
+lvm_fstype: "xfs"
+default_lv_size: "100%VG"

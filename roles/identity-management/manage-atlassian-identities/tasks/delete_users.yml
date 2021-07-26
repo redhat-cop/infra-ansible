@@ -1,0 +1,22 @@
+---
+
+- name: Delete User(s)
+  uri:
+    url: '{{ atlassian.url }}/rest/api/2/group?groupname={{ group.user_name }}'
+    method: DELETE
+    user: '{{ atlassian.username }}'
+    password: '{{ atlassian.password }}'
+    force_basic_auth: yes
+    status_code:
+      - 200
+    body_format: json
+  with_items:
+    - "{{ identities.users }}"
+  loop_control:
+    loop_var: user
+  when:
+    - identities.users|length > 0
+    - user.targets is undefined or
+      'atlassian' in user.targets
+    - user.state is defined
+    - user.state == "absent"

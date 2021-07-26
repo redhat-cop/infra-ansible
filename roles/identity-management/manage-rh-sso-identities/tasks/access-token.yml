@@ -1,0 +1,14 @@
+---
+- name: "Request Red Hat SSO REST API Access Token"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ rh_sso_admin_user }}"
+      password: "{{ rh_sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_token
+

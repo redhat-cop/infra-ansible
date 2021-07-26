@@ -1,0 +1,13 @@
+
+[osp-provisioner]
+localhost
+
+[tower-management-host]
+localhost
+
+[osp_instances:children]
+ansible-tower
+
+[ansible-tower]
+
+

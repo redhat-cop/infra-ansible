@@ -1,0 +1,7 @@
+---
+- name: 'github.com cleanup temp'
+  delegate_to: localhost
+  file:
+    path: '{{ tmp_dir.path }}'
+    state: absent
+

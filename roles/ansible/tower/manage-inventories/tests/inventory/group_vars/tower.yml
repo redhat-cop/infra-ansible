@@ -1,0 +1,19 @@
+---
+
+ansible_tower:
+  admin_password: "admin01"
+  inventories:
+  - name: "Inventory1"
+    description: "My Hosts"
+    organization: "Default"
+    variables: "---"
+    hosts:
+    - name: "localhost"
+      description: ""
+      variables: |-
+        ---
+        ansible_connection: local
+    groups:
+    - name: "seed_hosts"
+      hosts:
+      - name: "localhost"

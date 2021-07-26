@@ -1,0 +1,26 @@
+---
+- name: 'Check if mongodb is installed'
+  command: which mongod
+  register: mongod_check
+  ignore_errors: yes
+
+- name: 'Install mongodb if not installed'
+  include_tasks: 'install_mongodb.yml'
+  when: mongod_check != '/usr/bin/mongod'
+
+- name: 'Start MongoDB'
+  service:
+    name: mongod
+    state: started
+
+- name: 'Check if pip is installed'
+  command: which pip
+  register: pip_check
+  ignore_errors: yes
+
+- name: 'Install pip if not installed'
+  command: easy_install pip
+  when: pip_check != '/usr/bin/pip'
+
+- name: 'Install pymongo'
+  command: pip install pymongo

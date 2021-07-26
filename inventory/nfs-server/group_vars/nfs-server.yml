@@ -1,0 +1,13 @@
+---
+
+# Need to become "root" to perform the install
+ansible_become: true
+
+nfs_storage_device: /dev/vdb
+
+nfs_shares:
+- name: share1
+- name: share2
+- name: share3
+- name: share4
+- name: share5

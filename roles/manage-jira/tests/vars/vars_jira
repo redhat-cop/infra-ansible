@@ -1,0 +1,29 @@
+---
+atlassian:
+
+  jira:
+    username: user@example.com
+    password: YourPassword123
+    url: https://example-test.atlassian.net
+    lead: "example"
+
+    project:
+      name: "example"
+      key: "EX"
+      description: "Example Jira Project"
+      category_name: "Example Project Category"
+      category_description: "Exampe Project Category"
+    
+    groups:
+      - name: jira-administrators
+        role: "admin"
+      - name: leads
+        role: "admin"
+      - name: team
+        role: "member"
+      - name: viewer
+        role: "read"
+
+    permission_scheme:
+      name: "example"
+      description: "Example Permission Scheme"

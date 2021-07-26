@@ -1,0 +1,10 @@
+---
+
+- import_tasks: determine-action.yml
+
+- block:
+    - import_tasks: prereq.yml
+    - import_tasks: get-zone-records.yml
+    - import_tasks: process-views.yml
+  when:
+    - route53_processing|bool == True

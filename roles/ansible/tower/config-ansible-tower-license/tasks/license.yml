@@ -1,0 +1,20 @@
+---
+
+- name: "Call 'wait-for-tower-to-be-ready' to ensure Ansible Tower is ready"
+  include_role:
+    name: "ansible/tower/wait-for-tower-to-be-ready"
+
+- name: "Add Tower license"
+  uri:
+    url: "{{ ansible_tower.url | regex_replace('\\/$','')}}/api/v2/config/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: '{{ lookup("file", ansible_tower.install.license_file) | from_json | combine({"eula_accepted":"true"}) | to_json }}'
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+

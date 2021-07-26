@@ -1,0 +1,12 @@
+---
+
+- name: "Login and create a session with the IdM"
+  uri:
+    url: "https://{{ idm_fqdn }}/ipa/session/login_password"
+    method: POST
+    body: "user={{ idm_user }}&password={{ idm_password }}"
+    validate_certs: no
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+  register: idm_session
+

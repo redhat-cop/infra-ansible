@@ -1,0 +1,7 @@
+---
+
+- name: "Generate and store away the Let's Encrypt Certs"
+  hosts: cert-host
+  roles:
+  - role: certs/generate-csr
+  - role: certs/acme-host-cert

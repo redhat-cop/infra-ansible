@@ -1,0 +1,22 @@
+---
+- name: Delete Elastic IP
+  ec2_eip:
+    device_id: "{{ ec2instance.instance_id }}"
+    public_ip: "{{ ec2instance.public_ip_address }}"
+    region: "{{ aws_region }}"
+    release_on_disassociation: yes
+    state: absent
+  retries: 3
+  when: aws_instance.assign_public_ip and ec2instance is defined
+
+- name: Delete Instance
+  ec2:
+    state: absent
+    instance_ids:
+    - "{{ ec2instance.instance_id }}"
+    region: "{{ aws_region }}"
+    wait: yes
+    zone: "{{ aws_instance.zone }}"
+  retries: 3
+  delay: 3
+  when: ec2instance is defined

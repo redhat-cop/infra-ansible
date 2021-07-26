@@ -1,0 +1,12 @@
+---
+- name: Process all tasks
+  block:
+    - include_tasks: create_users.yml
+    - include_tasks: create_policies.yml
+    - include_tasks: create_groups.yml
+    - include_tasks: delete_users.yml
+    - include_tasks: delete_policies.yml
+    - include_tasks: delete_groups.yml
+
+  when:
+    - identities.targets is undefined or 'aws' in identities.targets

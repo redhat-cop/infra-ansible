@@ -1,0 +1,67 @@
+#!/usr/bin/php
+<?php
+
+$DataSpaceCritical = 90;
+$DataSpaceWarning = 80;
+
+
+$CLI_options = getopt("w:c:");
+
+if (!empty($CLI_options['w']))
+{
+	$DataSpaceWarning = $CLI_options['w'];
+}
+
+if (!empty($CLI_options['c']))
+{
+	$DataSpaceCritical = $CLI_options['c'];
+}
+
+
+$ReturnCode = 0;
+$DockerInfo = `docker info 2>/dev/null`;
+
+preg_match('/Data Space Total: (\S+) (\w+)/', $DockerInfo, $DataSpaceTotal);
+preg_match('/Data Space Available: (\S+) (\w+)/', $DockerInfo, $DataSpaceAvailable);
+
+
+if ($DataSpaceTotal[2] !== $DataSpaceAvailable[2])
+{
+	echo "WARNING: Mismatched units for Data Space\n";
+	$ReturnCode = 1;
+}
+
+$DataSpaceConsumption = (($DataSpaceTotal[1] - $DataSpaceAvailable[1]) * 100) / $DataSpaceTotal[1];
+$DataSpaceConsumption = number_format($DataSpaceConsumption, 2);
+
+# echo "Consumption : ${DataSpaceConsumption} %\n";
+
+# Check to see if consumption is above the thresholds
+# Calculate the current consumption
+
+# Check for critical first
+
+echo "Data Space ";
+
+if ($DataSpaceConsumption > $DataSpaceCritical)
+{
+ 	echo "Critical ";
+	$ReturnCode = 2;
+}
+elseif ($DataSpaceConsumption > $DataSpaceWarning)
+{
+ 	echo "Warning ";
+	$ReturnCode = 1;
+}
+else
+{
+	echo "OK ";
+}
+
+echo "(${DataSpaceConsumption}% full)";
+
+echo "\n";
+
+exit($ReturnCode);
+
+?>

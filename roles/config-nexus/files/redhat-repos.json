@@ -1,0 +1,5 @@
+{
+  "name": "redhat-repos",
+  "type": "groovy",
+  "content": "if ( !repository.repositoryManager.exists( 'jboss-public' ) ){ repository.createMavenProxy('jboss-public','https://repository.jboss.org/nexus/content/groups/public/') }; if ( !repository.repositoryManager.exists( 'redhat-ga' ) ){ repository.createMavenProxy('redhat-ga','https://maven.repository.redhat.com/ga/') }; if ( !repository.repositoryManager.exists( 'redhat-earlyaccess-all' ) ){ repository.createMavenProxy('redhat-earlyaccess-all','https://maven.repository.redhat.com/earlyaccess/all/') }; if ( !repository.repositoryManager.exists( 'redhat-public' ) ){ repository.createMavenGroup('redhat-public', ['jboss-public','redhat-earlyaccess-all','redhat-ga']) }"
+}

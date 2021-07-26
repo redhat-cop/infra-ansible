@@ -1,0 +1,19 @@
+---
+
+- hosts: satellite-server
+  tasks:
+    - import_role:
+        name: config-satellite
+        tasks_from: manifest
+      tags:
+        - 'update_manifest'
+    - import_role:
+        name: config-satellite
+        tasks_from: repos
+      tags:
+        - 'update_repos'
+    - import_role:
+        name: config-satellite
+        tasks_from: activation_keys
+      tags:
+        - 'update_activation_keys'

@@ -1,0 +1,13 @@
+---
+
+- import_playbook: "prep.yml"
+
+- import_playbook: "infra-hosts.yml"
+
+- import_playbook: "infra-virt-hosts.yml"
+
+- import_playbook: "vm.yml"
+
+- import_playbook: "services.yml"
+
+- import_playbook: "manage-lb/lb-vms.yml"

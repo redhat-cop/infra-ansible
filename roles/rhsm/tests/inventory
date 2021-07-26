@@ -1,0 +1,5 @@
+---
+
+[test-sat6]
+192.168.1.23 ansible_user=cloud-user ansible_become=True
+

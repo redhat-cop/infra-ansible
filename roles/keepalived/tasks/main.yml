@@ -1,0 +1,4 @@
+---
+
+- import_tasks: prereq.yml
+- import_tasks: keepalived-config.yml

@@ -1,0 +1,8 @@
+---
+
+ansible_user: centos
+ansible_become: True
+
+docker_install: True
+install_prerequisites: True
+

@@ -1,0 +1,60 @@
+---
+pkg_update: true
+hosting_infrastructure: openstack
+ansible_user: fedora
+
+osp_networks:
+- name: "bob-default"
+  description: "Bob's Network"
+
+osp_subnets:
+- name: "default-subnet"
+  network_name: "bob-default"
+  allocation_pool: "start=192.168.10.2,end=192.168.10.254"
+  dns_nameservers:
+  - "10.2.3.4"
+  - "10.2.3.5"
+  cidr: "192.168.10.0/24"
+  gateway: "192.168.10.1"
+
+osp_routers:
+- name: "bob-router"
+  external_gateway: "external"
+  subnet: "default-subnet"
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "vnc-sec-group"
+  description: "My VNC Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 5901
+    port_range_max: 5901
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+
+osp_instances:
+- name: "bastion-bob0"
+  meta:
+    group: bastion
+  image: "Fedora-Cloud-Base-28-1.1.x86_64"
+  key_name: "bob-laptop"
+  flavor: "m1.medium"
+  network: "bob-default"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - vnc-sec-group

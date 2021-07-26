@@ -1,0 +1,6 @@
+---
+
+- name: Manage Atlassian Identities (users/groups)
+  hosts: identity-hosts
+  roles:
+    - role: identity-management/manage-atlassian-identities

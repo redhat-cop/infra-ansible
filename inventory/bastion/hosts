@@ -1,0 +1,8 @@
+
+[osp-provisioner]
+localhost
+
+[bastion]
+
+[osp_instances:children]
+bastion

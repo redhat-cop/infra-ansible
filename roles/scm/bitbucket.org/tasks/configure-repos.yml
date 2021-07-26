@@ -1,0 +1,112 @@
+---
+
+- name: Set default branch restrictions
+  set_fact:
+    branch_restrictions: "{{ default_branch_restrictions }}"
+
+- name: Set branch restrictions if build restrictions are added
+  set_fact:
+    branch_restrictions: "{{ branch_restrictions | union(build_branch_restriction) }}"
+  when:
+    - repo.has_build_branch_restriction is defined
+    - repo.has_build_branch_restriction
+
+- name: Set branch restrictions if they are passed in
+  set_fact:
+    branch_restrictions: "{{ repo.branch_restrictions }}"
+  when:
+    - repo.branch_restrictions is defined
+
+- name: Create a repo with {{ repo.repo_name }} in bitbucket project with {{ repo.project_name }}
+  uri:
+    url: "{{ bitbucket_api_url }}/2.0/repositories/{{ repo.team_name }}/{{ repo.repo_name }}"
+    method: POST
+    user: "{{ bitbucket_username | b64decode | replace('\n', '') }}"
+    password: "{{ bitbucket_admin_password | b64decode | replace('\n', '') }}"
+    force_basic_auth: yes
+    body_format: json
+    body:
+      scm: "git"
+      project:
+        key: "{{ repo.project_name }}"
+      is_private: "{{ repo.is_private | default(true) }}"
+      has_wiki: "{{ repo.has_wiki | default(true) }}"
+      has_issues: "{{ repo.has_issues | default(true) }}"
+    status_code: 200, 400
+  register: create_repo_output
+  tags:
+    - create-repo
+
+- name: Fail if repo doesn't already exist
+  fail:
+    msg: "{{ repo.repo_name }} doesn't exist and there was still a status code: {{ create_repo_output.status }}"
+  when:
+    - create_repo_output.json.error.message != "Repository with this Slug and Owner already exists."
+
+- name: Perform initial commit (only for freshly created repos)
+  uri:
+    url: "{{ bitbucket_api_url }}/2.0/repositories/{{ repo.team_name }}/{{ repo.repo_name }}/src"
+    method: POST
+    user: "{{ bitbucket_username | b64decode | replace('\n', '') }}"
+    password: "{{ bitbucket_admin_password | b64decode | replace('\n', '') }}"
+    force_basic_auth: yes
+    body: "README.md={{ readme_contents }}&message=Initial%20commit"
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+    status_code: 200, 201
+  vars:
+    readme_contents: "{{ lookup( 'template', 'README.md.j2')|urlencode }}"
+  tags:
+    - create-repo
+  when:
+    - create_repo_output.status == 200
+
+- name: Add default reviewers for {{ repo.repo_name }}
+  uri:
+    url: "{{ bitbucket_api_url }}/2.0/repositories/{{ repo.team_name }}/{{ repo.repo_name }}/default-reviewers/{{ item }}"
+    method: PUT
+    user: "{{ bitbucket_username | b64decode | replace('\n', '') }}"
+    password: "{{ bitbucket_admin_password | b64decode | replace('\n', '') }}"
+    force_basic_auth: yes
+  with_items:
+    - "{{ bitbucket_users }}"
+  tags:
+    - default-reviewers
+
+- name: Add branch restrictions on master and passing build for {{ repo.repo_name }}
+  uri:
+    url: "{{ bitbucket_api_url }}/2.0/repositories/{{ repo.team_name }}/{{ repo.repo_name }}/branch-restrictions"
+    method: POST
+    user: "{{ bitbucket_username | b64decode | replace('\n', '') }}"
+    password: "{{ bitbucket_admin_password | b64decode | replace('\n', '') }}"
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    force_basic_auth: yes
+    body_format: json
+    body: "{{ item }}"
+    status_code: 201, 409
+  with_items: "{{ branch_restrictions }}"
+  tags:
+    - branch-restrictions
+
+# TODO: bitbucket.org API 2.0 does not currently support changing the default merge strategies
+#- name: Create default merge strategy for {{ repo.repo_name }}
+#  uri:
+#    url: "{{ bitbucket_api_url }}/2.0/repositories/{{ repo.team_name }}/{{ repo.repo_name }}/merge-strategies"
+#    method: GET
+#    user: "{{ bitbucket_username | b64decode | replace('\n', '') }}"
+#    password: "{{ bitbucket_admin_password | b64decode | replace('\n', '') }}"
+#    force_basic_auth: yes
+#    headers:
+#      Content-Type: "application/json"
+#      Accept: "application/json"
+#    body_format: json
+#    body:
+#      mergeConfig:
+#        defaultStrategy:
+#          id: "squash"
+#        strategies:
+#          - id: "squash"
+#  tags:
+#    - default-merge-strategy

@@ -1,0 +1,8 @@
+---
+
+- name: "Add version locks for specified packages"
+  shell: >
+    {{ ansible_pkg_mgr }} versionlock {{ item }}
+  with_items:
+    - "{{ versionlock_packages }}"
+

@@ -1,0 +1,11 @@
+
+[osp-provisioner]
+localhost
+
+[satellite-server]
+
+[osp_instances:children]
+satellite-server
+
+[rhsm_hosts:children]
+satellite-server

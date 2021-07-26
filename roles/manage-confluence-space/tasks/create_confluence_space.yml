@@ -1,0 +1,16 @@
+---
+- name: Create Confluence Space
+  uri:
+    url: '{{ confluence_destination_url }}/wiki/rest/api/space'
+    method: POST
+    user: '{{ confluence_destination_username }}'
+    password: '{{ confluence_destination_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    body: "{{ lookup('template', 'space.j2') }}"
+  register: space_content
+
+- name: set fact
+  set_fact:
+    destination_homepage_id: "{{ space_content.json['homepage']['id']}}"

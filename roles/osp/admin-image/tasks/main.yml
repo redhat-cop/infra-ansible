@@ -1,0 +1,11 @@
+---
+
+- name: "Create the image"
+  os_image:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
+    filename: "{{ item.filename }}"
+    disk_format: "{{ item.disk_format | default(omit) }}"
+    is_public: "{{ item.is_public | default(omit) }}"
+    name: "{{ item.name }}"
+  with_items:
+  - "{{ osp_images | default([]) }}"

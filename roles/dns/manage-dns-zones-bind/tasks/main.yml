@@ -1,0 +1,12 @@
+---
+
+- import_tasks: determine-action.yml
+
+- block:
+    - include_tasks: prereq.yml
+    - include_tasks: process-views.yml
+    - include_tasks: keys.yml
+    - include_tasks: print_keys.yml
+  when:
+    - named_processing|bool == True
+

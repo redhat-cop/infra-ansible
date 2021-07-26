@@ -1,0 +1,23 @@
+---
+- name: Create Jira Permission Scheme
+  uri:
+    url: "{{ jira_url }}/rest/api/2/permissionscheme"
+    method: POST
+    user: "{{ jira_username }}"
+    password: "{{ jira_password }}"
+    return_content: yes
+    force_basic_auth: yes
+    header:
+      - Accept: 'application/json'
+      - Content-Type: 'application/json'
+    body_format: json
+    body:
+      name: "{{ atlassian.jira.permission_scheme.name }}"
+      description: "{{ atlassian.jira.permission_scheme.description }}"
+      permissions: "{{ permission_list }}"
+    status_code: 201
+  register: permission_scheme_output
+
+- name: Set fact for Permission Scheme ID
+  set_fact:
+    default_permission_scheme_id: "{{ permission_scheme_output.json.id }}"

@@ -1,0 +1,52 @@
+---
+
+- name: "Ensure 'dhcp_domain' is unset for nova"
+  lineinfile:
+    path: "/etc/nova/nova.conf"
+    regexp: '^dhcp_domain='
+    line: 'dhcp_domain='
+  notify: 'restart openstack-nova-compute'
+
+- name: "Set a 'disk_alocation_ratio' to allow for overcommit on the local disk"
+  lineinfile:
+    path: "/etc/nova/nova.conf"
+    regexp: '^disk_allocation_ratio='
+    line: 'disk_allocation_ratio=2.0'
+  notify: 'restart openstack-nova-compute'
+
+- name: "Workaround for OSP >12 to allow for Nova Migrations"
+  replace:
+    path: "/var/lib/nova/.ssh/config"
+    regexp: '(.*)'
+    replace: '# \1'
+
+- name: "Ensure Nova Migration doesn't get blocked by host key checking"
+  lineinfile:
+    path: "/var/lib/nova/.ssh/config"
+    regexp: '^StrictHostKeyChecking '
+    line: 'StrictHostKeyChecking no'
+    create: yes
+    owner: nova
+    mode: 0644
+
+- name: "Copy SELinux .te file to remote host"
+  copy:
+    src: "nova-ssh.te"
+    dest: "/tmp/nova-ssh.te"
+
+- name: "Build SELinux module (.mod) to allow Nova Migration"
+  command: checkmodule -M -m /tmp/nova-ssh.te -o /tmp/nova-ssh.mod
+
+- name: "Build SELinux module (.pp) to allow Nova Migration"
+  command: semodule_package -m /tmp/nova-ssh.mod -o /tmp/nova-ssh.pp
+
+- name: "Enable the 'nova' user's shell"
+  user:
+    name: nova
+    shell: /bin/bash
+
+- name: "Load SELinux module to allow Nova Migration"
+  command: semodule -i /tmp/nova-ssh.pp
+  notify:
+  - 'restart openstack-nova-compute'
+  - 'restart libvirtd'

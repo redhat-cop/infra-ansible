@@ -1,0 +1,13 @@
+---
+
+- name: Check current state of 'named'
+  shell: systemctl status named
+  register: current_service_state
+  ignore_errors: true
+
+- name: Restart service if already running
+  service:
+    name: named
+    state: restarted
+  when:
+  - current_service_state.rc == 0

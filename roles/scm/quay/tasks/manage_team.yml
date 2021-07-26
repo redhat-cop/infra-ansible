@@ -1,0 +1,48 @@
+---
+
+- name: Create/Update Quay Team
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}"
+    method: PUT
+    body:
+      name: "{{ quay_team.name }}"
+      role: "{{ quay_team.role | default('member') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 201
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+
+- name: Get Team Members
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members"
+    validate_certs: "{{ quay_validate_certs }}"
+    status_code:
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: quay_team_members
+
+- name: Manage Team Members
+  include_tasks: manage_team_members.yml
+  loop: "{{ quay_team.members | default([]) }}"
+  loop_control:
+    loop_var: team_member
+
+- name: Delete Extra Team Members
+  block:
+    - name: Delete Team Member
+      uri:
+        url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members/{{ quay_organization.name + '+' + item.name if 'type' in item and item.type == 'robot' else item.name }}"
+        method: DELETE
+        validate_certs: "{{ quay_validate_certs }}"
+        status_code:
+          - 204
+        headers:
+          Authorization: "{{ auth_header }}"
+      loop: "{{ quay_team_members.json.members }}"
+      when: (quay_team.members | default([])) | selectattr('name', 'equalto', item.name.split('+')[1] if item.is_robot else item.name) | list |  length == 0
+  when: quay_prune|bool
+

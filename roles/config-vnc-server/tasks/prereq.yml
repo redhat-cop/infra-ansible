@@ -1,0 +1,25 @@
+---
+
+- name: 'Install required packages'
+  package:
+    name:
+      - tigervnc-server
+      - policycoreutils-python-utils
+      - checkpolicy
+      - firewalld
+      - python3-firewall
+    state: installed
+
+- name: 'Ensure firewalld is running'
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: 'Open Firewall for VNC use'
+  firewalld:
+    service: vnc-server
+    permanent: yes
+    state: enabled
+    immediate: yes
+

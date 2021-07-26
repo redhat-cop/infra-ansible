@@ -1,0 +1,34 @@
+
+
+# Make sure the name matches the frontend name
+backend quay_http
+    balance roundrobin
+
+    {% for host in groups.quay_enterprise %}
+    server quay_http_{{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:80 check
+    {% endfor %}
+
+# Make sure the name matches the frontend name
+backend quay_https
+    mode tcp
+    balance source
+    option httpchk GET /health/instance
+    http-check expect status 200
+
+    {% for host in groups.quay_enterprise %}
+    server quay_https_{{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:443 check check-ssl verify none
+    {% endfor %}
+
+# Make sure the name matches the frontend name
+backend redis
+    mode tcp
+    option tcp-check
+    tcp-check send PING\r\n
+    tcp-check expect string +PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+    {% for host in groups.redis %}
+    server redis_{{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:6379 check inter 1s
+    {% endfor %}

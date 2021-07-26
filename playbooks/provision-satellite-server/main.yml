@@ -1,0 +1,36 @@
+---
+
+- import_playbook: ../prep.yml
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../osp/manage-user-network.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../osp/provision-osp-instance.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../rhsm.yml
+  tags:
+  - 'never'
+  - 'install'
+
+- hosts: satellite-server
+  roles:
+  - role: update-host
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: configure-satellite-server.yml
+  tags:
+  - 'always'

@@ -1,0 +1,29 @@
+---
+
+- name: Create Jira Project
+  uri:
+    url: "{{ jira_url }}/rest/api/2/project"
+    method: POST
+    user: "{{ jira_username }}"
+    password: "{{ jira_password }}"
+    return_content: yes
+    force_basic_auth: yes
+    body_format: json
+    header:
+      - Accept: 'application/json'
+      - Content-Type: 'application/json'
+    body: "{ 'key': '{{ atlassian.jira.project.key }}',
+             'name': '{{ atlassian.jira.project.name }}',
+             'projectTypeKey': '{{ atlassian.jira.project.type_key | default('software')}}',
+             'projectTemplateKey': '{{ atlassian.jira.project.template_key | default('com.pyxis.greenhopper.jira:gh-simplified-agility-scrum')}}',
+             'description': '{{ atlassian.jira.project.description }}',
+             'lead': '{{ atlassian.jira.lead }}',
+             'assigneeType': 'PROJECT_LEAD',
+             'avatarId': 10200,
+             'permissionScheme': '{{ atlassian.jira.permission_scheme.id | default(default_permission_scheme_id) }}',
+             'notificationScheme': 10000,
+             'categoryId': '{{ CategoryID }}'
+           }"
+    status_code: 201
+  register: result
+

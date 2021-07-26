@@ -1,0 +1,8 @@
+---
+- name: Delete Security Groups
+  ec2_group:
+    name: "{{ item.name }}"
+    region: "{{ aws_region }}"
+    state: absent
+    vpc_id: "{{ vpc.vpcs[0].vpc_id }}"
+  with_items: "{{ security_groups | default([]) }}"

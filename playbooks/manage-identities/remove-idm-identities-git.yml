@@ -1,0 +1,65 @@
+---
+
+- name: Remove IPA/IdM identities and update repository
+  hosts: identity-hosts
+  gather_facts: no
+  pre_tasks:
+
+    - name: WARNING MESSAGE
+      debug:
+        msg:
+          - "##### WARNING #####"
+          - ""
+          - "No repository information was provided, changes won't be synchronised."
+          - ""
+          - "##### WARNING #####"
+      when:
+        - not repository is defined
+
+    - name: "Clone git repository"
+      include_role:
+        name: scm/git
+      vars:
+        action: pull
+      when:
+        - repository is defined
+      tags:
+        - always
+
+  roles:
+
+    - role: identity-management/remove-idm-identities
+
+  post_tasks:
+
+    - name: "Combine list of users to remove"
+      set_fact:
+        users_removed_total: "{{ (users_removed_success | default([])) + (users_removed_skipped | default([])) | list | flatten | unique }}"
+
+    - name: "Remove processed files"
+      include_role:
+        name: files/remove-files
+      vars:
+        dry_run: False
+        directory: "{{ scm_dir }}/queue"
+        files: "user-management-*.json"
+        match: "{{ users_removed_total }}"
+
+    - name: "Push git repository"
+      include_role:
+        name: scm/git
+      vars:
+        action: push
+      when:
+        - repository is defined
+      tags:
+        - always
+
+    - name: "Removed Users Status"
+      debug:
+        msg:
+          - "Repository: {{ scm_dir }}"
+          - "Success: {{ users_removed_success | default ([]) | length }}"
+          - "Failed: {{ users_removed_failed | default ([]) | length }}"
+          - "Skipped: {{ users_removed_skipped | default ([]) | length }}"
+          - "Total: {{ users_removed_total | default ([]) | length }}"

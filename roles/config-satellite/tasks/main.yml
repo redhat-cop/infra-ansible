@@ -1,0 +1,7 @@
+---
+
+- import_tasks: "prereq.yml"
+- import_tasks: "install.yml"
+- import_tasks: "manifest.yml"
+- import_tasks: "repos.yml"
+- import_tasks: "activation_keys.yml"

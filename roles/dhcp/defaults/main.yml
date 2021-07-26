@@ -1,0 +1,16 @@
+---
+# Location on target machine to place the config file
+dhcp_config_dest_file: /etc/dhcp/dhcpd.conf
+
+# default name for temp file that is created from the template
+dhcp_config_temp_file: dhcpTempConfigFile
+
+# Temp Directory
+dhcp_config_temp_dir: /tmp
+
+# default location on target machine for testing syntax
+dhcp_config_temp_loc: '{{dhcp_config_temp_dir }}/{{ dhcp_config_temp_file }}'
+
+#default null entries
+dhcp_host_entries: {}
+dhcp_group_entries: {}

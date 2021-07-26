@@ -1,0 +1,12 @@
+---
+- name: Configure Jira Variables
+  set_fact:
+    jira_url: "{{ atlassian.jira.url | default(atlassian.url) }}"
+    jira_username: "{{ atlassian.jira.username | default(atlassian.username) }}"
+    jira_password: "{{ atlassian.jira.password | default(atlassian.password) }}"
+
+- name: Build permission list variable
+  include_tasks: build_permissions_list.yml
+  loop: "{{ atlassian.jira.groups | default([]) }}"
+  loop_control:
+    loop_var: group

@@ -1,0 +1,12 @@
+---
+
+- name: "Assign role for project {{ project.name }}"
+  shell: >
+    openstack role add \
+      --user "{{ item.0.user }}" \
+      --user-domain "{{ item.0.user_domain | default('') }}" \
+      --project "{{ project.name }}" \
+      "{{ item.1 }}"
+  with_subelements:
+  - "{{ project.members }}"
+  - roles

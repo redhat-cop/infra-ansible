@@ -1,0 +1,13 @@
+#!/bin/sh
+
+[ -r /etc/sysconfig/i18n ] && . /etc/sysconfig/i18n
+export LANG
+export SYSFONT
+vncconfig -iconic &
+unset DBUS_SESSION_BUS_ADDRESS
+
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+xsetroot -solid grey
+xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+startxfce4 &
+

@@ -1,0 +1,70 @@
+---
+
+# Need to verify that providerId is a valid value
+
+- name: "Request Red Hat SSO REST API Access Token"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ rh_sso_admin_user }}"
+      password: "{{ rh_sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_token
+
+- name: "Get Existing Authentication Flows For realm: {{ af.realm }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_flows
+
+- name: "Check If Authentication Flow: {{ af.name }} exists"
+  set_fact:
+    af_check: "{{ rh_sso_flows.json | json_query(query) }}"
+  vars:
+    query: "[?alias=='{{ af.name }}'].alias"
+
+- name: "Retrieve Template For Authentication Flow: {{ af.name }}"
+  set_fact:
+    auth_flow_json: "{{ lookup('template', 'auth-flow.json.j2') | to_json }}"
+
+- name: "Create Authentication Flow: {{ af.name }} in realm: {{ af.realm }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows"
+    method: POST
+    body: "{{ auth_flow_json }}"
+    body_format: json
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  when:
+    - af_check[0] is not defined
+
+- name: "Notify that Authentication Flow: {{ af.name }} already exists"
+  debug:
+    msg: "Authentication Flow: {{ af.name }} already exists"
+  when:
+    - af_check[0] is defined
+
+- name: "Get Executions for Authentication Flow: {{ af.name }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ af.realm }}/authentication/flows/{{ af.name }}/executions"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_exec
+
+- name: "Ensure Execution Flows Exist"
+  include_tasks: 'manage-auth-flow-executions.yml'
+  loop: "{{ af.executions }}"
+  loop_control:
+    loop_var: af_exec
+

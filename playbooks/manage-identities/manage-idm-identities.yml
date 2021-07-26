@@ -1,0 +1,10 @@
+---
+
+- name: Create IPA/IdM identities
+  hosts: identity-hosts
+  gather_facts: no
+  roles:
+    - role: identity-management/manage-idm-identities
+    - role: identity-management/manage-user-password
+    - role: identity-management/manage-idm-user-password
+

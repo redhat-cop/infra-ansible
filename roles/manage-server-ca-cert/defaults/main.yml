@@ -1,0 +1,5 @@
+---
+
+list_of_additional_ca_certs: []
+server_ca_location: "/etc/pki/ca-trust/source/anchors/"
+

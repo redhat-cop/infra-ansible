@@ -1,0 +1,26 @@
+---
+- name: 'Pre-Req: Install required packages '
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+  - firewalld
+  - python-firewall
+  - libsemanage-python
+  - dhcp
+  notify: 'enable and start dhcp services'
+
+- name: 'Start firewalld service'
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: 'Pre-Req: Open Firewall for dhcp use'
+  firewalld:
+    service: "{{item}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+  - dhcp

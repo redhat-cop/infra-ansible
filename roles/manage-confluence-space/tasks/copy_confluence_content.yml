@@ -1,0 +1,101 @@
+---
+- name: Get Content from Source
+  uri:
+    url: '{{ confluence_source_url }}/wiki/rest/api/content/{{ confluence_space_content.id }}?expand=body.storage,history,space,container.history,container.version,version,ancestors'
+    method: GET
+    user: '{{ confluence_source_username }}'
+    password: '{{ confluence_source_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: content_json
+
+- name: Map ancestor ids if any
+  set_fact:
+    content_ancestors: "{{ content_json.json.ancestors | map(attribute='id') | list | map('extract', id_mapping) | list }}"
+
+- name: Pick only the last ancestor
+  set_fact:
+    content_ancestors: "{{ [-1] | map('extract', content_ancestors) | list }}"
+  when:
+    - content_ancestors|length > 0
+
+- name: Get the current page version
+  uri:
+    url: '{{ confluence_destination_url }}/wiki/rest/api/space/{{ atlassian.confluence.destination.key }}/content?expand=homepage,version'
+    method: GET
+    user: '{{ confluence_destination_username }}'
+    password: '{{ confluence_destination_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: homepage_content
+  no_log: false
+
+- name: set homepage at destination
+  block:
+    - set_fact:
+        homepage:
+          body:
+            storage:
+              value: "{{ content_json.json.body.storage.value }}"
+              representation: "storage"
+          title: "{{ atlassian.confluence.destination.name }}"
+          type: "{{ content_json.json.type }}"
+          space:
+            key: "{{ atlassian.confluence.destination.key }}"
+          version:
+            number: "{{ homepage_content.json['page']['results'][0]['version']['number'] + 1 }}"
+    - uri:
+        url: '{{ confluence_destination_url }}/wiki/rest/api/content/{{ destination_homepage_id }}'
+        method: PUT
+        user: '{{ confluence_destination_username }}'
+        password: '{{ confluence_destination_password }}'
+        force_basic_auth: yes
+        status_code: 200
+        body_format: json
+        body: "{{  homepage | to_json }}"
+        return_content: yes
+      register: homepage_content_json
+
+    - set_fact:
+        id_mapping: "{{ id_mapping|combine({ content_json.json.id : { 'id' : homepage_content_json.json.id }}) }}"
+  when:
+    - content_json.json.id == source_homepage_id
+
+- name: set payload for create contect
+  set_fact:
+    payload:
+      id: "{{ content_json.json.id }}"
+      title: "{{ content_json.json.title }}"
+      type: "{{ content_json.json.type }}"
+      space:
+        key: "{{ atlassian.confluence.destination.key }}"
+      body:
+        storage:
+          value: "{{ content_json.json.body.storage.value }}"
+          representation: "storage"
+
+- name: if page is child add ancestors
+  set_fact:
+    payload: "{{ payload | combine( {'ancestors': content_ancestors} )}}"
+  when:
+    - content_json.json.ancestors|length > 1
+
+- name: Create Content at Destination Site
+  uri:
+    url: '{{ confluence_destination_url }}/wiki/rest/api/content'
+    method: POST
+    user: '{{ confluence_destination_username }}'
+    password: '{{ confluence_destination_password }}'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    body: "{{  payload |  to_json }}"
+    return_content: yes
+  register: new_content_json
+
+- name: Append New id to old id mapping
+  set_fact:
+    id_mapping: "{{ id_mapping|combine({ content_json.json.id : { 'id' : new_content_json.json.id }}) }}"
+

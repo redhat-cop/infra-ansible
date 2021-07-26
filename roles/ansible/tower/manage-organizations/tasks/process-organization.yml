@@ -1,0 +1,54 @@
+---
+- name: 'Get the organization id based on the name'
+  set_fact:
+    organization_id: '{{ item.id }}'
+  when:
+    - item.name|trim == organization.name|trim
+  with_items:
+    - '{{ existing_organizations_output.rest_output }}'
+
+- name: 'Load up the organization'
+  uri:
+    url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/organizations/'
+    user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+    password: '{{ ansible_tower.admin_password }}'
+    force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'organization.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: 'application/json'
+      Accept: 'application/json'
+    validate_certs: '{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}'
+    status_code: 201
+  when: organization_id is not defined
+
+- name: 'Update existing organization'
+  uri:
+    url: '{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/organizations/{{ organization_id }}/'
+    user: '{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}'
+    password: '{{ ansible_tower.admin_password }}'
+    force_basic_auth: yes
+    method: PUT
+    body: "{{ lookup('template', 'organization.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: 'application/json'
+      Accept: 'application/json'
+    validate_certs: '{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}'
+    status_code: 200
+  when: organization_id is defined
+
+- name: 'Add or associate the galaxy credentials to the organization'
+  include_tasks: process-galaxy-credentials.yml
+  with_items:
+    - '{{ organization.galaxy_credentials }}'
+  loop_control:
+    loop_var: galaxy_credential
+  when:
+    - organization.galaxy_credentials | length > 0
+
+- name: 'Clear/Update facts'
+  set_fact:
+    existing_galaxy_credentials: null
+

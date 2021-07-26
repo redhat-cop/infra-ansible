@@ -1,0 +1,79 @@
+---
+
+- name: "Configure the keystone parameters to allow for multiple domains"
+  ini_file:
+    path: "/etc/keystone/keystone.conf"
+    section: "identity"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_items:
+  - { key: 'domain_specific_drivers_enabled', value: 'true' }
+  - { key: 'domain_config_dir', value: '/etc/keystone/domains' }
+  notify: 'restart keystone'
+
+- name: "Configure the openstack-dashboard parameters to allow for multiple domains"
+  lineinfile:
+    path: "/etc/openstack-dashboard/local_settings"
+    regexp: '^{{ item.key }} ='
+    line: '{{ item.key }} = {{ item.value }}'
+  with_items:
+  - { key: 'OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT', value: 'True' }
+  - { key: 'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN', value: '"default"' }
+  notify: 'restart keystone'
+
+- name: "Ensure target domain directory exists"
+  file:
+    path: "/etc/keystone/domains/"
+    state: directory
+
+- name: "Set SELinux boolean"
+  seboolean:
+    name: authlogin_nsswitch_use_ldap
+    state: yes
+    persistent: yes
+
+- name: "Setup LDAP domain configuration"
+  template:
+    src: keystone_ldap.j2
+    dest: "/etc/keystone/domains/keystone.{{ item.domain }}.conf"
+  notify: 'restart keystone'
+  with_items:
+  - "{{ keystone_ldap }}"
+
+- name: "Create temporary file for keystone rc variables"
+  tempfile:
+    state: file
+    prefix: keystonerc
+  register: keystonerc_file
+  notify:
+  - "remove temporary keystone rc file"
+
+- name: "Source the admin keystonerc file"
+  shell: "source {{ admin_keystonerc_file }}; env | grep '^OS_' > {{ keystonerc_file.path }}"
+
+- name: "Retrive the sourced rc content file"
+  fetch:
+    src: "{{ keystonerc_file.path }}"
+    dest: "{{ keystonerc_file.path }}"
+    flat: yes
+  notify:
+  - "remove local temporary keystone rc file"
+
+- name: "Ensure target directory for 'clouds.cfg' exists"
+  file:
+    path: "{{ clouds_yaml_file | dirname }}"
+    state: directory
+
+- name: "Configure the 'clouds.cfg' file for admin"
+  template:
+    src: clouds_yaml.j2
+    dest: "{{ clouds_yaml_file }}"
+
+- name: "Restart keystone (httpd) to apply config"
+  service:
+    name: httpd
+    state: restarted
+
+- name: "Wait a bit for keystone to catch up"
+  pause:
+    seconds: 10

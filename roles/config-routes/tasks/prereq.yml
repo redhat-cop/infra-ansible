@@ -1,0 +1,11 @@
+---
+
+- name: "Include prereqs per the type of OS"
+  include_tasks: "{{ distro_file }}"
+  with_first_found:
+  - files:
+    - prereq-{{ ansible_distribution }}.yml
+    skip: true
+  loop_control:
+    loop_var: distro_file
+

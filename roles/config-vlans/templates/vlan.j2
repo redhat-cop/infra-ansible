@@ -1,0 +1,28 @@
+VLAN="yes"
+TYPE="Vlan"
+VLAN_NAME_TYPE=VLAN_PLUS_VID_NO_PAD
+DEVICE="{{ ifcfg.device }}"
+NAME="{{ name | default(ifcfg.device) }}"
+PHYSDEV="{{ ifcfg.physdev }}"
+VLAN_ID="{{ ifcfg.vlan_id }}"
+BOOTPROTO="{{ ifcfg.bootproto | default('none') }}"
+MTU="{{ ifcfg.mtu | default('1500') }}"
+{% if ifcfg.ipaddr is defined %}
+IPADDR="{{ ifcfg.ipaddr }}"
+{% endif %}
+{% if ifcfg.netmask is defined %}
+NETMASK="{{ ifcfg.netmask }}"
+{% endif %}
+{% if ifcfg.gateway is defined %}
+GATEWAY="{{ ifcfg.gateway }}"
+{% endif %}
+{% if ifcfg.dns1 is defined %}
+DNS1="{{ ifcfg.dns1 }}"
+{% endif %}
+{% if ifcfg.dns2 is defined %}
+DNS2="{{ ifcfg.dns2 }}"
+{% endif %}
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+ONBOOT="{{ ifcfg.onboot | default('yes') }}"
+NM_CONTROLLED=no

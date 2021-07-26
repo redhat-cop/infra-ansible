@@ -1,0 +1,23 @@
+---
+
+- name: "Look up Nexus URL"
+  command: >
+    oc get route {{ nexus_name | default('nexus') }} -n {{ nexus_namespace }} -o custom-columns=ROUTE:.spec.host --no-headers
+  register: nexus_url_result
+  when:
+  - nexus_url is not defined or nexus_url|trim == ''
+
+- name: "Set nexus_url Result"
+  set_fact:
+    nexus_url: "{{ nexus_url_result.stdout }}"
+  when:
+  - nexus_url is not defined or nexus_url|trim == ''
+
+- name: "Ensure Nexus is available before attempting to communicate"
+  include_tasks: wait-for-nexus.yml
+
+- name: "Configure Repos"
+  include_tasks: configure-repos.yml
+  with_items:
+  - "{{ nexus_repos | default([]) }}"
+

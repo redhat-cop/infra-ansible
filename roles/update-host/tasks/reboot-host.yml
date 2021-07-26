@@ -1,0 +1,10 @@
+---
+
+## don's wait for the host to come back, another task in place
+- name: "Reboot the host - {{ inventory_hostname }}"
+  reboot:
+    reboot_timeout: 0
+  ignore_errors: true
+  when:
+    - host_updated.changed or force_host_reboot
+  become: True

@@ -1,0 +1,14 @@
+---
+
+- hosts: dns-server
+  roles:
+    - role: dns/config-dns-server-bind
+  tags:
+    - 'never'
+    - 'install'
+
+- hosts: dns-server
+  roles:
+    - role: dns/manage-dns-zones-bind
+  tags:
+    - 'always'

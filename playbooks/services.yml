@@ -1,0 +1,74 @@
+---
+
+- name: 'Configure DHCP'
+  hosts: dhcp_servers
+  roles:
+  - role: dhcp
+  tags:
+  - configure_dhcp
+
+- name: 'Configure DNS (internal)'
+  hosts: dns_servers_internal
+  roles:
+  - role: dns/config-dns-server-bind
+  - role: dns/manage-dns-zones-bind
+  tags:
+  - configure_dns_internal
+
+- name: 'Configure DNS (external)'
+  hosts: dns_servers_external
+  roles:
+  - role: dns/config-dns-server-bind
+  - role: dns/manage-dns-zones-bind
+  tags:
+  - configure_dns_external
+
+- name: 'Configure NTP / Chrony'
+  hosts: ntp_servers
+  roles:
+  - role: config-chrony
+  tags:
+  - configure_chrony
+
+- name: 'Configure IdM'
+  hosts: idm_servers
+  roles:
+  - role: config-idm-server
+  tags:
+  - configure_idm
+
+- name: 'Configure Satellite'
+  hosts: satellite-server
+  roles:
+  - role: config-satellite
+  tags:
+  - configure_satellite
+
+- name: 'Configure www hosts'
+  hosts: www_servers
+  roles:
+  - role: config-httpd
+  tags:
+  - configure_www_hosts
+
+- name: 'Configure REPO hosts'
+  hosts: repo_servers
+  roles:
+  - role: config-software-src
+  - role: config-repo-server
+  tags:
+  - configure_repo_hosts
+
+- name: 'Configure PXE hosts'
+  hosts: pxe_servers
+  roles:
+  - role: config-pxe
+  tags:
+  - configure_pxe_hosts
+
+- name: 'Configure OpenVPN'
+  hosts: openvpn_servers
+  roles:
+  - role: config-openvpn
+  tags:
+  - configure_openvpn

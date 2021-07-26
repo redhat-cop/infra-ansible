@@ -1,0 +1,9 @@
+{
+  "users" : [
+        {
+            "user_name": "test",
+            "password": "test1234",
+            "generate": True
+        }
+  ]
+}

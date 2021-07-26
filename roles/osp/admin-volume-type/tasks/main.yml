@@ -1,0 +1,26 @@
+---
+
+- name: "Obtain current volume types"
+  shell: >
+    openstack volume type list -f yaml
+  register: volume_type_list
+  changed_when: False
+
+- name: "Store away the yaml output"
+  set_fact:
+    volume_type_list_yaml: "{{ volume_type_list.stdout|from_yaml }}"
+
+- name: "Delete the volume type(s) that should NOT exist"
+  shell: >
+    openstack volume type delete "{{ item.Name }}"
+  with_items:
+    - "{{ volume_type_list_yaml | get_remaining_items(cinder_volume_types, 'Name', 'name') }}"
+
+- name: "Create the volume type(s) that should exist"
+  shell: >
+    openstack volume type create \
+      --public \
+      --property "volume_backend_name={{ item.backend }}" \
+      "{{ item.name }}"
+  with_items:
+    - "{{ cinder_volume_types | get_remaining_items(volume_type_list_yaml, 'name', 'Name') }}"

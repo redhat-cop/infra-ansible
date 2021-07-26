@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ -f ~/aws-credentials.csv ]
+then
+  source /usr/local/bin/aws_keys
+fi
+
+if [ -f ~/.config/openstack/openrc.sh ]
+then
+  source ~/.config/openstack/openrc.sh
+fi
+
+if [ -f ~/tsig.key ]
+then
+  source /usr/local/bin/tsig_keys
+fi
+
+if ! whoami &>/dev/null; then
+  echo "${USER:-default}:x:$(id -u):$(id -g):Default User:$HOME:/sbin/nologin" >> /etc/passwd
+fi
+
+exec "$@"

@@ -1,0 +1,8 @@
+
+# hostgroup 
+
+define hostgroup{
+        hostgroup_name  {{hostvars[item]['hostgroup_name']}}
+        alias           {{hostvars[item]['hostgroup_alias']}}
+        }
+

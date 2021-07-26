@@ -1,0 +1,13 @@
+---
+
+- name: 'Unmount install ISO'
+  mount:
+    path: "{{ item.value }}"
+    state: absent
+  loop: "{{ mounted_iso | dict2items }}"
+
+- name: 'Remove authorized_keys'
+  file:
+    path: "{{ default_http_dir }}/{{ virtinstall_authorized_keys | basename }}"
+    state: absent
+

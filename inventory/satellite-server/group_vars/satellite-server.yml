@@ -1,0 +1,51 @@
+---
+
+# Need to become "root" to perform the install
+ansible_become: true
+
+# RHSM registration details for the Satellite server itself
+rhsm_pool: '^my pool$'
+rhsm_repos:
+- "rhel-7-server-rpms"
+- "rhel-7-server-satellite-6.3-rpms"
+
+# Change to the correct path for your manifest file
+manifest_file_path: "{{ inventory_dir }}/../files/my-sat-manifest.zip"
+
+# Change to the desirable values
+satellite_organization: "CASL"
+satellite_location: "MyDatacenter"
+satellite_username: "admin"
+satellite_password: "MyAdminPassword"
+
+# Repos that should be enabled / hosted on the Satellite server
+satellite_repositories:
+- product: "Red Hat Enterprise Linux Server"
+  name: "Red Hat Enterprise Linux 7 Server (RPMs)"
+  release_version:
+  - "7.3"
+  - "7.4"
+  - "7Server"
+  base_arch: "x86_64"
+- product: "Red Hat Enterprise Linux Server"
+  name: "Red Hat Enterprise Linux 7 Server - Optional (RPMs)"
+  release_version:
+  - "7.3"
+  - "7.4"
+  - "7Server"
+  base_arch: "x86_64"
+- product: "Red Hat Enterprise Linux Server"
+  name: "Red Hat Enterprise Linux 7 Server - Extras (RPMs)"
+  release_version: []
+  base_arch: "x86_64"
+
+# Name the (default) sync plan
+satellite_sync_plan: "CASL"
+
+# Add some activation keys that the users can utilize
+satellite_activation_keys:
+- name: "casl-rhel1"
+  subscription: "MySubs"
+  type: "Physical"
+- name: "casl-rhel2"
+  subscription: "MySubs"

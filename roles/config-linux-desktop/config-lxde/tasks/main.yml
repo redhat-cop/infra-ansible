@@ -1,0 +1,13 @@
+---
+
+- name: "Install, configure and enable LXDE"
+  include_tasks: "{{ distro_file }}"
+  with_first_found:
+  - files:
+    - lxde-{{ ansible_distribution }}.yml
+    skip: true
+  loop_control:
+    loop_var: distro_file
+  when:
+  - lxde_install|default(False)
+

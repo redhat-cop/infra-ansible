@@ -1,0 +1,33 @@
+---
+
+- name: "Remove IPA/IdM user {{ user_data.user_name }}"
+  ipa_user:
+    ipa_host: "{{ ipa_host | default(ansible_host)}}"
+    ipa_port: "{{ ipa_port | default(443) }}"
+    ipa_user: "{{ ipa_admin_user | default('admin') }}"
+    ipa_pass: "{{ ipa_admin_password }}"
+    ipa_timeout: "{{ ipa_timeout | default(15) }}"
+    validate_certs: "{{ ipa_validate_certs | default(omit) }}"
+    name: "{{ user_data.user_name | trim }}"
+    state: "absent"
+  ignore_errors: True
+  register: user_removed
+
+- name: "Add User Email ID to success group"
+  set_fact:
+    users_removed_success: "{{ users_removed_success | default([]) + [ user_data.email ] }}"
+  when:
+    - user_removed is changed
+
+- name: "Add User Email ID to failed group"
+  set_fact:
+    users_removed_failed: "{{ users_removed_failed | default([]) + [ user_data.email ] }}"
+  when:
+    - user_removed is failed
+
+- name: "Add User Email ID to skipped group"
+  set_fact:
+    users_removed_skipped: "{{ users_removed_skipped | default([]) + [ user_data.email ] }}"
+  when:
+    - not user_removed is changed
+    - not user_removed is failed

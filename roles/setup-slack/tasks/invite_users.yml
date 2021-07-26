@@ -1,0 +1,27 @@
+---
+
+- name: Get channels info
+  import_tasks: get_channel_info.yml
+
+- name: Convert channel name to its mapped id
+  set_fact:
+    channels_ids: "{{ user.channels | map('extract', channel_mapping) | list | join(',')}}"
+
+- name: Create user_create payload
+  set_fact:
+    user_payload:
+      channels: "{{ channels_ids }}"
+      email: "{{ user.email }}"
+      first_name: "{{ user.first_name | urlencode }}"
+      last_name: "{{ user.last_name | urlencode }}"
+      set_active: true
+
+- name: Invite user
+  uri:
+    url: "https://slack.com/api/users.admin.invite"
+    method: POST
+    body_format: form-urlencoded
+    body: "{{ user_payload }}"
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
+    status_code: [200]

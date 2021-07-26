@@ -1,0 +1,12 @@
+---
+
+- include_tasks: configure_lvm.yml
+  loop_control:
+    loop_var: disk
+  with_items:
+  - "{{ disk_mapping }}"
+
+- name: "Updated PV metadata"
+  command: 'pvscan --cache'
+  when:
+  - disk_mapping|length > 0

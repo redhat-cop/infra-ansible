@@ -1,0 +1,16 @@
+---
+
+- name: Create/Update Quay Robot
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots/{{ quay_robot.name }}"
+    method: PUT
+    body:
+      description: "{{ quay_robot.description | default('') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 201
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: quay_organization.name + '+' + quay_robot.name not in org_robots.json.robots |  map(attribute='name') | list
+

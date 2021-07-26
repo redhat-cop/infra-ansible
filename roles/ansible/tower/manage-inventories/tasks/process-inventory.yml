@@ -1,0 +1,73 @@
+---
+
+- name: "Get the org id based on the org name"
+  set_fact:
+    org_id: "{{ item.id }}"
+  when:
+  - item.name|trim == inventory.organization|trim
+  with_items:
+  - "{{ existing_organizations_output.rest_output }}"
+
+- name: "Load up the inventory"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventories/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'inventory.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+    status_code: 200,201,400
+  register: inventory_output
+
+# Utilize the `rest_get` library routine to ensure REST pagination is handled
+- name: "Get the updated list of existing inventories"
+  rest_get:
+    host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
+    rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    rest_password: "{{ ansible_tower.admin_password }}"
+    api_uri: "/api/v2/inventories/"
+  register: existing_inventories_output
+
+- name: "Get the inventory id based on the inventory name"
+  set_fact:
+    inv_id: "{{ item.id }}"
+  when:
+  - item.name|trim == inventory.name|trim
+  with_items:
+  - "{{ existing_inventories_output.rest_output }}"
+
+- name: "Process the inventory host entries"
+  include_tasks: process-host.yml
+  with_items:
+  - "{{ inventory.hosts }}"
+  loop_control:
+    loop_var: host
+  when: inventory.hosts is defined
+
+- name: "Process the inventory group entries"
+  include_tasks: process-group.yml
+  with_items:
+  - "{{ inventory.groups }}"
+  loop_control:
+    loop_var: group
+  when: inventory.groups is defined
+
+- name: "Process the inventory sources"
+  include_tasks: process-source.yml
+  with_items:
+  - "{{ inventory.sources | default([])}}"
+  loop_control:
+    loop_var: source
+  when: inventory.sources is defined
+
+- name: "Clear/Update facts"
+  set_fact:
+    org_id: ''
+    inv_id: ''
+    processed_inventories: "{{ processed_inventories + [ { 'name': inventory.name } ] }}"
+

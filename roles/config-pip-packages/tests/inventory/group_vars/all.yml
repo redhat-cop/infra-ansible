@@ -1,0 +1,9 @@
+---
+
+pip:
+  packages:
+    - awscli==1.16.210
+    - Flask==1.1.1
+    - ansible-tower-cli==3.3.6
+  virtualenv: /tmp/venv
+  virtualenv_python: python3.7

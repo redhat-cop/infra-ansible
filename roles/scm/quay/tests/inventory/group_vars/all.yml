@@ -1,0 +1,18 @@
+---
+orgs:
+  - name: ansible
+    repos:
+      - name: test
+        permissions:
+          - name: testrobot
+            type: robot
+            role: write
+          - name: testteam
+            type: team
+            role: admin
+    robots:
+      - name: testrobot
+    teams:
+      - name: testteam
+        members:
+          - name: quay

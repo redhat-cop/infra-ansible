@@ -1,0 +1,89 @@
+---
+
+- name: "Requesting Access Token"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ rh_sso_admin_user }}"
+      password: "{{ rh_sso_admin_pass }}"
+      grant_type: "password"
+      client_id: "admin-cli"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: rh_sso_token
+
+- name: "Retrieve template for role"
+  set_fact:
+    role_json: "{{ lookup('template', 'realm_roles.json.j2') | to_json }}"
+
+- name: "Create Role: {{ role_data.name }} in Realm: {{ role_data.targetRealm }}"
+  block:
+    - name: "Create Role: {{ role_data.name }}"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ role_data.targetRealm }}/roles"
+        method: POST
+        body: "{{ role_json }}"
+        body_format: json
+        status_code: 201, 409
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+      register: rh_sso_role_create
+    - name: "Update Role: {{ role_data.name }}"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ role_data.targetRealm }}/roles/{{ role_data.name }}"
+        method: PUT
+        body: "{{ role_json }}"
+        body_format: json
+        status_code: 200, 204
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+      when:
+        - rh_sso_role_create.status == 409
+  when:
+    - role_data.clientRole is undefined or not role_data.clientRole
+
+- name: "Create Role: {{ role_data.name }} in Client: {{ role_data.clientName }} in Realm: {{ role_data.targetRealm }}"
+  block:
+    - name: "Get Clients in Realm: {{ role_data.targetRealm }}"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ role_data.targetRealm }}/clients"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+      register: rh_sso_clients
+    - name: "Get Client ID for Client: {{ role_data.clientName }}"
+      set_fact:
+        client_id: "{{ (rh_sso_clients.json | json_query(query))[0] }}"
+      vars:
+        query: "[?clientId=='{{ role_data.clientName }}'].id"
+    - name: "Create Client Role: {{ role_data.name }}"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ role_data.targetRealm }}/clients/{{ client_id }}/roles"
+        method: POST
+        body: "{{ role_json }}"
+        body_format: json
+        status_code: 201, 409
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+      register: rh_sso_role_create
+    - name: "Update Client Role: {{ role_data.name }}"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ role_data.targetRealm }}/clients/{{ client_id }}/roles/{{ role_data.name }}"
+        method: PUT
+        body: "{{ role_json }}"
+        body_format: json
+        status_code: 200, 204
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+      when:
+        - rh_sso_role_create.status == 409
+  when:
+    - role_data.clientRole is defined
+    - role_data.clientRole
+

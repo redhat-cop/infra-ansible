@@ -1,0 +1,9 @@
+---
+docker_install: False
+docker_username: root
+docker_network_interface: docker0
+mtu_offset: 0
+docker_interface: docker0
+external_interface: default_ipv4
+docker_network_file: /etc/sysconfig/docker-network
+grub_add_arg: "systemd.unified_cgroup_hierarchy=0"

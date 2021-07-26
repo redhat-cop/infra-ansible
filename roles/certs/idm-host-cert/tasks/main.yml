@@ -1,0 +1,16 @@
+---
+
+- import_tasks: "idm-login.yml"
+
+- import_tasks: "register-host.yml"
+
+- import_tasks: "create-host-cert.yml"
+
+- import_tasks: "retrieve-ca-cert.yml"
+
+- import_tasks: "create-directories.yml"
+
+- import_tasks: "write-certs-to-file.yml"
+
+- import_tasks: "print-certs.yml"
+

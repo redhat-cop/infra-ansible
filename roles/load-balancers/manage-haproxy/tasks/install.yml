@@ -1,0 +1,30 @@
+---
+
+- block:
+
+  - name: 'Install required packages'
+    package:
+      name: '{{ item }}'
+      state: installed
+    with_items:
+    - haproxy
+    - openssl-devel
+    - firewalld
+    - python-firewall
+    - libsemanage-python
+    - policycoreutils-python
+    notify: 'enable and start service(s)'
+
+  - name: 'Start firewalld'
+    service:
+      name: firewalld
+      state: started
+      enabled: yes
+
+  - name: 'Enable syslog logging'
+    copy:
+      src: rsyslog_haproxy.conf
+      dest: /etc/rsyslog.d/haproxy.conf
+    notify: 'restart rsyslog'
+
+  become: True

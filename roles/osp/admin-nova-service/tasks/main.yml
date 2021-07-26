@@ -1,0 +1,11 @@
+---
+
+- name: "Disable nova compute services on selected hosts"
+  shell: >
+    source {{ admin_keystonerc_file }};
+    openstack compute service set --disable {{ item }} nova-compute
+  with_items:
+  - "{{ ansible_play_hosts }}"
+  when:
+  - hostvars[item].nova_service is defined
+  - hostvars[item].nova_service == 'disabled'

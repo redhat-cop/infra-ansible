@@ -1,0 +1,29 @@
+---
+
+- name: Setup DNS Logging configuration
+  template:
+    src: logging.j2
+    dest: /etc/named/named.conf.logging
+    owner: named
+    group: named
+    mode: 0660
+  notify: restart named
+
+- name: Setup Controls configuration
+  template:
+    src: controls.j2
+    dest: /etc/named/named.conf.controls
+    owner: named
+    group: named
+    mode: 0660
+  notify: restart named
+
+- name: Configure named options
+  vars:
+    named_config: "{{ dns_data.named_global_config | default({}) }}"
+  template:
+    src: options.j2
+    dest: /etc/named/named.conf.options
+    owner: named
+    group: named
+  notify: restart named

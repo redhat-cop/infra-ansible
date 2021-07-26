@@ -1,0 +1,16 @@
+---
+
+- name: "Ensure the Nexus Server is Up"
+  uri:
+    url: "http://{{ nexus_url }}/service/metrics/ping"
+    method: GET
+    status_code: 200
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    validate_certs: "{{ nexus_validate_certs }}"
+  register: nexus_server_check_result
+  until: nexus_server_check_result is success
+  retries: '{{ nexus_server_poll_retries }}'
+  delay: '{{ nexus_server_poll_delay_in_seconds }}'
+

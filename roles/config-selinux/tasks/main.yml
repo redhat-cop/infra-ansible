@@ -1,0 +1,11 @@
+---
+
+- name: "Configure SELinux"
+  selinux:
+    state: "{{ target_state | default('enforcing') }}"
+    policy: "{{ (target_state == 'disabled') | ternary(omit, target_policy) }}"
+
+- name: "Relabel SElinux contexts"
+  command: "restorecon -r {{ selinux_relabel_dir | default('/') }}"
+  when: selinux_relabel | default('no') | bool
+

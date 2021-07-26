@@ -1,0 +1,25 @@
+---
+
+- name: "Check if service has already been started - if so skip"
+  command: "systemctl status sssd"
+  register: sssd_status
+  failed_when: False
+  changed_when: False
+
+- name: "Check if sssd.conf has already been configured - if so skip"
+  stat:
+    path: /etc/sssd/sssd.conf
+  register: stat_result
+  failed_when: False
+  changed_when: False
+
+- name: "Check if sssd has already been correctly configured - if so skip"
+  shell: "awk /^.domain.{{ ipa_domain }}.$/ /etc/sssd/sssd.conf"
+  register: check_conf
+  failed_when: False
+  changed_when: False
+
+- name: "Configure IPA/IdM Integration if not already enabled and correctly configured"
+  import_tasks: ipa-install.yml
+  when:
+  - (sssd_status.rc != 0 or stat_result.stat.exists == false or check_conf.stdout == "")

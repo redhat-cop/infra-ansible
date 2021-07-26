@@ -1,0 +1,90 @@
+---
+test_aws_vpc_id: vpc-9dcde6f8
+test_aws_vpc_region: eu-west-1
+
+dns_data:
+  views:
+  - name: private
+    zones:
+    - dns_domain: first.example.com
+      state: present
+      named: True
+      route53:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        vpc_id: "{{ test_aws_vpc_id }}"
+        vpc_region: "{{ test_aws_vpc_region }}"
+        private_zone: true
+        hosted_zone_id: Z07234592MWCM9XJSSPYU
+      nsupdate:
+      - server: "192.168.48.26"
+        key_name: "private-first.example.com"
+        key_secret: "EhZfRtlHgy7xTIi2LeVSGsBj99Sb8IGB6K30ovg13dE="
+        key_algorithm: "hmac-sha256"
+      entries:
+      - type: A
+        record: master
+        value: 172.16.10.20
+        ttl: 60
+        state: present
+      - type: A
+        record: node1
+        value: 172.16.10.21
+        ttl: 60
+        state: present
+    - dns_domain: second.example.com
+      state: present
+      nsupdate:
+      - server: "192.168.48.26"
+        key_name: "private-second.example.com"
+        key_secret: "+UYdpSzdQyZ20V9/2Ud9RjHFz9Pouqn4aXP3V9X/gq4="
+        key_algorithm: "hmac-sha256"
+      entries:
+      - type: A
+        record: master
+        value: 172.17.9.20
+        state: absent
+      - type: A
+        record: master
+        value: 172.17.10.20
+        state: present
+      - type: A
+        record: node1
+        value: 172.17.10.21
+        state: present
+  - name: public
+    zones:
+    - dns_domain: first.example.com
+      nsupdate:
+      - server: "192.168.48.26"
+        key_name: "public-first.example.com"
+        key_secret: "5RZv5wMtKS/fZtjtc2bXS2s6L5+cXN2x53jSkEtwNjk="
+        key_algorithm: "hmac-sha256"
+      route53:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+      entries:
+      - type: A
+        record: master
+        value: 10.9.10.20
+        state: present
+      - type: A
+        record: node1
+        value: 10.9.10.21
+        state: present
+    - dns_domain: second.example.com
+      nsupdate:
+      - server: "192.168.48.26"
+        key_name: "public-second.example.com"
+        key_secret: "7VKvn5iZ64l+s42XT/hllJSxS6CjE3369tOy85vkBk4="
+        key_algorithm: "hmac-sha256"
+      route53:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+      entries:
+      - type: A
+        record: master
+        value: 10.8.88.20
+      - type: A
+        record: node1
+        value: 10.8.88.20

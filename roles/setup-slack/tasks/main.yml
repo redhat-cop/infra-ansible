@@ -1,0 +1,16 @@
+---
+- name: Initialise channels name to id mapping
+  set_fact:
+    channel_mapping: {}
+
+- name: Create channels
+  include_tasks: create_channels.yml
+  with_items: "{{ slack_channels }}"
+  loop_control:
+    loop_var: channel
+
+- name: Invite users
+  include_tasks: invite_users.yml
+  with_items: "{{ slack_users }}"
+  loop_control:
+    loop_var: user

@@ -1,0 +1,31 @@
+---
+
+- name: "Manage Subnets"
+  block:
+  - name: "Gather facts for vpc: {{item.vpc_name}}"
+    ec2_vpc_net_facts:
+      aws_region: "{{ item.region | default(aws_region) }}"
+      aws_access_key: "{{ aws_key }}"
+      aws_secret_key: "{{ aws_secret }}"
+      filters:
+        "tag:Name": "{{ item.vpc_name }}"
+    register: vpc
+    delegate_to: localhost
+
+  - name: "Get id for vpc: {{item.vpc_name}}"
+    set_fact:
+      vpc_id: "{{ vpc | json_query('vpcs[*].vpc_id') | first }}"
+
+  - name: "Create subnet: {{ item.name }}"
+    ec2_vpc_subnet:
+      aws_region: "{{ item.region | default(aws_region) }}"
+      aws_access_key: "{{ aws_key }}"
+      aws_secret_key: "{{ aws_secret }}"
+      state: "{{item.state | default('present') }}"
+      vpc_id: "{{ vpc_id }}"
+      cidr: "{{ item.cidr_block }}"
+      az: "{{item.availability_zone | default(omit) }}"
+      map_public: "{{item.enable_public_ip | default(false) }}"
+      tags: "{{ item.tags | default(omit) }}"
+      purge_tags: "{{ item.purge_tags | default(true) }}"
+    delegate_to: localhost

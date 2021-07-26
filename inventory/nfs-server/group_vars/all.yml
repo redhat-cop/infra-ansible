@@ -1,0 +1,91 @@
+---
+
+pkg_update: true
+hosting_infrastructure: openstack
+ansible_user: cloud-user
+
+rhsm_repos:
+- "rhel-7-server-rpms"
+rhsm_username: "{{ lookup('env', 'RHSM_USER' ) }}"
+rhsm_password: "{{ lookup('env', 'RHSM_PASSWD' ) }}"
+rhsm_pool: "{{ lookup('env', 'RHSM_POOL' ) }}"
+
+osp_networks:
+- name: "nfs-network"
+  description: "NFS Network"
+
+osp_subnets:
+- name: "nfs-subnet"
+  network_name: "nfs-network"
+  cidr: "192.168.15.0/24"
+  gateway_ip: "192.168.15.1"
+  allocation_pool_start: "192.168.15.2"
+  allocation_pool_end: "192.168.15.254"
+  dns_nameservers:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+osp_routers:
+- name: "nfs-router"
+  external_gateway: "external"
+  subnet: "nfs-subnet"
+
+osp_security_groups:
+- name: "ssh-sec-group"
+  description: "My SSH Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "icmp-sec-group"
+  description: "ICMP Security Group"
+  rules:
+  - protocol: icmp
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+- name: "nfs-sec-group"
+  description: "My NFS Sec Group"
+  rules:
+  - protocol: tcp
+    port_range_min: 111
+    port_range_max: 111
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: udp
+    port_range_min: 111
+    port_range_max: 111
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: tcp
+    port_range_min: 2049
+    port_range_max: 2049
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+  - protocol: udp
+    port_range_min: 2049
+    port_range_max: 2049
+    direction: ingress
+    remote_ip_prefix: 0.0.0.0/0
+
+osp_volumes:
+- name: "nfs-vol"
+  display_description: "NFS Volume"
+  display_name: "nfs-vol"
+  size: 10
+
+osp_instances:
+- name: "my-nfs-server"
+  meta:
+    group: nfs-server
+  image: "rhel-server-7.5-x86_64"
+  key_name: "my-keypair"
+  flavor: "m1.medium"
+  network: "nfs-network"
+  security_groups:
+  - ssh-sec-group
+  - icmp-sec-group
+  - nfs-sec-group
+  volumes:
+  - nfs-vol

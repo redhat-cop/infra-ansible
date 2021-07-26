@@ -1,0 +1,16 @@
+---
+- import_tasks: prepare_confluence_vars.yml
+
+- import_tasks: prepare_confluence_source.yml
+
+- import_tasks: create_confluence_space.yml
+
+- include_tasks: copy_confluence_content.yml
+  with_items: '{{ processed_contents.stdout }}'
+  loop_control:
+    loop_var: confluence_space_content
+
+- include_tasks: copy_confluence_attachments.yml
+  with_dict: '{{ id_mapping }}'
+  loop_control:
+    loop_var: confluence_content_ids

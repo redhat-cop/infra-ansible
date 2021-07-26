@@ -1,0 +1,48 @@
+---
+
+- name: "Check For Existing Script: {{ item.script_name }}"
+  uri:
+    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}"
+    method: GET
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    status_code: 200,404
+    validate_certs: "{{ nexus_validate_certs }}"
+  register: get_script_result
+
+- name: "Delete Script if it Exists: {{ item.script_name }}"
+  uri:
+    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}"
+    method: DELETE
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    status_code: 204
+    validate_certs: "{{ nexus_validate_certs }}"
+  when: get_script_result.status == 200
+
+- name: "Create New Script: {{ item.script_name }}"
+  uri:
+    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    body_format: json
+    body: "{{ lookup('file', item.script_file )}}"
+    force_basic_auth: yes
+    validate_certs: "{{ nexus_validate_certs }}"
+    status_code: 204
+
+- name: "Execute New Script: {{ item.script_name }}"
+  uri:
+    url: "https://{{ nexus_url }}{{ nexus_api_base_path }}/script/{{ item.script_name }}/run"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    headers:
+      Content-Type: "text/plain"
+    force_basic_auth: yes
+    validate_certs: "{{ nexus_validate_certs }}"
+    status_code: 200
+

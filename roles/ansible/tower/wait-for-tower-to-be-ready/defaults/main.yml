@@ -1,0 +1,4 @@
+---
+
+default_ansible_tower_url: 'https://localhost'
+default_ansible_tower_admin_username: 'admin'

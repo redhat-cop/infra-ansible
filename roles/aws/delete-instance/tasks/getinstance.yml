@@ -1,0 +1,15 @@
+---
+- name: Get instance facts
+  ec2_instance_facts:
+    filters:
+      "tag:Name": "{{ aws_instance.hostname_prefix }}.{{ vpc_name }}.{{ dns_domain }}"
+    region: "{{ aws_region }}"
+  register: instances
+  failed_when: instances|length == 0
+
+- name: Get non-terminated instance
+  set_fact:
+    ec2instance: "{{ item }}"
+  with_items:
+  - "{{ instances.instances }}"
+  when: not item.state.name == 'terminated'

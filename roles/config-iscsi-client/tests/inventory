@@ -1,0 +1,5 @@
+
+
+[iscsi]
+node-1 ansible_user=fedora ansible_become=True ansible_host=192.168.1.11
+node-2 ansible_user=fedora ansible_become=True ansible_host=192.168.1.12

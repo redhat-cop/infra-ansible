@@ -1,0 +1,8 @@
+---
+
+- name: 'Update DNS records'
+  hosts: dns-records-manage-host
+  roles:
+  - role: dns/manage-dns-records
+  tags:
+  - update_dns_records

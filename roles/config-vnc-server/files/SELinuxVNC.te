@@ -1,0 +1,13 @@
+
+module SELinuxVNC 1.0;
+
+require {
+	type nfs_t;
+	type vnc_session_t;
+	class dir { add_name search write };
+	class file { create open write };
+}
+
+#============= vnc_session_t ==============
+allow vnc_session_t nfs_t:dir { add_name search write };
+allow vnc_session_t nfs_t:file { create open write };

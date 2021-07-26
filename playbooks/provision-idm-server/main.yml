@@ -1,0 +1,52 @@
+---
+
+- import_playbook: ../prep.yml
+  when:
+  - rhsm_register|default(False)
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../osp/manage-user-network.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../osp/provision-osp-instance.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../aws/provision-instance.yml
+  when:
+  - hosting_infrastructure == 'aws'
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: ../rhsm.yml
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: setup-idm-dns.yml
+  when:
+  - hosting_infrastructure == 'openstack'
+  tags:
+  - 'never'
+  - 'install'
+
+- hosts: idm-server
+  roles:
+  - role: update-host
+  tags:
+  - 'never'
+  - 'install'
+
+- import_playbook: configure-idm-server.yml
+  tags:
+  - 'always'

@@ -1,0 +1,30 @@
+---
+
+- name: Setup Domain Keys configuration
+  vars:
+    named_views: "{{ dns_data.views }}"
+  template:
+    src: list-tsig-keys.j2
+    dest: /etc/named/named.conf.tsig-keys
+    owner: "{{ bind_user }}"
+    group: "{{ bind_group }}"
+    mode: 0660
+  notify: restart named
+
+- import_tasks: generate_keys.yml
+  run_once: true
+  delegate_to: "{{ ansible_play_hosts | first }}"
+
+- name: Setup key files for nsupdate
+  template:
+    src: tsig-key.j2
+    dest: "{{ runtime_config_location }}/{{ item.key }}.key"
+    owner: "{{ bind_user }}"
+    group: "{{ bind_group }}"
+    mode: 0660
+  vars:
+    key_content: "{{ item.value }}"
+  loop: "{{ hostvars[ansible_play_hosts | first].nsupdate_keys | dict2items }}"
+  when:
+    - key_content.changed
+  notify: restart named

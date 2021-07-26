@@ -1,0 +1,10 @@
+---
+
+ansible_tower:
+  admin_password: 'admin01$'
+  settings:
+    AWX_PROOT_SHOW_PATHS:
+      - /var/lib/awx/.ssh
+      - /var/lib/awx/projects
+      - /tmp
+  url: https://192.168.1.21

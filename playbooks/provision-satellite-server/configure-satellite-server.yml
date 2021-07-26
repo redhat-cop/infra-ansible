@@ -1,0 +1,8 @@
+---
+
+- hosts: satellite-server
+  pre_tasks:
+    - import_tasks: generate-lvm-list.yml
+  roles:
+    - role: config-lvm
+    - role: config-satellite

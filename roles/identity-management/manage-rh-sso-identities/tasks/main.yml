@@ -1,0 +1,23 @@
+---
+
+- name: Manage Groups
+  include_tasks: manage-groups.yml
+  loop: "{{ identities.groups | default([]) }}"
+  loop_control:
+    loop_var: group_data
+  when:
+    - identities.targets is undefined or 'rh-sso' in identities.targets
+  tags:
+    - create-group
+    - delete-group
+
+- name: Manage Users
+  include_tasks: manage-users.yml
+  loop: "{{ identities.users | default([]) }}"
+  loop_control:
+    loop_var: user_data
+  when:
+    - identities.targets is undefined or 'rh-sso' in identities.targets
+  tags:
+    - create-user
+    - delete-user

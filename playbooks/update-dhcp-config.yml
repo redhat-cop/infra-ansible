@@ -1,0 +1,9 @@
+---
+
+- name: 'Update dhcpd config'
+  hosts: dhcp-servers
+  roles:
+    - role: dhcp
+  tags:
+    - update_dhcp_config
+

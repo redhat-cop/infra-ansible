@@ -1,0 +1,71 @@
+---
+
+# Either provide the FQDN here as an inventory var, or just use `-e` on the command line - i.e.:
+# > ansible-playbook -i <inventory> playbook/acme... -e 'host_name=*.h2.example.com'
+host_name: "*.h2.example.com"
+
+csr:
+  hostname: "{{ host_name }}"
+  country: "US"
+  state: "North Carolina"
+  location: "Raleigh"
+  org_name: "Red Hat, Inc."
+  org_unit: "Open Innovation Labs"
+  email: "myemail@example.com"
+
+
+dns_data:
+  views:
+    - name: external
+      zones:
+        - dns_domain: example.com
+          nsupdate:
+            - server: 192.168.48.38
+              key_name: "external-example.com"
+              key_secret: "oQSq7yGN1/X+xjgrSfWJJ0uhHkhRHtXyterbpORln0+/LSENKFK7JMTuauWr0Dw77OxwOWCXTnVIP+MWQxSHDA=="
+              key_algorithm: "hmac-sha256"
+          entries: "{{ certificate_dns_entries }}"
+
+file_host_name: "{{ host_name | regex_replace('^\\*\\.', 'wildcard.') }}"
+
+target_cert_files:
+  key: "/tmp/{{ file_host_name }}/{{ file_host_name }}.key"
+  csr: "/tmp/{{ file_host_name}}/{{ file_host_name }}.csr"
+  host_cert: "/tmp/{{ file_host_name }}/{{ file_host_name }}.pem"
+  intermediate_ca: "/tmp/{{ file_host_name }}/intermediate-ca.pem"
+  fullchain: "/tmp/{{ file_host_name }}/{{ file_host_name }}-fullchain.pem"
+
+#
+# Use `openssl genrsa` to generate an account key - if you don't have one.
+# See Ansible 'acme_certificate' docs for more details: https://docs.ansible.com/ansible/latest/modules/acme_certificate_module.html
+#
+acme:
+  account_key_content: |
+    -----BEGIN PRIVATE KEY-----
+    MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDZAXwEdau/mRLT
+    qAhIl3eSiTuoSz6zmnHcUxaeAVutsz0HGmNF55SWQwKDL8hBu6dY8zV/T2ZI/e7p
+    SGcd6Q3w20b+wQfhrRyuo1xEqhiZGp3qHIUUl48ic/5MBGHXX3PW66LL6sbmvtai
+    fpqhXFdVwMpmfNsLyCjba8Z74CkTFAtJgSxgzr03GUp9uVce1rdAzwprfzve4wjg
+    bH+53z5Rmet+a2rb+3s277EX8hwetsHIQPD1v0HaBikFkr0ttEaDOXe4wBZ52hQX
+    jMYEPHBi8yhOA79rKzuShuiHetLcq3kmM6gnEZbqIG92n0d2AK2iefogiffQVtwp
+    myzAdxUvAgMBAAECggEAVLk6pTcX5gcqjY5WJZlVatW/f/ZYtaCAAchC1U+sboXD
+    Num7hohiv8PL0FIwelF8hcL2yQzD342c4GGPOONLuRSzhDTzEc4Xm6tWE8zhK61z
+    p/qYjrCZhpcI2r7/QCsZPPjkp36zR1WM0QZi8srtoiJSPGwUzWXJZdmPNcAP6U07
+    C0NK/E+YvEoOqeBUNdSeCNLo/lw0+szvyDibkLE4ocmUwR6IKTXbDzG2oZdnRJvn
+    mxLh4QyczhVkqiuc+ScpVJusKGOJlFkIYrTAUIfTS5ylgqYcW1lFdzDhzxy+ECHb
+    oMekjVr7IMx5gnNWug4JO8FIOWhGu8x0k4+CJF+6oQKBgQDr22mqTmG6r2k2yjJz
+    YtV7UxAJTbykQdp4BzNV8ke927gvzsW8lstw6sfPDNaYiIRoNkA7H+dx08PUAfg2
+    UeJg3gQgIOr22UZ2n+BfLe8wt4ZdXZGSHuMlOPJYgUEiow3DFQt6f1EVg7dkIrap
+    L8/0OM6TcaX4fn1DUaUfZL6MkQKBgQDriewvAPYMi9eMJzIbDQcWoqYGBBrnWATt
+    mqM6rNxA41rwdLbi/VdMJoJKZ0EBI+1K7FBSObV05CZZs2j9fcLDuG2X0znI9FKx
+    3tWfV95ds1RefcBliCz8QyXeRiwcF1HGaLBN3JVeZPvLsjpjVI9cBHaGQyahOKAS
+    9yf4cudlvwKBgFPjkKvAgUYyScrxFAyyZJgerR+CBMyvl5MFjJ7PM/E1i0eF1hMD
+    14xsFXFxcYqDVAT09teQu3NjDM4FfVFkwo4NqY3751axZTygFOAFotLjE+l1dGdy
+    kPwWSyxrnM1DDYwLmi+RxTdPyBTXu/xlQyPsaJ1M2OmPo+Ij0gVegd/hAoGAZ5Qb
+    fQAbM6E7hLKn4iV0fIvCHtsnSZz3bdWW+nKR2SciEqQA2Qk3npFAsp99gpbd/xi0
+    qbQfC+xYwRGYlgD76T3tU9rbineG9hlcL9pgOyxlabg7J2se/UAzGbAaLbBDkdDv
+    1w2t0fjukcEq1AuXj4uW46wcDMHuAukVdrhw8dkCgYA+wDtFSJIHWG6mAJvfr1nq
+    HC7IvfB+gpfbxXqc78QhEsIqeH1P/F7nnjLDXwSSjd16/UYaKFPvzmZIu2zfaDuz
+    qPjyg97mVZWN8WTwCF1lddUD/oHgrI+s9+WvMmOU8lbB6HOOeALxQY8OV2agBZYB
+    PeOFUalyZQFVPzKXhdQWoQ==
+    -----END PRIVATE KEY-----

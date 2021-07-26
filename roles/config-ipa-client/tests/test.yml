@@ -1,0 +1,6 @@
+---
+
+- name: 'Configure the host for IPA/IdM use'
+  hosts: all
+  roles:
+  - role: config-ipa-client

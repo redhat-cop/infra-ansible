@@ -1,0 +1,11 @@
+---
+
+- import_tasks: prereq.yml
+
+# build the config file locally
+- import_tasks: dhcpconfig.yml
+  delegate_to: localhost
+  run_once: true
+
+# install the packages and copy the file from the local system
+- import_tasks: dhcp.yml

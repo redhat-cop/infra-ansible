@@ -1,0 +1,43 @@
+---
+
+- name: "Add EPEL temporary repository (but leave it disabled)"
+  yum_repository:
+    name: tmp-epel
+    description: EPEL YUM repo
+    baseurl: http://download.fedoraproject.org/pub/epel/7/$basearch
+    metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
+    gpgcheck: no
+    enabled: no
+
+- name: "Install python-pip from EPEL"
+  yum:
+    name: python-pip
+    enablerepo: tmp-epel
+    state: present
+
+- name: "Install Python Shade using pip"
+  pip:
+    name: shade
+
+- name: "Clear out temporary EPEL repository"
+  yum_repository:
+    name: tmp-epel
+    state: absent
+  notify: yum-clean-metadata
+
+- name: "Create the LDAP domain(s)"
+  os_keystone_domain:
+    cloud: "{{ item.cloud | default(osp_default_cloud) }}"
+    description: "{{ item.domain }} Domain"
+    name: "{{ item.domain }}"
+  with_items:
+  - "{{ keystone_ldap }}"
+
+- name: "Restart keystone (httpd) to ensure config has been applied"
+  service:
+    name: httpd
+    state: restarted
+
+- name: "Wait a bit for keystone to catch up"
+  pause:
+    seconds: 15

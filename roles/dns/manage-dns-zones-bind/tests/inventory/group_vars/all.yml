@@ -1,0 +1,16 @@
+---
+
+dns_data:
+  views:
+    - name: "private"
+      zones:
+        - dns_domain: "roletest1.com"
+          state: present
+        - dns_domain: "roletest2.com"
+          state: present
+    - name: "public"
+      zones:
+        - dns_domain: "roletest3.com"
+          state: absent
+        - dns_domain: "roletest4.com"
+          state: absent

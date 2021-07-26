@@ -1,0 +1,15 @@
+[all:vars]
+
+[infra_hosts]
+infra-1.example.com ansible_user=root ansible_host=192.168.1.11
+infra-2.example.com ansible_user=root ansible_host=192.168.1.12
+
+[infra_vms]
+vm-1.example.com infrahost=infra-1.example.com ansible_user=root ansible_host=192.168.1.21
+vm-2.example.com infrahost=infra-2.example.com ansible_user=root ansible_host=192.168.1.22
+vm-3.example.com infrahost=infra-1.example.com ansible_user=root ansible_host=192.168.1.23
+vm-4.example.com infrahost=infra-2.example.com ansible_user=root ansible_host=192.168.1.24
+
+
+
+

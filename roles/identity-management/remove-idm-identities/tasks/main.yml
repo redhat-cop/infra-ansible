@@ -1,0 +1,32 @@
+---
+
+- name: Remove IPA/IdM Identities when targeted
+  block:
+
+    - name: "Setup counter for removed users"
+      set_fact:
+        users_removed_success: []
+        users_removed_failure: []
+        users_removed_skipped: []
+
+    - name: Process each user
+      include_tasks:
+        file: remove_users.yml
+      with_items:
+        - "{{ identities.users }}"
+      loop_control:
+        loop_var: user_data
+      when:
+        - identities.users is defined
+        - identities.users | length > 0
+
+    - name: "Display counter for removed users"
+      debug:
+        msg:
+        - "Success: {{ users_removed_success | default ([]) | length }}"
+        - "Failed: {{ users_removed_failed | default ([]) | length }}"
+        - "Skipped: {{ users_removed_skipped | default ([]) | length }}"
+
+  when:
+    - identities.targets is undefined or
+      'idm' in identities.targets

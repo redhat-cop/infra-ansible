@@ -1,0 +1,150 @@
+---
+
+- name: "Set User Facts"
+  set_fact:
+    user_groups: []
+    user_realm_roles: []
+    user_client_roles: []
+    user_realm_role_ids: []
+    user_client_role_ids: []
+
+- name: "Get User Groups"
+  set_fact:
+    user_groups: "{{ user_groups + [ item.name ] }}"
+  loop: "{{ identities.groups }}"
+  when:
+    - item.targets is undefined or "rh-sso" in item.targets
+    - item.members is defined
+    - user_data.user_name in item.members
+    - user_data.realm == item.realm
+
+- name: "Get User Realm Roles"
+  set_fact:
+    user_realm_roles: "{{ user_realm_roles + [ item.name ] }}"
+  loop: "{{ identities.roles }}"
+  when:
+    - item.targets is undefined or "rh-sso" in item.targets
+    - item.members is defined
+    - user_data.user_name in item.members
+    - item.clientName is undefined or item.clientName|trim == ""
+
+- name: "Get User Client Roles"
+  set_fact:
+    user_client_roles: "{{ user_client_roles + [ { 'role': item.name, 'client': item.clientName } ] }}"
+  loop: "{{ identities.roles }}"
+  when:
+    - item.targets is undefined or "rh-sso" in item.targets
+    - item.members is defined
+    - user_data.user_name in item.members
+    - item.clientName is defined
+    - item.clientName|trim != ""
+
+- name: "Get Red Hat SSO Access Token"
+  include_tasks: access-token.yml
+
+- name: "Retrieve template to create/update user"
+  set_fact:
+    sso_user_json: "{{ lookup('template', 'manage-users.json.j2') }}"
+
+- name: "Create user: {{ user_data.user_name }}"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users"
+    method: POST
+    body: "{{ sso_user_json }}"
+    body_format: json
+    status_code: 201, 409
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: user
+
+- name: "Get New User ID"
+  set_fact:
+    sso_user_id: "{{ user.location | basename }}"
+  when:
+    - user.status == 201
+
+- name: "Update existing user: {{ user_data.user_name }}"
+  block:
+    - name: "Search For Existing User: {{ user_data.user_name }}"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users?username={{ user_data.user_name }}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+      register: get_sso_user
+
+    - name: "Get Existing User ID: {{ user_data.user_name }}"
+      set_fact:
+        sso_user_id: "{{ (get_sso_user.json | json_query(get_user_id)) | first }}"
+      vars:
+        get_user_id: "[? username=='{{ user_data.user_name }}'].id"
+
+    - name: "Update User: {{ user_data.user_name }}"
+      uri:
+        url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ sso_user_id }}"
+        method: PUT
+        body: "{{ sso_user_json }}"
+        body_format: json
+        status_code: 204
+        headers:
+          Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+        validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  when:
+    - user.status == 409
+
+- name: "Get Realm Roles"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/roles"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: realm_roles
+  when:
+    - user_realm_roles|length > 0
+
+- name: "Get Realm Role IDs"
+  set_fact:
+    user_realm_role_ids: "{{ user_realm_role_ids + [ (realm_roles.json | json_query(query) | first) ] }}"
+  vars:
+    query: "[?name=='{{ item }}'].{id:id,name:name}"
+  with_items: "{{ user_realm_roles }}"
+  when:
+    - realm_roles is defined
+    - realm_roles|length > 0
+
+- name: "Add Realm Role Mappings"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/users/{{ sso_user_id }}/role-mappings/realm"
+    method: POST
+    body: "{{ user_realm_role_ids }}"
+    body_format: json
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  when:
+    - user_realm_role_ids is defined
+    - user_realm_role_ids|length > 0
+
+- name: "Get Clients"
+  uri:
+    url: "{{ rh_sso_protocol }}://{{ rh_sso_host }}:{{ rh_sso_port }}/auth/admin/realms/{{ user_data.realm | mandatory }}/clients"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ rh_sso_token.json.access_token }}"
+    validate_certs: "{{ rh_sso_ssl_cert_validation | default(omit) }}"
+  register: realm_clients
+  when:
+    - user_client_roles is defined
+    - user_client_roles|length > 0
+
+- name: "Manage Client Roles"
+  include_tasks: "manage-user-client-roles.yaml"
+  loop: "{{ user_client_roles }}"
+  when:
+    - user_client_roles is defined
+    - user_client_roles|length > 0

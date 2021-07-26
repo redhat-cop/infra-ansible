@@ -1,0 +1,25 @@
+---
+
+- hosts: infra_osp_hosts
+  roles:
+    - role: config-software-src
+      tags:
+        - 'config-software-src'
+    - role: osp/admin-volume-type
+      tags:
+        - 'admin-volume-type'
+    - role: osp/admin-nova-flavor
+      tags:
+        - 'admin-nova-flavor'
+    - role: osp/admin-image
+      tags:
+        - 'admin-image'
+    - role: osp/admin-project
+      tags:
+        - 'admin-project'
+    - role: osp/admin-network
+      tags:
+        - 'admin-network'
+    - role: osp/admin-user
+      tags:
+        - 'admin-user'

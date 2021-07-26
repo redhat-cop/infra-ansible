@@ -1,0 +1,34 @@
+---
+- name: Get channel info
+  uri:
+    url: "https://slack.com/api/channels.list"
+    method: GET
+    status: [200]
+    return_content: yes
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
+  register: channel_data
+
+- name: Get group info
+  uri:
+    url: "https://slack.com/api/groups.list"
+    method: GET
+    status: [200]
+    return_content: yes
+    headers:
+      Authorization: "Bearer {{ slack_token }}"
+  register: group_data
+
+- name: Update channel mapping
+  with_items: "{{ channel_data.json.channels }}"
+  loop_control:
+    loop_var: channel
+  set_fact:
+    channel_mapping: "{{ channel_mapping|combine({ channel.name: channel.id }) }}"
+
+- name: Update group mapping
+  with_items: "{{ group_data.json.groups }}"
+  loop_control:
+    loop_var: group
+  set_fact:
+    channel_mapping: "{{ channel_mapping|combine({ group.name: group.id }) }}"

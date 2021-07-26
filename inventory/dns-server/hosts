@@ -1,0 +1,13 @@
+
+# 'osp-provisioner' is needed by the OSP related playbooks to provision the OSP instances
+[osp-provisioner]
+localhost
+
+[dns-server]
+
+# 'osp_instances' is needed by the OSP related playbooks to perform the provisioning of the OSP instances
+[osp_instances:children]
+dns-server
+
+[rhsm_hosts:children]
+dns-server

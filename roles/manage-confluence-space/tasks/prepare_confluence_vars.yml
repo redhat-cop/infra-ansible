@@ -1,0 +1,31 @@
+---
+- name: Verify source and destination dictionaries exist
+  fail:
+    msg: "This role requires that the following dictionaries exist: atlassian.confluence.source, atlassian.confluence.destination"
+  when:
+    - (atlassian.confluence.source|trim == "") or (atlassian.confluence.destination|trim == "")
+
+- name: Set Confluence Credentials
+  set_fact:
+    confluence_source_username: "{{ atlassian.confluence.source.username | default(atlassian.username) }}"
+    confluence_source_password: "{{ atlassian.confluence.source.password | default(atlassian.password) }}"
+    confluence_destination_username: "{{ atlassian.confluence.destination.username | default(atlassian.username) }}"
+    confluence_destination_password: "{{ atlassian.confluence.destination.password | default(atlassian.password) }}"
+
+- name: Set Confluence URL
+  set_fact:
+    confluence_source_url: "{{ atlassian.confluence.source.url | default(atlassian.url) }}"
+    confluence_destination_url: "{{ atlassian.confluence.destination.url | default(atlassian.url) }}"
+
+- name: Fail when Confluence credentials are not set
+  fail:
+    msg: "This role requires the following variables to be set: confluence_source_username, confluence_source_password, confluence_destination_username, confluence_destination_password."
+  when:
+    - (confluence_source_username|trim == "") or (confluence_source_password|trim == "") or
+      (confluence_destination_username|trim == "") or (confluence_destination_password|trim == "")
+
+- name: Fail when Confluence url is not set
+  fail:
+    msg: "This role requires the following variables to be set: confluence_source_url, confluence_destination_url."
+  when:
+    - (confluence_source_url|trim == "") or (confluence_destination_url|trim == "")

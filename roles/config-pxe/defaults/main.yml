@@ -1,0 +1,6 @@
+---
+
+tftpserver_root_dir: "/var/lib/tftpboot"
+
+default_pxe_menu_title: "PXE Boot Menu"
+default_pxe_timeout: 300

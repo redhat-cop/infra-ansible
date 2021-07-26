@@ -1,0 +1,12 @@
+---
+
+- name: "Remove Software packages/tools using package module."
+  package:
+    name: "{{ list_of_packages_to_remove | default([]) }}"
+    state: absent
+
+- name: "Install additional Software packages/tools using package module."
+  package:
+    name: "{{ list_of_packages_to_install | default([]) }}"
+    state: installed
+

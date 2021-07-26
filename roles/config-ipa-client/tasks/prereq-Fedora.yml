@@ -1,0 +1,10 @@
+---
+
+- name: "Install packages for IPA/IdM"
+  package:
+    name:
+      - freeipa-client
+      - sssd-nfs-idmap
+      - python3-libselinux
+    state: latest
+

@@ -1,0 +1,56 @@
+---
+
+- name: Pre-flight checks
+  assert:
+    that: "{{ assertion.that }}"
+    fail_msg: "{{ assertion.msg }}"
+    quiet: true
+  loop_control:
+    loop_var: assertion
+  loop:
+    - msg: Repository Path variable must be set in 'scm_dir'
+      that:
+        - scm_dir is defined
+
+- name: Add all new files to repository
+  shell: git add --all
+  args:
+    chdir: "{{ scm_dir }}"
+
+- name: Show staged files
+  shell: git diff --cached --name-only
+  args:
+    chdir: "{{ scm_dir }}"
+  register: scm_files_staged
+
+- name: Configure git username
+  shell: git config user.name "{{ git.username }}"
+  args:
+    chdir: "{{ scm_dir }}"
+
+- name: Configure git email
+  shell: git config user.email "{{ git.email }}"
+  args:
+    chdir: "{{ scm_dir }}"
+
+- name: Commit changes
+  shell: git commit --all --message "{{ git.message }}"
+  args:
+    chdir: "{{ scm_dir }}"
+  ignore_errors: True
+  register: scm_commit
+
+- name: Files were committed
+  debug:
+    msg:
+      - "There are changes that were committed"
+  when:
+    - scm_commit is succeeded
+
+- name: No files were committed
+  debug:
+    msg:
+      - "There are no changes that were committed"
+  when: >
+    scm_commit.rc != 0 or
+    "nothing to commit" in scm_commit.stdout

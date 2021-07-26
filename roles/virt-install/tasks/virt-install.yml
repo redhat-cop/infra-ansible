@@ -1,0 +1,109 @@
+---
+
+- name: "Set temporary fact to make referencing below easier"
+  set_fact:
+    vm: "{{ hostvars[instance] }}"
+
+- name: "Populate values for virt install run"
+  set_fact:
+    virtinstall_connect: "{{ vm['libvirt_connect'] | default(default_connect) }}"
+    virtinstall_virt_type: "{{ vm['libvirt_virt_type'] | default(default_virt_type) }}"
+    virtinstall_name: "{{ vm['libvirt_name'] | default(default_name) }}"
+    virtinstall_title: "{{ vm['libvirt_title'] | default(default_title) }}"
+    virtinstall_description: "{{ vm['libvirt_description'] | default(default_description) }}"
+    virtinstall_memory: "{{ vm['libvirt_memory'] | default(default_memory) }}"
+    virtinstall_vcpus: "{{ vm['libvirt_vcpus'] | default(default_vcpus) }}"
+    virtinstall_os_variant: "{{ vm['libvirt_os_variant'] | default(default_os_variant) }}"
+    virtinstall_iso: "{{ vm['libvirt_iso'] | default(default_iso) }}"
+    virtinstall_ksfile: "{{ vm['libvirt_ksfile'] | default(default_ksfile) }}"
+    virtinstall_authorized_keys: "{{ vm['libvirt_authorized_keys'] | default(default_authorized_keys) }}"
+    virtinstall_http_host: "{{ vm['libvirt_http_host'] | default(default_http_host) }}"
+
+- name: "Populate networking info if list of NICs is defined"
+  block:
+    - set_fact:
+        virt_install_network_string: ''
+        extra_args_ip: ''
+    - set_fact:
+        virt_install_network_string: "{{ virt_install_network_string | default('') + ' --network \"type='+ item['type']|default(default_network_type) + ',source=' + item['hostif']|default(default_network_hostif) + ',source_mode=bridge,model=' + item['model']|default(default_network_model) + '\"' }}"
+      with_items:
+        - "{{ vm.libvirt_networks }}"
+    - set_fact:
+        extra_args_ip: "ip={{ vm.libvirt_networks[0].ip }}::{{ vm.libvirt_networks[0].gateway }}:{{ vm.libvirt_networks[0].netmask }}:{{ virtinstall_name }}:{{ vm.libvirt_networks[0].name }}:none"
+      when:
+        - vm.libvirt_networks[0].ip is defined
+        - vm.libvirt_networks[0].gateway is defined
+        - vm.libvirt_networks[0].netmask is defined
+  when:
+    - vm.libvirt_networks is defined
+
+- name: "Populate disks if list of disks is defined"
+  block:
+    - set_fact:
+        virt_install_disk_string: ''
+    - set_fact:
+        virt_install_disk_string: "{{ virt_install_disk_string | default('') + ' --disk pool=' +  item['pool']|default(default_disk_pool) + ',size=' + item['size']|default(default_disk_size) + ',bus=virtio' }}"
+      with_items:
+        - "{{ vm.libvirt_disks }}"
+  when:
+    - vm.libvirt_disks is defined
+
+- name: "Make KS file available on the target host"
+  copy:
+    src: "{{ virtinstall_ksfile }}"
+    dest: "/tmp/{{ virtinstall_ksfile | basename }}"
+
+- name: "Make the authorized_keys file available on the target host"
+  copy:
+    src: "{{ virtinstall_authorized_keys }}"
+    dest: "{{ default_http_dir }}/{{ virtinstall_authorized_keys | basename }}"
+  notify: 'Remove authorized_keys'
+
+- name: "Make a mount point for install purpose"
+  tempfile:
+    state: directory
+    prefix: install
+    path: "{{ default_http_dir }}"
+  register: http_mount
+  when:
+    - mounted_iso[virtinstall_iso] is not defined
+
+- name: "Mount ISO to serv it up with http"
+  mount:
+    src: "{{ virtinstall_iso }}"
+    path: "{{ http_mount.path }}"
+    opts: loop
+    fstype: iso9660
+    state: mounted
+    boot: false # avoids that a dangling mount blocks boot process
+  notify: 'Unmount install ISO'
+  when:
+    - mounted_iso[virtinstall_iso] is not defined
+
+- name: 'Track mounted iso'
+  set_fact:
+    mounted_iso: "{{ mounted_iso | combine({ virtinstall_iso : http_mount.path }) }}"
+  when:
+    - mounted_iso[virtinstall_iso] is not defined
+
+- name: "Set Fact for VM command"
+  set_fact:
+    virt_install_commands: >
+      {{ virt_install_commands | default([]) + [ ('virt-install'
+      + ' --connect ' + virtinstall_connect
+      + ' --virt-type ' + virtinstall_virt_type
+      + ' --name ' + virtinstall_name
+      + ' --metadata "title=' + virtinstall_title + ',description=' + virtinstall_description + ',name=' + virtinstall_name + '"'
+      + virt_install_network_string
+      + virt_install_disk_string
+      + ' --os-variant ' + virtinstall_os_variant
+      + ' --memory ' + virtinstall_memory
+      + ' --vcpus ' + virtinstall_vcpus
+      + ' --location http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso] | basename
+      + ' --initrd-inject=/tmp/' + virtinstall_ksfile | basename
+      + ' --extra-args "inst.repo=http://' + virtinstall_http_host + '/' + mounted_iso[virtinstall_iso]|basename + ' inst.ks=file:/' + virtinstall_ksfile|basename + ' ' + extra_args_ip|default('') + '"'
+      + ' --graphics spice '
+      + ' --video qxl '
+      + ' --channel spicevmc '
+      + ' --autostart ') ] }}
+
