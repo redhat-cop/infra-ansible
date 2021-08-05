@@ -10,7 +10,7 @@
 
 - name: Locate Existing Delegate Prototype Matches Teams
   set_fact:
-      matched_prototypes: "{{ org_prototypes.json.prototypes | \
+    matched_prototypes: "{{ org_prototypes.json.prototypes | \
       rejectattr('delegate.is_robot','equalto','robot') | \
       selectattr('delegate.kind','equalto','team') | \
       selectattr('delegate.name','equalto',quay_prototype.delegate.name) | \
