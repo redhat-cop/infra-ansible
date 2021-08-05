@@ -15,6 +15,30 @@
     headers:
       Authorization: "{{ auth_header }}"
 
+- name: Get Team Sync Status
+  uri:
+    url: "{{ quay_api_base }}/organisation/{{ quay_organisation.name }}"
+    method: GET
+    validate_certs: "{{ quay_validate_certs }}"
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: org_team_sync
+
+- name: Activate Team LDAP Sync
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/syncing"
+    method: POST
+    body:
+      group_dn: "{{ quay_team.group_dn }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  loop: "{{ org_team_sync.json.teams | dict2items }}"
+  when: "(item.key == quay_team.name and item.value.is_synced == false)"
+
 - name: Get Team Members
   uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members"
