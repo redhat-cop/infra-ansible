@@ -37,7 +37,7 @@
     headers:
       Authorization: "{{ auth_header }}"
   loop: "{{ org_team_sync.json.teams | dict2items }}"
-  when: "(item.key == quay_team.name and item.value.is_synced == false)"
+  when: "(item.key == quay_team.name and item.value.is_synced == false and quay_team.members is not defined)"
 
 - name: Get Team Members
   uri:
