@@ -1,12 +1,22 @@
 ---
-- name: Locate Existing Delegate Prototype Matches
+- name: Locate Existing Delegate Prototype Matches Robots
   set_fact:
     matched_prototypes: "{{ org_prototypes.json.prototypes | \
+      selectattr('delegate.is_robot','equalto','robot') | \
       selectattr('delegate.is_robot','equalto',true if quay_prototype.delegate.kind == 'robot' else false) | \
       selectattr('delegate.kind','equalto','user' if quay_prototype.delegate.kind != 'team' else quay_prototype.delegate.kind) | \
       selectattr('delegate.name','equalto',quay_organization.name + '+' + quay_prototype.delegate.name if quay_prototype.delegate.kind == 'robot' else quay_prototype.delegate.name) | \
       list }}"
 
+- name: Locate Existing Delegate Prototype Matches Teams
+  set_fact:
+      matched_prototypes: "{{ org_prototypes.json.prototypes | \
+      rejectattr('delegate.is_robot','equalto','robot') | \
+      selectattr('delegate.kind','equalto','team') | \
+      selectattr('delegate.name','equalto',quay_prototype.delegate.name) | \
+      list }}"
+  when: "{{ 'robot' not in quay_prototype.delegate.kind }}"
+  
 - name: Locate Existing Activator Prototype Matches
   set_fact:
     matched_prototypes: "{{ matched_prototypes | default([]) | \
