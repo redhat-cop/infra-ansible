@@ -8,6 +8,14 @@
   with_items:
   - "{{ existing_organizations_output.rest_output }}"
 
+- name: "Get the inventory id based on the inventory name"
+  set_fact:
+    inv_id: "{{ item.id }}"
+  when:
+  - item.name|trim == inventory.name|trim
+  with_items:
+  - "{{ existing_inventories_output.rest_output }}"
+
 - name: "Load up the inventory"
   uri:
     url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventories/"
@@ -23,23 +31,15 @@
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201,400
   register: inventory_output
-
-# Utilize the `rest_get` library routine to ensure REST pagination is handled
-- name: "Get the updated list of existing inventories"
-  rest_get:
-    host_url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}"
-    rest_user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-    rest_password: "{{ ansible_tower.admin_password }}"
-    api_uri: "/api/v2/inventories/"
-  register: existing_inventories_output
-
-- name: "Get the inventory id based on the inventory name"
-  set_fact:
-    inv_id: "{{ item.id }}"
   when:
-  - item.name|trim == inventory.name|trim
-  with_items:
-  - "{{ existing_inventories_output.rest_output }}"
+    - (inv_id is not defined) or (inv_id | length == 0)
+
+- name: 'Get inventory id from the loaded inventory'
+  set_fact:
+    inv_id: "{{ inventory_output.json.id }}"
+  when:
+    - (inv_id is not defined) or (inv_id | length == 0)
+    - inventory_output is succeeded
 
 - name: "Process the inventory host entries"
   include_tasks: process-host.yml
@@ -70,4 +70,3 @@
     org_id: ''
     inv_id: ''
     processed_inventories: "{{ processed_inventories + [ { 'name': inventory.name } ] }}"
-
