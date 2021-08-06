@@ -29,10 +29,29 @@
       Content-Type: "application/json"
       Accept: "application/json"
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
-    status_code: 200,201,400
+    status_code: 200,201
   register: inventory_output
   when:
     - (inv_id is not defined) or (inv_id | length == 0)
+
+- name: "Update existing inventory"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/inventories/{{ inv_id }}/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: PUT
+    body: "{{ lookup('template', 'inventory.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
+    status_code: 200,201
+  register: inventory_output
+  when:
+    - inv_id is defined
+    - inv_id | length > 0
 
 - name: 'Get inventory id from the loaded inventory'
   set_fact:
