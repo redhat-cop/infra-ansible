@@ -28,7 +28,7 @@
     password: "{{ mail_password | default(mail.password) | default(omit) }}"
     to: "{{ mail_to | default(mail.to) | default(omit) }}"
     cc: "{{ mail_cc | default(mail.cc) | default(omit) }}"
-    bcc: "{{ mail_cc | default(mail.bcc) | default(omit) }}"
+    bcc: "{{ mail_bcc | default(mail.bcc) | default(omit) }}"
     from: "{{ mail_from | default(mail.from) | default(omit)}}"
     headers: "{{ mail_headers | default(mail.headers) | default(omit)}}"
     secure: "{{ mail_secure | default(mail.secure) | default(omit) }}"
