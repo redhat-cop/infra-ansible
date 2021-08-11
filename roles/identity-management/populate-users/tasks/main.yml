@@ -1,29 +1,36 @@
 ---
-- name: Convert csv to json - set facts
-  delegate_to: localhost
-  set_fact:
-    csv_identities:
-      users: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=users') }}"
-      groups: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=user_groups') }}"
 
-- name: Merge imported identities list with static identities list
-  delegate_to: localhost
-  set_fact:
-    merged_identities:
-      users: "{{ identities.users|default([]) + csv_identities.users }}"
-      groups: "{{ identities.groups|default([]) + csv_identities.groups }}"
+- block:
+  - name: Convert csv to json - set facts
+    delegate_to: localhost
+    set_fact:
+      csv_identities:
+        users: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=users') }}"
+        groups: "{{ lookup('csvtojson', 'file=' + csv_doc_file_name + ' var=user_groups') }}"
 
-- name: Combine identities dict with merged user and group identities
-  delegate_to: localhost
-  set_fact:
-    identities: "{{ identities|default({}) | combine(merged_identities, recursive=True) }}"
+  - name: Merge imported identities list with static identities list
+    delegate_to: localhost
+    set_fact:
+      merged_identities:
+        users: "{{ identities.users|default([]) + csv_identities.users }}"
+        groups: "{{ identities.groups|default([]) + csv_identities.groups }}"
 
-- name: "Display imported users values"
-  debug:
-    var: identities.users
-    verbosity: 2
+  - name: Combine identities dict with merged user and group identities
+    delegate_to: localhost
+    set_fact:
+      identities: "{{ identities|default({}) | combine(merged_identities, recursive=True) }}"
 
-- name: "Display imported groups values"
-  debug:
-    var: identities.groups
-    verbosity: 2
+  - name: "Display imported users values"
+    debug:
+      var: identities.users
+      verbosity: 2
+
+  - name: "Display imported groups values"
+    debug:
+      var: identities.groups
+      verbosity: 2
+
+  when:
+    - csv_doc_file_name is defined
+    - csv_doc_file_name|trim != ''
+
