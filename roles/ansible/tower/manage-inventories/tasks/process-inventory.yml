@@ -66,7 +66,7 @@
     - "{{ inventory.hosts }}"
   loop_control:
     loop_var: host
-  when: 
+  when:
     - inventory.hosts is defined
 
 - name: "Process the inventory group entries"
@@ -75,7 +75,7 @@
     - "{{ inventory.groups }}"
   loop_control:
     loop_var: group
-  when: 
+  when:
     - inventory.groups is defined
 
 - name: "Process the inventory sources"
