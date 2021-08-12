@@ -1,8 +1,7 @@
 FROM registry.fedoraproject.org/fedora
 
 ENV HELM_VERSION=latest \
-    KUSTOMIZE_VERSION=v3.5.4 \
-    AWS_CLI_VERSION=2.2.5
+    KUSTOMIZE_VERSION=v3.5.4
 
 USER root
 ENV WORK_DIR /infra-ansible
@@ -14,8 +13,10 @@ RUN \
       https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm
 RUN dnf -y install \
       ansible \
+      awscli \
       findutils \
       jq \
+      less \
       ncurses \
       openssl \
       pandoc \
@@ -47,11 +48,6 @@ RUN curl -fsSL -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/
     chmod 755 kustomize && \
     cp kustomize /usr/bin/; \
     rm -f kustomize.tar.gz
-
-RUN curl -fsSL -o awscliv2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip && \
-    unzip awscliv2.zip && \
-    ./aws/install; \
-    rm -rf ./awscliv2.zip ./aws
 
 COPY . ${WORK_DIR}
 COPY images/infra-ansible/root /
