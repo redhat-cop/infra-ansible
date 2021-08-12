@@ -42,8 +42,8 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master
     ./get_helm.sh; \
     rm -f ./get_helm.sh
 
-RUN curl -fsSL -v -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
-    tar -xvzf kustomize.tar.gz && \
+RUN curl -fsSL -o kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+    tar -xzf kustomize.tar.gz && \
     chmod 755 kustomize && \
     cp kustomize /usr/bin/; \
     rm -f kustomize.tar.gz
