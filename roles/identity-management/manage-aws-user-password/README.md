@@ -1,5 +1,5 @@
 Manage AWS User password
-====================================
+========================
 
 An Ansible role that manages AWS user's password
 
