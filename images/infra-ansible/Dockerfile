@@ -17,6 +17,7 @@ RUN dnf -y install \
       jq \
       ncurses \
       openssl \
+      pandoc \
       python3-cinderclient \
       python3-glanceclient \
       python3-heatclient \
