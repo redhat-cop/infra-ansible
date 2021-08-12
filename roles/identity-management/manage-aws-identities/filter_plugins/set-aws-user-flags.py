@@ -1,4 +1,4 @@
-def set_user_flags(entry):
+def set_aws_user_flags(entry):
 
     data = {
         'generate_password': False,
@@ -15,5 +15,5 @@ def set_user_flags(entry):
 class FilterModule(object):
     def filters(self):
         return {
-            'set_user_flags': set_user_flags
+            'set_aws_user_flags': set_aws_user_flags
         }
