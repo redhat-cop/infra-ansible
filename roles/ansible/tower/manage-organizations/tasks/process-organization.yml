@@ -21,7 +21,9 @@
       Accept: 'application/json'
     validate_certs: '{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}'
     status_code: 201
-  when: organization_id is not defined
+  register: result_load_organization
+  when:
+    - (organization_id is not defined) or (organization_id | length == 0)
 
 - name: 'Update existing organization'
   uri:
@@ -37,7 +39,16 @@
       Accept: 'application/json'
     validate_certs: '{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}'
     status_code: 200
-  when: organization_id is defined
+  when:
+    - organization_id is defined
+    - organization_id | length > 0
+
+- name: 'Get organization id from the loaded organization'
+  set_fact:
+    organization_id: '{{ result_load_organization.json.id }}'
+  when:
+    - (organization_id is not defined) or (organization_id | length == 0)
+    - result_load_organization is succeeded
 
 - name: 'Add or associate the galaxy credentials to the organization'
   include_tasks: process-galaxy-credentials.yml
@@ -50,5 +61,5 @@
 
 - name: 'Clear/Update facts'
   set_fact:
-    existing_galaxy_credentials: null
-
+    organization_id: ''
+    existing_galaxy_credentials: ''
