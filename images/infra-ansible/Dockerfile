@@ -16,7 +16,6 @@ RUN dnf -y install \
       awscli \
       findutils \
       jq \
-      less \
       ncurses \
       openssl \
       pandoc \
