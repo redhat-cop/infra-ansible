@@ -4,17 +4,17 @@
   set_fact:
     org_id: "{{ item.id }}"
   when:
-  - item.name|trim == inventory.organization|trim
+    - item.name|trim == inventory.organization|trim
   with_items:
-  - "{{ existing_organizations_output.rest_output }}"
+    - "{{ existing_organizations_output.rest_output }}"
 
 - name: "Get the inventory id based on the inventory name"
   set_fact:
     inv_id: "{{ item.id }}"
   when:
-  - item.name|trim == inventory.name|trim
+    - item.name|trim == inventory.name|trim
   with_items:
-  - "{{ existing_inventories_output.rest_output }}"
+    - "{{ existing_inventories_output.rest_output }}"
 
 - name: "Load up the inventory"
   uri:
@@ -63,23 +63,25 @@
 - name: "Process the inventory host entries"
   include_tasks: process-host.yml
   with_items:
-  - "{{ inventory.hosts }}"
+    - "{{ inventory.hosts }}"
   loop_control:
     loop_var: host
-  when: inventory.hosts is defined
+  when: 
+    - inventory.hosts is defined
 
 - name: "Process the inventory group entries"
   include_tasks: process-group.yml
   with_items:
-  - "{{ inventory.groups }}"
+    - "{{ inventory.groups }}"
   loop_control:
     loop_var: group
-  when: inventory.groups is defined
+  when: 
+    - inventory.groups is defined
 
 - name: "Process the inventory sources"
   include_tasks: process-source.yml
   with_items:
-  - "{{ inventory.sources | default([])}}"
+    - "{{ inventory.sources | default([])}}"
   loop_control:
     loop_var: source
   when: inventory.sources is defined
