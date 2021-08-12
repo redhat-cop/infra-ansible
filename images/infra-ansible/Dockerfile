@@ -13,6 +13,7 @@ RUN \
       https://repos.fedorapeople.org/repos/openstack/openstack-queens/rdo-release-queens-2.noarch.rpm
 RUN dnf -y install \
       ansible \
+      awscli \
       findutils \
       jq \
       ncurses \
