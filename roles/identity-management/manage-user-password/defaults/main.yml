@@ -1,0 +1,14 @@
+---
+
+generate_password_length: 16
+
+# The char set can be one of the following:
+# - ascii_lowercase
+# - ascii_uppercase
+# - digits
+# - hexdigits
+# - octdigits
+# - printable
+# - punctuation
+# - whitespace
+generate_password_char_sets: 'ascii_letters,digits,punctuation'
