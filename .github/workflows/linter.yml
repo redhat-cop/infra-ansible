@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2.3.4
     - name: yaml-lint
-      uses: ibiqlik/action-yamllint@v3.0.2
+      uses: ibiqlik/action-yamllint@v3.0.3
       with:
         # Path to custom configuration
         config_file: .github/workflow-config/yamllint.yml
