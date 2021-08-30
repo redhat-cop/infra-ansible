@@ -14,25 +14,21 @@
     - openshift_password|trim != ''
 
 - block:
-    - name: Retrieve Access Token ...
+    - name: Retrieve and store OpenShift Access Token
       shell: |
          oc whoami -t \
          --insecure-skip-tls-verify="{{ openshift_skip_tls_verify | default(false) | bool }}"
       register: ocwhoami
-      no_log: true
-    - name: Storing Token ..
-      set_fact:
+    - set_fact:
         openshift_token: "{{ ocwhoami.stdout }}"
-      no_log: true
   when:
     - openshift_token is not defined or openshift_token|trim == ''
 
-- name: Authenticate with Openshift via token
+- name: Authenticate with OpenShift via token
   shell: |
     oc login {{ openshift_host }} \
       --token '{{ openshift_token }}' \
       --insecure-skip-tls-verify="{{ openshift_skip_tls_verify | default(false) | bool }}"
-  no_log: true
   when:
     - openshift_token is defined
     - openshift_token|trim != ''
