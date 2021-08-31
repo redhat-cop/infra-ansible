@@ -1,0 +1,8 @@
+---
+ansible_tower:
+  admin_password: 'admin01'
+  organizations:
+    - name: 'Demo Organization'
+      description: 'Describe your demo organization'
+      galaxy_credentials:
+        - 'Ansible Galaxy'

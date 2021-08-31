@@ -6,27 +6,26 @@ ansible_connection: local
 #       - please replace with valid values and files
 
 ansible_tower_download_url: "https://releases.ansible.com/ansible-tower/setup_openshift/ansible-tower-openshift-setup-{{ ansible_tower_version }}.tar.gz"
-ansible_tower_version: 3.8.1-1
+ansible_tower_version: 3.8.2-1
+
 
 ##Initial Tower Config
-admin_user: 'admin'
-admin_password: 'admin'
-secret_key: 'abcdefghijkx'
-admin_email: 'root@localhost'
-
-pg_username: 'pgu'
-pg_password: 'pgu'
-pg_database: 'testtower'
-pg_port: '5432'
-pg_sslmode: 'prefer'  # set to 'verify-full' for client-side enforced SSL
-postgress_activate_wait: "120"
-
-# Deploy into Openshift
-
-openshift_host: "https://api.crc.testing:6443"
-openshift_skip_tls_verify: "true"
-openshift_project: "test-tower"
-openshift_user: "kubeadmin"
-openshift_password: "APBEh-jjrVy-hLQZX-VI9Kg"
-openshift_pg_emptydir: "true"
-
+ansible_tower:
+  admin_user: 'admin'
+  admin_password: 'admin'
+  install:
+    secret_key: 'abcdefghijkx'
+    openshift:
+      host: "https://api.crc.testing:6443"
+      project: "test-tower"
+      skip_tls_verify: "true"
+      user: "kubeadmin"
+      password: "APBEh-jjrVy-hLQZX-VI9Kg"
+      pg_emptydir: "true"
+    pg:
+      username: 'pgu'
+      password: 'pgu'
+      database: 'testtower'
+      port: '5432'
+      sslmode: 'prefer'  # set to 'verify-full' for client-side enforced SSL
+      activate_wait: "120"

@@ -26,7 +26,7 @@
       headers:
         Content-Type: "application/json"
         Accept: "application/json"
-      validate_certs: no
+      validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
       status_code: 200,201,400
     register: workflow_template_rest_output
 
@@ -44,7 +44,7 @@
     method: GET
     headers:
       Accept: "application/json"
-    validate_certs: no
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201,400
   register: current_workflow_nodes
 
@@ -57,7 +57,7 @@
     method: DELETE
     headers:
       Accept: "application/json"
-    validate_certs: no
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 204
   with_items: "{{ current_workflow_nodes.json.results }}"
   loop_control:

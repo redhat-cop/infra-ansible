@@ -12,5 +12,5 @@
     headers:
       Content-Type: "application/json"
       Accept: "application/json"
-    validate_certs: no
+    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201,204,400

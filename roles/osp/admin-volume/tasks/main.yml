@@ -1,10 +1,5 @@
 ---
 
-- name: "Install prereq software"
-  package:
-    name: 'python2-shade'
-    state: present
-
 - name: "Manage Volumes"
   os_volume:
     cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"

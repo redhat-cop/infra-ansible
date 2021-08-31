@@ -13,9 +13,21 @@
   - 'never'
   - 'install'
 
+- hosts: ansible-tower
+  roles:
+  - role: ansible/tower/config-ansible-tower-ocp
+  - role: ansible/tower/config-ansible-tower-subscription-manifest
+  - role: ansible/tower/config-ansible-tower-ocp-ssh
+  - role: ansible/tower/config-ansible-tower-ocp-ldap-ca
+  - role: ansible/tower/config-ansible-tower-ldap
+  tags:
+  - 'never'
+  - 'install-tower-ocp'
+
 - hosts: tower-management-host
   roles:
   - role: ansible/tower/manage-settings
+  - role: ansible/tower/manage-organizations
   - role: ansible/tower/manage-credential-types
   - role: ansible/tower/manage-credentials
   - role: ansible/tower/manage-projects
@@ -25,3 +37,9 @@
   - role: ansible/tower/manage-schedules
   tags:
   - 'always'
+
+- hosts: tower-management-host
+  roles:
+  - role: ansible/tower/launch-tower-jobs
+  tags:
+  - 'launch-tower-jobs'

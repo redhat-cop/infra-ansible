@@ -1,0 +1,10 @@
+---
+
+- name: Checking if target OCP project exists
+  command: oc get project {{ openshift_project }}
+  register: getProject
+  failed_when: false
+
+- name: Creating target OCP project
+  command: oc new-project {{ openshift_project }}
+  when: getProject.rc != 0

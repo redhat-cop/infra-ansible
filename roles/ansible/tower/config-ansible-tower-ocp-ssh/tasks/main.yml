@@ -1,0 +1,10 @@
+---
+
+- name: Add SSH keys to OCP as secrets and mount as volumes
+  include_tasks: ocp-process-ssh-key.yml
+  loop: "{{ ocp_ssh_private_keys }}"
+  loop_control:
+    loop_var: ssh_key
+  when:
+    - ocp_ssh_private_keys is defined
+    - (ocp_ssh_private_keys | type_debug) == 'list'

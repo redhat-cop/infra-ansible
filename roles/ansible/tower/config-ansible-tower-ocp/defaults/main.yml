@@ -2,12 +2,13 @@
 
 # Ansible Tower Download and Version Information
 ansible_tower_download_url: "https://releases.ansible.com/ansible-tower/setup_openshift/ansible-tower-openshift-setup-{{ ansible_tower_version }}.tar.gz"
-ansible_tower_version: 3.8.1-1
+ansible_tower_version: latest
+ansible_tower_remote_src: true
 
 # Initial Default Ansible Tower Config
 admin_user: 'admin'
 admin_password: 'admin'
-admin_email: 'root@localhost'
+
 secret_key: 'abcdefghijkx'
 
 # Default PostgreSQL setup
@@ -26,6 +27,12 @@ openshift_token: ""
 openshift_skip_tls_verify: "false"
 openshift_project: "tower"
 
-# PostgreSQL should relay on PVC, but for the moment we support EmptyDir only
-openshift_pg_pvc_name: "postgresql"
+# PostgreSQL can be deployed backed up by either EmptyDir or PVC, PVC will be created if openshift_pg_emptydir is set to false
 openshift_pg_emptydir: "true"
+
+# Only applicable if openshift_pg_emptydir is set to "false"
+openshift_pg_pvc_size: "10Gi"
+openshift_pg_pvc_name: "postgresql"
+openshift_pg_pvc_wait_retries: 5
+openshift_pg_pvc_wait_delay: 30
+

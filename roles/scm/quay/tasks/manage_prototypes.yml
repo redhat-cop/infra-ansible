@@ -1,0 +1,66 @@
+---
+- name: Locate Existing Delegate Prototype Matches
+  set_fact:
+    matched_prototypes: "{{ org_prototypes.json.prototypes | \
+      selectattr('delegate.is_robot','equalto',true if quay_prototype.delegate.kind == 'robot' else false) | \
+      selectattr('delegate.kind','equalto','user' if quay_prototype.delegate.kind != 'team' else quay_prototype.delegate.kind) | \
+      selectattr('delegate.name','equalto',quay_organization.name + '+' + quay_prototype.delegate.name if quay_prototype.delegate.kind == 'robot' else quay_prototype.delegate.name) | \
+      list }}"
+
+- name: Locate Existing Activator Prototype Matches
+  set_fact:
+    matched_prototypes: "{{ matched_prototypes | default([]) | \
+      selectattr('activating_user', 'defined') | \
+      rejectattr('activating_user', 'none') | \
+      selectattr('activating_user.is_robot','equalto',true if quay_prototype.activator.kind == 'robot' else false) | \
+      selectattr('activating_user.kind','equalto','user' if quay_prototype.activator.kind != 'team' else quay_prototype.activator.kind) | \
+      selectattr('activating_user.name','equalto',quay_organization.name + '+' + quay_prototype.activator.name if quay_prototype.activator.kind == 'robot' else quay_prototype.activator.name) | \
+      list }}"
+  when: "{{ 'activator' in quay_prototype and quay_prototype.activator is not none }}"
+
+- name: Create Base Prototype Fact
+  set_fact:
+    prototype:
+      role: "{{ quay_prototype.role }}"
+      delegate:
+        kind: "{{ 'user' if quay_prototype.delegate.kind != 'team' else quay_prototype.delegate.kind }}"
+        name: "{{ quay_organization.name + '+' + quay_prototype.delegate.name if quay_prototype.delegate.kind == 'robot' else quay_prototype.delegate.name }}"
+        is_robot: "{{ true if quay_prototype.delegate.kind == 'robot' else false }}"
+
+- name: Create Prototype Activator Fact
+  set_fact:
+    prototype_assigner:
+      role: "{{ quay_prototype.role }}"
+      activating_user:
+        kind: "{{ 'user' if quay_prototype.activator.kind != 'team' else quay_prototype.activator.kind }}"
+        name: "{{ quay_organization.name + '+' + quay_prototype.activator.name if quay_prototype.activator.kind == 'robot' else quay_prototype.activator.name }}"
+        is_robot: "{{ true if quay_prototype.activator.kind == 'robot' else false }}"
+  when: "{{ 'activator' in quay_prototype and quay_prototype.activator is not none }}"
+
+- name: Create Final Prototype Fact
+  set_fact:
+    prototype: "{{ prototype | combine(prototype_assigner | default({}), recursive=true) }}"
+
+- name: Create Prototype
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/prototypes"
+    method: POST
+    body: "{{ prototype }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code: 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: matched_prototypes | length == 0
+
+- name: Update Prototype
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/prototypes/{{ matched_prototypes[0].id }}"
+    method: PUT
+    body: "{{ prototype }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code: 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  when: matched_prototypes | length == 1

@@ -16,7 +16,7 @@
     "skip_tags": "",
     "start_at_task": "",
     "timeout": 0,
-    "use_fact_cache": false,
+    "use_fact_cache": {{ job_template.use_fact_cache | default(false) }},
     "host_config_key": "",
     "ask_diff_mode_on_launch": false,
     "ask_variables_on_launch": {{ job_template.ask_variables_on_launch | default(false) }},
@@ -30,5 +30,6 @@
     "survey_enabled": false,
     "become_enabled": {{ job_template.enable_privilege_escalation | default(false) }},
     "diff_mode": false,
-    "allow_simultaneous": true
+    "allow_simultaneous": {{ job_template.allow_simultaneous | default(true) }}, 
+    "webhook_service": "{{ job_template.webhook_service | default('') }}"
 }

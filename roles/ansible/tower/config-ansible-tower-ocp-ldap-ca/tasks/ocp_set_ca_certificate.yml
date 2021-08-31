@@ -1,0 +1,80 @@
+---
+
+- name: Override default openshift_project if one is supplied
+  set_fact:
+    openshift_project: "{{ ansible_tower.install.openshift.project | d(openshift_project) }}"
+
+- name: Check for CA ConfigMap
+  command: |
+    oc get configmap ldap-pem \
+      -n {{ openshift_project }}
+  register: ldap_ca_check
+  failed_when: ldap_ca_check.rc > 1
+
+- name: Create and Mount CA cert as ConfigMap
+  block:
+    - name: Create ConfigMap for CA
+      command: |
+        oc create configmap ldap-pem \
+          --from-file={{ ansible_tower.ldap.ca_cert }} \
+          -n {{ openshift_project }}
+    - name: Mount ConfigMap as volume in /etc/certs directory
+      command: |
+        oc set volume deployment/ansible-tower \
+          --add \
+          --configmap-name ldap-pem \
+          --type configmap \
+          --mount-path /etc/certs/ldap.pem \
+          --sub-path ldap.pem \
+          -n {{ openshift_project }}
+  when:
+    - ldap_ca_check.rc != 0
+
+- name: Set data for ldap.py configuration file
+  command: |
+    oc set data secret/ansible-tower-secrets \
+      --from-file="{{ role_path }}/files/ldap.py" \
+      -n {{ openshift_project }}
+
+- name: Fetch existing deployment template volumes
+  command: |
+    oc get deployment/ansible-tower \
+      -n {{ openshift_project }} \
+      -o=jsonpath="{.spec.template.spec.volumes}"
+  register: oc_output
+
+- name: Extract the 'ansible-tower-application-credentials' from the existing deployment
+  set_fact:
+    existing_volume:
+      "{{ oc_output.stdout |
+          from_json |
+          json_query(\"[?name=='ansible-tower-application-credentials']\") }}"
+
+- name: Append the new entry to the secret volume list
+  set_fact:
+    add_secret:
+      secret:
+        items: "{{ existing_volume[0]['secret']['items'] + [ secret_volume_patch_data ] }}"
+
+- name: Assemble final patch value for the new list
+  set_fact:
+    final_secret_volume_patch:
+      spec:
+        template:
+          spec:
+            volumes: "{{ [ existing_volume | combine(add_secret, recursive=True) ] }}"
+
+- name: Patch Ansible Tower deployment with CA Secret volume
+  command: |
+    oc patch deployment/ansible-tower \
+      -p '{{ final_secret_volume_patch | to_json }}' \
+      -n {{ openshift_project }}
+
+- name: Verify Ansible Tower deployment has completed rollout after setting CA Secret volume
+  command: |
+    oc rollout status deployment/ansible-tower \
+      -n {{ openshift_project }}
+  register: deployment_status_check
+  until: deployment_status_check.stdout == "deployment \"ansible-tower\" successfully rolled out"
+  retries: 6
+  delay: 10
