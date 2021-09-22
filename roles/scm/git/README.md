@@ -41,7 +41,7 @@ Example Playbook
 
     - name: "Touch a file inside the repo"
       file:
-        path: "{{ scm_dir }}/hello_worls.txt"
+        path: "{{ scm_dir }}/hello_world.txt"
         state: touch
 
     - name: "Commit changes and push git repository"
