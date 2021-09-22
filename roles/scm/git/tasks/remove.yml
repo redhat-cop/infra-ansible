@@ -1,0 +1,6 @@
+---
+
+- name: Remove git directory
+  file:
+    path: "{{ scm_dir }}"
+    state: absent
