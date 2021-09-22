@@ -3,7 +3,7 @@
 - name: "Process users for IPA/IdM"
   block:
 
-    - name: Create IPA/IdM user
+    - name: Manage IPA/IdM user
       ipa_user:
         ipa_host: "{{ ipa_host | default(ansible_host)}}"
         ipa_user: "{{ ipa_admin_user }}"

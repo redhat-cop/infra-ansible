@@ -1,0 +1,27 @@
+---
+
+#########################
+# Defaults
+#########################
+
+git:
+  name: Git Bot
+  username: git-bot
+  email: git-bot@no-reply
+  message: "Auto-update files"
+  remove_local: false
+
+# Example using HTTP
+#repository:
+#  name: example
+#  url: https://github.com/org/repo.git
+#  branch: main
+#  username: hello
+#  password: password
+
+# Example using SSH
+#repository:
+#  name: example
+#  url: ssh://git@github.com/org/repo.git
+#  branch: main
+#  ssh_key: "{{ lookup('file', '/var/home/mahdtech/.ssh/id_ed25519') }}"

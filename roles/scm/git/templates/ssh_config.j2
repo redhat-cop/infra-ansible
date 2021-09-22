@@ -1,0 +1,13 @@
+Host *
+
+  LogLevel DEBUG
+
+  IdentityFile {{ ssh_key }}
+
+  BatchMode yes
+
+  VisualHostKey yes
+
+  StrictHostKeyChecking no
+
+  UserKnownHostsFile /dev/null

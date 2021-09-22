@@ -1,0 +1,56 @@
+---
+
+- name: Prepare SCM credentials
+  include_tasks: prep.yml
+
+- name: Commit changes
+  include_tasks: commit.yml
+
+- name: Changes to be pushed
+  debug:
+    msg:
+      - "There are changes that need to be pushed"
+  register: scm_commit_changes
+  when: >
+    scm_commit is succeeded or
+    "Your branch is ahead" in scm_commit.stdout
+
+- name: Push changes (SSH)
+  block:
+
+    - name: Debug git config
+      shell: |
+        cat "{{ ssh_dir }}/wrapper"
+        cat "{{ ssh_dir }}/config"
+        git remote -v
+      args:
+        chdir: "{{ scm_dir }}"
+
+    - name: Push to remote repository (SSH)
+      shell: git push {{ repository.remote | default('origin') }}
+      args:
+        chdir: "{{ scm_dir }}"
+
+  environment:
+    GIT_SSH: "{{ ssh_dir }}/wrapper"
+  when:
+    - repository.ssh_key is defined
+    - scm_commit_changes is defined
+
+- name: Push changes (HTTP)
+  block:
+
+    - name: Push to remote repository (HTTP)
+      shell: git push
+      args:
+        chdir: "{{ scm_dir }}"
+
+  when:
+    - repository.url is regex ("^http[s]?://")
+    - scm_commit_changes is defined
+
+- name: Show git status
+  shell: git status
+  args:
+    chdir: "{{ scm_dir }}"
+  register: scm_files_status
