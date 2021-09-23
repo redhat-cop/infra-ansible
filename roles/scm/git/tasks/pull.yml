@@ -24,9 +24,8 @@
     force: "{{ repository.force | default(omit) }}"
     key_file: "{{ ssh_key | default(omit) }}"
     remote: "{{ repository.remote | default('origin') }}"
-    # Bracket notation used to avoid public method clash
-    update: "{{ repository['update'] | default(omit) }}"
-    version: "{{ repository.version | default('HEAD') }}"
-    accept_hostkey: "{{ repository.accept_hostkey | default(omit) }}"
+    update: "{{ repository.update_revision | default(omit) }}"
+    version: "{{ repository.version | default(omit) }}"
+    accept_hostkey: "{{ repository.accept_hostkey | default('yes') }}"
   when:
     - scm_dir is defined
