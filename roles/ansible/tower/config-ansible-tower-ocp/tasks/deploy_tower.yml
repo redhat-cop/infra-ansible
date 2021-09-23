@@ -49,3 +49,7 @@
   args:
     chdir: "{{ ansible_tower_dir }}"
 
+- name: "Pausing for 5 minutes to let Tower settle down"
+  pause:
+    minutes: 5
+
