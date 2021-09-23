@@ -51,5 +51,5 @@
 
 - name: "Pausing for 5 minutes to let Tower settle down"
   pause:
-    minutes: 5
+    minutes: "{{ ansible_tower_postdeployment_pause | default(5) }}"
 
