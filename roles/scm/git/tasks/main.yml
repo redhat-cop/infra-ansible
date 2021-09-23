@@ -13,7 +13,7 @@
         - repository.url is defined
 
 - name: Pre-flight checks (SSH Repo)
-  fail:
+  ansible.builtin.fail:
     msg:
       - "SSH Private key is expected when the URL is of type SSH"
   when:
@@ -21,7 +21,7 @@
     - not repository.ssh_key is defined
 
 - name: Pre-flight checks (HTTP Repo)
-  fail:
+  ansible.builtin.fail:
     msg:
       - "Personal Access Token is expected when the URL is of type HTTP"
   when:
@@ -29,12 +29,12 @@
     - ( not repository.username is defined or not repository.password is defined )
 
 - name: Pre-flight checks (Confused Repo)
-  fail:
+  ansible.builtin.fail:
     msg:
       - "Please provide either;"
-      - "   an SSH key with a url starting with ssh://"
-      - "   or a PAT with a user starting with http://"
-      - "but not both..."
+      - "   an SSH key and a url that starts with ssh://"
+      - "   OR"
+      - "   a PAT with a url that starts with http://"
   when:
     - repository.ssh_key is defined
     - repository.password is defined
