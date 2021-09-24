@@ -7,7 +7,7 @@
   include_tasks: commit.yml
 
 - name: Changes to be pushed
-  debug:
+  ansible.builtin.debug:
     msg:
       - "There are changes that need to be pushed"
   register: scm_commit_changes

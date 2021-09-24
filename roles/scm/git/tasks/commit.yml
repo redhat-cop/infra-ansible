@@ -26,19 +26,19 @@
   changed_when: false
 
 - name: Configure git username
-  shell: git config --local user.name "{{ git.username }}"
+  shell: git config --local user.name "{{ git_config.username }}"
   args:
     chdir: "{{ scm_dir }}"
   changed_when: false
 
 - name: Configure git email
-  shell: git config --local user.email "{{ git.email }}"
+  shell: git config --local user.email "{{ git_config.email }}"
   args:
     chdir: "{{ scm_dir }}"
   changed_when: false
 
 - name: Commit changes
-  shell: git commit --all --message "{{ git.message }}"
+  shell: git commit --all --message "{{ git_config.message }}"
   args:
     chdir: "{{ scm_dir }}"
   register: scm_commit
@@ -47,14 +47,14 @@
     - '"nothing to commit, working directory clean" not in scm_commit.stdout'
 
 - name: Files were committed
-  debug:
+  ansible.builtin.debug:
     msg:
       - "There are changes that were committed"
   when:
     - scm_commit is succeeded
 
 - name: No files were committed
-  debug:
+  ansible.builtin.debug:
     msg:
       - "There are no changes that were committed"
   when: >
