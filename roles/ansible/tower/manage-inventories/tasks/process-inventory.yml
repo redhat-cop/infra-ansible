@@ -48,7 +48,7 @@
       Accept: "application/json"
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201
-  register: inventory_output_update
+  register: inventory_output
   when:
     - inv_id is defined
     - inv_id | length > 0
