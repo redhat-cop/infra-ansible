@@ -48,7 +48,7 @@
       Accept: "application/json"
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201
-  register: inventory_output
+  register: inventory_output_update
   when:
     - inv_id is defined
     - inv_id | length > 0
@@ -57,7 +57,7 @@
   ansible.builtin.debug:
     msg:
       - "Create - {{ inventory_output_create | default('EMPTY') }}"
-      - "Update - {{ inventory_output | default('EMPTY') }}"
+      - "Update - {{ inventory_output_update | default('EMPTY') }}"
 
 - name: 'Get inventory id from the loaded inventory'
   set_fact:
@@ -97,4 +97,5 @@
     org_id: ''
     inv_id: ''
     inventory_output_create: ''
+    inventory_output_update: ''
     processed_inventories: "{{ processed_inventories + [ { 'name': inventory.name } ] }}"
