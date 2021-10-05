@@ -87,7 +87,7 @@
 - name: "Process the inventory sources"
   include_tasks: process-source.yml
   with_items:
-    - "{{ inventory.sources | default([])}}"
+    - "{{ inventory.sources | default([]) }}"
   loop_control:
     loop_var: source
   when: inventory.sources is defined
