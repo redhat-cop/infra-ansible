@@ -96,4 +96,5 @@
   set_fact:
     org_id: ''
     inv_id: ''
+    inventory_output_create: ''
     processed_inventories: "{{ processed_inventories + [ { 'name': inventory.name } ] }}"
