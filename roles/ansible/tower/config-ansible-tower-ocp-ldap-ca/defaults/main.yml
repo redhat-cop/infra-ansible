@@ -6,3 +6,5 @@ secret_volume_patch_data:
   key: ldap.py
   path: ldap.py
 
+default_ansible_tower_url: 'https://localhost'
+default_ansible_tower_admin_username: 'admin'
