@@ -30,7 +30,7 @@
       Accept: "application/json"
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201
-  register: inventory_output
+  register: inventory_output_create
   when:
     - (inv_id is not defined) or (inv_id | length == 0)
 
@@ -48,17 +48,23 @@
       Accept: "application/json"
     validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
     status_code: 200,201
-  register: inventory_output
+  register: inventory_output_update
   when:
     - inv_id is defined
     - inv_id | length > 0
 
+- name: Display Debug message
+  ansible.builtin.debug:
+    msg:
+      - "Create - {{ inventory_output_create | default('EMPTY') }}"
+      - "Update - {{ inventory_output_update | default('EMPTY') }}"
+
 - name: 'Get inventory id from the loaded inventory'
   set_fact:
-    inv_id: "{{ inventory_output.json.id }}"
+    inv_id: "{{ inventory_output_create.json.id }}"
   when:
     - (inv_id is not defined) or (inv_id | length == 0)
-    - inventory_output is succeeded
+    - inventory_output_create is succeeded
 
 - name: "Process the inventory host entries"
   include_tasks: process-host.yml
@@ -81,7 +87,7 @@
 - name: "Process the inventory sources"
   include_tasks: process-source.yml
   with_items:
-    - "{{ inventory.sources | default([])}}"
+    - "{{ inventory.sources | default([]) }}"
   loop_control:
     loop_var: source
   when: inventory.sources is defined
@@ -90,4 +96,6 @@
   set_fact:
     org_id: ''
     inv_id: ''
+    inventory_output_create: ''
+    inventory_output_update: ''
     processed_inventories: "{{ processed_inventories + [ { 'name': inventory.name } ] }}"
