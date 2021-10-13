@@ -24,6 +24,9 @@
         "(objectClass=groupofnames)"
     ],
     "AUTH_LDAP_GROUP_TYPE": "GroupOfNamesType",
+    "AUTH_LDAP_GROUP_TYPE_PARAMS": {
+        "name_attr": "cn"
+    },
     "AUTH_LDAP_REQUIRE_GROUP": "{{ ansible_tower.ldap.require_group }}",
     "AUTH_LDAP_DENY_GROUP": null,
     "AUTH_LDAP_USER_FLAGS_BY_GROUP": {
