@@ -79,20 +79,6 @@
   retries: 6
   delay: 10
 
-- name: Verify Ansible Tower API is available
-  uri:
-    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/"
-    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
-    password: "{{ ansible_tower.admin_password }}"
-    force_basic_auth: yes
-    method: GET
-    headers:
-      Content-Type: "application/json"
-      Accept: "application/json"
-    validate_certs: "{{ ansible_tower.validate_certs | default(validate_tower_certs) | default(true) }}"
-    return_content: no
-    status_code: 200
-  register: api_status_check
-  until: api_status_check.status == 200
-  retries: 5
-  delay: 60
+- name: "Call 'wait-for-tower-to-be-ready' to ensure Ansible Tower is ready"
+  include_role:
+    name: "ansible/tower/wait-for-tower-to-be-ready"
