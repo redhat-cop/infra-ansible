@@ -78,3 +78,7 @@
   until: deployment_status_check.stdout == "deployment \"ansible-tower\" successfully rolled out"
   retries: 6
   delay: 10
+
+- name: "Call 'wait-for-tower-to-be-ready' to ensure Ansible Tower is ready"
+  include_role:
+    name: "ansible/tower/wait-for-tower-to-be-ready"
