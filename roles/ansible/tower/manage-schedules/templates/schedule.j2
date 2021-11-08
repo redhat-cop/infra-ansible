@@ -5,24 +5,24 @@
     "description": "{{ schedule.description }}",
 {% endif %}
 {% if schedule.extra_data is defined %}
-    "extra_data": {{ schedule.extra_data | default("{}") | to_json }},
+    "extra_data": {{ schedule.extra_data | to_json }},
 {% endif %}
 {% if schedule.inventory is defined %}
-    "inventory": "{{ schedule.inventory | default() }}",
+    "inventory": "{{ schedule.inventory }}",
 {% endif %}
 {% if schedule.scm_branch is defined %}
-    "scm_branch": "{{ schedule.scm_branch | default('') }}",
+    "scm_branch": "{{ schedule.scm_branch }}",
 {% endif %}
     "job_type": null,
     "job_tags": "",
     "skip_tags": "",
 {% if schedule.limit is defined %}
-    "limit": "{{ schedule.limit | default('') }}",
+    "limit": "{{ schedule.limit }}",
 {% endif %}
     "diff_mode": null,
     "verbosity": null,
-    "unified_job_template": "{{ unified_job_template_id | default('') }}",
+    "unified_job_template": "{{ unified_job_template_id }}",
 {% if schedule.enabled is defined %}
-    "enabled": {{ schedule.enabled | default(true)| bool | lower }}
+    "enabled": {{ schedule.enabled | bool | lower }}
 {% endif %}
 }

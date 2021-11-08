@@ -1,19 +1,19 @@
 {
     "name": "{{ workflow_template.name }}",
 {% if workflow_template.description is defined %}
-    "description": "{{ workflow_template.description | default('') }}",
+    "description": "{{ workflow_template.description }}",
 {% endif %}
 {% if workflow_template.extra_vars is defined %}
-    "extra_vars": "{{ workflow_template.extra_vars | default('') }}",
+    "extra_vars": "{{ workflow_template.extra_vars }}",
 {% endif %}
     "organization": null,
 {% if workflow_template.allow_simultaneous is defined %}
-    "allow_simultaneous": "{{ workflow_template.allow_simultaneous | default(true) }}",
+    "allow_simultaneous": "{{ workflow_template.allow_simultaneous }}",
 {% endif %}
 {% if workflow_template.ask_variables_on_launch is defined %}
-    "ask_variables_on_launch": {{workflow_template.ask_variables_on_launch | default(false) }},
+    "ask_variables_on_launch": {{workflow_template.ask_variables_on_launch }},
 {% endif %}
 {% if workflow_template.webhook_service is defined %}
-    "webhook_service": "{{ workflow_template.webhook_service | default('') }}"
+    "webhook_service": "{{ workflow_template.webhook_service }}"
 {% endif %}
 }
