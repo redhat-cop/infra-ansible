@@ -1,16 +1,28 @@
 {
     "rrule": "{{ schedule.rrule }}",
     "name": "{{ schedule.name }}",
-    "description": "{{ schedule.description | default('') }}",
-    "extra_data": {{ schedule.extra_data | default("{}") | to_json }},
-    "inventory": "{{ schedule.inventory | default() }}",
-    "scm_branch": "{{ schedule.scm_branch | default('') }}",
+{% if schedule.description is defined %}
+    "description": "{{ schedule.description }}",
+{% endif %}
+{% if schedule.extra_data is defined %}
+    "extra_data": {{ schedule.extra_data | to_json }},
+{% endif %}
+{% if schedule.inventory is defined %}
+    "inventory": "{{ schedule.inventory }}",
+{% endif %}
+{% if schedule.scm_branch is defined %}
+    "scm_branch": "{{ schedule.scm_branch }}",
+{% endif %}
     "job_type": null,
     "job_tags": "",
     "skip_tags": "",
-    "limit": "{{ schedule.limit | default('') }}",
+{% if schedule.limit is defined %}
+    "limit": "{{ schedule.limit }}",
+{% endif %}
     "diff_mode": null,
     "verbosity": null,
-    "unified_job_template": "{{ unified_job_template_id | default('') }}",
-    "enabled": {{ schedule.enabled | default(true)| bool | lower }}
+    "unified_job_template": "{{ unified_job_template_id }}",
+{% if schedule.enabled is defined %}
+    "enabled": {{ schedule.enabled | bool | lower }}
+{% endif %}
 }
