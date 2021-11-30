@@ -1,0 +1,95 @@
+---
+- name: Prepare git credentials (SSH)
+  block:
+
+    - name: Create temporary directory for SSH config
+      tempfile:
+        state: directory
+        prefix: ssh-
+      register: result_ssh_dir
+      changed_when: false
+      notify: Remove SSH keys
+
+    - name: Create temporary file for the SSH private key
+      tempfile:
+        path: "{{ result_ssh_dir.path }}"
+        prefix: "key-"
+      register: result_ssh_key
+      changed_when: false
+
+    - name: Set SSH facts
+      set_fact:
+        ssh_dir: "{{ result_ssh_dir.path }}"
+        ssh_key: "{{ result_ssh_key.path }}"
+
+    - name: Copy SSH private key to temporary file
+      copy:
+        content: "{{ repository.ssh_key | from_yaml }}"
+        dest: "{{ ssh_key }}"
+        mode: 0600
+      no_log: true
+      changed_when: false
+
+    - name: Template SSH config
+      template:
+        src: ssh_config.j2
+        dest: "{{ ssh_dir }}/config"
+        force: true
+        backup: true
+        trim_blocks: false
+        mode: 0600
+      changed_when: false
+
+    - name: Template git wrapper
+      template:
+        src: git_wrapper.j2
+        dest: "{{ ssh_dir }}/wrapper"
+        force: true
+        trim_blocks: false
+        mode: 0700
+      changed_when: false
+
+    - name: Set the SCM repository (SSH)
+      set_fact:
+        scm_repository: "{{ repository.url }}"
+
+  when:
+    - repository.ssh_key is defined
+
+- name: Prepare git URL (HTTP)
+  block:
+    - name: Split the SCM repository URL (HTTP)
+      set_fact:
+        scm_repo_scheme: "{{ repository.url | urlsplit('scheme') }}"
+        scm_repo_hostname: "{{ repository.url | urlsplit('hostname') }}"
+        scm_repo_path: "{{ repository.url | urlsplit('path') }}"
+        scm_username: "{{ repository.username | urlencode() | regex_replace('/','%2F') }}"
+        scm_password: "{{ repository.password | urlencode() | regex_replace('/','%2F') }}"
+      no_log: true
+
+    - name: Set the SCM repository (HTTP)
+      set_fact:
+        scm_repository: "{{ scm_repo_scheme }}://{{ scm_username }}:{{ scm_password }}@{{ scm_repo_hostname }}{{ scm_repo_path }}"
+
+  when:
+    - repository.url is regex ("^http[s]?://")
+
+- name: Prepare local git credentials (HTTP)
+  block:
+
+    - name: Set the git username
+      shell: git config --local user.name "{{ repository.username }}"
+      args:
+        chdir: "{{ scm_dir }}"
+      notify: Remove git credentials
+
+    - name: Set the git password
+      shell: git config --local user.password "{{ repository.password }}"
+      args:
+        chdir: "{{ scm_dir }}"
+      notify: Remove git credentials
+
+  when:
+    - repository.username is defined
+    - repository.password is defined
+    - scm_dir is defined

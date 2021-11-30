@@ -24,6 +24,7 @@ The variables used to install Ansible Tower on OpenShift are outlined in the tab
 |ansible_tower_download_url|URL of Ansible Tower installer artifact repository|no|`https://releases.ansible.com/ansible-tower/setup_openshift/ansible-tower-openshift-setup-{{ ansible_tower_version }}.tar.gz`|
 |ansible_tower_version|Version of Ansible Tower Openshift installer|no|latest|
 |ansible_tower_remote_src|Is the Ansible Tower installer fetched from a remote source|no|true|
+|ansible_tower_postdeployment_pause| Time in minutes for which role will wait for Tower to settle down after deployment|no|5|
 |ansible_tower.install.openshift.host|OpenShift API url|no|CRC on local host|
 |ansible_tower.install.openshift.project|Project where to deploy Tower|no|'tower'|
 |ansible_tower.install.openshift.user|User to login into openshift|no|"test"|

@@ -1,0 +1,43 @@
+---
+
+- name: Process files
+  block:
+
+    - name: Processing message
+      debug:
+        msg:
+          - "Searching for {{ item.1 }} in {{ item.0 }}"
+
+    # This task will report success if the regexp was found.
+    - name: Search for content in file
+      lineinfile:
+        path: "{{ item.0 }}"
+        regexp: "{{ item.1 }}"
+        state: absent
+      check_mode: True
+      ignore_errors: True
+      register: file_match
+      failed_when: not file_match.changed
+
+    - name: No Match
+      debug:
+        msg:
+          - "No match found for {{ item.1 }} in {{ item.0 }}"
+      when:
+        - not file_match is successful
+
+    - name: Match found
+      debug:
+        msg:
+          - "Match found for {{ item.1 }} in {{ item.0 }}"
+      when:
+        - file_match is successful
+
+    - name: Mark file for removal
+      set_fact:
+        files_to_remove: "{{ (files_to_remove | default([])) + [ item.0 ] }}"
+      when:
+        - file_match is successful
+
+  when:
+    - match is iterable

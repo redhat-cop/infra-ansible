@@ -1,0 +1,64 @@
+---
+
+- name: Pre-flight checks
+  assert:
+    that: "{{ assertion.that }}"
+    fail_msg: "{{ assertion.msg }}"
+    quiet: true
+  loop_control:
+    loop_var: assertion
+  loop:
+    - msg: Repository URL variable must be set
+      that:
+        - repository.url is defined
+
+- name: Pre-flight checks (SSH Repo)
+  ansible.builtin.fail:
+    msg:
+      - "SSH Private key is expected when the URL is of type SSH"
+  when:
+    - repository.url is match ("ssh://")
+    - not repository.ssh_key is defined
+
+- name: Pre-flight checks (HTTP Repo)
+  ansible.builtin.fail:
+    msg:
+      - "Personal Access Token is expected when the URL is of type HTTP"
+  when:
+    - repository.url is regex ("^http[s]?://")
+    - ( not repository.username is defined or not repository.password is defined )
+
+- name: Pre-flight checks (Confused Repo)
+  ansible.builtin.fail:
+    msg:
+      - "Please provide either;"
+      - "   an SSH key and a url that starts with ssh://"
+      - "   OR"
+      - "   a PAT with a url that starts with http://"
+  when:
+    - repository.ssh_key is defined
+    - repository.password is defined
+
+- name: "Pull from git repository"
+  include_tasks:
+    file: pull.yml
+    apply:
+      tags:
+        - pull
+  when:
+    - action == "pull"
+
+- name: "Push to git repository"
+  include_tasks:
+    file: push.yml
+    apply:
+      tags:
+        - push
+  when:
+    - action == "push"
+
+- name: "Remove git repository"
+  include_tasks:
+    file: remove.yml
+  when:
+    - remove_local | default(false) | bool

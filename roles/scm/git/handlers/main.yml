@@ -1,0 +1,14 @@
+---
+
+- name: Clean-up temporary SSH directory
+  file:
+    path: "{{ ssh_dir }}"
+    state: absent
+  changed_when: false
+  listen:
+    - Remove SSH keys
+
+- name: Remove git credentials
+  include_tasks:
+    file: remove_git_creds.yml
+  listen: Remove git credentials

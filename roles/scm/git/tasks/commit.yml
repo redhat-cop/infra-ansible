@@ -1,0 +1,62 @@
+---
+
+- name: Pre-flight checks
+  assert:
+    that: "{{ assertion.that }}"
+    fail_msg: "{{ assertion.msg }}"
+    quiet: true
+  loop_control:
+    loop_var: assertion
+  loop:
+    - msg: Repository Path variable must be set in 'scm_dir'
+      that:
+        - scm_dir is defined
+
+- name: Add all new files to repository
+  shell: git add --all
+  args:
+    chdir: "{{ scm_dir }}"
+  changed_when: false
+
+- name: Show staged files
+  shell: git diff --cached --name-only
+  args:
+    chdir: "{{ scm_dir }}"
+  register: scm_files_staged
+  changed_when: false
+
+- name: Configure git username
+  shell: git config --local user.name "{{ git_config.username }}"
+  args:
+    chdir: "{{ scm_dir }}"
+  changed_when: false
+
+- name: Configure git email
+  shell: git config --local user.email "{{ git_config.email }}"
+  args:
+    chdir: "{{ scm_dir }}"
+  changed_when: false
+
+- name: Commit changes
+  shell: git commit --all --message "{{ git_config.message }}"
+  args:
+    chdir: "{{ scm_dir }}"
+  register: scm_commit
+  failed_when:
+    - scm_commit.rc != 0
+    - '"nothing to commit, working directory clean" not in scm_commit.stdout'
+
+- name: Files were committed
+  ansible.builtin.debug:
+    msg:
+      - "There are changes that were committed"
+  when:
+    - scm_commit is succeeded
+
+- name: No files were committed
+  ansible.builtin.debug:
+    msg:
+      - "There are no changes that were committed"
+  when: >
+    scm_commit.rc != 0 or
+    "nothing to commit" in scm_commit.stdout

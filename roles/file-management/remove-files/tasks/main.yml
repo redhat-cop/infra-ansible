@@ -1,0 +1,75 @@
+---
+
+- name: Pre-flight checks
+  assert:
+    that: "{{ assertion.that }}"
+    fail_msg: "{{ assertion.msg }}"
+    quiet: true
+  loop_control:
+    loop_var: assertion
+  loop:
+    - msg: A directory path must be provided to search
+      that:
+        - directory is defined
+    - msg: A match for file content must be provided
+      that:
+        - match is defined
+
+- name: "Check the directory actually exists"
+  ansible.builtin.stat:
+    path: "{{ directory }}"
+  register: result_directory
+  ignore_errors: True
+
+- name: Determine the list of files to be searched
+  block:
+
+    - name: Processing directory
+      debug:
+        msg:
+          - "Looking for {{ files }} within {{ directory }}"
+
+    - name: Collect list of files
+      find:
+        paths: "{{ directory }}"
+        patterns: "{{ files | default('*') }}"
+      register: files_to_process
+
+  when:
+    - result_directory.stat.isdir is defined
+
+- name: Remove matching files
+  block:
+
+    - name: Setup counter for files to remove
+      set_fact:
+        files_to_remove: []
+
+    - name: Set the list of files to check
+      set_fact:
+        files_to_check: "{{ files_to_process.files | map(attribute='path') | list | unique }}"
+
+    - name: Process each file and flag for removal
+      include_tasks: flag-file-for-removal.yml
+      loop: "{{ files_to_check | product(match) | list }}"
+
+    - name: Notify files marked for removal
+      debug:
+        msg:
+          - "The following files have been marked for removal"
+          - "{{ files_to_remove | list }}"
+
+    - name: Remove files marked for removal
+      file:
+        path: "{{ file }}"
+        state: absent
+      with_items:
+        - "{{ files_to_remove }}"
+      loop_control:
+        loop_var: file
+      when:
+        - not dry_run | bool
+
+  when:
+    - result_directory.stat.isdir is defined
+    - files_to_process is defined
