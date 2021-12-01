@@ -4,7 +4,7 @@
   hosts: mail-host
   gather_facts: no
   tasks:
-  - include_tasks: email-notify-single-user.yml
+  - include_tasks: email-notify-tasks.yml
     vars:
       first_name: "{{ item.first_name }}"
       user_name: "{{ item.user_name }}"
