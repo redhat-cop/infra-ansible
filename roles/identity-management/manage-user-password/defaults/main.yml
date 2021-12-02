@@ -14,5 +14,5 @@ generate_password_length: '16'
 #
 # ... or just a string of characters to use
 #
-generate_password_char_sets: 'ascii_letters,digits,!#%*+,-./:=?^_|'
+generate_password_char_sets: 'ascii_letters,digits,!#%+,-./:=?_|'
 
