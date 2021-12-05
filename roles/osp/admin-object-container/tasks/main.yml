@@ -1,0 +1,16 @@
+---
+
+
+- name: Manage OpenStack Container Objects
+  os_object:
+    cloud: "{{ item.cloud | default(osp_default_cloud) | default(omit) }}"
+    state: "{{ item.state | default(osp_resource_state) | default('present') }}"
+    name: "{{ item.name }}"
+    container: "{{ item.container }}"
+    container_access: "{{ item.container_access | default(omit) }}"
+    endpoint_type: "{{ item.endpoint_type | default(omit) }}"
+    filename: "{{ item.filename | default(omit) }}"
+  register: os_container_objects
+  with_items:
+  - "{{ osp_container_objects | default([]) }}"
+
