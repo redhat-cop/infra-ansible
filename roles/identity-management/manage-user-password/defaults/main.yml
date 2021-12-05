@@ -11,4 +11,8 @@ generate_password_length: '16'
 # - printable
 # - punctuation
 # - whitespace
-generate_password_char_sets: 'ascii_letters,digits,punctuation'
+#
+# ... or just a string of characters to use
+#
+generate_password_char_sets: 'ascii_letters,digits,!#%+,-./:=?_|'
+
