@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora
+FROM registry.fedoraproject.org/fedora:34
 
 ENV HELM_VERSION=latest \
     KUSTOMIZE_VERSION=v3.5.4
