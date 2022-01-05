@@ -30,5 +30,5 @@ dns_data:
           entries:
             - type: PTR
               record: "{{ hostvars['idm.subdomain']['openstack']['private_v4_ptr'] }}"
-              value: "idm.subdomain.my_dns_zone
+              value: "idm.subdomain.my_dns_zone"
 
