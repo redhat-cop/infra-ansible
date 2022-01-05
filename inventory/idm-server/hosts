@@ -8,7 +8,7 @@ localhost
 [idm-server]
 idm.example.com
 
-[dns-server]
+[dns-records-manage-host]
 localhost
 
 [osp_instances:children]
