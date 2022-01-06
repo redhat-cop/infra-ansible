@@ -2,3 +2,33 @@
 
 pkg_update: true
 hosting_infrastructure: openstack
+
+dns_data:
+  views:
+    - name: private
+      zones:
+        - dns_domain: "my_dns_zone"
+          state: present
+          named: True
+          nsupdate:
+            - server: "dns_server_ip"
+              key_name: "dns_zone_key_name"
+              key_secret: 'key_secret'
+              key_algorithm: 'hmac-sha256'
+          entries:
+            - type: A
+              record: "idm.subdomain"
+              value: "{{ hostvars['idm.subdomain']['openstack']['private_v4'] }}"
+        - dns_domain: "my_reverse_zone"
+          state: present
+          named: True
+          nsupdate:
+            - server: "dns_server_ip"
+              key_name: "reverse_key_name"
+              key_secret: 'key_secret'
+              key_algorithm: 'hmac-sha256'
+          entries:
+            - type: PTR
+              record: "{{ hostvars['idm.subdomain']['openstack']['private_v4_ptr'] }}"
+              value: "idm.subdomain.my_dns_zone"
+
