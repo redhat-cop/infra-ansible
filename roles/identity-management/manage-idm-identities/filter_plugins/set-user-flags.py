@@ -1,16 +1,18 @@
+
 def set_user_flags(entry):
 
-    data = {
-        'generate_password': False,
-        'notify_user': False
-    }
-
     if 'user' in entry.keys() and 'has_password' in entry['user'].keys() and entry['user']['has_password'] == False:
-        data['generate_password'] = True
-        data['notify_user'] = True
+        flag_state = True
+    else:
+        flag_state = False
 
-    return data
+    if 'generate_password' not in entry['user_data'].keys():
+        entry['user_data']['generate_password'] = flag_state 
 
+    if 'notify_user' not in entry['user_data'].keys():
+        entry['user_data']['notify_user'] = flag_state 
+
+    return entry['user_data']
 
 class FilterModule(object):
     def filters(self):
