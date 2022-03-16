@@ -7,12 +7,12 @@
       name: '{{ item }}'
       state: installed
     with_items:
-    - haproxy
-    - openssl-devel
-    - firewalld
-    - python-firewall
-    - libsemanage-python
-    - policycoreutils-python
+      - haproxy
+      - openssl-devel
+      - firewalld
+      - python3-firewall
+      - libsemanage-python
+      - policycoreutils-python
     notify: 'enable and start service(s)'
 
   - name: 'Start firewalld'

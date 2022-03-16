@@ -1,5 +1,5 @@
 	zone "{{ zone_dns_domain }}" IN {
-		type {{ zone_type | default(dns_server_type) }};
+		type {{ zone_type }};
 {% if zone_type == "forward" %}
                 forward only;
 		forwarders {

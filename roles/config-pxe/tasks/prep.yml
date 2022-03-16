@@ -8,7 +8,7 @@
     - tftp-server
     - syslinux
     - firewalld
-    - python-firewall
+    - python3-firewall
 
 - name: 'Ensure firewalld is running'
   service:

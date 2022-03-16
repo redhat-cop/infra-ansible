@@ -27,6 +27,7 @@
     ipa-replica-install -U
       --principal="{{ idm_principal }}"
       --admin-password="{{ idm_admin_password }}"
+      --setup-ca
   ignore_errors: true
   when:
   - idm_src is defined

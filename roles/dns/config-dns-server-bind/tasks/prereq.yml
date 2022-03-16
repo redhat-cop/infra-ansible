@@ -8,10 +8,7 @@
     - bind
     - bind-utils
     - firewalld
-    - python-firewall
-    - libsemanage-python
-    - python-dns
-    - libselinux-python
+    - python3-dns
 
 - name: Enable named
   service:

@@ -10,6 +10,4 @@
     loop_var: route
   when:
   - routes is defined
-  - routes.device is defined
-  - routes.device|trim != ""
   notify: 'Notify about Network reload'

@@ -3,11 +3,13 @@
 - name: 'Install required packages'
   package:
     name: '{{ item }}'
+    disable_gpg_check: True
     state: installed
   with_items:
-  - "{{ openvpn_rpm | default(default_openvpn_rpm) }}"
-  - firewalld
-  - python-firewall
+    - "{{ openvpn_bundled_clients_rpm }}"
+    - "{{ openvpn_rpm }}"
+    - firewalld
+    - python3-firewall
 
 - name: 'Ensure firewalld is running'
   service:
@@ -24,5 +26,6 @@
   with_items:
   - 443/tcp
   - 943/tcp
+  - 945/tcp
   - 1194/udp
 

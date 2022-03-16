@@ -31,7 +31,7 @@
 
     - name: Prepare the zone config content
       vars:
-        zone_type: "{{ zone.type | default('master') }}"
+        zone_type: "{{ zone.type | default(dns_server_type) | default('master') }}"
         zone_dns_domain: "{{ zone.dns_domain }}"
         zone_forwarders: "{{ zone.forwarders | default([]) }}"
         view_name: "{{ view.name }}"

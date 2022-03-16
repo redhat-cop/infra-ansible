@@ -2,8 +2,8 @@
 # defaults file for idm
 
 idm_principal: admin
-idm_rpms:
-  - ipa-server
-  - firewalld
-  - python-firewall
+
+# TODO: Update to follow the instructions here:
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/installing_identity_management/index#installing-packages-required-for-an-idm-server_preparing-the-system-for-ipa-server-installation
+idm_rpms: []
 
