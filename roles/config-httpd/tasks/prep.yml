@@ -28,4 +28,5 @@
     state: enabled
     immediate: yes
   with_items:
-  - 80/tcp
+    - 80/tcp
+

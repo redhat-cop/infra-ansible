@@ -20,4 +20,4 @@
     state: enabled
     immediate: yes
   with_items:
-  - "{{ rh_sso_port_list }}"
+    - "{{ rh_sso_port_list }}"

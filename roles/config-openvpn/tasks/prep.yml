@@ -24,8 +24,8 @@
     state: enabled
     immediate: yes
   with_items:
-  - 443/tcp
-  - 943/tcp
-  - 945/tcp
-  - 1194/udp
+    - 443/tcp
+    - 943/tcp
+    - 945/tcp
+    - 1194/udp
 
