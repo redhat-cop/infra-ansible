@@ -8,8 +8,6 @@ libvirt_base_packages:
   - virt-install
   - qemu-kvm
   - libvirt
-  - libvirt-python
-  - bridge-utils
 
 service_name: "libvirtd"
 

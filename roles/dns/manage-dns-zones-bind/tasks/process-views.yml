@@ -8,14 +8,16 @@
 - name: Generate a consistent serial number to be used across all zones
   set_fact:
     zone_serial_number: "{{ ansible_date_time.epoch }}"
-    common_recursion: dns_data.named_global_config.recursion | default(default_recursion)
+    common_recursion: "{{ dns_data.named_global_config.recursion | default(default_recursion) }}"
   run_once: true
   delegate_to: "{{ ansible_play_hosts | first }}"
 
-- name: Flush any cache data and reload before making zone changes
+- name: Attempt to flush any cache data and reload before making zone changes
   block:
     - command: /sbin/rndc flush
+      ignore_errors: yes
     - command: /sbin/rndc reload
+      ignore_errors: yes
   when:
     - service_facts.ansible_facts.services['named.service'].state == "running"
 

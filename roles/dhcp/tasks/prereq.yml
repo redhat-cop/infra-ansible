@@ -5,9 +5,7 @@
     state: installed
   with_items:
   - firewalld
-  - python-firewall
-  - libsemanage-python
-  - dhcp
+  - dhcp-server
   notify: 'enable and start dhcp services'
 
 - name: 'Start firewalld service'

@@ -10,6 +10,5 @@ config_chrony_firewall_services:
 config_chrony_packages:
   - chrony
   - firewalld
-  - python-firewall
 
 chrony_allow_subnet: 127.0.0.1

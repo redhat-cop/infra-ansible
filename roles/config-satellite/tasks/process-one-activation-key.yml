@@ -21,7 +21,7 @@
        -p "{{ satellite_password }}"
        activation-key add-subscription
        --name "{{ activation_key.name }}"
-       --subscription-id "{{ item.ID }}"
+       --subscription-id "{{ item.Id }}"
        --organization "{{ satellite_organization }}"
   when:
     - (activation_key.type is defined and

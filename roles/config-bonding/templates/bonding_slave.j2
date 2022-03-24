@@ -4,4 +4,3 @@ DEVICE="{{ ifcfg.1.device }}"
 NAME="{{ name | default(ifcfg.1.device) }}"
 ONBOOT="{{ onboot | default('yes') }}"
 MASTER="{{ ifcfg.0.device }}"
-NM_CONTROLLED=no

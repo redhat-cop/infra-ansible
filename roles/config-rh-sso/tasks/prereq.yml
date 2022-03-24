@@ -4,8 +4,8 @@
     name: '{{ item }}'
     state: installed
   with_items:
-  - firewalld
-  - python-firewall
+    - firewalld
+    - python3-firewall
 
 - name: 'Start firewalld service'
   service:
@@ -20,4 +20,4 @@
     state: enabled
     immediate: yes
   with_items:
-  - "{{ rh_sso_port_list }}"
+    - "{{ rh_sso_port_list }}"
