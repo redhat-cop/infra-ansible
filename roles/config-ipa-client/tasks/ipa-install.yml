@@ -34,10 +34,10 @@
 - name: "Set up the IPA/IdM client integration"
   command: >
     ipa-client-install -U
-       -p "{{ ipa_username }}"
-       -w "{{ ipa_password }}"
-       --domain="{{ ipa_domain }}"
-       --force-join
+      -p "{{ ipa_username }}"
+      -w "{{ ipa_password }}"
+      --domain="{{ ipa_domain }}"
+      --force-join
 
 - name: "Set up automount for file systems"
   command: 'ipa-client-automount -U --location {{ ipa_automount_location }}'
