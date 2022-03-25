@@ -3,19 +3,24 @@
 - name: 'Generate and activate the HAproxy configuration'
   hosts: lb_vms
   tasks:
-  - import_role:
-      name: load-balancers/manage-haproxy
-      tasks_from: install
-    tags:
-    - 'never'
-    - 'install'
-  - import_role:
-      name: load-balancers/manage-haproxy
-      tasks_from: generate-config
-    tags:
-    - 'always'
-  - import_role:
-      name: load-balancers/manage-haproxy
-      tasks_from: activate-config
-    tags:
-    - 'always'
+    - import_role:
+        name: keepalived
+      tags:
+        - 'never'
+        - 'install'
+    - import_role:
+        name: load-balancers/manage-haproxy
+        tasks_from: install
+      tags:
+        - 'never'
+        - 'install'
+    - import_role:
+        name: load-balancers/manage-haproxy
+        tasks_from: generate-config
+      tags:
+        - 'always'
+    - import_role:
+        name: load-balancers/manage-haproxy
+        tasks_from: activate-config
+      tags:
+        - 'always'
