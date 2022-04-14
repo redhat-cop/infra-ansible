@@ -2,3 +2,11 @@
 
 temp_new_file: '/etc/haproxy/haproxy.cfg.new'
 lb_https_backends: {}
+lb_install_packages:
+   - haproxy
+   - openssl-devel
+   - firewalld
+   - python3-firewall
+   - libsemanage-python
+   - policycoreutils-python
+

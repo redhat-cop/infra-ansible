@@ -6,13 +6,7 @@
       package:
         name: '{{ item }}'
         state: installed
-      with_items:
-        - haproxy
-        - openssl-devel
-        - firewalld
-        - python3-firewall
-        - libsemanage-python
-        - policycoreutils-python
+      loop: '{{ lb_install_packages|flatten(levels=-1) }}'
       notify: 'enable and start service(s)'
 
     - name: 'Start firewalld'
