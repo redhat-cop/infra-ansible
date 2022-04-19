@@ -4,9 +4,8 @@
 
     - name: 'Install required packages'
       package:
-        name: '{{ item }}'
+        name: '{{ lb_install_packages }}'
         state: installed
-      loop: '{{ lb_install_packages|flatten(levels=-1) }}'
       notify: 'enable and start service(s)'
 
     - name: 'Start firewalld'
