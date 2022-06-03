@@ -1,0 +1,3 @@
+---
+
+- import_tasks: wait_for_objects.yml

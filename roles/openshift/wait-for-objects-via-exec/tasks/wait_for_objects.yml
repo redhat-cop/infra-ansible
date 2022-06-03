@@ -1,0 +1,5 @@
+---
+- name: Manage OpenShift objects with Executable
+  shell:
+    cmd: "{{item.executable}} wait {{ item.kind }}/{{ item.name }} --for={{ item.state }}  -n {{ item.namespace }} --timeout={{ item.timeout }} "
+  loop: "{{ openshift_wait_for_objects }}"
