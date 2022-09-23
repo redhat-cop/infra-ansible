@@ -21,9 +21,10 @@ See `Example Inventory` below for more specific details. At a high level, the fo
 |rhsm_server_hostname|The Satellite hostname/FQDN used for registration|yes if Satellite registration is used|
 |rhsm_activationkey|The Satellite activationkey used for registration|yes if Satellite registration is used|
 |rhsm_org_id|The Satellite organization ID used for registration|yes if Satellite registration is used|
-|rhsm_pool|The subscription pool name used for registration|no|
+|rhsm_pool|The subscription pool ID used for registration|no|
 |rhsm_repos|A list of repositories to enable|no|
 |rhsm_force_register|Set to 'yes' to force a unregister/clean + re-registration|no|
+|rhsm_lock_release|The release version the host would like to tie to|no|
 
 
 Dependencies

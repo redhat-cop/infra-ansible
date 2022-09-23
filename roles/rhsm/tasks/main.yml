@@ -43,7 +43,8 @@
         force_register: "{{ rhsm_force_register | default(omit) }}"
 
     - name: "Lock in specific release - if requested"
-      command: "subscription-manager release --set={{ rhsm_lock_release }}"
+      rhsm_release:
+        release: "{{ rhsm_lock_release }}"
       when:
         - rhsm_lock_release is defined
         - rhsm_lock_release|trim != ''
