@@ -3,9 +3,6 @@
 - name: "Send HTML e-mail message (based on MD) to a list of users"
   hosts: mail-host
   gather_facts: no
-  vars:
-    list_of_mail_to: []
-
   tasks:
     - include_vars:
         file: "{{ email_content_file }}"
@@ -17,11 +14,8 @@
         markdown_content: "{{ body }}"
     - set_fact:
         mail: "{{ mail | combine({ 'subject': title, 'body': md_to_html.html_body_message }) }}"
-
-    - set_fact:
-        list_of_mail_to: "{{ list_of_mail_to | d([]) + [ item.email ] }}"
-      loop: "{{ list_of_users }}"
-      when: list_of_users is defined
+        list_of_mail_to: "{{ list_of_mail_to | default([]) + [ item.email ] }}"
+      loop: "{{ list_of_users|flatten(levels=1) }}"
 
     - include_role:
         name: notifications/send-email
