@@ -5,9 +5,9 @@
     name: '{{ item }}'
     state: installed
   with_items:
-  - httpd
-  - firewalld
-  - python-firewall
+    - httpd
+    - firewalld
+    - python3-firewall
 
 - name: 'Ensure firewalld is running'
   service:
@@ -28,4 +28,5 @@
     state: enabled
     immediate: yes
   with_items:
-  - 80/tcp
+    - 80/tcp
+
