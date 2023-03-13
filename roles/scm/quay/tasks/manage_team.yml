@@ -15,6 +15,30 @@
     headers:
       Authorization: "{{ auth_header }}"
 
+- name: Get Team Sync Status
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
+    method: GET
+    validate_certs: "{{ quay_validate_certs }}"
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: org_team_sync
+
+- name: Activate Team LDAP Sync
+  uri:
+    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/syncing"
+    method: POST
+    body:
+      group_dn: "{{ quay_team.group_dn }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    body_format: json
+    status_code:
+      - 200
+    headers:
+      Authorization: "{{ auth_header }}"
+  loop: "{{ org_team_sync.json.teams | dict2items }}"
+  when: "(item.key == quay_team.name and item.value.is_synced == false and quay_team.members is not defined)"
+
 - name: Get Team Members
   uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members"
@@ -45,4 +69,3 @@
       loop: "{{ quay_team_members.json.members }}"
       when: (quay_team.members | default([])) | selectattr('name', 'equalto', item.name.split('+')[1] if item.is_robot else item.name) | list |  length == 0
   when: quay_prune|bool
-

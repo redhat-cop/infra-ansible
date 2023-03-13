@@ -10,9 +10,30 @@ orgs:
           - name: testteam
             type: team
             role: admin
+          - name: testteam2
+            type: team
+            role: read
     robots:
       - name: testrobot
     teams:
       - name: testteam
         members:
           - name: quay
+      - name: testteam2
+        role: member
+        permissions: read
+        group_dn: "CN=...OU=..."
+    prototypes:
+      - delegate:
+          kind: robot
+          name: testrobot
+          is_robot: true
+        role: read
+      - delegate:
+          kind: team
+          name: testteam
+        role: admin
+      - delegate:
+          kind: team
+          name: testteam2
+        role: read
