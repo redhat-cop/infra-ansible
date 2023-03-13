@@ -6,7 +6,6 @@
     state: installed
   with_items:
     - keepalived
-    - libsemanage-python
   notify: 'start and enable keepalived services'
 
 
