@@ -1,0 +1,5 @@
+---
+- name: Manage OpenShift objects with Executable
+  shell:
+    cmd: "{{item.executable}} {{ item.action }} {{ item.kind }}/{{ item.name }} -n {{ item.namespace }}"
+  loop: "{{ openshift_manage_objects }}"

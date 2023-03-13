@@ -1,0 +1,9 @@
+---
+- name: Remove OpenShift object via OpenShift API
+  k8s:
+    state: absent
+    name: "{{ item.name }}"
+    api_version: "{{ item.api_version }}"
+    kind: "{{ item.kind }}"
+    namespace: "{{ item.namespace }}"
+  loop: "{{ openshift_remove_objects }}"

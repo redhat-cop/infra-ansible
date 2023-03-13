@@ -1,0 +1,6 @@
+---
+
+- hosts: openshift_api
+  roles:
+  - role: openshift/remove-object-via-api
+
