@@ -1,0 +1,34 @@
+---
+
+- name: Verify Required API Request Parameters Provided
+  ansible.builtin.assert:
+    that:
+      - api_request_uri | default("", true) | length > 0
+      - api_request_var | default("", true) | length > 0
+    quiet: true
+    fail_msg: Required API Variables Not Provided
+
+- name: "Execute API Request: {{ api_request_uri }}"
+  ansible.builtin.uri:
+    url: "{{ api_request_uri + ((('&' if '?' in api_request_uri else '?')  + 'next_page=' + api_request_next_page| default('', True)) if api_request_next_page is defined else '') }}"
+    validate_certs: "{{ quay_validate_certs }}"
+    status_code: "{{ api_request_status_code | default([200], True)}}"
+    headers:
+      Authorization: "{{ auth_header }}"
+  register: api_request_response
+
+- name: Set API Response Variable
+  ansible.builtin.set_fact:
+    "{{ api_request_var }}": "{{ lookup('ansible.builtin.vars', api_request_var, default=[]) | ansible.builtin.combine(api_request_response, list_merge='append', recursive=true) }}"
+
+- name: "Paginate API Request: {{ api_request_uri }}"
+  ansible.builtin.include_tasks:
+    file: _api_request.yml
+  vars:
+    api_request_next_page: "{{ api_request_response.json['next_page'] }}"
+  when: "'next_page' in api_request_response.json"
+
+- name: Clear Request Variables
+  ansible.builtin.set_fact:
+    api_request_next_page:
+    api_request_status_code:

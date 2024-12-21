@@ -1,7 +1,7 @@
 ---
 
-- name: Add Team Members
-  uri:
+- name: "Add Team Members - Organization: {{ quay_organization.name }} - Team: {{ quay_team.name }} "
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members/{{ quay_organization.name + '+' + team_member.name if 'type' in team_member and team_member.type == 'robot' else team_member.name }}"
     method: PUT
     body:

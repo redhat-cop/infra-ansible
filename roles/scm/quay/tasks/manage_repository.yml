@@ -1,11 +1,11 @@
 ---
 
 - name: Set if repository currently exists
-  set_fact:
+  ansible.builtin.set_fact:
     org_repository_exists: "{{ quay_repository.name in org_repositories.json.repositories | map(attribute='name') | list }}"
 
-- name: Create Quay Repository
-  uri:
+- name: "Create Quay Repository - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/repository"
     method: POST
     body:
@@ -21,8 +21,8 @@
       Authorization: "{{ auth_header }}"
   when: not org_repository_exists|bool
 
-- name: Update Quay Repository
-  uri:
+- name: "Update Quay Repository - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}"
     method: PUT
     body:
@@ -38,8 +38,8 @@
       Authorization: "{{ auth_header }}"
   when: org_repository_exists|bool
 
-- name: Manage Permissions
-  uri:
+- name: "Manage Permissions - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/{{ 'team' if 'type' in item and item.type == 'team' else 'user' }}/{{ (quay_repository.namespace | default(quay_organization.name)) + '+' + item.name if item.type == 'robot' else item.name }}"
     method: PUT
     body:
@@ -49,34 +49,34 @@
     status_code: 200
     headers:
       Authorization: "{{ auth_header }}"
+  loop_control:
+    label: "{{ item.name }}"
   loop: "{{ quay_repository.permissions | default([]) }}"
 
-- name: Delete Extra Permissions
+- name: "Delete Extra Permissions - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
   block:
-    - name: List Repository Team Permissions
-      uri:
-        url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/team/"
-        validate_certs: "{{ quay_validate_certs }}"
-        body_format: json
-        status_code:
+    - name: "List Repository Team Permissions - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
+      ansible.builtin.include_tasks:
+        file: _api_request.yml
+      vars:
+        api_request_uri: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/team/"
+        api_request_var: org_repositories_permissions_teams
+        api_request_status_code:
           - 200
           - 404
-        headers:
-          Authorization: "{{ auth_header }}"
-      register: org_repositories_permissions_teams
-    - name: List Repository User Permissions
-      uri:
-        url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/user/"
-        validate_certs: "{{ quay_validate_certs }}"
-        body_format: json
-        status_code:
+
+    - name: "List Repository User Permissions - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
+      ansible.builtin.include_tasks:
+        file: _api_request.yml
+      vars:
+        api_request_uri: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/user/"
+        api_request_var: org_repositories_permissions_users
+        api_request_status_code:
           - 200
           - 404
-        headers:
-          Authorization: "{{ auth_header }}"
-      register: org_repositories_permissions_users
-    - name: Delete Extra Permissions Team
-      uri:
+
+    - name: "Delete Extra Permissions Team - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
+      ansible.builtin.uri:
         url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/team/{{ item.key }}"
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
@@ -85,9 +85,12 @@
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ (org_repositories_permissions_teams.json.permissions | default({})) | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
       when: (quay_repository.permissions | default([])) | selectattr('name', 'equalto', item.key) | list |  length == 0
-    - name: Delete Extra Permissions User
-      uri:
+
+    - name: "Delete Extra Permissions User - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Repository: {{ quay_repository.name }}"
+      ansible.builtin.uri:
         url: "{{ quay_api_base }}/repository/{{ (quay_repository.namespace | default(quay_organization.name)) }}/{{ quay_repository.name }}/permissions/user/{{ item.value.name }}"
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
@@ -96,6 +99,7 @@
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ (org_repositories_permissions_users.json.permissions | default({})) | dict2items }}"
+      loop_control:
+        label: "{{ item.value.name }}"
       when: (quay_repository.permissions | default([])) | selectattr('name', 'equalto', item.value.name.split('+')[1] if item.value.is_robot else item.value.name) | list |  length == 0
   when: quay_prune|bool
-

@@ -1,7 +1,7 @@
 ---
 
-- name: Create/Update Quay Robot
-  uri:
+- name: "Create/Update Quay Robot - Organization: {{ quay_organization.name }} - Robot: {{ quay_robot.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots/{{ quay_robot.name }}"
     method: PUT
     body:

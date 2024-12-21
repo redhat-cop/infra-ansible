@@ -1,17 +1,16 @@
 ---
 - name: Check if Organization Exists
-  uri:
-    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
-    validate_certs: "{{ quay_validate_certs }}"
-    status_code:
+  ansible.builtin.include_tasks:
+    file: _api_request.yml
+  vars:
+    api_request_uri: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
+    api_request_var: quay_organization_exists
+    api_request_status_code:
       - 200
       - 404
-    headers:
-      Authorization: "{{ auth_header }}"
-  register: quay_organization_exists
 
-- name: Create Quay Organization
-  uri:
+- name: "Create Quay Organization: {{ quay_organization.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/"
     method: POST
     body:
@@ -24,8 +23,8 @@
       Authorization: "{{ auth_header }}"
   when: quay_organization_exists.status == 404
 
-- name: Update Quay Organization
-  uri:
+- name: "Update Quay Organization: {{ quay_organization.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
     method: PUT
     body:
@@ -38,74 +37,69 @@
       Authorization: "{{ auth_header }}"
   when: quay_organization_exists.status == 200
 
-- name: Get Quay Organization
-  uri:
-    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
-    validate_certs: "{{ quay_validate_certs }}"
-    headers:
-      Authorization: "{{ auth_header }}"
-  register: current_quay_org
+- name: "Get Quay Organization: {{ quay_organization.name }}"
+  ansible.builtin.include_tasks:
+    file: _api_request.yml
+  vars:
+    api_request_uri: "{{ quay_api_base }}/organization/{{ quay_organization.name }}"
+    api_request_var: current_quay_org
 
-- name: List Organization Robots
-  uri:
-    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots"
-    validate_certs: "{{ quay_validate_certs }}"
-    status_code:
-      - 200
-    headers:
-      Authorization: "{{ auth_header }}"
-  register: org_robots
+- name: "List Organization Robots - {{ quay_organization.name }}"
+  ansible.builtin.include_tasks:
+    file: _api_request.yml
+  vars:
+    api_request_uri: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots"
+    api_request_var: org_robots
 
-- name: List Organization Prototypes
-  uri:
-    url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/prototypes"
-    validate_certs: "{{ quay_validate_certs }}"
-    status_code:
-      - 200
-    headers:
-      Authorization: "{{ auth_header }}"
-  register: org_prototypes
+- name: "List Organization Prototypes - {{ quay_organization.name }}"
+  ansible.builtin.include_tasks:
+    file: _api_request.yml
+  vars:
+    api_request_uri: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/prototypes"
+    api_request_var: org_prototypes
 
-- name: Manage Robots
-  include_tasks: manage_robot.yml
+- name: "Manage Robots - Organization: {{ quay_organization.name }}"
+  ansible.builtin.include_tasks: manage_robot.yml
   loop: "{{ quay_organization.robots | default([]) }}"
   loop_control:
     loop_var: quay_robot
+    label: "{{ quay_robot['name'] }}"
 
-- name: Manage Teams
-  include_tasks: manage_team.yml
+- name: "Manage Teams - Organization: {{ quay_organization.name }}"
+  ansible.builtin.include_tasks: manage_team.yml
   loop: "{{ quay_organization.teams | default([]) }}"
   loop_control:
     loop_var: quay_team
+    label: "{{ quay_team['name'] }}"
 
-- name: Manage Prototypes
-  include_tasks: manage_prototypes.yml
+- name: "Manage Prototypes - Organization: {{ quay_organization.name }}"
+  ansible.builtin.include_tasks: manage_prototypes.yml
   loop: "{{ quay_organization.prototypes | default([]) }}"
   loop_control:
     loop_var: quay_prototype
+    label: "{{ quay_prototype['name'] }}"
 
-- name: List Repositories
-  uri:
-    url: "{{ quay_api_base }}/repository?namespace={{ quay_organization.name }}"
-    validate_certs: "{{ quay_validate_certs }}"
-    body_format: json
-    status_code:
+- name: "List Repositories - Organization: {{ quay_organization.name }}"
+  ansible.builtin.include_tasks:
+    file: _api_request.yml
+  vars:
+    api_request_uri: "{{ quay_api_base }}/repository?namespace={{ quay_organization.name }}"
+    api_request_var: org_repositories
+    api_request_status_code:
       - 200
       - 404
-    headers:
-      Authorization: "{{ auth_header }}"
-  register: org_repositories
 
-- name: Manage Repositories
-  include_tasks: manage_repository.yml
+- name: "Manage Repositories - Organization: {{ quay_organization.name }}"
+  ansible.builtin.include_tasks: manage_repository.yml
   loop: "{{ quay_organization.repos | default([]) }}"
   loop_control:
     loop_var: quay_repository
+    label: "{{ quay_repository['name'] }}"
 
-- name: Prune Organization
+- name: "Prune Organization - Organization: {{ quay_organization.name }}"
   block:
-    - name: Delete Extra Robot Accounts
-      uri:
+    - name: "Delete Extra Robot Accounts - Organization: {{ quay_organization.name }}"
+      ansible.builtin.uri:
         url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/robots/{{ item.name.split('+')[1] }}"
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
@@ -114,15 +108,17 @@
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ org_robots.json.robots }}"
+      loop_control:
+        label: "{{ item.name.split('+')[1] }}"
       when: "item.name.split('+')[1] not in quay_organization.robots |  map(attribute='name') | list"
 
     - name: "Warn on Max Repositories Found"
-      debug:
+      ansible.builtin.debug:
         msg: "Warning: Repositories Found: {{ org_repositories.json.repositories | length }}. Purging Only Supported on Organizations with <= 100 Repositories"
       when: org_repositories.json.repositories | length > 100
 
-    - name: Delete Extra Repositories
-      uri:
+    - name: "Delete Extra Repositories - Organization: {{ quay_organization.name }}"
+      ansible.builtin.uri:
         url: "{{ quay_api_base }}/repository/{{ quay_organization.name }}/{{ item.name }}"
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
@@ -131,10 +127,12 @@
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ org_repositories.json.repositories }}"
+      loop_control:
+        label: "{{ item.name }}"
       when: "item.name not in quay_organization.repos |  map(attribute='name') | list"
 
-    - name: Delete Extra Teams
-      uri:
+    - name: "Delete Extra Teams - Organization: {{ quay_organization.name }}"
+      ansible.builtin.uri:
         url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ item.key }}"
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
@@ -143,6 +141,7 @@
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ current_quay_org.json.teams | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
       when: "item.key not in quay_organization.teams |  map(attribute='name') | list"
-
   when: quay_prune|bool
