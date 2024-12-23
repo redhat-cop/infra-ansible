@@ -1,7 +1,7 @@
 ---
 
-- name: Create/Update Quay Team
-  uri:
+- name: "Create/Update Quay Team - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Team: {{ quay_team.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}"
     method: PUT
     body:
@@ -15,8 +15,8 @@
     headers:
       Authorization: "{{ auth_header }}"
 
-- name: Get Team Members
-  uri:
+- name: "Get Team Members - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Team: {{ quay_team.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members"
     validate_certs: "{{ quay_validate_certs }}"
     status_code:
@@ -25,16 +25,17 @@
       Authorization: "{{ auth_header }}"
   register: quay_team_members
 
-- name: Manage Team Members
-  include_tasks: manage_team_members.yml
+- name: "Manage Team Members - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Team: {{ quay_team.name }}"
+  ansible.builtin.include_tasks: manage_team_members.yml
   loop: "{{ quay_team.members | default([]) }}"
   loop_control:
     loop_var: team_member
+    label: "{{ team_member['name'] }}"
 
-- name: Delete Extra Team Members
+- name: "Delete Extra Team Members - Organization: {{ quay_repository.namespace | default(quay_organization.name) }} - Team: {{ quay_team.name }}"
   block:
     - name: Delete Team Member
-      uri:
+      ansible.builtin.uri:
         url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/team/{{ quay_team.name }}/members/{{ quay_organization.name + '+' + item.name if 'type' in item and item.type == 'robot' else item.name }}"
         method: DELETE
         validate_certs: "{{ quay_validate_certs }}"
@@ -43,6 +44,8 @@
         headers:
           Authorization: "{{ auth_header }}"
       loop: "{{ quay_team_members.json.members }}"
+      loop_control:
+        label: "{{ item['name'] }}"
       when: (quay_team.members | default([])) | selectattr('name', 'equalto', item.name.split('+')[1] if item.is_robot else item.name) | list |  length == 0
   when: quay_prune|bool
 
