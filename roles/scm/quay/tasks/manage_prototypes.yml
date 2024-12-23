@@ -1,6 +1,6 @@
 ---
 - name: Locate Existing Delegate Prototype Matches
-  set_fact:
+  ansible.builtin.set_fact:
     matched_prototypes: "{{ org_prototypes.json.prototypes | \
       selectattr('delegate.is_robot','equalto',true if quay_prototype.delegate.kind == 'robot' else false) | \
       selectattr('delegate.kind','equalto','user' if quay_prototype.delegate.kind != 'team' else quay_prototype.delegate.kind) | \
@@ -8,7 +8,7 @@
       list }}"
 
 - name: Locate Existing Activator Prototype Matches
-  set_fact:
+  ansible.builtin.set_fact:
     matched_prototypes: "{{ matched_prototypes | default([]) | \
       selectattr('activating_user', 'defined') | \
       rejectattr('activating_user', 'none') | \
@@ -19,7 +19,7 @@
   when: "{{ 'activator' in quay_prototype and quay_prototype.activator is not none }}"
 
 - name: Create Base Prototype Fact
-  set_fact:
+  ansible.builtin.set_fact:
     prototype:
       role: "{{ quay_prototype.role }}"
       delegate:
@@ -28,7 +28,7 @@
         is_robot: "{{ true if quay_prototype.delegate.kind == 'robot' else false }}"
 
 - name: Create Prototype Activator Fact
-  set_fact:
+  ansible.builtin.set_fact:
     prototype_assigner:
       role: "{{ quay_prototype.role }}"
       activating_user:
@@ -38,11 +38,11 @@
   when: "{{ 'activator' in quay_prototype and quay_prototype.activator is not none }}"
 
 - name: Create Final Prototype Fact
-  set_fact:
+  ansible.builtin.set_fact:
     prototype: "{{ prototype | combine(prototype_assigner | default({}), recursive=true) }}"
 
-- name: Create Prototype
-  uri:
+- name: "Create Prototype - Organization: {{ quay_organization.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/prototypes"
     method: POST
     body: "{{ prototype }}"
@@ -53,8 +53,8 @@
       Authorization: "{{ auth_header }}"
   when: matched_prototypes | length == 0
 
-- name: Update Prototype
-  uri:
+- name: "Update Prototype - Organization: {{ quay_organization.name }}"
+  ansible.builtin.uri:
     url: "{{ quay_api_base }}/organization/{{ quay_organization.name }}/prototypes/{{ matched_prototypes[0].id }}"
     method: PUT
     body: "{{ prototype }}"
